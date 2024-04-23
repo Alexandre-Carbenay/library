@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: catalog
+
+management:
+  endpoints:
+    web:
+      base-path: /management
+      exposure.include: '*'
+  endpoint:
+    health:
+      show-details: always
+  health:
+    probes.enabled: true
+    diskspace.enabled: false
+    livenessstate.enabled: true
+    readinessstate.enabled: true
