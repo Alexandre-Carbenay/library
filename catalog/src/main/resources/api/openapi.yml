@@ -46,12 +46,18 @@ components:
           readOnly: true
           required:
             - books
+            - authors
           properties:
             books:
               description: The books collection, containing basic information for each book.
               type: array
               items:
                 $ref: '#/components/schemas/Book'
+            authors:
+              description: The authors related to the books in the collection.
+              type: array
+              items:
+                $ref: '#/components/schemas/Author'
         '_links':
           type: object
           readOnly: true
@@ -122,16 +128,20 @@ components:
       required:
         - id
         - isbn
+        - title
         - authors
         - language
         - summary
+        - '_links'
       properties:
         id:
           $ref: '#/components/schemas/BookId'
         isbn:
           $ref: '#/components/schemas/ISBN'
+        title:
+          $ref: '#/components/schemas/Title'
         authors:
-          $ref: '#/components/schemas/Authors'
+          $ref: '#/components/schemas/BookAuthors'
         language:
           $ref: '#/components/schemas/Language'
         summary:
@@ -159,20 +169,39 @@ components:
       type: string
       format: isbn
       example: 9782081275232
-    Authors:
+    Title:
+      type: string
+      example: Du contrat social
+    BookAuthors:
       type: array
       items:
-        $ref: '#/components/schemas/Author'
+        $ref: '#/components/schemas/AuthorId'
     Author:
       type: object
       required:
         - id
         - name
+        - '_links'
       properties:
         id:
           $ref: '#/components/schemas/AuthorId'
         name:
           $ref: '#/components/schemas/AuthorName'
+        '_links':
+          type: object
+          readOnly: true
+          required:
+            - self
+          properties:
+            self:
+              description: Link to this author. Can be used to see the detail of this author.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://catalog.library.adhuc.org/api/v1/authors/99287cef-2c8c-4a4d-a82e-f1a8452dcfe2'
     AuthorId:
       type: string
       format: uuid
