@@ -53,7 +53,7 @@ class OpenApiValidationTests {
     })
     @DisplayName("allow accessing path specified in openapi endpoints")
     void knownPath(String acceptHeader) throws Exception {
-        mvc.perform(get("/api/v1/catalog").header("Accept", acceptHeader))
+        mvc.perform(get("/api/v1/catalog").accept(acceptHeader))
                 .andExpect(status().is2xxSuccessful());
     }
 
