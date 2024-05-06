@@ -1,6 +1,8 @@
 spring:
   application:
     name: catalog
+  jackson:
+    property-naming-strategy: SNAKE_CASE
 
 management:
   endpoints:
