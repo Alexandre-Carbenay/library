@@ -1,5 +1,7 @@
 package org.adhuc.library.catalog.adapter.rest.catalog;
 
+import net.jqwik.api.Arbitraries;
+import net.jqwik.api.Combinators;
 import org.adhuc.library.catalog.adapter.rest.PaginationSerializationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.RequestValidationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
@@ -31,6 +33,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toSet;
 import static net.jqwik.api.Arbitraries.integers;
 import static org.adhuc.library.catalog.books.BooksMother.books;
@@ -118,6 +122,158 @@ class CatalogControllerTests {
                 .flatMap(numberOfElements -> books().list().ofSize(numberOfElements)
                         .map(books -> Arguments.of(numberOfElements, books)))
                 .sampleStream().limit(5);
+    }
+
+    @ParameterizedTest
+    @MethodSource("defaultPageSizeProvider")
+    @DisplayName("provide a page with default page size when not specified explicitly")
+    void defaultPageSize(Page<Book> books) throws Exception {
+        when(catalogService.getPage(any())).thenReturn(books);
+
+        var result = mvc.perform(get("/api/v1/catalog").accept("application/hal+json")
+                        .param("page", String.valueOf(books.getNumber())))
+                .andExpect(status().isPartialContent())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("page.size", equalTo(books.getSize())))
+                .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(books.getTotalElements()).intValue())))
+                .andExpect(jsonPath("page.total_pages", equalTo(books.getTotalPages())))
+                .andExpect(jsonPath("page.number", equalTo(books.getNumber())))
+                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{books.getNumber()}&size=50")))
+                .andExpect(jsonPath("_embedded").exists());
+
+        assertResponseContainsAllBooks(result, books.toList());
+        assertResponseContainsAllBooksAuthors(result, books.toList());
+
+        verify(catalogService).getPage(pageableCaptor.capture());
+        var actual = pageableCaptor.getValue();
+        SoftAssertions.assertSoftly(s -> {
+            s.assertThat(actual.getPageNumber()).isEqualTo(books.getNumber());
+            s.assertThat(actual.getPageSize()).isEqualTo(50);
+        });
+    }
+
+    private static Stream<Arguments> defaultPageSizeProvider() {
+        return integers().between(0, 100)
+                .map(pageIndex -> pageSample(pageIndex, 50))
+                .map(Arguments::of)
+                .sampleStream().limit(5);
+    }
+
+    @ParameterizedTest
+    @MethodSource("pageProvider")
+    @DisplayName("provide a page corresponding to requested page and size")
+    void getPage(int pageNumber, int pageSize, Page<Book> books) throws Exception {
+        when(catalogService.getPage(any())).thenReturn(books);
+
+        var result = mvc.perform(get("/api/v1/catalog").accept("application/hal+json")
+                                .param("page", Integer.toString(pageNumber))
+                                .param("size", Integer.toString(pageSize))
+                ).andExpect(status().isPartialContent())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("page.size", equalTo(books.getSize())))
+                .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(books.getTotalElements()).intValue())))
+                .andExpect(jsonPath("page.total_pages", equalTo(books.getTotalPages())))
+                .andExpect(jsonPath("page.number", equalTo(pageNumber)))
+                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{pageNumber}&size=\{pageSize}")))
+                .andExpect(jsonPath("_embedded").exists());
+
+        assertResponseContainsAllBooks(result, books.toList());
+        assertResponseContainsAllBooksAuthors(result, books.toList());
+
+        verify(catalogService).getPage(pageableCaptor.capture());
+        var actual = pageableCaptor.getValue();
+        SoftAssertions.assertSoftly(s -> {
+            s.assertThat(actual.getPageNumber()).isEqualTo(books.getNumber());
+            s.assertThat(actual.getPageSize()).isEqualTo(books.getSize());
+        });
+    }
+
+    private static Stream<Arguments> pageProvider() {
+        return Combinators.combine(integers().between(0, 100), integers().between(2, 100))
+                .as((pageNumber, pageSize) -> Arguments.of(pageNumber, pageSize, pageSample(pageNumber, pageSize)))
+                .sampleStream().limit(5);
+    }
+
+    @ParameterizedTest(name = "[{index}] Page = {0}, size = {1}, first = {3}, prev = {4}, next = {5}, last = {6}")
+    @MethodSource({"uniquePagesProvider", "firstPagesProvider", "intermediatePagesProvider", "lastPagesProvider"})
+    @DisplayName("provide a page with navigation links")
+    void getPageWithNavigation(int pageNumber, int pageSize, Page<Book> books, boolean hasFirst,
+                               boolean hasPrev, boolean hasNext, boolean hasLast) throws Exception {
+        when(catalogService.getPage(any())).thenReturn(books);
+
+        var result = mvc.perform(get("/api/v1/catalog").accept("application/hal+json")
+                        .param("page", Integer.toString(pageNumber))
+                        .param("size", Integer.toString(pageSize)))
+                .andExpect(status().isPartialContent())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{pageNumber}&size=\{pageSize}")));
+
+        verifyNavigationLink(result, hasFirst, "first", STR."http://localhost/api/v1/catalog?page=0&size=\{pageSize}");
+        verifyNavigationLink(result, hasPrev, "prev", STR."http://localhost/api/v1/catalog?page=\{pageNumber - 1}&size=\{pageSize}");
+        verifyNavigationLink(result, hasNext, "next", STR."http://localhost/api/v1/catalog?page=\{pageNumber + 1}&size=\{pageSize}");
+        verifyNavigationLink(result, hasLast, "last", STR."http://localhost/api/v1/catalog?page=\{books.getTotalPages() - 1}&size=\{pageSize}");
+    }
+
+    static void verifyNavigationLink(ResultActions result, boolean hasLink, String linkName, String valueIfExists) throws Exception {
+        if (hasLink) {
+            result.andExpect(jsonPath(STR."_links.\{linkName}.href", equalTo(valueIfExists)));
+        } else {
+            result.andExpect(jsonPath(STR."_links.\{linkName}").doesNotExist());
+        }
+    }
+
+    static Stream<Arguments> uniquePagesProvider() {
+        return integers().between(2, 100)
+                .map(requestedPageSize -> lastPage(0, requestedPageSize))
+                .map(books -> Arguments.of(0, books.getPageable().getPageSize(), books, false, false, false, false))
+                .sampleStream().distinct().limit(3);
+    }
+
+    static Stream<Arguments> firstPagesProvider() {
+        return integers().between(2, 100)
+                .map(requestedPageSize -> fullPage(0, requestedPageSize))
+                .map(books -> Arguments.of(0, books.getPageable().getPageSize(), books, true, false, true, true))
+                .sampleStream().distinct().limit(3);
+    }
+
+    static Stream<Arguments> intermediatePagesProvider() {
+        return Combinators.combine(integers().between(1, 100), integers().between(2, 100))
+                .as(CatalogControllerTests::fullPage)
+                .map(books -> Arguments.of(books.getNumber(), books.getPageable().getPageSize(), books, true, true, true, true))
+                .sampleStream().distinct().limit(3);
+    }
+
+    static Stream<Arguments> lastPagesProvider() {
+        return Combinators.combine(integers().between(1, 100), integers().between(2, 100))
+                .as(CatalogControllerTests::lastPage)
+                .map(books -> Arguments.of(books.getNumber(), books.getPageable().getPageSize(), books, true, true, false, true))
+                .sampleStream().distinct().limit(3);
+    }
+
+    private static Page<Book> pageSample(int pageIndex, int requestedPageSize) {
+        var isLastPage = Arbitraries.of(TRUE, FALSE).sample();
+        if (isLastPage) {
+            return lastPage(pageIndex, requestedPageSize);
+        }
+        return fullPage(pageIndex, requestedPageSize);
+    }
+
+    private static PageImpl<Book> lastPage(int page, int requestedPageSize) {
+        int pageSize = integers().between(1, requestedPageSize).sample();
+        int totalRows = pageSize;
+        if (page > 0) {
+            totalRows += requestedPageSize * page;
+        }
+        var elements = books().list().ofSize(pageSize).sample();
+        return new PageImpl<>(elements, PageRequest.of(page, requestedPageSize), totalRows);
+    }
+
+    private static PageImpl<Book> fullPage(int page, int requestedPageSize) {
+        var totalPages = integers().between(page + 1, 150).sample();
+        var lastPageSize = integers().between(1, requestedPageSize - 1).sample();
+        var totalRows = totalPages * requestedPageSize + lastPageSize;
+        var elements = books().list().ofSize(requestedPageSize).sample();
+        return new PageImpl<>(elements, PageRequest.of(page, requestedPageSize), totalRows);
     }
 
     private void assertResponseContainsAllBooks(ResultActions result, List<Book> expected) throws Exception {

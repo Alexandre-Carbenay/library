@@ -25,6 +25,11 @@ dependencies {
 	testImplementation 'net.jqwik:jqwik:1.8.4'
 }
 
+tasks.withType(JavaCompile).configureEach {
+	options.compilerArgs.add('--enable-preview')
+	options.compilerArgs.add('-parameters')
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
