@@ -40,6 +40,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/BookDetails'
+        '404':
+          $ref: '#/components/responses/UnknownBook'
   /v1/authors/{id}:
     get:
       tags:
@@ -127,6 +129,21 @@ components:
         application/hal+json:
           schema:
             $ref: '#/components/schemas/AuthorDetails'
+    UnknownBook:
+      description: No book corresponds to the specified identity.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            unknown:
+              $ref: '#/components/examples/UnknownBook'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            unknown:
+              $ref: '#/components/examples/UnknownBook'
   schemas:
     Catalog:
       type: object
@@ -318,7 +335,9 @@ components:
       example: Du contrat social
     PublicationDate:
       type: string
-      format: date
+      description: |
+        The publication date can be either an exact date, in 'yyy-MM-dd' format,
+        or a year, either negative (BC) or positive (AD).
       example: 1762
     BookAuthors:
       type: array
@@ -458,3 +477,51 @@ components:
           type: number
           example: 2
           minimum: 0
+    Error:
+      type: object
+      required:
+        - timestamp
+        - status
+        - error
+        - description
+      properties:
+        timestamp:
+          type: string
+          description: The server timestamp when generating the error.
+          format: date-time
+        status:
+          type: integer
+          description: The HTTP status of the response.
+        error:
+          type: string
+          description: The error general code.
+        description:
+          type: string
+          description: The error specific description to help understanding and resolution.
+        details:
+          type: array
+          description: The error details, providing information about each problem.
+          items:
+            type: object
+            required:
+              - reason
+            properties:
+              reason:
+                type: string
+                description: The problem reason used to determine why the server returned an error.
+              pointer:
+                type: string
+                description: |
+                  A JSON pointer (https://datatracker.ietf.org/doc/html/rfc6901) to the associated entity in the request
+                  document (e.g. "/" for a primary object, "/name" for a specific attribute named "name").
+              parameter:
+                type: string
+                description: A string indicating which URI query parameter caused the error.
+  examples:
+    UnknownBook:
+      value:
+        timestamp: '2024-01-01T12:34:56'
+        status: 404
+        error: ENTITY_NOT_FOUND
+        description: No book exists with id 'e5c0f8ae-2092-4acb-92e4-0088870ddf43'
+      summary: Error when no book corresponds to the specified identity.

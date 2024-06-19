@@ -37,13 +37,13 @@ public class CatalogController {
     private final CatalogService catalogService;
 
     public CatalogController(PagedResourcesAssembler<Book> pageAssembler,
-                             CatalogService catalogService,
                              BookModelAssembler bookModelAssembler,
-                             AuthorModelAssembler authorModelAssembler) {
+                             AuthorModelAssembler authorModelAssembler,
+                             CatalogService catalogService) {
         this.pageAssembler = pageAssembler;
-        this.catalogService = catalogService;
         this.bookModelAssembler = bookModelAssembler;
         this.authorModelAssembler = authorModelAssembler;
+        this.catalogService = catalogService;
     }
 
     @GetMapping

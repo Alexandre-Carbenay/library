@@ -4,7 +4,13 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-public record Book(UUID id, String isbn, String title, Set<Author> authors, String language, String summary) {
+public record Book(UUID id,
+                   String isbn,
+                   String title,
+                   PublicationDate publicationDate,
+                   Set<Author> authors,
+                   String language,
+                   String summary) {
 
     @Override
     public boolean equals(Object o) {

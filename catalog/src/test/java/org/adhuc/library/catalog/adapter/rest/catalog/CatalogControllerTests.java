@@ -37,6 +37,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toSet;
 import static net.jqwik.api.Arbitraries.integers;
+import static org.adhuc.library.catalog.adapter.rest.AuthorsAssertions.assertResponseContainsAllEmbeddedAuthors;
 import static org.adhuc.library.catalog.books.BooksMother.books;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -298,20 +299,7 @@ class CatalogControllerTests {
 
     private void assertResponseContainsAllBooksAuthors(ResultActions result, Collection<Book> expectedBooks) throws Exception {
         var expectedAuthors = expectedBooks.stream().map(Book::authors).flatMap(Collection::stream).collect(toSet());
-        assertResponseContainsAllAuthors(result, expectedAuthors);
-    }
-
-    private void assertResponseContainsAllAuthors(ResultActions result, Collection<Author> expectedAuthors) throws Exception {
-        result.andExpect(jsonPath("_embedded.authors").exists())
-                .andExpect(jsonPath("_embedded.authors").isArray())
-                .andExpect(jsonPath("_embedded.authors", hasSize(expectedAuthors.size())));
-        for (var author : expectedAuthors) {
-            result.andExpect(jsonPath(
-                    "_embedded.authors.[" +
-                            "?(@.id == \"" + author.id() + "\" " +
-                            "&& @.name == \"" + author.name() + "\" " +
-                            "&& @._links.self.href == \"http://localhost/api/v1/authors/" + author.id() + "\")]").exists());
-        }
+        assertResponseContainsAllEmbeddedAuthors(result, expectedAuthors);
     }
 
 }
