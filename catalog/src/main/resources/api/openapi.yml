@@ -56,6 +56,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/AuthorDetails'
+        '404':
+          $ref: '#/components/responses/UnknownAuthor'
 components:
   parameters:
     BookId:
@@ -120,15 +122,6 @@ components:
         application/hal+json:
           schema:
             $ref: '#/components/schemas/BookDetails'
-    AuthorDetails:
-      description: An author details.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/AuthorDetails'
-        application/hal+json:
-          schema:
-            $ref: '#/components/schemas/AuthorDetails'
     UnknownBook:
       description: No book corresponds to the specified identity.
       content:
@@ -144,6 +137,30 @@ components:
           examples:
             unknown:
               $ref: '#/components/examples/UnknownBook'
+    AuthorDetails:
+      description: An author details.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthorDetails'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/AuthorDetails'
+    UnknownAuthor:
+      description: No author corresponds to the specified identity.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            unknown:
+              $ref: '#/components/examples/UnknownAuthor'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            unknown:
+              $ref: '#/components/examples/UnknownAuthor'
   schemas:
     Catalog:
       type: object
@@ -385,8 +402,6 @@ components:
           $ref: '#/components/schemas/DateOfBirth'
         date_of_death:
           $ref: '#/components/schemas/DateOfDeath'
-        notable_books:
-          $ref: '#/components/schemas/NotableBooks'
         '_links':
           type: object
           readOnly: true
@@ -406,7 +421,7 @@ components:
           type: object
           readOnly: true
           required:
-            - books
+            - notable_books
           properties:
             books:
               description: The author's books, containing basic information for each book.
@@ -525,3 +540,10 @@ components:
         error: ENTITY_NOT_FOUND
         description: No book exists with id 'e5c0f8ae-2092-4acb-92e4-0088870ddf43'
       summary: Error when no book corresponds to the specified identity.
+    UnknownAuthor:
+      value:
+        timestamp: '2024-01-01T12:34:56'
+        status: 404
+        error: ENTITY_NOT_FOUND
+        description: No author exists with id '96c7774f-dd6b-43d4-bd0e-6a7d1aad09a4'
+      summary: Error when no author corresponds to the specified identity.

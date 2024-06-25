@@ -1,7 +1,7 @@
 package org.adhuc.library.catalog.adapter.rest.books;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import org.adhuc.library.catalog.books.Author;
+import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.books.Book;
 import org.springframework.hateoas.RepresentationModel;
 

@@ -1,5 +1,7 @@
 package org.adhuc.library.catalog.books;
 
+import org.adhuc.library.catalog.authors.Author;
+
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;

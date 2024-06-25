@@ -2,7 +2,7 @@ package org.adhuc.library.catalog.adapter.rest.catalog;
 
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
-import org.adhuc.library.catalog.books.Author;
+import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.CatalogService;
 import org.springframework.data.domain.Page;

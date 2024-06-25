@@ -1,7 +1,6 @@
 package org.adhuc.library.catalog.adapter.rest.books;
 
 import net.jqwik.api.Arbitrary;
-import org.adhuc.library.catalog.adapter.rest.PaginationSerializationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.RequestValidationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.books.Book;
@@ -25,7 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static org.adhuc.library.catalog.adapter.rest.AuthorsAssertions.assertResponseContainsAllEmbeddedAuthors;
+import static org.adhuc.library.catalog.adapter.rest.authors.AuthorsAssertions.assertResponseContainsAllEmbeddedAuthors;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -38,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         BookDetailsModelAssembler.class,
         AuthorModelAssembler.class
 })
-@Import({RequestValidationConfiguration.class, PaginationSerializationConfiguration.class})
+@Import(RequestValidationConfiguration.class)
 @DisplayName("Books controller should")
 class BooksControllerTests {
 

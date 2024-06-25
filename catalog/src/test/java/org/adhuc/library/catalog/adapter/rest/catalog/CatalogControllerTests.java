@@ -6,7 +6,7 @@ import org.adhuc.library.catalog.adapter.rest.PaginationSerializationConfigurati
 import org.adhuc.library.catalog.adapter.rest.RequestValidationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
-import org.adhuc.library.catalog.books.Author;
+import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.CatalogService;
 import org.assertj.core.api.SoftAssertions;
@@ -37,7 +37,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toSet;
 import static net.jqwik.api.Arbitraries.integers;
-import static org.adhuc.library.catalog.adapter.rest.AuthorsAssertions.assertResponseContainsAllEmbeddedAuthors;
+import static org.adhuc.library.catalog.adapter.rest.authors.AuthorsAssertions.assertResponseContainsAllEmbeddedAuthors;
 import static org.adhuc.library.catalog.books.BooksMother.books;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;

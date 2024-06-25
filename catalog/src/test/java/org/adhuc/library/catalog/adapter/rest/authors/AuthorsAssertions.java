@@ -1,6 +1,6 @@
-package org.adhuc.library.catalog.adapter.rest;
+package org.adhuc.library.catalog.adapter.rest.authors;
 
-import org.adhuc.library.catalog.books.Author;
+import org.adhuc.library.catalog.authors.Author;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Collection;

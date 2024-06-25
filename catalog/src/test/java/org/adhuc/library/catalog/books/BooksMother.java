@@ -3,6 +3,8 @@ package org.adhuc.library.catalog.books;
 import net.jqwik.api.Arbitraries;
 import net.jqwik.api.Arbitrary;
 import net.jqwik.api.Combinators;
+import org.adhuc.library.catalog.authors.Author;
+import org.adhuc.library.catalog.authors.AuthorsMother;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -66,7 +68,7 @@ public final class BooksMother {
         }
 
         public static Arbitrary<Author> authors() {
-            return BooksMother.authors();
+            return AuthorsMother.authors();
         }
 
         public static Arbitrary<String> languages() {
@@ -75,21 +77,6 @@ public final class BooksMother {
 
         public static Arbitrary<String> summaries() {
             return strings().alpha().numeric().withChars(" ,;.?!:-()[]{}&\"'àéèïöù").ofMinLength(30)
-                    .filter(s -> !s.isBlank());
-        }
-    }
-
-    public static Arbitrary<Author> authors() {
-        return Combinators.combine(Authors.ids(), Authors.names()).as(Author::new);
-    }
-
-    public static final class Authors {
-        public static Arbitrary<UUID> ids() {
-            return Arbitraries.create(UUID::randomUUID);
-        }
-
-        public static Arbitrary<String> names() {
-            return strings().alpha().withChars(' ').ofMinLength(3).ofMaxLength(100)
                     .filter(s -> !s.isBlank());
         }
     }

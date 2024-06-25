@@ -1,10 +1,10 @@
 package org.adhuc.library.catalog.adapter.rest.books;
 
+import org.adhuc.library.catalog.adapter.rest.Error;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksService;
 import org.springframework.hateoas.LinkRelation;
-import org.springframework.hateoas.mediatype.hal.HalModelBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +15,7 @@ import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
+import static org.springframework.hateoas.mediatype.hal.HalModelBuilder.halModelOf;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -47,8 +48,7 @@ public class BooksController {
         var bookDetails = bookModelAssembler.toModel(book);
         var authors = authorModelAssembler.toCollectionModel(book.authors()).getContent();
         return ResponseEntity.status(OK)
-                .body(HalModelBuilder
-                        .halModelOf(bookDetails)
+                .body(halModelOf(bookDetails)
                         .links(bookDetails.getLinks())
                         .embed(authors, LinkRelation.of("authors"))
                         .build()
@@ -63,9 +63,6 @@ public class BooksController {
                         "ENTITY_NOT_FOUND",
                         STR."No book exists with id '\{id}'"
                 ));
-    }
-
-    record Error(ZonedDateTime timestamp, int status, String error, String description) {
     }
 
 }
