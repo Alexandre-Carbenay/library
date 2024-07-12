@@ -1,4 +1,4 @@
-package org.adhuc.library.catalog.adapter.rest;
+package org.adhuc.library.catalog.adapter.rest.support.validation.openapi;
 
 import com.atlassian.oai.validator.OpenApiInteractionValidator;
 import com.atlassian.oai.validator.report.LevelResolverFactory;

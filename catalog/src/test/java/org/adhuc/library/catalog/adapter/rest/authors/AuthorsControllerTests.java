@@ -1,6 +1,6 @@
 package org.adhuc.library.catalog.adapter.rest.authors;
 
-import org.adhuc.library.catalog.adapter.rest.RequestValidationConfiguration;
+import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.authors.AuthorsService;
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -44,6 +45,23 @@ class AuthorsControllerTests {
     private MockMvc mvc;
     @MockBean
     private AuthorsService authorsService;
+
+    @ParameterizedTest
+    @ValueSource(strings = {"123", "invalid"})
+    @DisplayName("refuse providing an author with invalid ID")
+    void invalidAuthorId(String invalidId) throws Exception {
+        mvc.perform(get("/api/v1/authors/{id}", invalidId).accept("application/hal+json"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("status", equalTo(400)))
+                .andExpect(jsonPath("error", equalTo("INVALID_REQUEST")))
+                .andExpect(jsonPath("description", equalTo("Request validation error")))
+                .andExpect(jsonPath("sources").isArray())
+                .andExpect(jsonPath("sources", hasSize(1)))
+                .andExpect(jsonPath("sources[0].reason",
+                        equalTo(STR."Input string \"\{invalidId}\" is not a valid UUID")))
+                .andExpect(jsonPath("sources[0].parameter", equalTo("id")));
+    }
 
     @Test
     @DisplayName("not find an author corresponding to an unknown ID")

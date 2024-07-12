@@ -1,7 +1,7 @@
 package org.adhuc.library.catalog.adapter.rest.books;
 
 import net.jqwik.api.Arbitrary;
-import org.adhuc.library.catalog.adapter.rest.RequestValidationConfiguration;
+import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksMother;
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -45,6 +46,23 @@ class BooksControllerTests {
     private MockMvc mvc;
     @MockBean
     private BooksService booksService;
+
+    @ParameterizedTest
+    @ValueSource(strings = {"123", "invalid"})
+    @DisplayName("refuse providing a book with invalid ID")
+    void invalidBookId(String invalidId) throws Exception {
+        mvc.perform(get("/api/v1/books/{id}", invalidId).accept("application/hal+json"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("status", equalTo(400)))
+                .andExpect(jsonPath("error", equalTo("INVALID_REQUEST")))
+                .andExpect(jsonPath("description", equalTo("Request validation error")))
+                .andExpect(jsonPath("sources").isArray())
+                .andExpect(jsonPath("sources", hasSize(1)))
+                .andExpect(jsonPath("sources[0].reason",
+                        equalTo(STR."Input string \"\{invalidId}\" is not a valid UUID")))
+                .andExpect(jsonPath("sources[0].parameter", equalTo("id")));
+    }
 
     @Test
     @DisplayName("not find a book corresponding to an unknown ID")

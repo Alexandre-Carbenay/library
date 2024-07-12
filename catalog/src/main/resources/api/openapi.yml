@@ -26,6 +26,8 @@ paths:
       responses:
         '206':
           $ref: '#/components/responses/Catalog'
+        '400':
+          $ref: '#/components/responses/InvalidPaginationParameters'
   /v1/books/{id}:
     get:
       tags:
@@ -40,6 +42,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/BookDetails'
+        '400':
+          $ref: '#/components/responses/InvalidBookId'
         '404':
           $ref: '#/components/responses/UnknownBook'
   /v1/authors/{id}:
@@ -56,6 +60,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/AuthorDetails'
+        '400':
+          $ref: '#/components/responses/InvalidAuthorId'
         '404':
           $ref: '#/components/responses/UnknownAuthor'
 components:
@@ -122,6 +128,15 @@ components:
         application/hal+json:
           schema:
             $ref: '#/components/schemas/BookDetails'
+    InvalidBookId:
+      description: Invalid book ID.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            invalidId:
+              $ref: '#/components/examples/InvalidUUIDId'
     UnknownBook:
       description: No book corresponds to the specified identity.
       content:
@@ -146,6 +161,15 @@ components:
         application/hal+json:
           schema:
             $ref: '#/components/schemas/AuthorDetails'
+    InvalidAuthorId:
+      description: Invalid author ID.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            invalidId:
+              $ref: '#/components/examples/InvalidUUIDId'
     UnknownAuthor:
       description: No author corresponds to the specified identity.
       content:
@@ -161,6 +185,17 @@ components:
           examples:
             unknown:
               $ref: '#/components/examples/UnknownAuthor'
+    InvalidPaginationParameters:
+      description: Invalid pagination parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            pageNumber:
+              $ref: '#/components/examples/InvalidPageNumber'
+            pageSize:
+              $ref: '#/components/examples/InvalidPageSize'
   schemas:
     Catalog:
       type: object
@@ -443,10 +478,6 @@ components:
       type: string
       format: date
       example: 1778-07-02
-    NotableBooks:
-      type: array
-      items:
-        $ref: '#/components/schemas/BookId'
     Language:
       type: string
       example: French
@@ -513,26 +544,66 @@ components:
         description:
           type: string
           description: The error specific description to help understanding and resolution.
-        details:
+        sources:
           type: array
-          description: The error details, providing information about each problem.
+          description: The error sources, providing information about each problem.
           items:
-            type: object
-            required:
-              - reason
-            properties:
-              reason:
-                type: string
-                description: The problem reason used to determine why the server returned an error.
-              pointer:
-                type: string
-                description: |
-                  A JSON pointer (https://datatracker.ietf.org/doc/html/rfc6901) to the associated entity in the request
-                  document (e.g. "/" for a primary object, "/name" for a specific attribute named "name").
-              parameter:
-                type: string
-                description: A string indicating which URI query parameter caused the error.
+            oneOf:
+              - type: object
+                required:
+                  - reason
+                  - pointer
+                properties:
+                  reason:
+                    type: string
+                    description: The problem reason used to determine why the server returned an error.
+                  pointer:
+                    type: string
+                    description: |
+                      A JSON pointer (https://datatracker.ietf.org/doc/html/rfc6901) to the associated entity in the request
+                      document (e.g. "/" for a primary object, "/name" for a specific attribute named "name").
+              - type: object
+                required:
+                  - reason
+                  - parameter
+                properties:
+                  reason:
+                    type: string
+                    description: The problem reason used to determine why the server returned an error.
+                  parameter:
+                    type: string
+                    description: A string indicating which URI query parameter caused the error.
   examples:
+    InvalidPageNumber:
+      value:
+        timestamp: '2024-01-01T12:34:56'
+        status: 400
+        error: INVALID_REQUEST
+        description: Request validation error
+        sources:
+          - reason: 'Numeric instance is lower than the required minimum (minimum: 0, found: -1)'
+            parameter: page
+      summary: Invalid page number.
+    InvalidPageSize:
+      value:
+        timestamp: '2024-01-01T12:34:56'
+        status: 400
+        error: INVALID_REQUEST
+        description: Request validation error
+        sources:
+          - reason: 'Numeric instance is lower than the required minimum (minimum: 1, found: 0)'
+            parameter: size
+      summary: Invalid page size.
+    InvalidUUIDId:
+      value:
+        timestamp: '2024-01-01T12:34:56'
+        status: 400
+        error: INVALID_REQUEST
+        description: Request validation error
+        sources:
+          - reason: 'Input string "1234" is not a valid UUID'
+            parameter: id
+      summary: Invalid UUID passed as id in the path.
     UnknownBook:
       value:
         timestamp: '2024-01-01T12:34:56'

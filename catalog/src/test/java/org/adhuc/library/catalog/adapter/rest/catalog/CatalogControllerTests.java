@@ -3,7 +3,7 @@ package org.adhuc.library.catalog.adapter.rest.catalog;
 import net.jqwik.api.Arbitraries;
 import net.jqwik.api.Combinators;
 import org.adhuc.library.catalog.adapter.rest.PaginationSerializationConfiguration;
-import org.adhuc.library.catalog.adapter.rest.RequestValidationConfiguration;
+import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
 import org.adhuc.library.catalog.authors.Author;
@@ -14,7 +14,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SuppressWarnings("unused")
 @WebMvcTest(controllers = {CatalogController.class, BookModelAssembler.class, AuthorModelAssembler.class})
 @Import({RequestValidationConfiguration.class, PaginationSerializationConfiguration.class})
 @DisplayName("Catalog controller should")
@@ -132,7 +135,7 @@ class CatalogControllerTests {
         when(catalogService.getPage(any())).thenReturn(books);
 
         var result = mvc.perform(get("/api/v1/catalog").accept("application/hal+json")
-                        .param("page", String.valueOf(books.getNumber())))
+                        .queryParam("page", String.valueOf(books.getNumber())))
                 .andExpect(status().isPartialContent())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("page.size", equalTo(books.getSize())))
@@ -161,14 +164,72 @@ class CatalogControllerTests {
     }
 
     @ParameterizedTest
+    @ValueSource(strings = {"-50", "-2", "-1"})
+    @DisplayName("refuse providing a page with a negative page number")
+    void getInvalidPageNumber(String pageNumber) throws Exception {
+        mvc.perform(get("/api/v1/catalog").accept("application/hal+json")
+                        .queryParam("page", pageNumber)
+                ).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("status", equalTo(400)))
+                .andExpect(jsonPath("error", equalTo("INVALID_REQUEST")))
+                .andExpect(jsonPath("description", equalTo("Request validation error")))
+                .andExpect(jsonPath("sources").isArray())
+                .andExpect(jsonPath("sources", hasSize(1)))
+                .andExpect(jsonPath("sources[0].reason",
+                        equalTo(STR."Numeric instance is lower than the required minimum (minimum: 0, found: \{pageNumber})")))
+                .andExpect(jsonPath("sources[0].parameter", equalTo("page")));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"-50", "-1", "0"})
+    @DisplayName("refuse providing a page with a negative page size")
+    void getInvalidPageSize(String pageSize) throws Exception {
+        mvc.perform(get("/api/v1/catalog").accept("application/hal+json")
+                        .queryParam("size", pageSize)
+                ).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("status", equalTo(400)))
+                .andExpect(jsonPath("error", equalTo("INVALID_REQUEST")))
+                .andExpect(jsonPath("description", equalTo("Request validation error")))
+                .andExpect(jsonPath("sources").isArray())
+                .andExpect(jsonPath("sources", hasSize(1)))
+                .andExpect(jsonPath("sources[0].reason",
+                        equalTo(STR."Numeric instance is lower than the required minimum (minimum: 1, found: \{pageSize})")))
+                .andExpect(jsonPath("sources[0].parameter", equalTo("size")));
+    }
+
+    @ParameterizedTest
+    @CsvSource({"-50,-1", "-2,-50", "-1,0"})
+    @DisplayName("refuse providing a page with a negative page number")
+    void getInvalidPageNumberAndSize(String pageNumber, String pageSize) throws Exception {
+        mvc.perform(get("/api/v1/catalog").accept("application/hal+json")
+                        .queryParam("page", pageNumber)
+                        .queryParam("size", pageSize)
+                ).andExpect(status().isBadRequest())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("status", equalTo(400)))
+                .andExpect(jsonPath("error", equalTo("INVALID_REQUEST")))
+                .andExpect(jsonPath("description", equalTo("Request validation error")))
+                .andExpect(jsonPath("sources").isArray())
+                .andExpect(jsonPath("sources", hasSize(2)))
+                .andExpect(jsonPath("sources[0].reason",
+                        equalTo(STR."Numeric instance is lower than the required minimum (minimum: 0, found: \{pageNumber})")))
+                .andExpect(jsonPath("sources[0].parameter", equalTo("page")))
+                .andExpect(jsonPath("sources[1].reason",
+                        equalTo(STR."Numeric instance is lower than the required minimum (minimum: 1, found: \{pageSize})")))
+                .andExpect(jsonPath("sources[1].parameter", equalTo("size")));
+    }
+
+    @ParameterizedTest
     @MethodSource("pageProvider")
     @DisplayName("provide a page corresponding to requested page and size")
     void getPage(int pageNumber, int pageSize, Page<Book> books) throws Exception {
         when(catalogService.getPage(any())).thenReturn(books);
 
         var result = mvc.perform(get("/api/v1/catalog").accept("application/hal+json")
-                                .param("page", Integer.toString(pageNumber))
-                                .param("size", Integer.toString(pageSize))
+                        .queryParam("page", Integer.toString(pageNumber))
+                        .queryParam("size", Integer.toString(pageSize))
                 ).andExpect(status().isPartialContent())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("page.size", equalTo(books.getSize())))
@@ -203,8 +264,8 @@ class CatalogControllerTests {
         when(catalogService.getPage(any())).thenReturn(books);
 
         var result = mvc.perform(get("/api/v1/catalog").accept("application/hal+json")
-                        .param("page", Integer.toString(pageNumber))
-                        .param("size", Integer.toString(pageSize)))
+                        .queryParam("page", Integer.toString(pageNumber))
+                        .queryParam("size", Integer.toString(pageSize)))
                 .andExpect(status().isPartialContent())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{pageNumber}&size=\{pageSize}")));
