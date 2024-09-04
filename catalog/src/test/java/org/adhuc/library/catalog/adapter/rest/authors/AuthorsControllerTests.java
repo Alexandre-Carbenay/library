@@ -1,9 +1,11 @@
 package org.adhuc.library.catalog.adapter.rest.authors;
 
-import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
+import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.authors.AuthorsService;
+import org.adhuc.library.catalog.books.Book;
+import org.adhuc.library.catalog.books.BooksService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,14 +19,16 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.adhuc.library.catalog.adapter.rest.books.BooksAssertions.assertResponseContainsAllEmbeddedBooks;
 import static org.adhuc.library.catalog.authors.AuthorsMother.Authors.*;
+import static org.adhuc.library.catalog.authors.AuthorsMother.authors;
 import static org.adhuc.library.catalog.authors.AuthorsMother.builder;
-import static org.adhuc.library.catalog.books.BooksMother.books;
+import static org.adhuc.library.catalog.books.BooksMother.notableBooksOf;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,6 +49,8 @@ class AuthorsControllerTests {
     private MockMvc mvc;
     @MockBean
     private AuthorsService authorsService;
+    @MockBean
+    private BooksService booksService;
 
     @ParameterizedTest
     @ValueSource(strings = {"123", "invalid"})
@@ -82,11 +88,12 @@ class AuthorsControllerTests {
     @MethodSource({
             "aliveAuthorProvider",
             "deadAuthorProvider",
-            "authorWithNoNotableBookProvider"
+            "authorWithNotableBookProvider"
     })
     @DisplayName("provide the author details corresponding to the ID")
-    void knownAuthorId(Author author) throws Exception {
+    void knownAuthorId(Author author, List<Book> notableBooks) throws Exception {
         when(authorsService.getAuthor(Mockito.any())).thenReturn(Optional.of(author));
+        when(booksService.getNotableBooks(author.id())).thenReturn(notableBooks);
 
         var result = mvc.perform(get("/api/v1/authors/{id}", author.id()).accept("application/hal+json"))
                 .andExpect(status().isOk())
@@ -100,7 +107,7 @@ class AuthorsControllerTests {
             result.andExpect(jsonPath("date_of_death").doesNotExist());
         }
 
-        assertResponseContainsAllEmbeddedBooks(result, "notable_books", author.notableBooks());
+        assertResponseContainsAllEmbeddedBooks(result, "notable_books", notableBooks);
 
         verify(authorsService).getAuthor(author.id());
     }
@@ -108,7 +115,7 @@ class AuthorsControllerTests {
     static Stream<Arguments> aliveAuthorProvider() {
         return aliveDatesOfBirth()
                 .map(dateOfBirth -> builder().dateOfBirth(dateOfBirth).dateOfDeath(null).build())
-                .map(Arguments::of)
+                .map(author -> Arguments.of(author, List.of()))
                 .sampleStream().limit(3);
     }
 
@@ -116,14 +123,14 @@ class AuthorsControllerTests {
         return deadDatesOfBirth()
                 .flatMap(dateOfBirth -> deadDatesOfDeath(dateOfBirth)
                         .map(dateOfDeath -> builder().dateOfBirth(dateOfBirth).dateOfDeath(dateOfDeath).build()))
-                .map(Arguments::of)
+                .map(author -> Arguments.of(author, List.of()))
                 .sampleStream().limit(3);
     }
 
-    static Stream<Arguments> authorWithNoNotableBookProvider() {
-        return books().list().ofMinSize(1).ofMaxSize(10)
-                .map(notableBooks -> builder().notableBooks(notableBooks).build())
-                .map(Arguments::of)
+    static Stream<Arguments> authorWithNotableBookProvider() {
+        return authors().flatMap(author -> notableBooksOf(author.id()).list().ofMinSize(1).ofMaxSize(10)
+                        .map(notableBooks -> Arguments.of(author, notableBooks))
+                )
                 .sampleStream().limit(3);
     }
 

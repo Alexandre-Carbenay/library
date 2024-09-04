@@ -3,10 +3,8 @@ package org.adhuc.library.catalog.authors;
 import net.jqwik.api.Arbitraries;
 import net.jqwik.api.Arbitrary;
 import net.jqwik.api.Combinators;
-import org.adhuc.library.catalog.books.Book;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 import static java.time.LocalDate.now;
@@ -19,7 +17,7 @@ public class AuthorsMother {
     public static Arbitrary<Author> authors() {
         return Combinators.combine(Authors.ids(), Authors.names(), Authors.datesOfBirth())
                 .flatAs((id, name, dateOfBirth) -> Authors.datesOfDeath(dateOfBirth)
-                        .map(dateOfDeath -> new Author(id, name, dateOfBirth, dateOfDeath, List.of())));
+                        .map(dateOfDeath -> new Author(id, name, dateOfBirth, dateOfDeath)));
     }
 
     public static AuthorBuilder builder() {
@@ -70,27 +68,22 @@ public class AuthorsMother {
         private Author author = authors().sample();
 
         public AuthorBuilder id(UUID id) {
-            author = new Author(id, author.name(), author.dateOfBirth(), author.dateOfDeath(), author.notableBooks());
+            author = new Author(id, author.name(), author.dateOfBirth(), author.dateOfDeath());
             return this;
         }
 
         public AuthorBuilder name(String name) {
-            author = new Author(author.id(), name, author.dateOfBirth(), author.dateOfDeath(), author.notableBooks());
+            author = new Author(author.id(), name, author.dateOfBirth(), author.dateOfDeath());
             return this;
         }
 
         public AuthorBuilder dateOfBirth(LocalDate dateOfBirth) {
-            author = new Author(author.id(), author.name(), dateOfBirth, author.dateOfDeath(), author.notableBooks());
+            author = new Author(author.id(), author.name(), dateOfBirth, author.dateOfDeath());
             return this;
         }
 
         public AuthorBuilder dateOfDeath(LocalDate dateOfDeath) {
-            author = new Author(author.id(), author.name(), author.dateOfBirth(), dateOfDeath, author.notableBooks());
-            return this;
-        }
-
-        public AuthorBuilder notableBooks(List<Book> notableBooks) {
-            author = new Author(author.id(), author.name(), author.dateOfBirth(), author.dateOfDeath(), notableBooks);
+            author = new Author(author.id(), author.name(), author.dateOfBirth(), dateOfDeath);
             return this;
         }
 

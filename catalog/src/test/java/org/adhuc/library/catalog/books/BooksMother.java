@@ -23,7 +23,19 @@ public final class BooksMother {
                 Books.isbns(),
                 Books.titles(),
                 Books.publicationDates(),
-                Books.authors().set().ofMinSize(1).ofMaxSize(4),
+                Books.authors(),
+                Books.languages(),
+                Books.summaries()
+        ).as(Book::new);
+    }
+
+    public static Arbitrary<Book> notableBooksOf(UUID authorId) {
+        return Combinators.combine(
+                Books.ids(),
+                Books.isbns(),
+                Books.titles(),
+                Books.publicationDates(),
+                Books.authoredWith(authorId),
                 Books.languages(),
                 Books.summaries()
         ).as(Book::new);
@@ -67,8 +79,18 @@ public final class BooksMother {
             return integers().between(-1000, -1).map(PublicationDate::of);
         }
 
-        public static Arbitrary<Author> authors() {
-            return AuthorsMother.authors();
+        public static Arbitrary<Set<Author>> authors() {
+            return AuthorsMother.authors().set().ofMinSize(1).ofMaxSize(4);
+        }
+
+        public static Arbitrary<Set<Author>> authoredWith(UUID authorId) {
+            return Combinators.combine(
+                    Arbitraries.create(() -> AuthorsMother.builder().id(authorId).build()),
+                    AuthorsMother.authors().set().ofMinSize(0).ofMaxSize(3)
+            ).as((author, others) -> {
+                others.add(author);
+                return others;
+            });
         }
 
         public static Arbitrary<String> languages() {
