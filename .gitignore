@@ -36,3 +36,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Structurizr
+doc/architecture/c4/workspace.json
+doc/architecture/c4/.structurizr

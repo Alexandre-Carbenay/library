@@ -1,0 +1,47 @@
+name: C4 diagrams generation
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'doc/architecture/c4/workspace.dsl'
+      - 'doc/architecture/util/structurizr/**'
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    branches:
+      - 'main'
+    paths:
+      - 'doc/architecture/c4/workspace.dsl'
+      - 'doc/architecture/util/structurizr/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout project sources
+        uses: actions/checkout@v4
+
+      - name: Extract branch name
+        id: extract_branch
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
+      - name: Export C4 diagrams from Structurizr DSL
+        run: make structurizr
+        timeout-minutes: 5
+
+      - run: git status
+
+      - name: Commit & Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'doc: Update C4 diagrams'
+          branch: ${{ steps.extract_branch.outputs.branch }}

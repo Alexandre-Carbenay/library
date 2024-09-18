@@ -1,0 +1,32 @@
+services:
+  structurizr-lite:
+    container_name: structurizr
+    image: structurizr/lite
+    ports:
+      - 8080:8080
+    healthcheck:
+      test: "curl -s http://localhost:8080/workspace/diagrams"
+    volumes:
+      - ../../architecture/c4:/usr/local/structurizr
+  c4-exporter:
+    container_name: c4-exporter
+    build:
+      dockerfile_inline: |
+        FROM node:hydrogen-slim
+        RUN apt-get update \
+          && apt-get install -y wget gnupg \
+          && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
+          && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+          && apt-get update \
+          && apt-get install -y google-chrome-stable --no-install-recommends \
+          && rm -rf /var/lib/apt/lists/*
+        ENV PUPPETEER_SKIP_DOWNLOAD true
+        RUN npm install --prefix /home/node puppeteer
+        COPY export-diagrams.js /home/node
+        CMD /bin/sh -c "node export-diagrams.js http://structurizr-lite:8080/workspace/diagrams"
+    working_dir: /home/node
+    depends_on:
+      structurizr-lite:
+        condition: service_healthy
+    volumes:
+      - ../../architecture/c4:/home/node/export:rw
