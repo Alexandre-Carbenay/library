@@ -30,7 +30,7 @@ dependencies {
 	implementation 'org.springframework.modulith:spring-modulith-starter-insight'
 	implementation 'org.jmolecules:jmolecules-ddd'
 	implementation 'org.jmolecules:jmolecules-onion-architecture'
-	implementation 'com.atlassian.oai:swagger-request-validator-spring-webmvc:2.40.0'
+	implementation 'com.atlassian.oai:swagger-request-validator-spring-webmvc:2.42.0'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
