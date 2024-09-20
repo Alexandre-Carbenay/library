@@ -1,11 +1,5 @@
 name: C4 diagrams generation
 on:
-  push:
-    branches:
-      - 'main'
-    paths:
-      - 'doc/architecture/c4/workspace.dsl'
-      - 'doc/architecture/util/structurizr/**'
   pull_request:
     types:
       - opened
