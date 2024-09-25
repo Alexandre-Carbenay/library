@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'org.adhuc.library'
-version = '0.0.1-SNAPSHOT'
+version = '1'
 
 java {
 	sourceCompatibility = '21'
