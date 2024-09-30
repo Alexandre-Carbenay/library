@@ -1,17 +1,17 @@
 package org.adhuc.library.catalog.adapter.rest.books;
 
-import org.adhuc.library.catalog.adapter.rest.Error;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksService;
 import org.springframework.hateoas.LinkRelation;
+import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.ZonedDateTime;
+import java.net.URI;
 import java.util.UUID;
 
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
@@ -19,6 +19,7 @@ import static org.springframework.hateoas.mediatype.hal.HalModelBuilder.halModel
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 
 @RestController
 @RequestMapping(path = "/api/v1/books", produces = {APPLICATION_JSON_VALUE, HAL_JSON_VALUE})
@@ -55,14 +56,14 @@ public class BooksController {
                 );
     }
 
-    private ResponseEntity<Error> prepareNotFoundResponse(UUID id) {
-        return ResponseEntity.status(NOT_FOUND)
-                .body(new Error(
-                        ZonedDateTime.now(),
-                        404,
-                        "ENTITY_NOT_FOUND",
-                        STR."No book exists with id '\{id}'"
-                ));
+    private ResponseEntity<Problem> prepareNotFoundResponse(UUID id) {
+        return ResponseEntity.status(NOT_FOUND).contentType(APPLICATION_PROBLEM_JSON)
+                .body(Problem.create()
+                        .withType(URI.create("/problems/unknown-book"))
+                        .withStatus(NOT_FOUND)
+                        .withTitle("Unknown book")
+                        .withDetail(STR."No book exists with id '\{id}'")
+                );
     }
 
 }

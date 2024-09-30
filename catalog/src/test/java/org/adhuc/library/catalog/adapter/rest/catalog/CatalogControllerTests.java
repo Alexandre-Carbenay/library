@@ -27,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -170,15 +171,15 @@ class CatalogControllerTests {
         mvc.perform(get("/api/v1/catalog").accept("application/hal+json")
                         .queryParam("page", pageNumber)
                 ).andExpect(status().isBadRequest())
-                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
                 .andExpect(jsonPath("status", equalTo(400)))
-                .andExpect(jsonPath("error", equalTo("INVALID_REQUEST")))
-                .andExpect(jsonPath("description", equalTo("Request validation error")))
-                .andExpect(jsonPath("sources").isArray())
-                .andExpect(jsonPath("sources", hasSize(1)))
-                .andExpect(jsonPath("sources[0].reason",
-                        equalTo(STR."Numeric instance is lower than the required minimum (minimum: 0, found: \{pageNumber})")))
-                .andExpect(jsonPath("sources[0].parameter", equalTo("page")));
+                .andExpect(jsonPath("title", equalTo("Request validation error")))
+                .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                .andExpect(jsonPath("errors").isArray())
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors[0].detail", equalTo(STR."Numeric instance is lower than the required minimum (minimum: 0, found: \{pageNumber})")))
+                .andExpect(jsonPath("errors[0].parameter", equalTo("page")));
     }
 
     @ParameterizedTest
@@ -188,15 +189,16 @@ class CatalogControllerTests {
         mvc.perform(get("/api/v1/catalog").accept("application/hal+json")
                         .queryParam("size", pageSize)
                 ).andExpect(status().isBadRequest())
-                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
                 .andExpect(jsonPath("status", equalTo(400)))
-                .andExpect(jsonPath("error", equalTo("INVALID_REQUEST")))
-                .andExpect(jsonPath("description", equalTo("Request validation error")))
-                .andExpect(jsonPath("sources").isArray())
-                .andExpect(jsonPath("sources", hasSize(1)))
-                .andExpect(jsonPath("sources[0].reason",
+                .andExpect(jsonPath("title", equalTo("Request validation error")))
+                .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                .andExpect(jsonPath("errors").isArray())
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors[0].detail",
                         equalTo(STR."Numeric instance is lower than the required minimum (minimum: 1, found: \{pageSize})")))
-                .andExpect(jsonPath("sources[0].parameter", equalTo("size")));
+                .andExpect(jsonPath("errors[0].parameter", equalTo("size")));
     }
 
     @ParameterizedTest
@@ -207,18 +209,19 @@ class CatalogControllerTests {
                         .queryParam("page", pageNumber)
                         .queryParam("size", pageSize)
                 ).andExpect(status().isBadRequest())
-                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
                 .andExpect(jsonPath("status", equalTo(400)))
-                .andExpect(jsonPath("error", equalTo("INVALID_REQUEST")))
-                .andExpect(jsonPath("description", equalTo("Request validation error")))
-                .andExpect(jsonPath("sources").isArray())
-                .andExpect(jsonPath("sources", hasSize(2)))
-                .andExpect(jsonPath("sources[0].reason",
+                .andExpect(jsonPath("title", equalTo("Request validation error")))
+                .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                .andExpect(jsonPath("errors").isArray())
+                .andExpect(jsonPath("errors", hasSize(2)))
+                .andExpect(jsonPath("errors[0].detail",
                         equalTo(STR."Numeric instance is lower than the required minimum (minimum: 0, found: \{pageNumber})")))
-                .andExpect(jsonPath("sources[0].parameter", equalTo("page")))
-                .andExpect(jsonPath("sources[1].reason",
+                .andExpect(jsonPath("errors[0].parameter", equalTo("page")))
+                .andExpect(jsonPath("errors[1].detail",
                         equalTo(STR."Numeric instance is lower than the required minimum (minimum: 1, found: \{pageSize})")))
-                .andExpect(jsonPath("sources[1].parameter", equalTo("size")));
+                .andExpect(jsonPath("errors[1].parameter", equalTo("size")));
     }
 
     @ParameterizedTest

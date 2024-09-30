@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -33,8 +34,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = {
         AuthorsController.class,
@@ -58,15 +58,16 @@ class AuthorsControllerTests {
     void invalidAuthorId(String invalidId) throws Exception {
         mvc.perform(get("/api/v1/authors/{id}", invalidId).accept("application/hal+json"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
                 .andExpect(jsonPath("status", equalTo(400)))
-                .andExpect(jsonPath("error", equalTo("INVALID_REQUEST")))
-                .andExpect(jsonPath("description", equalTo("Request validation error")))
-                .andExpect(jsonPath("sources").isArray())
-                .andExpect(jsonPath("sources", hasSize(1)))
-                .andExpect(jsonPath("sources[0].reason",
+                .andExpect(jsonPath("title", equalTo("Request validation error")))
+                .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                .andExpect(jsonPath("errors").isArray())
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors[0].detail",
                         equalTo(STR."Input string \"\{invalidId}\" is not a valid UUID")))
-                .andExpect(jsonPath("sources[0].parameter", equalTo("id")));
+                .andExpect(jsonPath("errors[0].parameter", equalTo("id")));
     }
 
     @Test
@@ -75,10 +76,11 @@ class AuthorsControllerTests {
         var unknownId = UUID.randomUUID();
         mvc.perform(get("/api/v1/authors/{id}", unknownId).accept("application/hal+json"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("type", equalTo("/problems/unknown-author")))
                 .andExpect(jsonPath("status", equalTo(404)))
-                .andExpect(jsonPath("error", equalTo("ENTITY_NOT_FOUND")))
-                .andExpect(jsonPath("description", allOf(
+                .andExpect(jsonPath("title", equalTo("Unknown author")))
+                .andExpect(jsonPath("detail", allOf(
                         startsWith("No author exists with id"),
                         containsString(unknownId.toString()))
                 ));
