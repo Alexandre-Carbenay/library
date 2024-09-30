@@ -5,7 +5,7 @@ on:
       - 'main'
     paths:
       - 'catalog/**'
-      - '.github/workflows/ci-catalog.yml'
+      - '.github/workflows/cd-catalog.yml'
       - '!**/README.md'
   pull_request:
     types:
@@ -16,7 +16,7 @@ on:
       - 'main'
     paths:
       - 'catalog/**'
-      - '.github/workflows/ci-catalog.yml'
+      - '.github/workflows/cd-catalog.yml'
       - '!**/README.md'
   workflow_dispatch:
 

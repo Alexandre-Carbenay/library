@@ -10,6 +10,7 @@ on:
     paths:
       - 'doc/architecture/c4/workspace.dsl'
       - 'doc/architecture/util/structurizr/**'
+      - '.github/workflows/c4-diagrams-generation.yml'
   workflow_dispatch:
 
 jobs:
