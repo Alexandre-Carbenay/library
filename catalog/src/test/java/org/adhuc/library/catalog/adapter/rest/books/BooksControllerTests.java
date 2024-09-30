@@ -1,8 +1,8 @@
 package org.adhuc.library.catalog.adapter.rest.books;
 
 import net.jqwik.api.Arbitrary;
-import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
+import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksMother;
 import org.adhuc.library.catalog.books.BooksMother.Books;
@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
@@ -53,15 +54,16 @@ class BooksControllerTests {
     void invalidBookId(String invalidId) throws Exception {
         mvc.perform(get("/api/v1/books/{id}", invalidId).accept("application/hal+json"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
                 .andExpect(jsonPath("status", equalTo(400)))
-                .andExpect(jsonPath("error", equalTo("INVALID_REQUEST")))
-                .andExpect(jsonPath("description", equalTo("Request validation error")))
-                .andExpect(jsonPath("sources").isArray())
-                .andExpect(jsonPath("sources", hasSize(1)))
-                .andExpect(jsonPath("sources[0].reason",
+                .andExpect(jsonPath("title", equalTo("Request validation error")))
+                .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                .andExpect(jsonPath("errors").isArray())
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors[0].detail",
                         equalTo(STR."Input string \"\{invalidId}\" is not a valid UUID")))
-                .andExpect(jsonPath("sources[0].parameter", equalTo("id")));
+                .andExpect(jsonPath("errors[0].parameter", equalTo("id")));
     }
 
     @Test
@@ -70,10 +72,11 @@ class BooksControllerTests {
         var unknownId = UUID.randomUUID();
         mvc.perform(get("/api/v1/books/{id}", unknownId).accept("application/hal+json"))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                .andExpect(jsonPath("type", equalTo("/problems/unknown-book")))
                 .andExpect(jsonPath("status", equalTo(404)))
-                .andExpect(jsonPath("error", equalTo("ENTITY_NOT_FOUND")))
-                .andExpect(jsonPath("description", allOf(
+                .andExpect(jsonPath("title", equalTo("Unknown book")))
+                .andExpect(jsonPath("detail", allOf(
                         startsWith("No book exists with id"),
                         containsString(unknownId.toString()))
                 ));

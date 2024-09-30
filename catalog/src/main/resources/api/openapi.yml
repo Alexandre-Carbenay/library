@@ -131,24 +131,18 @@ components:
     InvalidBookId:
       description: Invalid book ID.
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Problem'
           examples:
             invalidId:
               $ref: '#/components/examples/InvalidUUIDId'
     UnknownBook:
       description: No book corresponds to the specified identity.
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error'
-          examples:
-            unknown:
-              $ref: '#/components/examples/UnknownBook'
-        application/hal+json:
-          schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Problem'
           examples:
             unknown:
               $ref: '#/components/examples/UnknownBook'
@@ -164,33 +158,27 @@ components:
     InvalidAuthorId:
       description: Invalid author ID.
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Problem'
           examples:
             invalidId:
               $ref: '#/components/examples/InvalidUUIDId'
     UnknownAuthor:
       description: No author corresponds to the specified identity.
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error'
-          examples:
-            unknown:
-              $ref: '#/components/examples/UnknownAuthor'
-        application/hal+json:
-          schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Problem'
           examples:
             unknown:
               $ref: '#/components/examples/UnknownAuthor'
     InvalidPaginationParameters:
       description: Invalid pagination parameters.
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: '#/components/schemas/Error'
+            $ref: '#/components/schemas/Problem'
           examples:
             pageNumber:
               $ref: '#/components/examples/InvalidPageNumber'
@@ -523,40 +511,40 @@ components:
           type: number
           example: 2
           minimum: 0
-    Error:
+    Problem:
       type: object
       required:
-        - timestamp
+        - type
         - status
-        - error
-        - description
+        - title
+        - detail
       properties:
-        timestamp:
+        type:
           type: string
-          description: The server timestamp when generating the error.
-          format: date-time
+          format: uri-reference
+          description: The problem type.
         status:
           type: integer
           description: The HTTP status of the response.
-        error:
+        title:
           type: string
-          description: The error general code.
-        description:
+          description: A human-readable summary of the problem type.
+        detail:
           type: string
-          description: The error specific description to help understanding and resolution.
-        sources:
+          description: A human-readable explanation specific to this occurrence of the problem.
+        errors:
           type: array
-          description: The error sources, providing information about each problem.
+          description: An extension to the problem, providing information about each error.
           items:
             oneOf:
               - type: object
                 required:
-                  - reason
+                  - detail
                   - pointer
                 properties:
-                  reason:
+                  detail:
                     type: string
-                    description: The problem reason used to determine why the server returned an error.
+                    description: The error detail used to determine why the server returned an error.
                   pointer:
                     type: string
                     description: |
@@ -564,57 +552,57 @@ components:
                       document (e.g. "/" for a primary object, "/name" for a specific attribute named "name").
               - type: object
                 required:
-                  - reason
+                  - detail
                   - parameter
                 properties:
-                  reason:
+                  detail:
                     type: string
-                    description: The problem reason used to determine why the server returned an error.
+                    description: The error detail used to determine why the server returned an error.
                   parameter:
                     type: string
                     description: A string indicating which URI query parameter caused the error.
   examples:
     InvalidPageNumber:
       value:
-        timestamp: '2024-01-01T12:34:56'
+        type: /problems/invalid-request
         status: 400
-        error: INVALID_REQUEST
-        description: Request validation error
-        sources:
-          - reason: 'Numeric instance is lower than the required minimum (minimum: 0, found: -1)'
+        title: Request validation error
+        detail: Invalid page number
+        errors:
+          - detail: 'Numeric instance is lower than the required minimum (minimum: 0, found: -1)'
             parameter: page
       summary: Invalid page number.
     InvalidPageSize:
       value:
-        timestamp: '2024-01-01T12:34:56'
+        type: /problems/invalid-request
         status: 400
-        error: INVALID_REQUEST
-        description: Request validation error
-        sources:
-          - reason: 'Numeric instance is lower than the required minimum (minimum: 1, found: 0)'
+        title: Request validation error
+        detail: Invalid page size
+        errors:
+          - detail: 'Numeric instance is lower than the required minimum (minimum: 1, found: 0)'
             parameter: size
       summary: Invalid page size.
     InvalidUUIDId:
       value:
-        timestamp: '2024-01-01T12:34:56'
+        type: /problems/invalid-request
         status: 400
-        error: INVALID_REQUEST
-        description: Request validation error
-        sources:
-          - reason: 'Input string "1234" is not a valid UUID'
+        title: Request validation error
+        detail: Invalid UUID id
+        errors:
+          - detail: 'Input string "1234" is not a valid UUID'
             parameter: id
       summary: Invalid UUID passed as id in the path.
     UnknownBook:
       value:
-        timestamp: '2024-01-01T12:34:56'
+        type: /problems/unknown-book
         status: 404
-        error: ENTITY_NOT_FOUND
-        description: No book exists with id 'e5c0f8ae-2092-4acb-92e4-0088870ddf43'
+        title: Unknown book
+        detail: No book exists with id 'e5c0f8ae-2092-4acb-92e4-0088870ddf43'
       summary: Error when no book corresponds to the specified identity.
     UnknownAuthor:
       value:
-        timestamp: '2024-01-01T12:34:56'
+        type: /problems/unknown-author
         status: 404
-        error: ENTITY_NOT_FOUND
-        description: No author exists with id '96c7774f-dd6b-43d4-bd0e-6a7d1aad09a4'
+        title: Unknown author
+        detail: No author exists with id '96c7774f-dd6b-43d4-bd0e-6a7d1aad09a4'
       summary: Error when no author corresponds to the specified identity.
