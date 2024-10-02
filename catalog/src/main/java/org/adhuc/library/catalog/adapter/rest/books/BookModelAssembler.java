@@ -18,7 +18,7 @@ public class BookModelAssembler extends RepresentationModelAssemblerSupport<Book
     @Override
     public BookModel toModel(@NonNull Book book) {
         var model = instantiateModel(book);
-        model.add(linkTo(methodOn(BooksController.class).getBook(book.id())).withSelfRel());
+        model.add(linkTo(methodOn(BooksController.class).getBook(book.isbn())).withSelfRel());
         return model;
     }
 

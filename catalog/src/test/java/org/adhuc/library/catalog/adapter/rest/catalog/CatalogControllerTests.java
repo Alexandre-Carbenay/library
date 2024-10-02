@@ -351,14 +351,13 @@ class CatalogControllerTests {
     }
 
     private void assertResponseContainsBook(ResultActions result, String jsonPrefix, Book expected) throws Exception {
-        result.andExpect(jsonPath(jsonPrefix + "id", equalTo(expected.id().toString())))
-                .andExpect(jsonPath(jsonPrefix + "isbn", equalTo(expected.isbn())))
+        result.andExpect(jsonPath(jsonPrefix + "isbn", equalTo(expected.isbn())))
                 .andExpect(jsonPath(jsonPrefix + "title", equalTo(expected.title())))
                 .andExpect(jsonPath(jsonPrefix + "authors", containsInAnyOrder(
                         expected.authors().stream().map(Author::id).map(UUID::toString).toArray())))
                 .andExpect(jsonPath(jsonPrefix + "language", equalTo(expected.language())))
                 .andExpect(jsonPath(jsonPrefix + "summary", equalTo(expected.summary())))
-                .andExpect(jsonPath(jsonPrefix + "_links.self.href", equalTo("http://localhost/api/v1/books/" + expected.id())));
+                .andExpect(jsonPath(jsonPrefix + "_links.self.href", equalTo("http://localhost/api/v1/books/" + expected.isbn())));
     }
 
     private void assertResponseContainsAllBooksAuthors(ResultActions result, Collection<Book> expectedBooks) throws Exception {

@@ -28,22 +28,22 @@ paths:
           $ref: '#/components/responses/Catalog'
         '400':
           $ref: '#/components/responses/InvalidPaginationParameters'
-  /v1/books/{id}:
+  /v1/books/{isbn}:
     get:
       tags:
         - Books
-      summary: Gets the details of a book based on its identity.
+      summary: Gets the details of a book based on its ISBN.
       description: |
         The details of a book contain all its information and the relation to
         its authors.
       operationId: getBook
       parameters:
-        - $ref: '#/components/parameters/BookId'
+        - $ref: '#/components/parameters/ISBN'
       responses:
         '200':
           $ref: '#/components/responses/BookDetails'
         '400':
-          $ref: '#/components/responses/InvalidBookId'
+          $ref: '#/components/responses/InvalidBookISBN'
         '404':
           $ref: '#/components/responses/UnknownBook'
   /v1/authors/{id}:
@@ -66,15 +66,15 @@ paths:
           $ref: '#/components/responses/UnknownAuthor'
 components:
   parameters:
-    BookId:
-      name: id
-      description: Book identity.
+    ISBN:
+      name: isbn
+      description: Book ISBN.
       in: path
       required: true
       schema:
         type: string
-        format: uuid
-        example: baa19c4e-a347-45bd-8caf-e150aa8203e9
+        format: isbn
+        example: 9782081275232
     AuthorId:
       name: id
       description: Author identity.
@@ -128,15 +128,15 @@ components:
         application/hal+json:
           schema:
             $ref: '#/components/schemas/BookDetails'
-    InvalidBookId:
-      description: Invalid book ID.
+    InvalidBookISBN:
+      description: Invalid book ISBN.
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           examples:
             invalidId:
-              $ref: '#/components/examples/InvalidUUIDId'
+              $ref: '#/components/examples/InvalidISBN'
     UnknownBook:
       description: No book corresponds to the specified identity.
       content:
@@ -278,7 +278,6 @@ components:
     Book:
       type: object
       required:
-        - id
         - isbn
         - title
         - authors
@@ -286,8 +285,6 @@ components:
         - summary
         - '_links'
       properties:
-        id:
-          $ref: '#/components/schemas/BookId'
         isbn:
           $ref: '#/components/schemas/ISBN'
         title:
@@ -316,7 +313,6 @@ components:
     BookDetails:
       type: object
       required:
-        - id
         - isbn
         - title
         - publication_date
@@ -324,8 +320,6 @@ components:
         - summary
         - '_links'
       properties:
-        id:
-          $ref: '#/components/schemas/BookId'
         isbn:
           $ref: '#/components/schemas/ISBN'
         title:
@@ -362,10 +356,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Author'
-    BookId:
-      type: string
-      format: uuid
-      example: baa19c4e-a347-45bd-8caf-e150aa8203e9
     ISBN:
       type: string
       format: isbn
@@ -592,16 +582,26 @@ components:
           - detail: 'Input string "1234" is not a valid UUID'
             parameter: id
       summary: Invalid UUID passed as id in the path.
+    InvalidISBN:
+      value:
+        type: /problems/invalid-request
+        status: 400
+        title: Request validation error
+        detail: Invalid ISBN
+        errors:
+          - detail: 'Input string "1234" is not a valid ISBN'
+            parameter: isbn
+      summary: Invalid UUID passed as id in the path.
     UnknownBook:
       value:
-        type: /problems/unknown-book
+        type: /problems/unknown-entity
         status: 404
         title: Unknown book
-        detail: No book exists with id 'e5c0f8ae-2092-4acb-92e4-0088870ddf43'
-      summary: Error when no book corresponds to the specified identity.
+        detail: No book exists with ISBN '9782081275232'
+      summary: Error when no book corresponds to the specified ISBN.
     UnknownAuthor:
       value:
-        type: /problems/unknown-author
+        type: /problems/unknown-entity
         status: 404
         title: Unknown author
         detail: No author exists with id '96c7774f-dd6b-43d4-bd0e-6a7d1aad09a4'

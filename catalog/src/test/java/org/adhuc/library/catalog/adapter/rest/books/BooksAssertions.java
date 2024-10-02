@@ -26,12 +26,11 @@ public class BooksAssertions {
             for (var book : expectedBooks) {
                 result.andExpect(jsonPath(
                         embeddedResources + "[" +
-                                "?(@.id == \"" + book.id() + "\" " +
-                                "&& @.isbn == \"" + book.isbn() + "\" " +
+                                "?(@.isbn == \"" + book.isbn() + "\" " +
                                 "&& @.title == \"" + book.title() + "\" " +
                                 "&& @.language == \"" + book.language() + "\" " +
                                 "&& @.summary == " + MAPPER.writeValueAsString(book.summary()) + " " +
-                                "&& @._links.self.href == \"http://localhost/api/v1/books/" + book.id() + "\")]").exists());
+                                "&& @._links.self.href == \"http://localhost/api/v1/books/" + book.isbn() + "\")]").exists());
             }
         }
     }

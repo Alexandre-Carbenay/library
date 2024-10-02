@@ -4,10 +4,8 @@ import org.adhuc.library.catalog.authors.Author;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
-public record Book(UUID id,
-                   String isbn,
+public record Book(String isbn,
                    String title,
                    PublicationDate publicationDate,
                    Set<Author> authors,
@@ -19,12 +17,12 @@ public record Book(UUID id,
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return Objects.equals(id, book.id);
+        return Objects.equals(isbn, book.isbn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(isbn);
     }
 
 }

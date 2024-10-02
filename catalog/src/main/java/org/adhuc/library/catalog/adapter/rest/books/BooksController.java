@@ -1,8 +1,10 @@
 package org.adhuc.library.catalog.adapter.rest.books;
 
+import org.adhuc.library.catalog.adapter.rest.ProblemError.ParameterError;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksService;
+import org.apache.commons.validator.routines.ISBNValidator;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.util.UUID;
+import java.util.List;
 
+import static org.adhuc.library.catalog.adapter.rest.support.validation.InvalidRequestBuilder.invalidRequest;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.hateoas.mediatype.hal.HalModelBuilder.halModelOf;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -28,6 +31,7 @@ public class BooksController {
     private final BookDetailsModelAssembler bookModelAssembler;
     private final AuthorModelAssembler authorModelAssembler;
     private final BooksService booksService;
+    private final ISBNValidator isbnValidator = new ISBNValidator();
 
     public BooksController(BookDetailsModelAssembler bookModelAssembler,
                            AuthorModelAssembler authorModelAssembler,
@@ -37,12 +41,15 @@ public class BooksController {
         this.booksService = booksService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getBook(@PathVariable UUID id) {
-        var book = booksService.getBook(id);
+    @GetMapping("/{isbn}")
+    public ResponseEntity<?> getBook(@PathVariable String isbn) {
+        if (!isbnValidator.isValid(isbn)) {
+            return prepareInvalidIsbnResponse(isbn);
+        }
+        var book = booksService.getBook(isbn);
         return book.isPresent()
                 ? prepareBookResponse(book.get())
-                : prepareNotFoundResponse(id);
+                : prepareNotFoundResponse(isbn);
     }
 
     private ResponseEntity<Object> prepareBookResponse(Book book) {
@@ -56,13 +63,20 @@ public class BooksController {
                 );
     }
 
-    private ResponseEntity<Problem> prepareNotFoundResponse(UUID id) {
+    private ResponseEntity<Problem> prepareInvalidIsbnResponse(String isbn) {
+        var problem = invalidRequest(List.of(
+                new ParameterError(STR."Input string \"\{isbn}\" is not a valid ISBN", "isbn")
+        ));
+        return ResponseEntity.badRequest().contentType(APPLICATION_PROBLEM_JSON).body(problem);
+    }
+
+    private ResponseEntity<Problem> prepareNotFoundResponse(String isbn) {
         return ResponseEntity.status(NOT_FOUND).contentType(APPLICATION_PROBLEM_JSON)
                 .body(Problem.create()
-                        .withType(URI.create("/problems/unknown-book"))
+                        .withType(URI.create("/problems/unknown-entity"))
                         .withStatus(NOT_FOUND)
                         .withTitle("Unknown book")
-                        .withDetail(STR."No book exists with id '\{id}'")
+                        .withDetail(STR."No book exists with ISBN '\{isbn}'")
                 );
     }
 
