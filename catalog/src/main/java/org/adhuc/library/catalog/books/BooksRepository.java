@@ -13,7 +13,7 @@ public interface BooksRepository {
 
     Page<Book> find(Pageable request);
 
-    Optional<Book> findById(UUID id);
+    Optional<Book> findByIsbn(String isbn);
 
     Collection<Book> findNotableByAuthor(UUID authorId);
 

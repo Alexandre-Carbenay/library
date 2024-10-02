@@ -18,7 +18,7 @@ public class BookDetailsModelAssembler extends RepresentationModelAssemblerSuppo
     @Override
     public BookDetailsModel toModel(@NonNull Book book) {
         var model = instantiateModel(book);
-        model.add(linkTo(methodOn(BooksController.class).getBook(book.id())).withSelfRel());
+        model.add(linkTo(methodOn(BooksController.class).getBook(book.isbn())).withSelfRel());
         return model;
     }
 

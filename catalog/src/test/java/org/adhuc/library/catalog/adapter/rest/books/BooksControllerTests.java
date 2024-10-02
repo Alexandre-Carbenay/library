@@ -23,7 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.adhuc.library.catalog.adapter.rest.authors.AuthorsAssertions.assertResponseContainsAllEmbeddedAuthors;
@@ -50,9 +49,9 @@ class BooksControllerTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"123", "invalid"})
-    @DisplayName("refuse providing a book with invalid ID")
-    void invalidBookId(String invalidId) throws Exception {
-        mvc.perform(get("/api/v1/books/{id}", invalidId).accept("application/hal+json"))
+    @DisplayName("refuse providing a book with invalid ISBN")
+    void invalidBookId(String invalidIsbn) throws Exception {
+        mvc.perform(get("/api/v1/books/{isbn}", invalidIsbn).accept("application/hal+json"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
@@ -62,23 +61,23 @@ class BooksControllerTests {
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
                 .andExpect(jsonPath("errors[0].detail",
-                        equalTo(STR."Input string \"\{invalidId}\" is not a valid UUID")))
-                .andExpect(jsonPath("errors[0].parameter", equalTo("id")));
+                        equalTo(STR."Input string \"\{invalidIsbn}\" is not a valid ISBN")))
+                .andExpect(jsonPath("errors[0].parameter", equalTo("isbn")));
     }
 
     @Test
-    @DisplayName("not find a book corresponding to an unknown ID")
+    @DisplayName("not find a book corresponding to an unknown ISBN")
     void unknownBookId() throws Exception {
-        var unknownId = UUID.randomUUID();
-        mvc.perform(get("/api/v1/books/{id}", unknownId).accept("application/hal+json"))
+        var unknownIsbn = "9782081275232";
+        mvc.perform(get("/api/v1/books/{id}", unknownIsbn).accept("application/hal+json"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("type", equalTo("/problems/unknown-book")))
+                .andExpect(jsonPath("type", equalTo("/problems/unknown-entity")))
                 .andExpect(jsonPath("status", equalTo(404)))
                 .andExpect(jsonPath("title", equalTo("Unknown book")))
                 .andExpect(jsonPath("detail", allOf(
-                        startsWith("No book exists with id"),
-                        containsString(unknownId.toString()))
+                        startsWith("No book exists with ISBN"),
+                        containsString(unknownIsbn))
                 ));
     }
 
@@ -92,19 +91,18 @@ class BooksControllerTests {
     void knownBookId(Book book) throws Exception {
         when(booksService.getBook(Mockito.any())).thenReturn(Optional.of(book));
 
-        var result = mvc.perform(get("/api/v1/books/{id}", book.id()).accept("application/hal+json"))
+        var result = mvc.perform(get("/api/v1/books/{isbn}", book.isbn()).accept("application/hal+json"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id", equalTo(book.id().toString())))
                 .andExpect(jsonPath("isbn", equalTo(book.isbn())))
                 .andExpect(jsonPath("title", equalTo(book.title())))
                 .andExpect(jsonPath("publication_date", equalTo(book.publicationDate().toString())))
                 .andExpect(jsonPath("language", equalTo(book.language())))
                 .andExpect(jsonPath("summary", equalTo(book.summary())))
-                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/books/" + book.id())));
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/books/" + book.isbn())));
 
         assertResponseContainsAllEmbeddedAuthors(result, book.authors());
 
-        verify(booksService).getBook(book.id());
+        verify(booksService).getBook(book.isbn());
     }
 
     static Stream<Arguments> booksWithExactPublicationDateProvider() {

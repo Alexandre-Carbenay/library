@@ -65,7 +65,7 @@ public class AuthorsController {
     private ResponseEntity<Problem> prepareNotFoundResponse(UUID id) {
         return ResponseEntity.status(NOT_FOUND).contentType(APPLICATION_PROBLEM_JSON)
                 .body(Problem.create()
-                        .withType(URI.create("/problems/unknown-author"))
+                        .withType(URI.create("/problems/unknown-entity"))
                         .withStatus(NOT_FOUND)
                         .withTitle("Unknown author")
                         .withDetail(STR."No author exists with id '\{id}'")

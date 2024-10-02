@@ -31,6 +31,9 @@ dependencies {
 	implementation 'org.jmolecules:jmolecules-ddd'
 	implementation 'org.jmolecules:jmolecules-onion-architecture'
 	implementation 'com.atlassian.oai:swagger-request-validator-spring-webmvc:2.42.0'
+	implementation('commons-validator:commons-validator:1.9.0') {
+		exclude group: 'commons-collections', module: 'commons-collections'
+	}
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.modulith:spring-modulith-starter-test'

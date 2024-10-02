@@ -17,8 +17,8 @@ public class BooksService {
         this.repository = repository;
     }
 
-    public Optional<Book> getBook(UUID id) {
-        return repository.findById(id);
+    public Optional<Book> getBook(String isbn) {
+        return repository.findByIsbn(isbn);
     }
 
     public Collection<Book> getNotableBooks(UUID authorId) {

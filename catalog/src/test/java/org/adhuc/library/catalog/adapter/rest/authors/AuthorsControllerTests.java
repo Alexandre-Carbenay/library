@@ -77,7 +77,7 @@ class AuthorsControllerTests {
         mvc.perform(get("/api/v1/authors/{id}", unknownId).accept("application/hal+json"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("type", equalTo("/problems/unknown-author")))
+                .andExpect(jsonPath("type", equalTo("/problems/unknown-entity")))
                 .andExpect(jsonPath("status", equalTo(404)))
                 .andExpect(jsonPath("title", equalTo("Unknown author")))
                 .andExpect(jsonPath("detail", allOf(

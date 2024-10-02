@@ -14,12 +14,12 @@ import static java.time.LocalDate.now;
 import static net.jqwik.api.Arbitraries.integers;
 import static net.jqwik.api.Arbitraries.strings;
 import static net.jqwik.time.api.Dates.dates;
+import static org.adhuc.library.catalog.books.IsbnGenerator.isbn13s;
 
 public final class BooksMother {
 
     public static Arbitrary<Book> books() {
         return Combinators.combine(
-                Books.ids(),
                 Books.isbns(),
                 Books.titles(),
                 Books.publicationDates(),
@@ -31,7 +31,6 @@ public final class BooksMother {
 
     public static Arbitrary<Book> notableBooksOf(UUID authorId) {
         return Combinators.combine(
-                Books.ids(),
                 Books.isbns(),
                 Books.titles(),
                 Books.publicationDates(),
@@ -46,12 +45,8 @@ public final class BooksMother {
     }
 
     public static final class Books {
-        public static Arbitrary<UUID> ids() {
-            return Arbitraries.create(UUID::randomUUID);
-        }
-
         public static Arbitrary<String> isbns() {
-            return strings().numeric().ofLength(13);
+            return isbn13s();
         }
 
         public static Arbitrary<String> titles() {
@@ -106,38 +101,33 @@ public final class BooksMother {
     public static class BookBuilder {
         private Book book = books().sample();
 
-        public BookBuilder id(UUID id) {
-            book = new Book(id, book.isbn(), book.title(), book.publicationDate(), book.authors(), book.language(), book.summary());
-            return this;
-        }
-
         public BookBuilder isbn(String isbn) {
-            book = new Book(book.id(), isbn, book.title(), book.publicationDate(), book.authors(), book.language(), book.summary());
+            book = new Book(isbn, book.title(), book.publicationDate(), book.authors(), book.language(), book.summary());
             return this;
         }
 
         public BookBuilder title(String title) {
-            book = new Book(book.id(), book.isbn(), title, book.publicationDate(), book.authors(), book.language(), book.summary());
+            book = new Book(book.isbn(), title, book.publicationDate(), book.authors(), book.language(), book.summary());
             return this;
         }
 
         public BookBuilder publicationDate(PublicationDate publicationDate) {
-            book = new Book(book.id(), book.isbn(), book.title(), publicationDate, book.authors(), book.language(), book.summary());
+            book = new Book(book.isbn(), book.title(), publicationDate, book.authors(), book.language(), book.summary());
             return this;
         }
 
         public BookBuilder authors(Set<Author> authors) {
-            book = new Book(book.id(), book.isbn(), book.title(), book.publicationDate(), authors, book.language(), book.summary());
+            book = new Book(book.isbn(), book.title(), book.publicationDate(), authors, book.language(), book.summary());
             return this;
         }
 
         public BookBuilder language(String language) {
-            book = new Book(book.id(), book.isbn(), book.title(), book.publicationDate(), book.authors(), language, book.summary());
+            book = new Book(book.isbn(), book.title(), book.publicationDate(), book.authors(), language, book.summary());
             return this;
         }
 
         public BookBuilder summary(String summary) {
-            book = new Book(book.id(), book.isbn(), book.title(), book.publicationDate(), book.authors(), book.language(), summary);
+            book = new Book(book.isbn(), book.title(), book.publicationDate(), book.authors(), book.language(), summary);
             return this;
         }
 

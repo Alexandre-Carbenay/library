@@ -22,7 +22,7 @@ class InMemoryBooksRepository implements BooksRepository {
     }
 
     @Override
-    public Optional<Book> findById(UUID id) {
+    public Optional<Book> findByIsbn(String isbn) {
         return Optional.empty();
     }
 

@@ -14,7 +14,6 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 @SuppressWarnings("FieldCanBeLocal")
 @JsonAutoDetect(fieldVisibility = ANY)
 public class BookModel extends RepresentationModel<BookModel> {
-    private final UUID id;
     private final String isbn;
     private final String title;
     private final List<UUID> authors;
@@ -22,7 +21,6 @@ public class BookModel extends RepresentationModel<BookModel> {
     private final String summary;
 
     BookModel(Book book) {
-        this.id = book.id();
         this.isbn = book.isbn();
         this.title = book.title();
         this.authors = book.authors().stream().sorted(Comparator.comparing(Author::name)).map(Author::id).toList();
