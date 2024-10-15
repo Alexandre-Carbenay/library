@@ -1,0 +1,24 @@
+[
+  {
+    "id": "f921c511-6341-494a-8152-c92613db248b",
+    "name": "Albert Camus",
+    "dateOfBirth": "1913-11-07",
+    "dateOfDeath": "1960-01-04"
+  },
+  {
+    "id": "40ad7b89-7aec-45ae-bdd1-410e5a11f44b",
+    "name": "Gustave Flaubert",
+    "dateOfBirth": "1821-12-12",
+    "dateOfDeath": "1880-08-08"
+  },
+  {
+    "id": "2c98db8d-d0c3-4dfb-8cfe-355256300a91",
+    "name": "Léon Tolstoï",
+    "dateOfBirth": "1828-08-28",
+    "dateOfDeath": "1910-11-07"
+  },
+  {
+    "id": "b61b590b-fdf8-436a-80bd-03c1591e482c",
+    "name": "Virgine Despentes",
+    "dateOfBirth": "1969-06-13"
+  }

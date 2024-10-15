@@ -1,0 +1,88 @@
+[
+  {
+    "id": "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725",
+    "name": "Jean-Jacques Rousseau",
+    "dateOfBirth": "1712-06-28",
+    "dateOfDeath": "1778-07-02"
+  },
+  {
+    "id": "d8d94b64-603d-4fae-90dd-5296cde7fa2c",
+    "name": "John Ronald Reuel Tolkien",
+    "dateOfBirth": "1892-01-03",
+    "dateOfDeath": "1973-09-02"
+  },
+  {
+    "id": "c5f1361f-61b4-42c4-9cf1-d82e9a45317a",
+    "name": "George Raymond Richard Martin",
+    "dateOfBirth": "1948-09-20"
+  },
+  {
+    "id": "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5",
+    "name": "Isaac Asimov",
+    "dateOfBirth": "1920-01-02",
+    "dateOfDeath": "1992-04-06"
+  },
+  {
+    "id": "298b695e-306c-4b41-b2d1-95f295c88c37",
+    "name": "J. K. Rowling",
+    "dateOfBirth": "1965-07-31"
+  },
+  {
+    "id": "88a5e171-9ac6-41d5-b6ac-aa9a93d12004",
+    "name": "Ernest Hemingway",
+    "dateOfBirth": "1899-07-21",
+    "dateOfDeath": "1961-07-02"
+  },
+  {
+    "id": "4d5a8b1a-8d69-43c3-95e5-0c87f0883937",
+    "name": "Honoré de Balzac",
+    "dateOfBirth": "1799-05-20",
+    "dateOfDeath": "1850-08-18"
+  },
+  {
+    "id": "3d9c3009-32d0-49d0-a29e-d48ab05b8a61",
+    "name": "Alexandre Dumas",
+    "dateOfBirth": "1802-07-24",
+    "dateOfDeath": "1870-12-05"
+  },
+  {
+    "id": "060d74f4-1d42-4087-b4ef-07dd00bb559c",
+    "name": "David Graeber",
+    "dateOfBirth": "1961-02-12",
+    "dateOfDeath": "2020-09-02"
+  },
+  {
+    "id": "6e2051c4-8c1a-4611-9be1-0ff5755771d7",
+    "name": "David Wengrow",
+    "dateOfBirth": "1972-07-25"
+  },
+  {
+    "id": "9fdf9832-59d0-47e0-bfdf-1f7e1ce12b91",
+    "name": "Molière",
+    "dateOfBirth": "1622-01-15",
+    "dateOfDeath": "1673-02-17"
+  },
+  {
+    "id": "00121904-81f3-44ec-b217-7c275dfa9b5b",
+    "name": "Pierre Corneille",
+    "dateOfBirth": "1647-01-22",
+    "dateOfDeath": "1684-10-01"
+  },
+  {
+    "id": "34100743-dcd0-45da-8142-8f4e650dd365",
+    "name": "William Shakespeare",
+    "dateOfBirth": "1564-04-23",
+    "dateOfDeath": "1616-04-23"
+  },
+  {
+    "id": "87979468-9c9b-4883-b7c4-06c15c7bcf77",
+    "name": "Alain Damasio",
+    "dateOfBirth": "1969-08-01"
+  },
+  {
+    "id": "406d7543-ad61-4807-bd28-d61022950463",
+    "name": "Franz Kafka",
+    "dateOfBirth": "1883-07-03",
+    "dateOfDeath": "1924-06-03"
+  }
+]
