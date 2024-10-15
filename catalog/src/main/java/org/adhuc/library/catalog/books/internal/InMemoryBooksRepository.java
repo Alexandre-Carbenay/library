@@ -7,14 +7,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
 @InfrastructureRing
-class InMemoryBooksRepository implements BooksRepository {
+public class InMemoryBooksRepository implements BooksRepository {
+
+    private final List<Book> books = new ArrayList<>();
+
+    public Collection<Book> findAll() {
+        return List.copyOf(books);
+    }
 
     @Override
     public Page<Book> find(Pageable request) {
@@ -23,12 +26,18 @@ class InMemoryBooksRepository implements BooksRepository {
 
     @Override
     public Optional<Book> findByIsbn(String isbn) {
-        return Optional.empty();
+        return books.stream()
+                .filter(book -> book.isbn().equals(isbn))
+                .findFirst();
     }
 
     @Override
     public Collection<Book> findNotableByAuthor(UUID authorId) {
         return List.of();
+    }
+
+    public void saveAll(Collection<Book> books) {
+        this.books.addAll(books);
     }
 
 }

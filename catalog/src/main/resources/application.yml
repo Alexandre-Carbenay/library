@@ -17,3 +17,17 @@ management:
     diskspace.enabled: false
     livenessstate.enabled: true
     readinessstate.enabled: true
+
+library.catalog:
+  data.auto-load:
+    enabled: false
+    authors.resource: 'classpath:data/catalog-authors.json'
+    books.resource: 'classpath:data/catalog-books.json'
+
+logging:
+  level:
+    org.adhuc.library.catalog: INFO
+    org.springframework:
+      boot:
+        autoconfigure.logging: ERROR
+        actuate: ERROR
