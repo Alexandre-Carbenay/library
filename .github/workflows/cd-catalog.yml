@@ -85,3 +85,8 @@ jobs:
         env:
           VERSION: ${{ steps.app_version.outputs.version }}
           REVISION: ${{ steps.branch_name.outputs.branch }}-${{ github.run_number }}
+
+      - name: Run acceptance tests
+        working-directory: ./catalog
+        run: make acceptance
+        timeout-minutes: 5

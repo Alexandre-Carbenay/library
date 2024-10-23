@@ -44,7 +44,7 @@ public class InMemoryBooksLoader {
         var booksResource = resourceLoader.getResource(booksResourcePath);
         var mapper = new ObjectMapper();
         try {
-            var books = mapper.readValue(booksResource.getFile(), new TypeReference<List<BookDto>>() {
+            var books = mapper.readValue(booksResource.getInputStream(), new TypeReference<List<BookDto>>() {
                     })
                     .stream().map(dto -> dto.convert(authorsRepository))
                     .toList();
