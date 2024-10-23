@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.4'
 	id 'io.spring.dependency-management' version '1.1.6'
+	id 'com.avast.gradle.docker-compose' version '0.17.10'
 }
 
 group = 'org.adhuc.library'
@@ -13,6 +14,19 @@ java {
 
 repositories {
 	mavenCentral()
+}
+
+sourceSets {
+	acceptance {
+		java {
+			srcDir file('src/acceptance/java')
+		}
+	}
+}
+
+configurations {
+	acceptanceTestCompile.extendsFrom testCompile
+	acceptanceTestRuntime.extendsFrom testRuntime
 }
 
 dependencyManagement {
@@ -40,6 +54,15 @@ dependencies {
 	testImplementation 'org.jmolecules.integrations:jmolecules-archunit'
 	testImplementation 'com.tngtech.archunit:archunit-junit5:1.3.0'
 	testImplementation 'net.jqwik:jqwik:1.9.1'
+
+	acceptanceImplementation platform('io.cucumber:cucumber-bom:7.20.1')
+	acceptanceImplementation 'io.cucumber:cucumber-java'
+	acceptanceImplementation 'io.cucumber:cucumber-junit-platform-engine'
+	acceptanceImplementation 'org.junit.platform:junit-platform-suite'
+	acceptanceImplementation 'io.rest-assured:rest-assured'
+	acceptanceImplementation 'org.assertj:assertj-core'
+	acceptanceImplementation 'com.fasterxml.jackson.core:jackson-annotations'
+	acceptanceImplementation 'com.fasterxml.jackson.core:jackson-databind'
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -47,7 +70,33 @@ tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs.add('-parameters')
 }
 
-tasks.named('test') {
+tasks.withType(Test).configureEach {
 	useJUnitPlatform()
 	jvmArgs += '--enable-preview'
+	testLogging {
+		events "failed", "skipped", "standardError"
+		showExceptions true
+		showStackTraces true
+		exceptionFormat "full"
+		showCauses true
+		showStandardStreams false
+	}
+}
+
+task acceptance(type: Test) {
+	testClassesDirs = sourceSets.acceptance.output.classesDirs
+	classpath = sourceSets.acceptance.runtimeClasspath
+	doFirst { dockerCompose.exposeAsSystemProperties(acceptance) }
+	// Work around. Gradle does not include enough information to disambiguate
+	// between different examples and scenarios.
+	systemProperty("cucumber.junit-platform.naming-strategy", "long")
+	testLogging {
+		showStandardStreams true
+	}
+}
+dockerCompose.isRequiredBy(acceptance)
+
+dockerCompose {
+	useComposeFiles = ['docker/docker-compose.yml']
+	environment.put 'SERVICES_HOST', '0.0.0.0'
 }

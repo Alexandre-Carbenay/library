@@ -31,7 +31,7 @@ public class InMemoryAuthorsLoader {
         var authorsResource = resourceLoader.getResource(authorsResourcePath);
         var mapper = new ObjectMapper();
         try {
-            var authors = mapper.readValue(authorsResource.getFile(), new TypeReference<List<AuthorDto>>() {
+            var authors = mapper.readValue(authorsResource.getInputStream(), new TypeReference<List<AuthorDto>>() {
                     })
                     .stream().map(AuthorDto::convert)
                     .toList();

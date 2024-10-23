@@ -5,4 +5,6 @@ build: build-catalog ## Build the catalog application
 
 include ./catalog.mk ../common.mk
 
+acceptance: acceptance-catalog ## Run acceptance tests on the catalog application
+
 clean: clean-catalog ## Clean the catalog project folder

@@ -27,4 +27,4 @@ LABEL org.opencontainers.image.description="Catalog service for the Library syst
 LABEL org.opencontainers.image.base.name="eclipse-temurin:21-jre-alpine"
 EXPOSE 8080/tcp
 RUN java -XX:ArchiveClassesAtExit=application.jsa -Dspring.context.exit=onRefresh --enable-preview -jar application.jar
-ENTRYPOINT ["java", "-XX:SharedArchiveFile=application.jsa", "-jar", "application.jar"]
+ENTRYPOINT ["java", "--enable-preview", "-XX:SharedArchiveFile=application.jsa", "-jar", "application.jar"]
