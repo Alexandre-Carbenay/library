@@ -87,6 +87,30 @@ jobs:
           REVISION: ${{ steps.branch_name.outputs.branch }}-${{ github.run_number }}
 
       - name: Run acceptance tests
+        id: acceptance
         working-directory: ./catalog
-        run: make acceptance
+        run: |
+          make acceptance | tee acceptance.log
+          result_code=${PIPESTATUS[0]}
+          # Retrieve the cucumber report URL from acceptance execution logs, remove the color characters, extract the URL only
+          echo "report_url=$(sed '/View your Cucumber Report at:/{n; p}' acceptance.log | sed -e 's/\x1b\[[0-9;]*m//g' | grep -o 'http[s]\?://[^ ]\+' | head -1)" >> $GITHUB_OUTPUT
+          exit $result_code
         timeout-minutes: 5
+
+      - name: Update Pull Request with acceptance tests report URL
+        uses: actions/github-script@v7
+        if: always() && github.event_name == 'pull_request'
+        with:
+          script: |
+            const { REPORTS_BASE_URL, GCS_REPORTS_PATH } = process.env
+            const output = `
+            #### Acceptance tests \`${{ steps.acceptance.outcome }}\`
+            ${{ steps.acceptance.outputs.report_url }}
+            `;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            })
