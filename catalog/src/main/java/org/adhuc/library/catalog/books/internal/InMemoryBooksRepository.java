@@ -35,7 +35,9 @@ public class InMemoryBooksRepository implements BooksRepository {
 
     @Override
     public Collection<Book> findNotableByAuthor(UUID authorId) {
-        return List.of();
+        return books.stream()
+                .filter(book -> book.authors().stream().anyMatch(author -> author.id().equals(authorId)))
+                .toList();
     }
 
     public void saveAll(Collection<Book> books) {

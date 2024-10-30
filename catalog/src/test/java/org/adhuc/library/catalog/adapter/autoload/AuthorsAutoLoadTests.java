@@ -16,12 +16,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.FileNotFoundException;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Stream;
 
-import static org.adhuc.library.catalog.adapter.autoload.AutoLoadedAuthorsMother.*;
+import static org.adhuc.library.catalog.authors.AuthorsMother.Real.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

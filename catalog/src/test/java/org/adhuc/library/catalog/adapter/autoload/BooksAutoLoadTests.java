@@ -21,8 +21,8 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.adhuc.library.catalog.adapter.autoload.AutoLoadedAuthorsMother.*;
-import static org.adhuc.library.catalog.adapter.autoload.AutoLoadedBooksMother.*;
+import static org.adhuc.library.catalog.authors.AuthorsMother.Real.*;
+import static org.adhuc.library.catalog.books.BooksMother.Real.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

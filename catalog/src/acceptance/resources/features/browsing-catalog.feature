@@ -80,3 +80,19 @@ Feature: Browse the catalog
 				| 4    | 10       | 9782073004215, 9782072729935, 9782070361519, 9782070409341, 9782253006305, 9782253098041, 9782253099994, 9782253098058, 9782253098065, 9782070417681 |
 				| 5    | 10       | 9791020923769, 9782330061258, 9791020924636, 9782070449996, 9782070450022, 9782070449941, 9782070449934, 9782070409181, 9782070468485, 9782070468508 |
 				| 6    | 10       | 9788490019481, 9780192862426, 9782072927522, 9782072927515, 9782072847929, 9782070462872, 9782073052872                                              |
+
+	Rule: The catalog provides author for each book within a page
+
+		Scenario Outline:
+			Given Georges is a library member
+			When he browses the catalog to page <page> showing <pageSize> books
+			Then the page <page> contains <authors> corresponding to the books
+			Examples:
+				| page | pageSize | authors                                                                      |
+				| 0    | 10       | Jean-Jacques Rousseau, John Ronald Reuel Tolkien                             |
+				| 1    | 10       | George Raymond Richard Martin                                                |
+				| 2    | 10       | Isaac Asimov                                                                 |
+				| 3    | 10       | Isaac Asimov, J. K. Rowling, Ernest Hemingway                                |
+				| 4    | 10       | Ernest Hemingway, Honoré de Balzac, Alexandre Dumas                          |
+				| 5    | 10       | David Graeber, David Wengrow, Molière, Pierre Corneille, William Shakespeare |
+				| 6    | 10       | William Shakespeare, Alain Damasio, Franz Kafka                              |
