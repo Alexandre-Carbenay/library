@@ -1,15 +1,13 @@
 package org.adhuc.library.catalog.acceptance;
 
-import io.cucumber.java.ParameterType;
-import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.ValidatableResponse;
 
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
+import static io.restassured.RestAssured.*;
+import static org.adhuc.library.catalog.acceptance.assertions.EmbeddedAuthorsAssertions.assertResponseEmbedsAuthors;
 import static org.hamcrest.Matchers.*;
 
 @SuppressWarnings("preview")
@@ -18,11 +16,6 @@ public class CatalogStepDefinitions {
     private static final List<String> NAVIGATION_LINKS = List.of("first", "prev", "next", "last");
 
     private ValidatableResponse response;
-
-    @Given("{word} is a library member")
-    public void libraryMember(String name) {
-        // nothing to do here now
-    }
 
     @When("he browses the catalog to page {int} showing {int} books")
     public void browseCatalogToPage(int page, int pageSize) {
@@ -74,22 +67,17 @@ public class CatalogStepDefinitions {
     }
 
     @Then("the page {int} contains books corresponding to the expected {isbns}")
-    public void catalogPageWithIsbn(int page, List<String> isbns) {
+    public void catalogPageWithIsbns(int page, List<String> isbns) {
         for (int index = 0; index < isbns.size(); index++) {
             var isbn = isbns.get(index);
-            response.body(STR."_embedded.books[\{index}].isbn",
+            response.body("_embedded.books[%d].isbn", withArgs(index),
                     describedAs(STR."Book with index \{index} within page \{page} must have ISBN = \{isbn}", equalTo(isbn)));
         }
     }
 
-    @ParameterType(".*")
-    public List<String> navigation(String source) {
-        return List.of(source.split(", "));
-    }
-
-    @ParameterType(".*")
-    public List<String> isbns(String source) {
-        return List.of(source.split(", "));
+    @Then("the page {int} contains {authorNames} corresponding to the books")
+    public void catalogPageWithAuthors(int page, List<String> authorNames) {
+        assertResponseEmbedsAuthors(response, authorNames, name -> STR."Catalog page \{page} must contain author named \{name}");
     }
 
 }

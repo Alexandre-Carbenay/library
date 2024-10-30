@@ -10,6 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.data.domain.PageRequest;
 
+import static org.adhuc.library.catalog.books.BooksMother.books;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -50,7 +51,7 @@ class CatalogServiceTests {
 
         @BeforeEach
         void setUp() {
-            booksRepository.saveAll(BooksMother.books().list().ofSize(106).sample());
+            booksRepository.saveAll(books().list().ofSize(106).sample());
         }
 
         @ParameterizedTest

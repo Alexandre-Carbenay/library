@@ -11,8 +11,8 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.UUID;
 
-import static org.adhuc.library.catalog.adapter.autoload.AutoLoadedAuthorsMother.LEON_TOLSTOI;
-import static org.adhuc.library.catalog.adapter.autoload.AutoLoadedBooksMother.L_ETRANGER;
+import static org.adhuc.library.catalog.authors.AuthorsMother.Real.LEON_TOLSTOI;
+import static org.adhuc.library.catalog.books.BooksMother.Real.L_ETRANGER;
 
 @SpringBootTest
 @TestPropertySource(properties = {
