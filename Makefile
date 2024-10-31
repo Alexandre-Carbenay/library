@@ -1,3 +1,4 @@
+ENV_LOCATION=.
 CATALOG_LOCATION=./catalog
 
 # Defined before inclusions to ensure it is the first target

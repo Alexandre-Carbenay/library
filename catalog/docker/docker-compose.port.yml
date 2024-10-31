@@ -1,0 +1,4 @@
+services:
+  catalog:
+    ports:
+      - ${CATALOG_API_PORT:-8080}:8080
