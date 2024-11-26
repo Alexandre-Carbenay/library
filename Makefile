@@ -1,14 +1,15 @@
 ENV_LOCATION=.
 CATALOG_LOCATION=./catalog
+WEBSITE_LOCATION=./website
 
 # Defined before inclusions to ensure it is the first target
-build: build-catalog ## Build all the applications
+build: build-catalog build-website ## Build all the applications
 
-include $(CATALOG_LOCATION)/catalog.mk common.mk
+include $(CATALOG_LOCATION)/catalog.mk $(WEBSITE_LOCATION)/website.mk common.mk
 
 acceptance: acceptance-catalog ## Run acceptance tests on all the applications
 
-clean: clean-catalog ## Clean the projects folders
+clean: clean-catalog clean-website ## Clean the projects folders
 
 structurizr: ## Generate Structurizr C4 diagrams
 	./doc/util/structurizr/export-diagrams.sh doc/util/structurizr

@@ -7,6 +7,10 @@ build/
 **/.jqwik-database
 .env
 
+# Website stylesheet files
+website/src/main/sass/**/*.scss
+website/src/main/resources/static/resources/css
+
 ### STS ###
 .apt_generated
 .classpath

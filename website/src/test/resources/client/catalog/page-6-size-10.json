@@ -1,0 +1,153 @@
+{
+  "page": {
+    "size": 10,
+    "total_elements": 67,
+    "total_pages": 7,
+    "number": 6
+  },
+  "_embedded": {
+    "books": [
+      {
+        "isbn": "9788490019481",
+        "title": "Hamlet",
+        "authors": [
+          "34100743-dcd0-45da-8142-8f4e650dd365"
+        ],
+        "language": "en",
+        "summary": "\"Sit down awhile, And let us once again assail your ears, That are so fortified against our story What we have two nights seen...\" The Tragedy of Hamlet, Prince of Denmark, often shortened to Hamlet, is a tragedy written by William Shakespeare at an uncertain date between 1599 and 1602. Set in the Kingdom of Denmark, the play dramatises the revenge Prince Hamlet is called to wreak upon his uncle, Claudius, by the ghost of Hamlet's father, King Hamlet. Claudius had murdered his own brother and seized the throne, also marrying his deceased brother's widow. Hamlet is Shakespeare's longest play, and is among the most powerful and influential tragedies in English literature, with a story capable of \"seemingly endless retelling and adaptation by others\". The play likely was one of Shakespeare's most popular works during his lifetime, and still ranks among his most performed.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9788490019481"
+          }
+        }
+      },
+      {
+        "isbn": "9780192862426",
+        "title": "Macbeth",
+        "authors": [
+          "34100743-dcd0-45da-8142-8f4e650dd365"
+        ],
+        "language": "en",
+        "summary": "Dark and violent, Macbeth is a restless, haunting exploration of the human costs of violence and power. One of the most theatrically spectacular of Shakespeare's plays, Macbeth has endured as a psychologically and supernaturally sinister work. Emma Smith's introduction considers the historical and contemporary contexts of the play, from the influence of the Gunpowder Plot as an act of domestic terrorism, to the combination of banal domesticity and pure horror in the play's setting and events.\n\nThe New Oxford Shakespeare offers authoritative editions of Shakespeare's works with introductory materials designed to encourage new interpretations of the plays and poems. Using the text from the landmark The New Oxford Shakespeare Complete Works: Modern Critical Edition, these volumes offer readers the latest thinking on the authentic texts (collated from all surviving original versions of Shakespeare's work) alongside innovative introductions from leading scholars. The texts are accompanied by a comprehensive set of critical apparatus to give readers the best resources to help understand and enjoy Shakespeare's work.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9780192862426"
+          }
+        }
+      },
+      {
+        "isbn": "9782072927522",
+        "title": "La zone du dehors",
+        "authors": [
+          "87979468-9c9b-4883-b7c4-06c15c7bcf77"
+        ],
+        "language": "fr",
+        "summary": "2084. Orwell est loin désormais. Le totalitarisme a pris les traits bonhommes de la social-démocratie. Souriez, vous êtes gérés ! Le citoyen ne s'opprime plus : il se fabrique. A la pâte à norme, au confort, au consensus. Copie qu'on forme, tout simplement. Au coeur de cette glu, un mouvement, une force de frappe, des fous : la Volte. Le Dehors est leur espace, subvertir leur seule arme. Emmenés par Capt, philosophe et stratège, le peintre Kamio et le fulgurant Slift que rien ne bloque ni ne borne, ils iront au bout de leur volution.\nEn perdant beaucoup. En gagnant tout. Premier roman, ici réécrit, La Zone du Dehors est un livre de combat contre nos sociétés de contrôle. Celle que nos gouvernements, nos multinationales, nos technologies et nos médias nous tissent aux fibres, tranquillement. Avec notre plus complice consentement. Peut-être est-il temps d'apprendre à boxer chaos debout contre le swing de la norme ?",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782072927522"
+          }
+        }
+      },
+      {
+        "isbn": "9782072927515",
+        "title": "La horde du contrevent",
+        "authors": [
+          "87979468-9c9b-4883-b7c4-06c15c7bcf77"
+        ],
+        "language": "fr",
+        "summary": "Un groupe d'élite, formé dès l'enfance à faire face, part des confins d'une terre féroce, saignée de rafales, pour aller chercher l'origine du vent. Ils sont vingt-trois, un bloc, un noeud de courage : la Horde. Ils sont pilier, ailier, traceur, aéromaître et géomaître, feuleuse et sourcière, troubadour et scribe. Ils traversent leur monde debout, à pied, en quête d'un Extrême-Amont qui fuit devant eux comme un horizon fou.\nExpérience de lecture unique, La Horde du Contrevent est un livre-univers qui fond d'un même feu l'aventure et la poésie des parcours, le combat nu et la quête d'un sens profond du vivant qui unirait le mouvement et le lien. Chaque mot résonne, claque, fuse : Alain Damasio joue de sa plume comme d'un pinceau, d'une caméra ou d'une arme... Chef-d'oeuvre porté par un bouche-à-oreille rare, le roman a été logiquement récompensé par le Grand Prix de l'Imaginaire.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782072927515"
+          }
+        }
+      },
+      {
+        "isbn": "9782072847929",
+        "title": "Les furtifs",
+        "authors": [
+          "87979468-9c9b-4883-b7c4-06c15c7bcf77"
+        ],
+        "language": "fr",
+        "summary": "Ils sont là, parmi nous, jamais où tu regardes, à circuler dans les angles morts de la vision humaine. On les appelle les furtifs. Des fantômes ? Plutôt l'exact inverse : des êtres de chair et de sons, à la vitalité hors norme, qui métabolisent dans leur trajet pierres, déchets, animaux ou plantes pour alimenter leurs métamorphoses incessantes. Lorca Varèse, sociologue pour communes autogérées, et sa femme, Sahar, proferrante dans la rue pour les enfants que l'Education nationale, en faillite, a abandonnés, ont vu leur couple brisé par la disparition de leur fille unique de quatre ans, Tishka - volatilisée un matin, inexplicablement.\nSahar ne parvient pas à faire son deuil alors que Lorca, convaincu que sa fille est partie avec les furtifs, intègre une unité clandestine de l'armée chargée de chasser ces animaux extraordinaires. Peu à peu, ils apprendront à apprivoiser leur puissance de fuite et à renouer, grâce à eux, avec ce vivant que nos sociétés excommunient. Les furtifs nous plonge dans un futur proche où le libéralisme et la technologie n'ont jamais aussi bien maximisé nos servitudes volontaires - sous couvert de libération !",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782072847929"
+          }
+        }
+      },
+      {
+        "isbn": "9782070462872",
+        "title": "La métamorphose",
+        "authors": [
+          "406d7543-ad61-4807-bd28-d61022950463"
+        ],
+        "language": "fr",
+        "summary": "\"Lorsque Gregor Samsa s'éveilla un matin au sortir de rêves agités, il se retrouva dans son lit changé en un énorme cancrelat. [... ] \"Que m'est-il arrivé ? \" pensa-t-il. Ce n'était pas un rêve. [... ] \"Et si je continuais un peu à dormir et oubliais toutes ces bêtises\", pensa-t-il, mais cela était tout à fait irréalisable, car il avait coutume de dormir sur le côté droit et il lui était impossible, dans son état actuel, de se mettre dans cette position.\nIl avait beau se jeter de toutes ses forces sur le côté droit, il rebondissait sans cesse sur le dos\".",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782070462872"
+          }
+        }
+      },
+      {
+        "isbn": "9782073052872",
+        "title": "Le procès",
+        "authors": [
+          "406d7543-ad61-4807-bd28-d61022950463"
+        ],
+        "language": "fr",
+        "summary": "Joseph K. , cadre de banque, est arrêté chez lui, un beau matin, sans raison, le jour de son trentième anniversaire. Si on le laisse libre d'aller et venir, il ne cesse de se heurter à des obstacles absurdes, à des êtres étranges, à une réalité qui semble se dérober à mesure qu'il tente de percer le mystère de son \"arrestation\". Une justice invisible mais menaçante, qui ne définit jamais la faute qu'il a pu commettre, le cerne de toutes parts.\nLe Procès, que Kafka considérait comme inachevé, et qui parut en 1925, moins d'un an après sa mort, est un livre d'une originalité radicale, sans sources ni modèles, qui entraîne son personnage, tout comme les lecteurs, sur un terrain de plus en plus instable, à la manière des sables mouvants. Avec une notice de Régis Quatresous : \"Traduire, retraduire Le Procès. Pour saluer Alexandre Vialatte\".",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782073052872"
+          }
+        }
+      }
+    ],
+    "authors": [
+      {
+        "id": "406d7543-ad61-4807-bd28-d61022950463",
+        "name": "Franz Kafka",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/authors/406d7543-ad61-4807-bd28-d61022950463"
+          }
+        }
+      },
+      {
+        "id": "34100743-dcd0-45da-8142-8f4e650dd365",
+        "name": "William Shakespeare",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/authors/34100743-dcd0-45da-8142-8f4e650dd365"
+          }
+        }
+      },
+      {
+        "id": "87979468-9c9b-4883-b7c4-06c15c7bcf77",
+        "name": "Alain Damasio",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/authors/87979468-9c9b-4883-b7c4-06c15c7bcf77"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "first": {
+      "href": "http://localhost:8080/api/v1/catalog?page=0&size=10"
+    },
+    "prev": {
+      "href": "http://localhost:8080/api/v1/catalog?page=5&size=10"
+    },
+    "self": {
+      "href": "http://localhost:8080/api/v1/catalog?page=6&size=10"
+    },
+    "last": {
+      "href": "http://localhost:8080/api/v1/catalog?page=6&size=10"
+    }
+  }
+}

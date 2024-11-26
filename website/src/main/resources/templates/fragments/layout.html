@@ -1,0 +1,57 @@
+<!doctype html>
+<html th:fragment="layout (template, menu)">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Library website</title>
+
+    <link th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/resources/css/library.css}" />
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark" role="navigation">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#main-navbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="main-navbar" style>
+
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" th:remove="all">
+                <li th:fragment="menuItem (link,active,title,glyph,text)" th:class="nav-item">
+                    <a th:class="${active==menu ? 'nav-link active' : 'nav-link'}" th:href="@{__${link}__}" th:title="${title}">
+                        <span th:class="'fa fa-'+${glyph}" class="fa fa-home"></span>
+                        <span th:text="${text}">Template</span>
+                    </a>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav me-auto">
+                <li th:replace="~{::menuItem ('/','home','home page','home','Home')}">
+                    <span class="fa fa-home" aria-hidden="true"></span>
+                    <span>Home</span>
+                </li>
+
+                <li th:replace="~{::menuItem ('/catalog','catalog','library catalog','search','Browse catalog')}">
+                    <span class="fa fa-search" aria-hidden="true"></span>
+                    <span>Browse catalog</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="container xd-container">
+        <th:block th:insert="${template}" />
+    </div>
+</div>
+
+<script th:src="@{/webjars/bootstrap/5.3.3/dist/js/bootstrap.bundle.min.js}"></script>
+
+</body>
+
+</html>

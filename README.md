@@ -43,4 +43,5 @@ properties that will be used during execution. By default, those values are set 
 
 ```properties
 CATALOG_API_PORT=8080
+WEBSITE_PORT=9000
 ```
