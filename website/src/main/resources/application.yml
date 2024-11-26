@@ -1,0 +1,19 @@
+spring.application.name: Library website
+
+management:
+  endpoints:
+    web:
+      base-path: /management
+      exposure.include: '*'
+  endpoint:
+    health:
+      show-details: always
+  health:
+    probes.enabled: true
+    diskspace.enabled: false
+    livenessstate.enabled: true
+    readinessstate.enabled: true
+
+library.website:
+  rest-client:
+    catalog.base-url: http://localhost:8080/api/v1

@@ -1,0 +1,186 @@
+{
+  "page": {
+    "size": 10,
+    "total_elements": 67,
+    "total_pages": 7,
+    "number": 0
+  },
+  "_embedded": {
+    "books": [
+      {
+        "isbn": "9782081275232",
+        "title": "Du contrat social",
+        "authors": [
+          "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+        ],
+        "language": "fr",
+        "summary": "Paru en 1762, le Contrat social, en affirmant le principe de souveraineté du peuple, a constitué un tournant décisif pour la modernité et s'est imposé comme un des textes majeurs de la philosophie politique. Il a aussi acquis le statut de monument, plus célèbre que connu, plus révéré - ou honni - qu'interrogé. Retrouver, dans les formules fameuses et les pages d'anthologie, le mouvement de la réflexion et les questions vives qui nourrissent une œuvre beaucoup plus problématique qu'affirmative, c'est découvrir une pensée qui se tient au plus près des préoccupations d'aujourd'hui : comment intégrer les intérêts de tous dans la détermination de l'intérêt commun ? Comment lutter contre la pente de tout gouvernement à déposséder les citoyens de la souveraineté ? Comment former en chacun ce sentiment d'obligation sans lequel le lien social se défait ?\n",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782081275232"
+          }
+        }
+      },
+      {
+        "isbn": "9782081275256",
+        "title": "Discours sur l'origine et les fondements de l'inégalité parmi les hommes",
+        "authors": [
+          "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+        ],
+        "language": "fr",
+        "summary": "Paru en 1755, le Discours sur l'origine et les fondements de l'inégalité parmi les hommes peut être considéré comme la matrice de l'oeuvre morale et politique de Rousseau : il y affirme sa stature de philosophe, l'originalité de sa voix, la force de son \"système\". Résoudre le problème posé par l'Académie de Dijon - \"quelle est la source de l'inégalité parmi les hommes et si elle est autorisée par la loi naturelle ? \"-, en d'autres termes expliquer que riches et puissants dominent leurs semblables sur lesquels ils n'ont pas de réelle supériorité, exige aux yeux de Rousseau de poser à nouveaux frais la question \"qu'est-ce que l'homme ? \".\nPour cela, il faut comprendre comment s'est formée sa \"nature actuelle\", si éloignée de ce que serait son état de nature : \"Si je me suis étendu si longtemps sur la supposition de cette condition primitive, c'est qu'ayant d'anciennes erreurs et des préjugés invétérés à détruire, j'ai cru devoir creuser jusqu'à la racine.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782081275256"
+          }
+        }
+      },
+      {
+        "isbn": "9782081206922",
+        "title": "Emile ou de l'éducation",
+        "authors": [
+          "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+        ],
+        "language": "fr",
+        "summary": "La publication de l'Emile, en 1762, restitue au problème de l'éducation sa place centrale en philosophie. De ses premiers mois jusqu'à la rencontre amoureuse, Emile est suivi dans chaque étape, à travers des expériences qui attestent d'abord le souci de considérer « l'enfant dans l'enfant », au lieu de le sortir de son âge. Rousseau montre qu'il est possible d'éduquer un homme selon la nature et de quelle façon les vices et l'inégalité caractérisent désormais la condition humaine : double enjeu qui constitue sa « théorie de l'homme ».\nLa richesse incomparable de ce maître-livre tient aussi aux tensions qui le parcourent. Rousseau refuse le péché originel mais il doit rendre raison du mal et de la souffrance que ce dogme interdisait d'ignorer; il critique les philosophes de son temps mais il pousse à ses limites leur méthode empiriste; il proclame: «je hais les livres», mais il fournit le panorama le plus juste et le plus instruit de la culture du XVIIIe siècle, en face de l'Encyclopédie et, pour partie, contre elle.\nParus ensemble, Emile et le Contrat social furent condamnés à Paris puis à Genève: la force du traité d'éducation n'échappa pas aux censeurs, même si Rousseau prétendait ne livrer que « les rêveries d'un visionnaire ». Car la forme même de la fiction arrache l'ouvrage aux circonstances : pas plus que ses lecteurs des Lumières, nous ne sommes à l'abri de ses leçons. ",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782081206922"
+          }
+        }
+      },
+      {
+        "isbn": "9782070399697",
+        "title": "Les Confessions",
+        "authors": [
+          "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+        ],
+        "language": "fr",
+        "summary": "Je forme une entreprise qui n'eut jamais d'exemple et dont l'exécution n'aura point d'imitateur. Je veux montrer à mes semblables un homme dans toute la vérité de la nature; et cet homme ce sera moi. Moi, seul. Je sens mon cœur et je connais les hommes. Je ne suis fait comme aucun de ceux que j'ai vus; j'ose croire n'être fait comme aucun de ceux qui existent. Si je ne vaux pas mieux, au moins je suis autre. Si la nature a bien ou mal fait de briser le moule dans lequel elle m'a jeté, c'est ce dont on ne peut juger qu'après m'avoir lu. ",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782070399697"
+          }
+        }
+      },
+      {
+        "isbn": "9782081409842",
+        "title": "Julie ou la Nouvelle Héloïse",
+        "authors": [
+          "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+        ],
+        "language": "fr",
+        "summary": "\"J'ai vu les moeurs de mon temps, et j'ai publié ces lettres\" : c'est par ces mots que l'\"éditeur\" Rousseau ouvre La Nouvelle Héloïse, correspondance amoureuse entre Julie d'Etange et son précepteur Saint-Preux. Sur les rives du lac Léman, ces \"belles âmes\" forment une petite société idéale, où priment les passions douces et la sincérité du sentiment, à l'écart des maux de la civilisation. Dans la lignée des Lettres persanes de Montesquieu, Rousseau conçoit son oeuvre comme un laboratoire d'idées nouvelles, qui concentre les questionnements de son époque sur l'homme et ses passions.\nRoman d'amour, chant élégiaque, mais aussi fiction expérimentale au croisement de l'anthropologie et de la politique : La Nouvelle Héloïse, plus grand succès de librairie de son temps, consacre avec éclat les noces du roman et de la philosophie au XVIIIe siècle. ",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782081409842"
+          }
+        }
+      },
+      {
+        "isbn": "9782267046885",
+        "title": "Le Seigneur des Anneaux - La fraternité de l'anneau",
+        "authors": [
+          "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+        ],
+        "language": "fr",
+        "summary": "Dans un paisible village du Comté, le jeune Frodo est sur le point de recevoir un cadeau qui changera sa vie à jamais : l'Anneau de Pouvoir. Forgé par Sauron au coeur de la Montagne du Feu, on croyait l'Anneau perdu depuis qu'un homme l'avait arraché au Seigneur des Ténèbres avant de le chasser hors du monde. A présent, de noirs présages s'étendent à nouveau sur la Terre du Milieu, les créatures maléfiques se multiplient et, dans les Montagnes de Brume, les Orques traquent les Nains.\nL'ennemi veut récupérer son bien afin de dominer le monde ; l'Œil de Sauron est désormais pointé sur le Comté. Heureusement Gandalf les a devancés. S'ils font vite, Frodo et lui parviendront peut-être à détruire l'Anneau à temps. Chef-d'oeuvre de la fantasy, découverte d'un monde imaginaire, de sa géographie, de son histoire et de ses langues, mais aussi réflexion sur le pouvoir et la mort, Le Seigneur des Anneaux est sans équivalent par sa puissance d'évocation, son souffle et son ampleur.\nCette traduction de Daniel Lauzon prend en compte la dernière version du texte anglais, les indications laissées par Tolkien à l'intention des traducteurs et les découvertes permises par les publications posthumes proposées par Christopher Tolkien. Ce volume contient 18 illustrations d'Alan Lee, ainsi que deux cartes en couleur de la Terre du Milieu et du Comté. ",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782267046885"
+          }
+        }
+      },
+      {
+        "isbn": "9782267046892",
+        "title": "Le Seigneur des Anneaux - Les deux tours",
+        "authors": [
+          "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+        ],
+        "language": "fr",
+        "summary": "La Fraternité de l'Anneau poursuit son voyage vers la Montagne du Feu où l'Anneau Unique fut forgé, et où Frodo a pour mission de le détruire. Cette quête terrible est parsemée d'embûches : Gandalf a disparu dans les Mines de la Moria et Boromir a succombé au pouvoir de l'Anneau. Frodo et Sam se sont échappés afin de poursuivre leur voyage jusqu'au coeur du Mordor. A présent, ils cheminent seuls dans la désolation qui entoure le pays de Sauron – mais c'est sans compter la mystérieuse silhouette qui les suit partout où ils vont.\nChef-d'oeuvre de la fantasy, découverte d'un monde imaginaire, de sa géographie, de son histoire et de ses langues, mais aussi réflexion sur le pouvoir et la mort, Le Seigneur des Anneaux est sans équivalent par sa puissance d'évocation, son souffle et son ampleur. Cette traduction de Daniel Lauzon prend en compte la dernière version du texte anglais, les indications laissées par Tolkien à l'intention des traducteurs et les découvertes permises par les publications posthumes proposées par Christopher Tolkien.\nCe volume contient 16 illustrations d'Alan Lee, ainsi qu'une carte en couleur de la Terre du Milieu.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782267046892"
+          }
+        }
+      },
+      {
+        "isbn": "9782267046908",
+        "title": "Le Seigneur des Anneaux - Le retour du roi",
+        "authors": [
+          "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+        ],
+        "language": "fr",
+        "summary": "Alors que les armées de Sauron se rassemblent et que son ombre maléfique s'étend de plus en plus en Terre du Milieu, Hommes, Nains, Elfes et Ents unissent leurs forces pour se battre contre les Ténèbres. Gandalf, quant à lui, élabore une stratégie désespérée afin de triompher du mal. Le Mordor s'est armé, ses créatures malfaisantes se sont multipliées, la riposte se prépare. Si l'Anneau tombe entre les mains du Seigneur des Ténèbres, qui pourra l'arrêter ? Tous les espoirs reposent sur Frodo et Sam, qui peinent à atteindre la Montagne du Feu afin de détruire, une bonne fois pour toutes, l'Anneau de Sauron.\nChef-d'oeuvre de la fantasy, découverte d'un monde imaginaire, de sa géographie, de son histoire et de ses langues, mais aussi réflexion sur le pouvoir et la mort, Le Seigneur des Anneaux est sans équivalent par sa puissance d'évocation, son souffle et son ampleur.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782267046908"
+          }
+        }
+      },
+      {
+        "isbn": "9782266339667",
+        "title": "Le Hobbit",
+        "authors": [
+          "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+        ],
+        "language": "fr",
+        "summary": "Bilbo, comme tous les hobbits, est un petit être paisible et sans histoires. Son quotidien est bouleversé un beau jour, lorsque Gandalf le magicien et treize nains barbus l'entraînent dans un voyage périlleux. C'est le début d'une grande aventure, d'une fantastique quête au trésor semée d'embûches et d'épreuves, qui mènera Bilbo jusqu'à la Montagne Solitaire gardée par le dragon Smaug...",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782266339667"
+          }
+        }
+      },
+      {
+        "isbn": "9782267044706",
+        "title": "Le Silmarillion",
+        "authors": [
+          "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+        ],
+        "language": "fr",
+        "summary": "Composé de récits allant des Jours Anciens de la Terre du Milieu jusqu'à la fin de la Guerre de l'Anneau, en passant par le Second Age et la montée en puissance de Sauron, Le Silmarillion est au coeur de l'univers imaginé par J. R. R. Tolkien. Ces histoires se déroulent à une époque où Morgoth, le premier Seigneur des Ténèbres, habite la Terre du Milieu et où les Elfes lui font la guerre dans sa forteresse d'Angband pour récupérer les Silmarils.\nCes trois joyaux contenant la dernière lumière pure du Valinor ont été dérobés par Morgoth puis sertis dans sa couronne de fer. Ces contes sont accompagnés de plusieurs oeuvres plus courtes. L'Ainulindalë est un mythe de la Création tandis que la Valaquenta décrit la nature et les pouvoirs des dieux. L'Akallabêth raconte la destruction du grand royaume insulaire de Númenor à la fin du Second Age et Les Anneaux du Pouvoir relate les grands événements de la fin du Troisième Age, que raconte également Le Seigneur des Anneaux.\nJ. R. R. Tolkien n'a pas pu publier Le Silmarillion de son vivant, car il a évolué avec lui. Il a donc laissé à son fils Christopher le soin de faire paraître cette oeuvre à partir de nombreux manuscrits et de rendre publiable la grande vision de son père, terminant ainsi l'oeuvre littéraire de toute une vie. Cette édition spéciale présente sous une forme nouvelle ce premier pas fondamental dans l'édition posthume par Christopher Tolkien des volumes concernant la Terre du Milieu, début de quarante années d'une carrière illustre, avec la publication de plus de vingt livres célébrant l'héritage de son père.\nOn retrouvera aussi dans ce volume une lettre de J. R. R. Tolkien, écrite en 1951, qui fournit une passionnante exposition des Ages précédents, et près de 50 peintures en couleurs de Ted Nasmith, dont certaines apparaissent ici pour la première fois.",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/books/9782267044706"
+          }
+        }
+      }
+    ],
+    "authors": [
+      {
+        "id": "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725",
+        "name": "Jean-Jacques Rousseau",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/authors/83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+          }
+        }
+      },
+      {
+        "id": "d8d94b64-603d-4fae-90dd-5296cde7fa2c",
+        "name": "John Ronald Reuel Tolkien",
+        "_links": {
+          "self": {
+            "href": "http://localhost:8080/api/v1/authors/d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "first": {
+      "href": "http://localhost:8080/api/v1/catalog?page=0&size=10"
+    },
+    "self": {
+      "href": "http://localhost:8080/api/v1/catalog?page=0&size=10"
+    },
+    "next": {
+      "href": "http://localhost:8080/api/v1/catalog?page=1&size=10"
+    },
+    "last": {
+      "href": "http://localhost:8080/api/v1/catalog?page=6&size=10"
+    }
+  }
+}

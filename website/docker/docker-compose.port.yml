@@ -1,0 +1,4 @@
+services:
+  website:
+    ports:
+      - ${WEBSITE_PORT:-9000}:8080

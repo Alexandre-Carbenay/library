@@ -1,0 +1,19 @@
+networks:
+  catalog:
+    name: catalog
+
+services:
+  catalog:
+    container_name: catalog
+    image: catalog:latest
+    ports:
+      - 8080
+    environment:
+      LIBRARY_CATALOG_DATA_AUTO_LOAD_ENABLED: 'true'
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8080/management/health/liveness || exit 1
+      interval: 5s
+      timeout: 1s
+      retries: 3
+    networks:
+      - catalog

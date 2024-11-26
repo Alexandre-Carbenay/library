@@ -1,0 +1,67 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.5'
+	id 'io.spring.dependency-management' version '1.1.6'
+	id 'io.miret.etienne.sass' version '1.5.1'
+}
+
+group = 'org.adhuc.library'
+version = '1'
+
+java {
+	sourceCompatibility = '21'
+}
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+	scss { transitive = false }
+}
+
+ext {
+	bootstrapVersion = '5.3.3'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.data:spring-data-commons'
+	runtimeOnly "org.webjars.npm:bootstrap:${bootstrapVersion}"
+	runtimeOnly 'org.webjars.npm:font-awesome:4.7.0'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	scss 'org.webjars.npm:bootstrap:5.3.3'
+}
+
+task extractBootstrap(type: Copy) {
+	from zipTree(configurations.scss.singleFile).matching {
+		include "META-INF/resources/webjars/bootstrap/${bootstrapVersion}/scss/**/*.scss"
+	}
+	into 'build/bootstrap'
+}
+
+task copyBootstrap(type: Copy) {
+	dependsOn extractBootstrap
+	from ("build/bootstrap/META-INF/resources/webjars/bootstrap/${bootstrapVersion}/scss") {
+		include '**/*.scss'
+	}
+	into "${projectDir}/src/main/sass"
+}
+
+compileSass {
+	dependsOn copyBootstrap
+	sourceDir = project.file("${projectDir}/src/main/sass")
+	outputDir = project.file("${projectDir}/src/main/resources/static/resources/css")
+}
+
+processResources {
+	dependsOn compileSass
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
