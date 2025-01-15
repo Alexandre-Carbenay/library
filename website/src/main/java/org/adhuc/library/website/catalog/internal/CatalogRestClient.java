@@ -28,7 +28,7 @@ class CatalogRestClient implements CatalogClient {
     @Override
     public Page<Book> listBooks(Pageable pageable) {
         return restClient.get()
-                .uri("/catalog?page={page}&size={size}", pageable.getPageNumber(), pageable.getPageSize())
+                .uri("/api/v1/catalog?page={page}&size={size}", pageable.getPageNumber(), pageable.getPageSize())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .body(BooksPage.class);

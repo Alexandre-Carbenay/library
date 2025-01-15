@@ -20,9 +20,10 @@ import java.util.stream.Stream;
 
 import static org.adhuc.library.website.catalog.BooksMother.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.http.HttpStatus.PARTIAL_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestToUriTemplate;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 @DisplayName("Catalog REST client should")
 class CatalogRestClientTests {
@@ -45,8 +46,8 @@ class CatalogRestClientTests {
     @DisplayName("list books for the default page")
     void getDefaultPage() {
         var response = new DefaultResourceLoader().getResource("classpath:client/catalog/page-0-size-10.json");
-        mockServer.expect(requestToUriTemplate("http://localhost:12345/test/catalog?page=0&size=10")).andRespond(
-                withSuccess().body(response).contentType(APPLICATION_JSON)
+        mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page=0&size=10")).andRespond(
+                withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON)
         );
 
         var actual = catalogRestClient.listBooks();
@@ -63,8 +64,8 @@ class CatalogRestClientTests {
     @MethodSource("pageProvider")
     @DisplayName("list books for a page")
     void getPage(int page, int size, Resource response, int expectedTotalPages, int expectedSize) {
-        mockServer.expect(requestToUriTemplate("http://localhost:12345/test/catalog?page={page}&size={size}", page, size)).andRespond(
-                withSuccess().body(response).contentType(APPLICATION_JSON)
+        mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page={page}&size={size}", page, size)).andRespond(
+                withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON)
         );
 
         var actual = catalogRestClient.listBooks(PageRequest.of(page, size));
@@ -92,8 +93,8 @@ class CatalogRestClientTests {
     @MethodSource("pageBooksProvider")
     @DisplayName("list books for a page with expected books contained and non expected books not contained")
     void getPageContainingBooks(int page, int size, Resource response, List<Book> expectedBooks, List<Book> nonExpectedBooks) {
-        mockServer.expect(requestToUriTemplate("http://localhost:12345/test/catalog?page={page}&size={size}", page, size)).andRespond(
-                withSuccess().body(response).contentType(APPLICATION_JSON)
+        mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page={page}&size={size}", page, size)).andRespond(
+                withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON)
         );
 
         var actual = catalogRestClient.listBooks(PageRequest.of(page, size));
