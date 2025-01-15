@@ -16,4 +16,4 @@ management:
 
 library.website:
   rest-client:
-    catalog.base-url: http://localhost:8080/api/v1
+    catalog.base-url: http://localhost:8080

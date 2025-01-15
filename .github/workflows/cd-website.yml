@@ -24,6 +24,7 @@ jobs:
   build:
     runs-on: [ubuntu-latest]
     permissions:
+      contents: write
       pull-requests: write
     steps:
       - name: Checkout project sources
@@ -85,3 +86,19 @@ jobs:
         env:
           VERSION: ${{ steps.app_version.outputs.version }}
           REVISION: ${{ steps.branch_name.outputs.branch }}-${{ github.run_number }}
+
+      - name: Check for Pacts changes to commit
+        id: check-pacts
+        working-directory: ./website
+        run: |
+          if git status --porcelain; then
+            echo "PACTS_CHANGED=true" >> $GITHUB_OUTPUT
+          else
+            echo "PACTS_CHANGED=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push Pacts
+        if: ${{ steps.check-pacts.outputs.PACTS_CHANGED == 'true' }}
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'doc: Update library website pacts [skip actions]'

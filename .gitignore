@@ -7,7 +7,7 @@ build/
 **/.jqwik-database
 .env
 
-# Website stylesheet files
+### Website stylesheet files ###
 website/src/main/sass/**/*.scss
 website/src/main/resources/static/resources/css
 
@@ -43,6 +43,9 @@ out/
 ### VS Code ###
 .vscode/
 
-### Structurizr
+### Structurizr ###
 doc/architecture/c4/workspace.json
 doc/architecture/c4/.structurizr
+
+### Pact ###
+website/target
