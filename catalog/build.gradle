@@ -54,6 +54,7 @@ dependencies {
 	testImplementation 'org.jmolecules.integrations:jmolecules-archunit'
 	testImplementation 'com.tngtech.archunit:archunit-junit5:1.3.0'
 	testImplementation 'net.jqwik:jqwik:1.9.2'
+	testImplementation 'au.com.dius.pact.provider:junit5:4.6.15'
 
 	acceptanceImplementation platform('io.cucumber:cucumber-bom:7.20.1')
 	acceptanceImplementation 'io.cucumber:cucumber-java'
