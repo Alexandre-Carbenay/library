@@ -1,4 +1,5 @@
 ENV_LOCATION=..
+PACT_LOCATION=../pact
 CATALOG_LOCATION=.
 
 # Defined before inclusions to ensure it is the first target
