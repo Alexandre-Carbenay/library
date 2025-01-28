@@ -41,11 +41,168 @@
               }
             ]
           },
+          "_links": {
+            "first": {
+              "href": "http://localhost:8080/api/v1/catalog?page=0&size=10"
+            },
+            "last": {
+              "href": "http://localhost:8080/api/v1/catalog?page=6&size=10"
+            },
+            "next": {
+              "href": "http://localhost:8080/api/v1/catalog?page=1&size=10"
+            }
+          },
           "page": {
             "number": 0,
             "size": 10,
             "total_elements": 67,
             "total_pages": 7
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$._embedded.authors": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$._embedded.authors[*].id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$._embedded.books": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "max": 10
+                }
+              ]
+            },
+            "$._embedded.books[*].authors": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$._embedded.books[*].authors[*]": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$.page.number": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.page.size": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.page.total_elements": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.page.total_pages": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            }
+          }
+        },
+        "status": 206
+      }
+    },
+    {
+      "description": "Specific website page request",
+      "providerStates": [
+        {
+          "name": "Catalog contains books"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/catalog",
+        "query": {
+          "page": [
+            "1"
+          ],
+          "size": [
+            "25"
+          ]
+        }
+      },
+      "response": {
+        "body": {
+          "_embedded": {
+            "authors": [
+              {
+                "id": "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2",
+                "name": "Jean-Jacques Rousseau"
+              }
+            ],
+            "books": [
+              {
+                "authors": [
+                  "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"
+                ],
+                "summary": "Paru en 1762, le Contrat social, ...",
+                "title": "Du contrat social"
+              }
+            ]
+          },
+          "_links": {
+            "first": {
+              "href": "http://localhost:8080/api/v1/catalog?page=0&size=25"
+            },
+            "last": {
+              "href": "http://localhost:8080/api/v1/catalog?page=3&size=25"
+            },
+            "next": {
+              "href": "http://localhost:8080/api/v1/catalog?page=2&size=25"
+            },
+            "prev": {
+              "href": "http://localhost:8080/api/v1/catalog?page=0&size=25"
+            }
+          },
+          "page": {
+            "number": 1,
+            "size": 25,
+            "total_elements": 67,
+            "total_pages": 3
           }
         },
         "headers": {

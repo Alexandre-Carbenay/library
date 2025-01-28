@@ -25,5 +25,10 @@ public final class BooksMother {
             List.of(new Author(UUID.fromString("060d74f4-1d42-4087-b4ef-07dd00bb559c"), "David Graeber")),
             "Dans la société moderne, beaucoup d'employés consacrent leur vie à des tâches inutiles et vides de sens. C'est ce que David Graeber appelle les \"bullshit jobs\" - ou \"jobs à la con\". L'auteur en cherche l'origine et en détaille les conséquences : dépression, anxiété, effondrement de l'estime de soi... Il en appelle à une révolte du salarié moderne ainsi qu'à une vaste réorganisation des valeurs, qui placerait le travail créatif et aidant au coeur de notre culture et ferait de la technologie un outil de libération plutôt que d'asservissement assouvissant enfin notre soif de sens et d'épanouissement."
     );
+    public static final Book HAMLET = new Book(
+            "Hamlet",
+            List.of(new Author(UUID.fromString("34100743-dcd0-45da-8142-8f4e650dd365"), "William Shakespeare")),
+            "\"Sit down awhile, And let us once again assail your ears, That are so fortified against our story What we have two nights seen...\" The Tragedy of Hamlet, Prince of Denmark, often shortened to Hamlet, is a tragedy written by William Shakespeare at an uncertain date between 1599 and 1602. Set in the Kingdom of Denmark, the play dramatises the revenge Prince Hamlet is called to wreak upon his uncle, Claudius, by the ghost of Hamlet's father, King Hamlet. Claudius had murdered his own brother and seized the throne, also marrying his deceased brother's widow. Hamlet is Shakespeare's longest play, and is among the most powerful and influential tragedies in English literature, with a story capable of \"seemingly endless retelling and adaptation by others\". The play likely was one of Shakespeare's most popular works during his lifetime, and still ranks among his most performed."
+    );
 
 }
