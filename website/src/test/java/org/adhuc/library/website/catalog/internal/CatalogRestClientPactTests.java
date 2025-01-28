@@ -12,6 +12,7 @@ import org.adhuc.library.website.catalog.Book;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,7 +29,7 @@ public class CatalogRestClientPactTests {
     private static final String UUID_REGEX = "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$";
 
     @Pact(consumer = "library-website", provider = "library-catalog")
-    public RequestResponsePact getCatalog(PactDslWithProvider builder) {
+    public RequestResponsePact defaultPage(PactDslWithProvider builder) {
         return builder
                 .given("Catalog contains books")
                 .uponReceiving("Default website page request")
@@ -44,6 +45,11 @@ public class CatalogRestClientPactTests {
                         page.integerType("total_elements", 67);
                         page.integerType("total_pages", 7);
                         page.integerType("number", 0);
+                    });
+                    root.object("_links", links -> {
+                        links.object("first", first -> first.stringValue("href", "http://localhost:8080/api/v1/catalog?page=0&size=10"));
+                        links.object("next", next -> next.stringValue("href", "http://localhost:8080/api/v1/catalog?page=1&size=10"));
+                        links.object("last", last -> last.stringValue("href", "http://localhost:8080/api/v1/catalog?page=6&size=10"));
                     });
                     root.object("_embedded", embedded -> {
                         embedded.maxArrayLike("books", 10, book -> {
@@ -61,7 +67,7 @@ public class CatalogRestClientPactTests {
     }
 
     @Test
-    @PactTestFor(pactMethod = "getCatalog", pactVersion = PactSpecVersion.V3)
+    @PactTestFor(pactMethod = "defaultPage", pactVersion = PactSpecVersion.V3)
     void getCatalogDefaultPage(MockServer mockServer) {
         var properties = new CatalogRestClientProperties(mockServer.getUrl());
         var restTemplate = new RestTemplate();
@@ -75,6 +81,78 @@ public class CatalogRestClientPactTests {
             s.assertThat(catalog.getNumber()).isEqualTo(0);
             s.assertThat(catalog.getTotalElements()).isEqualTo(67);
             s.assertThat(catalog.getTotalPages()).isEqualTo(7);
+            s.assertThat(catalog.hasLink("first")).isTrue();
+            s.assertThat(catalog.hasLink("prev")).isFalse();
+            s.assertThat(catalog.hasLink("next")).isTrue();
+            s.assertThat(catalog.hasLink("last")).isTrue();
+
+            s.assertThat(catalog.getContent()).hasSize(1)
+                    .contains(new Book(
+                            "Du contrat social",
+                            List.of(new Author(UUID.fromString("99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), "Jean-Jacques Rousseau")),
+                            "Paru en 1762, le Contrat social, ..."
+                    ));
+        });
+    }
+
+    @Pact(consumer = "library-website", provider = "library-catalog")
+    public RequestResponsePact otherPage(PactDslWithProvider builder) {
+        return builder
+                .given("Catalog contains books")
+                .uponReceiving("Specific website page request")
+                .method("GET")
+                .path("/api/v1/catalog")
+                .query("page=1&size=25")
+                .willRespondWith()
+                .status(206)
+                .headers(Map.of("Content-Type", "application/json"))
+                .body(newJsonBody(root -> {
+                    root.object("page", page -> {
+                        page.integerType("size", 25);
+                        page.integerType("total_elements", 67);
+                        page.integerType("total_pages", 3);
+                        page.integerType("number", 1);
+                    });
+                    root.object("_links", links -> {
+                        links.object("first", first -> first.stringValue("href", "http://localhost:8080/api/v1/catalog?page=0&size=25"));
+                        links.object("prev", prev -> prev.stringValue("href", "http://localhost:8080/api/v1/catalog?page=0&size=25"));
+                        links.object("next", next -> next.stringValue("href", "http://localhost:8080/api/v1/catalog?page=2&size=25"));
+                        links.object("last", last -> last.stringValue("href", "http://localhost:8080/api/v1/catalog?page=3&size=25"));
+                    });
+                    root.object("_embedded", embedded -> {
+                        embedded.maxArrayLike("books", 10, book -> {
+                            book.stringValue("title", "Du contrat social");
+                            book.minArrayLike("authors", 1, stringMatcher(UUID_REGEX, "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), 1);
+                            book.stringValue("summary", "Paru en 1762, le Contrat social, ...");
+                        });
+                        embedded.minArrayLike("authors", 1, author -> {
+                            author.stringMatcher("id", UUID_REGEX, "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2");
+                            author.stringValue("name", "Jean-Jacques Rousseau");
+                        });
+                    });
+                }).build())
+                .toPact();
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "otherPage", pactVersion = PactSpecVersion.V3)
+    void getCatalogPage(MockServer mockServer) {
+        var properties = new CatalogRestClientProperties(mockServer.getUrl());
+        var restTemplate = new RestTemplate();
+        var restClientBuilder = RestClient.builder(restTemplate);
+        var catalogRestClient = new CatalogRestClient(restClientBuilder, properties);
+
+        var catalog = catalogRestClient.listBooks(PageRequest.of(1, 25));
+
+        SoftAssertions.assertSoftly(s -> {
+            s.assertThat(catalog.getSize()).isEqualTo(25);
+            s.assertThat(catalog.getNumber()).isEqualTo(1);
+            s.assertThat(catalog.getTotalElements()).isEqualTo(67);
+            s.assertThat(catalog.getTotalPages()).isEqualTo(3);
+            s.assertThat(catalog.hasLink("first")).isTrue();
+            s.assertThat(catalog.hasLink("prev")).isTrue();
+            s.assertThat(catalog.hasLink("next")).isTrue();
+            s.assertThat(catalog.hasLink("last")).isTrue();
 
             s.assertThat(catalog.getContent()).hasSize(1)
                     .contains(new Book(

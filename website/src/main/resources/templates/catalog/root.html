@@ -5,6 +5,13 @@
 
 <h2>Library catalog</h2>
 
+<div>
+    <span><a th:if="${firstPageLinkName != null}" th:href="@{/catalog(link=${firstPageLinkName})}" title="First" class="fa fa-fast-backward"></a></span>
+    <span><a th:if="${previousPageLinkName != null}" th:href="@{/catalog(link=${previousPageLinkName})}" title="Previous" class="fa fa-step-backward"></a></span>
+    <span><a th:if="${nextPageLinkName != null}" th:href="@{/catalog(link=${nextPageLinkName})}" title="Next" class="fa fa-step-forward"></a></span>
+    <span><a th:if="${lastPageLinkName != null}" th:href="@{/catalog(link=${lastPageLinkName})}" title="Last" class="fa fa-fast-forward"></a></span>
+</div>
+
 <table id="catalog" class="table table-striped">
     <thead>
     <tr>

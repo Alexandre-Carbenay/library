@@ -1,12 +1,12 @@
 package org.adhuc.library.website.catalog;
 
-import org.springframework.data.domain.Page;
+import org.adhuc.library.website.support.pagination.NavigablePage;
 import org.springframework.data.domain.Pageable;
 
 public interface CatalogClient {
 
-    Page<Book> listBooks();
+    NavigablePage<Book> listBooks();
 
-    Page<Book> listBooks(Pageable pageable);
+    NavigablePage<Book> listBooks(NavigablePage<Book> current, String linkName);
 
 }
