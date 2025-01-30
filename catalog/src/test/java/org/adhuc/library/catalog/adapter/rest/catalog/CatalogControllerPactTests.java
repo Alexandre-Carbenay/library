@@ -48,9 +48,29 @@ class CatalogControllerPactTests {
         context.verifyInteraction();
     }
 
-    @State("Catalog contains books")
-    void defaultWebsitePageState() {
+    @State("First page of 10 elements contains books")
+    void page0Size10() {
         var request = PageRequest.of(0, 10);
+        when(catalogService.getPage(request)).thenReturn(new PageImpl<>(List.of(
+                new Book(
+                        "9782081275232",
+                        "Du contrat social",
+                        PublicationDate.of(LocalDate.parse("2012-01-04")),
+                        Set.of(new Author(
+                                UUID.fromString("83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"),
+                                "Jean-Jacques Rousseau",
+                                LocalDate.parse("1712-06-28"),
+                                LocalDate.parse("1778-07-02")
+                        )),
+                        "fr",
+                        "Paru en 1762, le Contrat social, ..."
+                )
+        ), request, 67));
+    }
+
+    @State("Next page of 25 elements contains books")
+    void page1Size25() {
+        var request = PageRequest.of(1, 25);
         when(catalogService.getPage(request)).thenReturn(new PageImpl<>(List.of(
                 new Book(
                         "9782081275232",
