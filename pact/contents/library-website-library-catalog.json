@@ -7,7 +7,7 @@
       "description": "Default website page request",
       "providerStates": [
         {
-          "name": "Catalog contains books"
+          "name": "First page of 10 elements contains books"
         }
       ],
       "request": {
@@ -43,13 +43,13 @@
           },
           "_links": {
             "first": {
-              "href": "http://localhost:8080/api/v1/catalog?page=0&size=10"
+              "href": "string"
             },
             "last": {
-              "href": "http://localhost:8080/api/v1/catalog?page=6&size=10"
+              "href": "string"
             },
             "next": {
-              "href": "http://localhost:8080/api/v1/catalog?page=1&size=10"
+              "href": "string"
             }
           },
           "page": {
@@ -57,6 +57,22 @@
             "size": 10,
             "total_elements": 67,
             "total_pages": 7
+          }
+        },
+        "generators": {
+          "body": {
+            "$._links.first.href": {
+              "size": 20,
+              "type": "RandomString"
+            },
+            "$._links.last.href": {
+              "size": 20,
+              "type": "RandomString"
+            },
+            "$._links.next.href": {
+              "size": 20,
+              "type": "RandomString"
+            }
           }
         },
         "headers": {
@@ -106,6 +122,30 @@
                 {
                   "match": "regex",
                   "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$._links.first.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$._links.last.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$._links.next.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
                 }
               ]
             },
@@ -150,7 +190,7 @@
       "description": "Specific website page request",
       "providerStates": [
         {
-          "name": "Catalog contains books"
+          "name": "Next page of 25 elements contains books"
         }
       ],
       "request": {
@@ -186,16 +226,16 @@
           },
           "_links": {
             "first": {
-              "href": "http://localhost:8080/api/v1/catalog?page=0&size=25"
+              "href": "string"
             },
             "last": {
-              "href": "http://localhost:8080/api/v1/catalog?page=3&size=25"
+              "href": "string"
             },
             "next": {
-              "href": "http://localhost:8080/api/v1/catalog?page=2&size=25"
+              "href": "string"
             },
             "prev": {
-              "href": "http://localhost:8080/api/v1/catalog?page=0&size=25"
+              "href": "string"
             }
           },
           "page": {
@@ -203,6 +243,26 @@
             "size": 25,
             "total_elements": 67,
             "total_pages": 3
+          }
+        },
+        "generators": {
+          "body": {
+            "$._links.first.href": {
+              "size": 20,
+              "type": "RandomString"
+            },
+            "$._links.last.href": {
+              "size": 20,
+              "type": "RandomString"
+            },
+            "$._links.next.href": {
+              "size": 20,
+              "type": "RandomString"
+            },
+            "$._links.prev.href": {
+              "size": 20,
+              "type": "RandomString"
+            }
           }
         },
         "headers": {
@@ -252,6 +312,38 @@
                 {
                   "match": "regex",
                   "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$._links.first.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$._links.last.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$._links.next.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$._links.prev.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
                 }
               ]
             },

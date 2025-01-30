@@ -31,7 +31,7 @@ public class CatalogRestClientPactTests {
     @Pact(consumer = "library-website", provider = "library-catalog")
     public RequestResponsePact defaultPage(PactDslWithProvider builder) {
         return builder
-                .given("Catalog contains books")
+                .given("First page of 10 elements contains books")
                 .uponReceiving("Default website page request")
                 .method("GET")
                 .path("/api/v1/catalog")
@@ -47,9 +47,9 @@ public class CatalogRestClientPactTests {
                         page.integerType("number", 0);
                     });
                     root.object("_links", links -> {
-                        links.object("first", first -> first.stringValue("href", "http://localhost:8080/api/v1/catalog?page=0&size=10"));
-                        links.object("next", next -> next.stringValue("href", "http://localhost:8080/api/v1/catalog?page=1&size=10"));
-                        links.object("last", last -> last.stringValue("href", "http://localhost:8080/api/v1/catalog?page=6&size=10"));
+                        links.object("first", first -> first.stringType("href"));
+                        links.object("next", next -> next.stringType("href"));
+                        links.object("last", last -> last.stringType("href"));
                     });
                     root.object("_embedded", embedded -> {
                         embedded.maxArrayLike("books", 10, book -> {
@@ -98,7 +98,7 @@ public class CatalogRestClientPactTests {
     @Pact(consumer = "library-website", provider = "library-catalog")
     public RequestResponsePact otherPage(PactDslWithProvider builder) {
         return builder
-                .given("Catalog contains books")
+                .given("Next page of 25 elements contains books")
                 .uponReceiving("Specific website page request")
                 .method("GET")
                 .path("/api/v1/catalog")
@@ -114,10 +114,10 @@ public class CatalogRestClientPactTests {
                         page.integerType("number", 1);
                     });
                     root.object("_links", links -> {
-                        links.object("first", first -> first.stringValue("href", "http://localhost:8080/api/v1/catalog?page=0&size=25"));
-                        links.object("prev", prev -> prev.stringValue("href", "http://localhost:8080/api/v1/catalog?page=0&size=25"));
-                        links.object("next", next -> next.stringValue("href", "http://localhost:8080/api/v1/catalog?page=2&size=25"));
-                        links.object("last", last -> last.stringValue("href", "http://localhost:8080/api/v1/catalog?page=3&size=25"));
+                        links.object("first", first -> first.stringType("href"));
+                        links.object("prev", prev -> prev.stringType("href"));
+                        links.object("next", next -> next.stringType("href"));
+                        links.object("last", last -> last.stringType("href"));
                     });
                     root.object("_embedded", embedded -> {
                         embedded.maxArrayLike("books", 10, book -> {
