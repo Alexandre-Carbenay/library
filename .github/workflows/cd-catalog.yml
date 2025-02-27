@@ -169,7 +169,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: "🐳 🔓 Log in to the Container registry"
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        uses: docker/login-action@v3
         with:
           registry: ${{ env.docker-registry }}
           username: ${{ github.actor }}
@@ -217,6 +217,9 @@ jobs:
     permissions:
       packages: write
     steps:
+      - name: "📥 Checkout project sources"
+        uses: actions/checkout@v4
+
       - name: "🐳 🔓 Log in to the Container registry"
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
         with:
@@ -232,3 +235,39 @@ jobs:
         run: |
           docker tag ${{ env.docker-registry }}/${{ env.github-repository }}/${{ env.docker-image }}:sha-${{ github.sha }} ${{ env.docker-registry }}/${{ env.github-repository }}/${{ env.docker-image }}:latest
           docker push ${{ env.docker-registry }}/${{ env.github-repository }}/${{ env.docker-image }}:latest
+
+      - name: "🏷 📦 Define tags based on semantic versioning"
+        id: svu
+        run: |
+          set +e
+          mkdir -p target_dir
+          wget -q https://github.com/caarlos0/svu/releases/download/v3.1.0/svu_3.1.0_linux_amd64.tar.gz -P target_dir
+          cd target_dir || exit
+          tar -xzvf svu_3.1.0_linux_amd64.tar.gz
+          chmod +x svu
+          sudo mv svu /usr/local/bin/
+          cd .. || exit
+          rm -rf target_dir
+
+          echo "current_tag=$(svu current --prefix="catalog-v" --pattern="catalog-v[0-9]*.[0-9]*.[0-9]*" --directory=./catalog)" >> $GITHUB_OUTPUT
+          echo "next_tag=$(svu next --prefix="catalog-v" --pattern="catalog-v[0-9]*.[0-9]*.[0-9]*" --directory=./catalog)" >> $GITHUB_OUTPUT
+
+      - name: "🏷 🌵 Tag Git branch"
+        run: |
+          git config --global --add safe.directory "$(realpath "./catalog")"
+          git config --global user.email "username@users.noreply.github.com"
+          git config --global user.name "${GITHUB_ACTOR}"
+          git config --global http.sslVerify true
+
+          git -C ./catalog tag -fa ${{ steps.svu.outputs.next_tag }} ${{ github.sha }} -m "${TAG_MSG}"
+          git -C ./catalog push origin ${{ steps.svu.outputs.next_tag }} --push-option "ci.skip"
+
+      - name: "📦 🚀 Create Github release"
+        run: |
+          gh release create ${{ steps.svu.outputs.next_tag }} \
+            --generate-notes \
+            --latest \
+            --verify-tag=true \
+            --target=main \
+            --notes-start-tag=${{ steps.svu.outputs.current_tag }} \
+            --prerelease=false
