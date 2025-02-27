@@ -12,7 +12,7 @@ Those tools and practices include:
   [Cucumber](https://cucumber.io/).
 - the [Consumer-driven Contract testing](https://martinfowler.com/articles/consumerDrivenContracts.html) pattern, to
   ease the maintainability of APIs from the viewpoint of the providers, based on the definition of the API usage by the
-  consumers. This pattern is implemented with the (Pact)[https://docs.pact.io/] tool.
+  consumers. This pattern is implemented with the [Pact](https://docs.pact.io/) tool.
 
 ## Project structure
 
