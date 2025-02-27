@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: "🐘 🧪 Gradle Wrapper Validation Action"
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/wrapper-validation-action@v3
 
       - name: "🐳 🔍 Hadolint Dockerfile Scan"
         uses: hadolint/hadolint-action@v3.1.0
