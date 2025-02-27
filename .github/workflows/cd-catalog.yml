@@ -118,7 +118,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "🐳 📦 🚀 Build and publish artifact with Docker (PR)"
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         if: github.ref != 'refs/heads/main' && github.event_name == 'pull_request'
         timeout-minutes: 1
         with:
@@ -134,7 +134,7 @@ jobs:
             ${{ env.docker-registry }}/${{ env.github-repository }}/${{ env.docker-image }}:sha-${{ github.sha }}
 
       - name: "🐳 📦 🚀 Build and publish artifact with Docker (main)"
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         if: github.ref == 'refs/heads/main'
         timeout-minutes: 1
         with:
