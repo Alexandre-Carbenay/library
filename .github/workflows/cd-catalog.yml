@@ -262,8 +262,9 @@ jobs:
           cd .. || exit
           rm -rf target_dir
 
-          echo "current_tag=$(svu current --tag.prefix="catalog-v" --tag.pattern="catalog-v[0-9]*.[0-9]*.[0-9]*")" >> $GITHUB_OUTPUT
-          echo "next_tag=$(svu next --tag.prefix="catalog-v" --tag.pattern="catalog-v[0-9]*.[0-9]*.[0-9]*" --log.directory="./catalog")-build-${{ github.run_number }}" >> $GITHUB_OUTPUT
+          echo "current_tag=$(svu current --tag.prefix="catalog-v" --tag.pattern="catalog-v[0-9]*.[0-9]*.[0-9]*-build-*")" >> $GITHUB_OUTPUT
+          echo "next_tag=$(svu next --tag.prefix="catalog-v" --tag.pattern="catalog-v[0-9]*.[0-9]*.[0-9]*" --log.directory="./catalog")" >> $GITHUB_OUTPUT
+          echo "next_build_tag=$(svu next --tag.prefix="catalog-v" --tag.pattern="catalog-v[0-9]*.[0-9]*.[0-9]*" --log.directory="./catalog")-build-${{ github.run_number }}" >> $GITHUB_OUTPUT
 
       - name: "🏷 🌵 Tag Git branch"
         run: |
@@ -273,20 +274,23 @@ jobs:
           git config --global http.sslVerify true
 
           git -C ./catalog tag -fa ${{ steps.svu.outputs.next_tag }} ${{ github.sha }} -m "${TAG_MSG}"
-          git -C ./catalog push origin ${{ steps.svu.outputs.next_tag }} --push-option "ci.skip"
+          git -C ./catalog push --force origin ${{ steps.svu.outputs.next_tag }} --push-option "ci.skip"
+
+          git -C ./catalog tag -fa ${{ steps.svu.outputs.next_build_tag }} ${{ github.sha }} -m "${TAG_MSG}"
+          git -C ./catalog push origin ${{ steps.svu.outputs.next_build_tag }} --push-option "ci.skip"
 
       - name: "🏷 🐳 📦 Push Docker image with release tag"
         run: |
           docker tag ${{ env.distant-image }}:sha-${{ github.sha }} ${{ env.distant-image }}:latest
-          docker tag ${{ env.distant-image }}:sha-${{ github.sha }} ${{ env.distant-image }}:${{ steps.svu.outputs.next_tag }}
+          docker tag ${{ env.distant-image }}:sha-${{ github.sha }} ${{ env.distant-image }}:${{ steps.svu.outputs.next_build_tag }}
           docker push ${{ env.distant-image }}:latest
-          docker push ${{ env.distant-image }}:${{ steps.svu.outputs.next_tag }}
+          docker push ${{ env.distant-image }}:${{ steps.svu.outputs.next_build_tag }}
         env:
           distant-image: ${{ env.docker-registry }}/${{ env.github-repository }}/${{ env.docker-image }}
 
       - name: "📦 🚀 Create Github release"
         run: |
-          gh release create ${{ steps.svu.outputs.next_tag }} \
+          gh release create ${{ steps.svu.outputs.next_build_tag }} \
             --generate-notes \
             --latest \
             --verify-tag=true \
