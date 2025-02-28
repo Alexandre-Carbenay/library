@@ -82,6 +82,11 @@ jobs:
         run: make build-catalog-compile
         timeout-minutes: 1
 
+      - name: "🐳 📀 Cache Docker images"
+        uses: ScribeMD/docker-cache@0.5.0
+        with:
+          key: docker-${{ runner.os }}-${{ hashFiles('./catalog/docker/docker-compose.yml') }}
+
       - name: "🐘 🧪 Test with Gradle"
         working-directory: ./catalog
         run: make build-catalog-test
