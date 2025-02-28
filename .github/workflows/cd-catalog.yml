@@ -235,11 +235,6 @@ jobs:
         run: |
           docker pull ${{ env.docker-registry }}/${{ env.github-repository }}/${{ env.docker-image }}:sha-${{ github.sha }}
 
-      - name: "🐳 📦 🚀 Push Docker image with release tag"
-        run: |
-          docker tag ${{ env.docker-registry }}/${{ env.github-repository }}/${{ env.docker-image }}:sha-${{ github.sha }} ${{ env.docker-registry }}/${{ env.github-repository }}/${{ env.docker-image }}:latest
-          docker push ${{ env.docker-registry }}/${{ env.github-repository }}/${{ env.docker-image }}:latest
-
       - name: "🏷 📦 Define tags based on semantic versioning"
         id: svu
         run: |
@@ -265,6 +260,15 @@ jobs:
 
           git -C ./catalog tag -fa ${{ steps.svu.outputs.next_tag }} ${{ github.sha }} -m "${TAG_MSG}"
           git -C ./catalog push origin ${{ steps.svu.outputs.next_tag }} --push-option "ci.skip"
+
+      - name: "🏷 🐳 📦 Push Docker image with release tag"
+        run: |
+          docker tag ${{ env.distant-image }}:sha-${{ github.sha }} ${{ env.distant-image }}:latest
+          docker tag ${{ env.distant-image }}:sha-${{ github.sha }} ${{ env.distant-image }}:${{ steps.svu.outputs.next_tag }}
+          docker push ${{ env.distant-image }}:latest
+          docker push ${{ env.distant-image }}:${{ steps.svu.outputs.next_tag }}
+        env:
+          distant-image: ${{ env.docker-registry }}/${{ env.github-repository }}/${{ env.docker-image }}
 
       - name: "📦 🚀 Create Github release"
         run: |
