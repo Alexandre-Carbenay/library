@@ -23,6 +23,7 @@ on:
 env:
   docker-registry: 'ghcr.io'
   github-repository: 'alexandre-carbenay/library'
+  github-package: 'library%2Fcatalog'
   docker-image: 'catalog'
 
 jobs:
@@ -116,6 +117,19 @@ jobs:
           registry: ${{ env.docker-registry }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "🐳 📦 🧹 Remove previous artifact from Docker registry (PR)"
+        if: github.ref != 'refs/heads/main' && github.event_name == 'pull_request'
+        run: |
+          package=$(gh api /user/packages/container/${{ env.github-package }}/versions | jq -r '.[] | select(.metadata.container.tags[] | contains("${{ env.tag }}")) | .id')
+          if [ "${package}" != "" ]
+          then
+            echo "Deleting package ${package}"
+            echo -n | gh api --method DELETE /user/packages/container/${{ env.github-package }}/versions/${package} --input -
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: pr-${{ github.event.pull_request.number }}
 
       - name: "🐳 📦 🚀 Build and publish artifact with Docker (PR)"
         uses: docker/build-push-action@v6

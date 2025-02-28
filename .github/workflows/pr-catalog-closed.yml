@@ -1,0 +1,42 @@
+name: Closed PR pipeline for Catalog
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - 'main'
+    paths:
+      - 'catalog/**'
+      - '.github/workflows/cd-catalog.yml'
+      - '!**/README.md'
+  workflow_dispatch:
+
+env:
+  docker-registry: 'ghcr.io'
+  github-package: 'library%2Fcatalog'
+
+jobs:
+  clean:
+    name: '🧹 Clean'
+    runs-on: [ubuntu-latest]
+    permissions:
+      packages: write
+    steps:
+      - name: "🐳 🔓 Log in to the Container registry"
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.docker-registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "🐳 📦 🧹 Remove artifact from Docker registry"
+        run: |
+          package=$(gh api /user/packages/container/${{ env.github-package }}/versions | jq -r '.[] | select(.metadata.container.tags[] | contains("${{ env.tag }}")) | .id')
+          if [ "${package}" != "" ]
+          then
+            echo "Deleting package ${package}"
+            echo -n | gh api --method DELETE /user/packages/container/${{ env.github-package }}/versions/${package} --input -
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: pr-${{ github.event.pull_request.number }}
