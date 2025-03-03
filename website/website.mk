@@ -10,14 +10,26 @@ endif
 
 gradleWebsite = $(WEBSITE_LOCATION)/gradlew -p $(WEBSITE_LOCATION)
 
-build-website: ## Build the website application
-	$(gradleWebsite) check bootJar && \
-		cp $(WEBSITE_LOCATION)/build/pacts/*.json $(PACT_LOCATION)/contents && \
-		docker build -t website:latest --build-arg REVISION=$(REVISION) --build-arg VERSION=$(VERSION) --build-arg CREATION_DATE=$(shell date --utc --iso-8601=seconds) $(WEBSITE_LOCATION)
+build-website: build-website-compile build-website-test build-website-jar build-website-docker ## Build the website application
 
-publish-pact-website: ## Publish the pacts for website consumer
-	$(gradleWebsite) check pactPublish
+build-website-compile: ## Compile the website application
+	$(gradleWebsite) classes
+
+build-website-test: ## Run tests on the website application
+	$(gradleWebsite) check
 	cp $(WEBSITE_LOCATION)/build/pacts/*.json $(PACT_LOCATION)/contents
+
+build-website-test-publish: ## Publish tests report for the website application
+	# For now, we don't publish anything
+
+build-website-jar: ## Build JAR for the website application
+	$(gradleWebsite) bootJar
+
+build-website-docker: ## Build Docker image for the website application
+	docker build -t website:latest --build-arg REVISION=$(REVISION) --build-arg VERSION=$(VERSION) --build-arg CREATION_DATE=$(shell date --utc --iso-8601=seconds) $(WEBSITE_LOCATION)
+
+publish-pact-website: build-website-test ## Publish the pacts for website consumer
+	$(gradleWebsite) pactPublish
 
 start-website: ## Start the website application
 	docker compose $(INCLUDE_ENV) \
