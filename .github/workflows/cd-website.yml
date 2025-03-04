@@ -18,6 +18,7 @@ on:
     paths:
       - 'website/**'
       - '.github/workflows/cd-website.yml'
+      - '.github/workflows/cd-generic.yml'
       - '!**/README.md'
   workflow_dispatch:
 
