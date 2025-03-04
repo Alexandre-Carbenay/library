@@ -144,14 +144,14 @@ jobs:
       - name: "🐳 📦 🧹 Remove previous artifact from Docker registry (PR)"
         if: github.ref != 'refs/heads/main' && github.event_name == 'pull_request'
         run: |
-          has_package=$(gh api /user/packages?package_type=container | jq -r '.[] | if .name == "library/${{ inputs.app-name }}" then true else false end')
-          if [ ${has_package} == true ]
+          package=$(gh api /user/packages?package_type=container | jq -r '.[] | select(.name == "library/${{ inputs.app-name }}") | .name')
+          if [ ${package} != "" ]
           then
-            package=$(gh api /user/packages/container/${{ inputs.github-package }}/versions | jq -r '.[] | select(.metadata.container.tags[] | contains("${{ env.tag }}")) | .id')
-            if [ "${package}" != "" ]
+            version=$(gh api /user/packages/container/${{ inputs.github-package }}/versions | jq -r '.[] | select(.metadata.container.tags[] | contains("${{ env.tag }}")) | .id')
+            if [ "${version}" != "" ]
             then
-              echo "Deleting package ${package}"
-              echo -n | gh api --method DELETE /user/packages/container/${{ inputs.github-package }}/versions/${package} --input -
+              echo "Deleting version ${version} from package ${package}"
+              echo -n | gh api --method DELETE /user/packages/container/${{ inputs.github-package }}/versions/${version} --input -
             fi
           fi
         env:
