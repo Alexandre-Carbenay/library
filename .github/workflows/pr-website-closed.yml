@@ -1,4 +1,4 @@
-name: Closed PR pipeline for Catalog
+name: Closed PR pipeline for Library Website
 on:
   pull_request:
     types:
@@ -7,7 +7,7 @@ on:
       - 'main'
     paths:
       - 'catalog/**'
-      - '.github/workflows/cd-catalog.yml'
+      - '.github/workflows/cd-website.yml'
       - '.github/workflows/cd-generic.yml'
       - '!**/README.md'
   workflow_dispatch:
@@ -16,6 +16,6 @@ jobs:
   pr-closed:
     uses: ./.github/workflows/pr-closed-generic.yml
     with:
-      app-name: 'catalog'
-      github-package: 'library%2Fcatalog'
+      app-name: 'website'
+      github-package: 'library%2Fwebsite'
     secrets: inherit

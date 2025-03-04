@@ -1,0 +1,44 @@
+name: Closed PR pipeline for Library app
+on:
+  workflow_call:
+    inputs:
+      docker-registry:
+        required: false
+        type: string
+        default: 'ghcr.io'
+      app-name:
+        required: true
+        type: string
+      github-package:
+        required: true
+        type: string
+
+jobs:
+  clean:
+    name: '🧹 Clean'
+    runs-on: [ubuntu-latest]
+    permissions:
+      packages: write
+    steps:
+      - name: "🐳 🔓 Log in to the Container registry"
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ inputs.docker-registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "🐳 📦 🧹 Remove artifact from Docker registry"
+        run: |
+          has_package=$(gh api /user/packages?package_type=container | jq -r '.[] | if .name == "library/${{ inputs.app-name }}" then true else false end')
+          if [ ${has_package} == true ]
+          then
+            package=$(gh api /user/packages/container/${{ inputs.github-package }}/versions | jq -r '.[] | select(.metadata.container.tags[] | contains("${{ env.tag }}")) | .id')
+            if [ "${package}" != "" ]
+            then
+              echo "Deleting package ${package}"
+              echo -n | gh api --method DELETE /user/packages/container/${{ inputs.github-package }}/versions/${package} --input -
+            fi
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GH_CLASSICAL_PAT }}
+          tag: pr-${{ github.event.pull_request.number }}
