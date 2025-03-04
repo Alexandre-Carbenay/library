@@ -13,8 +13,16 @@ COPY --from=builder /builder/extracted/dependencies/ ./
 COPY --from=builder /builder/extracted/spring-boot-loader/ ./
 COPY --from=builder /builder/extracted/snapshot-dependencies/ ./
 COPY --from=builder /builder/extracted/application/ ./
+ARG UID=10001
 RUN addgroup -S library && \
-    adduser -S library -G library && \
+    adduser -G library \
+    --disabled-password \
+    --gecos "" \
+    --home "/nonexistent" \
+    --shell "/sbin/nologin" \
+    --no-create-home \
+    --uid "${UID}" \
+    library && \
     chown -R library:library /application
 USER library:library
 LABEL org.opencontainers.image.created="${CREATED}"
