@@ -21,6 +21,7 @@ public class AcceptanceTests {
     public void configureRestAssured() {
         var baseUrl = new ServiceUrlResolver(CATALOG_SERVICE_NAME, CATALOG_EXPOSED_PORT).serviceUrl();
         RestAssured.baseURI = STR."\{baseUrl}/api";
+        RestAssured.useRelaxedHTTPSValidation();
     }
 
     static class ServiceUrlResolver {
@@ -39,7 +40,7 @@ public class AcceptanceTests {
         }
 
         String serviceUrl() {
-            return String.format("http://%s:%s", DEFAULT_HOST, this.port);
+            return String.format("https://%s:%s", DEFAULT_HOST, this.port);
         }
     }
 

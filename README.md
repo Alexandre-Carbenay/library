@@ -31,12 +31,13 @@ And the container diagram representing the Library system:
 
 ### Tooling and documentation
 
-Some other folders provides general purpose content:
+Some other folders provide general purpose content:
 
 - the [doc](./doc) folder hosts the documentation and tooling to generate it, in an architecture-as-code approach.
 - the [pact](./pact) folder hosts the [Pact](https://docs.pact.io/) artifacts shared between the different applications
   to implement the Consumer-driven Contract testing pattern, and the tooling to start a
   [pact broker](https://github.com/pact-foundation/pact_broker) used in the continuous delivery pipeline.
+- the [ssl](./ssl) folder contains certificates for localhost environment.
 
 ## Usage
 
@@ -50,8 +51,12 @@ Here is a list of the common targets:
 - `stop` to stop the application previously started with `start`.
 - `acceptance` to run the application's acceptance tests in a docker compose environment.
 
-In addition to those application specific `Makefile`, the root folder provides its own `Makefile` that can be used to
-execute some common tasks, such as:
+In addition to those application specific `Makefile`, the root folder provides its own `Makefile`. Thus, from the root
+folder you can reach the previous targets for each application, in the form of `<target>-<app>`, replacing the `<target>`
+by the name of the target and the `<app>` suffix by the name of the application _(e.g. `build-catalog` for the catalog
+app)_.
+
+The root `Makefile` can also be used to execute some common tasks, such as:
 
 - `structurizr` to generate the Structurizr C4 diagrams.
 - `start-pact-broker` to start the environment of the Pact broker used in the Consumer-driven contract testing pattern.
@@ -67,4 +72,32 @@ properties that will be used during execution. By default, those values are set 
 PACT_BROKER_PORT=9292
 CATALOG_API_PORT=8080
 WEBSITE_PORT=9000
+```
+
+### HTTP2 activation
+
+HTTP2 is enabled by default in each application configuration, but won't be used by default if you don't configure a
+keystore for the application and activate HTTPS.
+
+The applications therefore provide a `local` configuration, that can be enabled through a Spring profile (i.e. add the
+`--spring.profiles.active=local` to the program execution arguments). By default, the local profile configures the
+self-signed certificates found in the `./ssl` folder to be used for HTTPS. If the local profile is not active, the
+services will be exposed by HTTP (instead of HTTPS) and HTTP2 won't be available (replaced by HTTP1.1).
+
+A different certificate, with different subject, is also configured to enable HTTPS for docker compose in local
+environments. Each application exposed as a dependency in a docker compose local environment (e.g. catalog for website)
+will have its own certificate with appropriate subject.
+
+#### Certificate generation
+
+Certificates are generated using the [`openssl`]() tool, through a command like (source:
+[Let's Encrypt](https://letsencrypt.org/docs/certificates-for-localhost/)):
+
+```shell
+openssl req -x509 -out localhost.crt -keyout localhost.key \
+  -newkey rsa:2048 -nodes -sha256 \
+  -subj '/CN=localhost' -extensions EXT -config <( \
+   printf "[dn]\nCN=localhost\n[req]\ndistinguished_name = dn\n[EXT]\nsubjectAltName=DNS:localhost\nkeyUsage=digitalSignature\nextendedKeyUsage=serverAuth")
+
+openssl pkcs12 -export -in localhost.crt -inkey localhost.key -name localhost -out localhost.p12
 ```

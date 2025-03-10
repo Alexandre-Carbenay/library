@@ -69,10 +69,10 @@ public class CatalogRestClientPactTests {
     @Test
     @PactTestFor(pactMethod = "defaultPage", pactVersion = PactSpecVersion.V3)
     void getCatalogDefaultPage(MockServer mockServer) {
-        var properties = new CatalogRestClientProperties(mockServer.getUrl());
+        var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
         var restTemplate = new RestTemplate();
         var restClientBuilder = RestClient.builder(restTemplate);
-        var catalogRestClient = new CatalogRestClient(restClientBuilder, properties);
+        var catalogRestClient = new CatalogRestClient(restClientBuilder, null, properties);
 
         var catalog = catalogRestClient.listBooks();
 
@@ -137,10 +137,10 @@ public class CatalogRestClientPactTests {
     @Test
     @PactTestFor(pactMethod = "otherPage", pactVersion = PactSpecVersion.V3)
     void getCatalogPage(MockServer mockServer) {
-        var properties = new CatalogRestClientProperties(mockServer.getUrl());
+        var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
         var restTemplate = new RestTemplate();
         var restClientBuilder = RestClient.builder(restTemplate);
-        var catalogRestClient = new CatalogRestClient(restClientBuilder, properties);
+        var catalogRestClient = new CatalogRestClient(restClientBuilder, null, properties);
 
         var catalog = catalogRestClient.listBooks(PageRequest.of(1, 25));
 

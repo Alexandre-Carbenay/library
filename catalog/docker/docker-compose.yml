@@ -9,9 +9,14 @@ services:
     ports:
       - 8080
     environment:
+      SERVER_SSL_KEY_STORE_TYPE: PKCS12
+      SERVER_SSL_KEY_STORE: classpath:ssl/localhost.p12
+      SERVER_SSL_KEY_STORE_PASSWORD: password
+      SERVER_SSL_KEY_ALIAS: localhost
+      SERVER_SSL_KEY_STORE_ENABLED_PROTOCOLS: TLSv1.3
       LIBRARY_CATALOG_DATA_AUTO_LOAD_ENABLED: 'true'
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:8080/management/health/liveness || exit 1
+      test: wget --no-verbose --no-check-certificate --tries=1 --spider https://localhost:8080/management/health/liveness || exit 1
       interval: 5s
       timeout: 1s
       retries: 3
