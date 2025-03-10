@@ -38,13 +38,13 @@ class CatalogRestClientTests {
 
     @BeforeEach
     void setUp() {
-        var properties = new CatalogRestClientProperties("http://localhost:12345/test");
+        var properties = new CatalogRestClientProperties("http://localhost:12345/test", false);
 
         var restTemplate = new RestTemplate();
         mockServer = MockRestServiceServer.bindTo(restTemplate).build();
 
         var restClientBuilder = RestClient.builder(restTemplate);
-        catalogRestClient = new CatalogRestClient(restClientBuilder, properties);
+        catalogRestClient = new CatalogRestClient(restClientBuilder, null, properties);
     }
 
     @Test

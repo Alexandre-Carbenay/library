@@ -3,6 +3,7 @@ package org.adhuc.library.website.catalog.internal;
 import org.adhuc.library.website.catalog.Book;
 import org.adhuc.library.website.catalog.CatalogClient;
 import org.adhuc.library.website.support.pagination.NavigablePage;
+import org.springframework.boot.autoconfigure.web.client.RestClientSsl;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,8 +17,12 @@ class CatalogRestClient implements CatalogClient {
 
     private final RestClient restClient;
 
-    CatalogRestClient(RestClient.Builder restClientBuilder, CatalogRestClientProperties properties) {
-        this.restClient = restClientBuilder.baseUrl(properties.baseUrl()).build();
+    CatalogRestClient(RestClient.Builder restClientBuilder, RestClientSsl ssl, CatalogRestClientProperties properties) {
+        var builder = restClientBuilder.baseUrl(properties.baseUrl());
+        if (properties.sslEnabled()) {
+            builder = builder.apply(ssl.fromBundle("catalog"));
+        }
+        this.restClient = builder.build();
     }
 
     @Override
