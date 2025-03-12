@@ -6,7 +6,7 @@ on:
     paths:
       - 'catalog/**'
       - '.github/workflows/cd-catalog.yml'
-      - '.github/workflows/cd-generic.yml'
+#      - '.github/workflows/cd-generic.yml'
       - '!**/README.md'
   pull_request:
     types:
@@ -18,7 +18,7 @@ on:
     paths:
       - 'catalog/**'
       - '.github/workflows/cd-catalog.yml'
-      - '.github/workflows/cd-generic.yml'
+#      - '.github/workflows/cd-generic.yml'
       - '!**/README.md'
   workflow_dispatch:
 

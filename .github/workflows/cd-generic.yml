@@ -150,6 +150,10 @@ jobs:
           package=$(gh api /user/packages?package_type=container | jq -r '.[] | select(.name == "library/${{ inputs.app-name }}") | .name')
           if [ ${package} != "" ]
           then
+            echo "Searching for version in package ${package}"
+            echo $(gh api /user/packages?package_type=container)
+            echo $(gh api /user/packages/container/${{ inputs.github-package }}/versions)
+            echo $(gh api /user/packages/container/library/${{ inputs.app-name }}/versions)
             version=$(gh api /user/packages/container/${{ inputs.github-package }}/versions | jq -r '.[] | select(.metadata.container.tags[] | contains("${{ env.tag }}")) | .id')
             if [ "${version}" != "" ]
             then
