@@ -6,6 +6,9 @@ example of library system.
 Those tools and practices include:
 
 - the [C4 model](https://c4model.com/) and tooling to generate schemas from the model.
+- the [Continuous Delivery](https://martinfowler.com/bliki/ContinuousDelivery.html) development approach, based on the
+  corresponding [Accelerate capabilities](https://itrevolution.com/articles/24-key-capabilities-to-drive-improvement-in-software-delivery/)
+  achievement.
 - the API specification-first approach, bringing high quality documentation and automatic basic validation.
 - the [Behavior-driven Development](https://en.wikipedia.org/wiki/Behavior-driven_development) (BDD) approach to define
   features specifications and relevant acceptance scenarii, and automate the execution of those scenarii using JUnit and
@@ -16,6 +19,21 @@ Those tools and practices include:
 - the usage of [circuit breakers](https://martinfowler.com/bliki/CircuitBreaker.html) and timeouts to guarantee the
   resilience of a client against its service providers, using [Resilience4j](https://resilience4j.readme.io/) integrated
   with [Spring Cloud Circuit Breaker](https://docs.spring.io/spring-cloud-circuitbreaker/reference/index.html).
+
+## TL;DR
+
+First follow the [installation guideline](./INSTALLATION.md).
+
+Then start the library system running the following commands:
+
+```shell
+make clean && make
+make start-website
+```
+
+You can now browse to the [Library Website](https://localhost:9000/) in your local environment.
+
+To stop the library system, run the `make stop-website` command.
 
 ## Project structure
 
@@ -104,3 +122,9 @@ openssl req -x509 -out localhost.crt -keyout localhost.key \
 
 openssl pkcs12 -export -in localhost.crt -inkey localhost.key -name localhost -out localhost.p12
 ```
+
+### Continuous Delivery pipeline
+
+A generic pipeline is defined for all applications to enforce continuous delivery development:
+
+![Continuous delivery pipeline](./doc/architecture/cd/cd-pipeline.png)

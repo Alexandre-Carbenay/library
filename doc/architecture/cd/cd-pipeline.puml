@@ -1,0 +1,31 @@
+@startuml
+start
+partition Build {
+:Checkout;
+:Compile;
+:Test (unit, integration);
+:Publish tests report;
+:Build artifact;
+if (is API consumer?) equals (yes) then
+:Publish consumer contracts;
+else (no)
+endif
+:Publish artifact;
+}
+partition Acceptance {
+if (acceptance test suite?) equals (yes) then
+:Pull artifact;
+:Run acceptance tests;
+:Publish acceptance tests report;
+else (no)
+endif
+}
+partition Release {
+if (main branch?) equals (yes) then
+:Define version with semver;
+:Publish release;
+else (no)
+endif
+}
+stop
+@endum
