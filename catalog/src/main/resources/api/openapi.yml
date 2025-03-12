@@ -28,6 +28,8 @@ paths:
           $ref: '#/components/responses/Catalog'
         '400':
           $ref: '#/components/responses/InvalidPaginationParameters'
+        '500':
+          $ref: '#/components/responses/GeneralError'
   /v1/books/{isbn}:
     get:
       tags:
@@ -46,6 +48,8 @@ paths:
           $ref: '#/components/responses/InvalidBookISBN'
         '404':
           $ref: '#/components/responses/UnknownBook'
+        '500':
+          $ref: '#/components/responses/GeneralError'
   /v1/authors/{id}:
     get:
       tags:
@@ -64,6 +68,8 @@ paths:
           $ref: '#/components/responses/InvalidAuthorId'
         '404':
           $ref: '#/components/responses/UnknownAuthor'
+        '500':
+          $ref: '#/components/responses/GeneralError'
 components:
   parameters:
     ISBN:
@@ -184,6 +190,12 @@ components:
               $ref: '#/components/examples/InvalidPageNumber'
             pageSize:
               $ref: '#/components/examples/InvalidPageSize'
+    GeneralError:
+      description: General unexpected error.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
   schemas:
     Catalog:
       type: object
