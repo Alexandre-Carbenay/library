@@ -6,7 +6,7 @@ on:
     branches:
       - 'main'
     paths:
-      - 'catalog/**'
+      - 'website/**'
       - '.github/workflows/cd-website.yml'
       - '.github/workflows/cd-generic.yml'
       - '!**/README.md'
