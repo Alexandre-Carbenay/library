@@ -1,5 +1,7 @@
 package org.adhuc.library.website.catalog;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.adhuc.library.website.support.pagination.NavigablePageImpl;
 import org.adhuc.library.website.support.pagination.NavigablePageImpl.Link;
 import org.hamcrest.Matcher;
@@ -12,9 +14,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,6 +31,8 @@ import static org.adhuc.library.website.catalog.BooksMother.*;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -228,6 +237,81 @@ class CatalogControllerTests {
         verify(navigationSession).currentPage();
         verify(navigationSession).switchPage(same(page));
         verifyNoMoreInteractions(navigationSession);
+    }
+
+    @Test
+    @DisplayName("provide the error page with error details when catalog client raises client error")
+    void catalogClientError() throws Exception {
+        var body = """
+                {
+                    "type": "/problems/bad-request",
+                    "status": "400",
+                    "title": "Test error",
+                    "detail": "Some details on client error"
+                }
+                """;
+        var exception = prepareException(
+                HttpClientErrorException.create(BAD_REQUEST, "Bad request",
+                        jsonProblemResponseHeaders(), body.getBytes(), Charset.defaultCharset()
+                ),
+                body
+        );
+
+        when(catalogClient.listBooks()).thenThrow(exception);
+
+        mvc.perform(get("/catalog"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"))
+                .andExpect(model().attribute("message", "Some details on client error"));
+
+        verify(catalogClient).listBooks();
+        verifyNoMoreInteractions(catalogClient);
+    }
+
+    @Test
+    @DisplayName("provide the error page with error details when catalog client raises server error")
+    void catalogServerError() throws Exception {
+        var body = """
+                {
+                    "type": "/problems/internal-server-error",
+                    "status": "500",
+                    "title": "Test error",
+                    "detail": "Some details on server error"
+                }
+                """;
+        var exception = prepareException(
+                HttpServerErrorException.create(BAD_REQUEST, "Bad request",
+                        jsonProblemResponseHeaders(), body.getBytes(), Charset.defaultCharset()
+                ),
+                body
+        );
+
+        when(catalogClient.listBooks()).thenThrow(exception);
+
+        mvc.perform(get("/catalog"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"))
+                .andExpect(model().attribute("message", "Some details on server error"));
+
+        verify(catalogClient).listBooks();
+        verifyNoMoreInteractions(catalogClient);
+    }
+
+    private <T extends HttpStatusCodeException> T prepareException(T exception, String body) {
+        exception.setBodyConvertFunction(resolvableType -> {
+            try {
+                return new ObjectMapper().reader().forType(resolvableType.getType()).readValue(body);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        return exception;
+    }
+
+    private HttpHeaders jsonProblemResponseHeaders() {
+        var headers = new HttpHeaders();
+        headers.setContentType(APPLICATION_PROBLEM_JSON);
+        return headers;
     }
 
 }

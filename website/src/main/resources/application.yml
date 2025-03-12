@@ -15,7 +15,27 @@ management:
     diskspace.enabled: false
     livenessstate.enabled: true
     readinessstate.enabled: true
+    circuitbreakers.enabled: true
 
 library.website:
   rest-client:
     catalog.base-url: http://localhost:8080
+
+resilience4j:
+  circuitbreaker:
+    # See https://resilience4j.readme.io/docs/circuitbreaker#create-and-configure-a-circuitbreaker
+    configs:
+      default:
+        failureRateThreshold: 20
+        slowCallRateThreshold: 80
+        slowCallDurationThreshold: 5000 # milliseconds
+        slidingWindowType: TIME_BASED
+        slidingWindowSize: 10 # seconds
+        minimumNumberOfCalls: 10
+        waitDurationInOpenState: 30000 # milliseconds
+  timelimiter:
+    # See https://resilience4j.readme.io/docs/timeout
+    configs:
+      default:
+        timeoutDuration: 500ms
+        cancelRunningFuture: true
