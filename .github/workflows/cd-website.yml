@@ -32,4 +32,3 @@ jobs:
       docker-image: 'website'
       publish-pacts: true
       run-acceptance: false
-    secrets: inherit
