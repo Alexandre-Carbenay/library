@@ -5,6 +5,8 @@ import org.adhuc.library.website.catalog.CatalogClient;
 import org.adhuc.library.website.support.pagination.NavigablePage;
 import org.springframework.boot.autoconfigure.web.client.RestClientSsl;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -16,13 +18,18 @@ import org.springframework.web.client.RestClient;
 class CatalogRestClient implements CatalogClient {
 
     private final RestClient restClient;
+    private final CircuitBreaker circuitBreaker;
 
-    CatalogRestClient(RestClient.Builder restClientBuilder, RestClientSsl ssl, CatalogRestClientProperties properties) {
+    CatalogRestClient(RestClient.Builder restClientBuilder,
+                      RestClientSsl ssl,
+                      CircuitBreakerFactory<?, ?> circuitBreakerFactory,
+                      CatalogRestClientProperties properties) {
         var builder = restClientBuilder.baseUrl(properties.baseUrl());
         if (properties.sslEnabled()) {
             builder = builder.apply(ssl.fromBundle("catalog"));
         }
         this.restClient = builder.build();
+        this.circuitBreaker = circuitBreakerFactory.create("catalog");
     }
 
     @Override
@@ -43,11 +50,11 @@ class CatalogRestClient implements CatalogClient {
     }
 
     private NavigablePage<Book> listBooks(String uri, Object... uriVariables) {
-        return restClient.get()
+        return circuitBreaker.run(() -> restClient.get()
                 .uri(uri, uriVariables)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .body(BooksPage.class);
+                .body(BooksPage.class));
     }
 
 }

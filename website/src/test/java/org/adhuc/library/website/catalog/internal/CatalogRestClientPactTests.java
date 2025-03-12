@@ -12,6 +12,10 @@ import org.adhuc.library.website.catalog.Book;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
@@ -19,14 +23,20 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static au.com.dius.pact.consumer.dsl.LambdaDsl.newJsonBody;
 import static au.com.dius.pact.consumer.dsl.PactDslJsonRootValue.stringMatcher;
+import static org.mockito.Mockito.when;
 
-@ExtendWith(PactConsumerTestExt.class)
+@ExtendWith({PactConsumerTestExt.class, MockitoExtension.class})
 public class CatalogRestClientPactTests {
 
     private static final String UUID_REGEX = "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$";
+
+    @Mock
+    private CircuitBreakerFactory<?, ?> circuitBreakerFactory;
 
     @Pact(consumer = "library-website", provider = "library-catalog")
     public RequestResponsePact defaultPage(PactDslWithProvider builder) {
@@ -69,10 +79,17 @@ public class CatalogRestClientPactTests {
     @Test
     @PactTestFor(pactMethod = "defaultPage", pactVersion = PactSpecVersion.V3)
     void getCatalogDefaultPage(MockServer mockServer) {
+        when(circuitBreakerFactory.create("catalog")).thenReturn(new CircuitBreaker() {
+            @Override
+            public <T> T run(Supplier<T> toRun, Function<Throwable, T> fallback) {
+                return toRun.get();
+            }
+        });
+
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
         var restTemplate = new RestTemplate();
         var restClientBuilder = RestClient.builder(restTemplate);
-        var catalogRestClient = new CatalogRestClient(restClientBuilder, null, properties);
+        var catalogRestClient = new CatalogRestClient(restClientBuilder, null, circuitBreakerFactory, properties);
 
         var catalog = catalogRestClient.listBooks();
 
@@ -137,10 +154,17 @@ public class CatalogRestClientPactTests {
     @Test
     @PactTestFor(pactMethod = "otherPage", pactVersion = PactSpecVersion.V3)
     void getCatalogPage(MockServer mockServer) {
+        when(circuitBreakerFactory.create("catalog")).thenReturn(new CircuitBreaker() {
+            @Override
+            public <T> T run(Supplier<T> toRun, Function<Throwable, T> fallback) {
+                return toRun.get();
+            }
+        });
+
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
         var restTemplate = new RestTemplate();
         var restClientBuilder = RestClient.builder(restTemplate);
-        var catalogRestClient = new CatalogRestClient(restClientBuilder, null, properties);
+        var catalogRestClient = new CatalogRestClient(restClientBuilder, null, circuitBreakerFactory, properties);
 
         var catalog = catalogRestClient.listBooks(PageRequest.of(1, 25));
 

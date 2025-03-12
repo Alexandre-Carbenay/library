@@ -13,6 +13,9 @@ Those tools and practices include:
 - the [Consumer-driven Contract testing](https://martinfowler.com/articles/consumerDrivenContracts.html) pattern, to
   ease the maintainability of APIs from the viewpoint of the providers, based on the definition of the API usage by the
   consumers. This pattern is implemented with the [Pact](https://docs.pact.io/) tool.
+- the usage of [circuit breakers](https://martinfowler.com/bliki/CircuitBreaker.html) and timeouts to guarantee the
+  resilience of a client against its service providers, using [Resilience4j](https://resilience4j.readme.io/) integrated
+  with [Spring Cloud Circuit Breaker](https://docs.spring.io/spring-cloud-circuitbreaker/reference/index.html).
 
 ## Project structure
 
