@@ -39,6 +39,7 @@ jobs:
       id-token: write
       pull-requests: write
       packages: write
+      contents: write
     concurrency:
       group: "${{ github.workflow }}-${{ github.ref }}"
       cancel-in-progress: true
