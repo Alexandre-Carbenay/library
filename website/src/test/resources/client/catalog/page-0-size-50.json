@@ -6,7 +6,7 @@
     "number" : 0
   },
   "_embedded" : {
-    "books" : [ {
+    "editions" : [ {
       "isbn" : "9782081275232",
       "title" : "Du contrat social",
       "authors" : [ "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725" ],
@@ -14,7 +14,7 @@
       "summary" : "Paru en 1762, le Contrat social, en affirmant le principe de souveraineté du peuple, a constitué un tournant décisif pour la modernité et s'est imposé comme un des textes majeurs de la philosophie politique. Il a aussi acquis le statut de monument, plus célèbre que connu, plus révéré - ou honni - qu'interrogé. Retrouver, dans les formules fameuses et les pages d'anthologie, le mouvement de la réflexion et les questions vives qui nourrissent une œuvre beaucoup plus problématique qu'affirmative, c'est découvrir une pensée qui se tient au plus près des préoccupations d'aujourd'hui : comment intégrer les intérêts de tous dans la détermination de l'intérêt commun ? Comment lutter contre la pente de tout gouvernement à déposséder les citoyens de la souveraineté ? Comment former en chacun ce sentiment d'obligation sans lequel le lien social se défait ?\n",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782081275232"
+          "href" : "http://localhost:12345/api/v1/editions/9782081275232"
         }
       }
     }, {
@@ -25,7 +25,7 @@
       "summary" : "Paru en 1755, le Discours sur l'origine et les fondements de l'inégalité parmi les hommes peut être considéré comme la matrice de l'oeuvre morale et politique de Rousseau : il y affirme sa stature de philosophe, l'originalité de sa voix, la force de son \"système\". Résoudre le problème posé par l'Académie de Dijon - \"quelle est la source de l'inégalité parmi les hommes et si elle est autorisée par la loi naturelle ? \"-, en d'autres termes expliquer que riches et puissants dominent leurs semblables sur lesquels ils n'ont pas de réelle supériorité, exige aux yeux de Rousseau de poser à nouveaux frais la question \"qu'est-ce que l'homme ? \".\nPour cela, il faut comprendre comment s'est formée sa \"nature actuelle\", si éloignée de ce que serait son état de nature : \"Si je me suis étendu si longtemps sur la supposition de cette condition primitive, c'est qu'ayant d'anciennes erreurs et des préjugés invétérés à détruire, j'ai cru devoir creuser jusqu'à la racine.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782081275256"
+          "href" : "http://localhost:12345/api/v1/editions/9782081275256"
         }
       }
     }, {
@@ -36,7 +36,7 @@
       "summary" : "La publication de l'Emile, en 1762, restitue au problème de l'éducation sa place centrale en philosophie. De ses premiers mois jusqu'à la rencontre amoureuse, Emile est suivi dans chaque étape, à travers des expériences qui attestent d'abord le souci de considérer « l'enfant dans l'enfant », au lieu de le sortir de son âge. Rousseau montre qu'il est possible d'éduquer un homme selon la nature et de quelle façon les vices et l'inégalité caractérisent désormais la condition humaine : double enjeu qui constitue sa « théorie de l'homme ».\nLa richesse incomparable de ce maître-livre tient aussi aux tensions qui le parcourent. Rousseau refuse le péché originel mais il doit rendre raison du mal et de la souffrance que ce dogme interdisait d'ignorer; il critique les philosophes de son temps mais il pousse à ses limites leur méthode empiriste; il proclame: «je hais les livres», mais il fournit le panorama le plus juste et le plus instruit de la culture du XVIIIe siècle, en face de l'Encyclopédie et, pour partie, contre elle.\nParus ensemble, Emile et le Contrat social furent condamnés à Paris puis à Genève: la force du traité d'éducation n'échappa pas aux censeurs, même si Rousseau prétendait ne livrer que « les rêveries d'un visionnaire ». Car la forme même de la fiction arrache l'ouvrage aux circonstances : pas plus que ses lecteurs des Lumières, nous ne sommes à l'abri de ses leçons. ",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782081206922"
+          "href" : "http://localhost:12345/api/v1/editions/9782081206922"
         }
       }
     }, {
@@ -47,7 +47,7 @@
       "summary" : "Je forme une entreprise qui n'eut jamais d'exemple et dont l'exécution n'aura point d'imitateur. Je veux montrer à mes semblables un homme dans toute la vérité de la nature; et cet homme ce sera moi. Moi, seul. Je sens mon cœur et je connais les hommes. Je ne suis fait comme aucun de ceux que j'ai vus; j'ose croire n'être fait comme aucun de ceux qui existent. Si je ne vaux pas mieux, au moins je suis autre. Si la nature a bien ou mal fait de briser le moule dans lequel elle m'a jeté, c'est ce dont on ne peut juger qu'après m'avoir lu. ",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070399697"
+          "href" : "http://localhost:12345/api/v1/editions/9782070399697"
         }
       }
     }, {
@@ -58,7 +58,7 @@
       "summary" : "\"J'ai vu les moeurs de mon temps, et j'ai publié ces lettres\" : c'est par ces mots que l'\"éditeur\" Rousseau ouvre La Nouvelle Héloïse, correspondance amoureuse entre Julie d'Etange et son précepteur Saint-Preux. Sur les rives du lac Léman, ces \"belles âmes\" forment une petite société idéale, où priment les passions douces et la sincérité du sentiment, à l'écart des maux de la civilisation. Dans la lignée des Lettres persanes de Montesquieu, Rousseau conçoit son oeuvre comme un laboratoire d'idées nouvelles, qui concentre les questionnements de son époque sur l'homme et ses passions.\nRoman d'amour, chant élégiaque, mais aussi fiction expérimentale au croisement de l'anthropologie et de la politique : La Nouvelle Héloïse, plus grand succès de librairie de son temps, consacre avec éclat les noces du roman et de la philosophie au XVIIIe siècle. ",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782081409842"
+          "href" : "http://localhost:12345/api/v1/editions/9782081409842"
         }
       }
     }, {
@@ -69,7 +69,7 @@
       "summary" : "Dans un paisible village du Comté, le jeune Frodo est sur le point de recevoir un cadeau qui changera sa vie à jamais : l'Anneau de Pouvoir. Forgé par Sauron au coeur de la Montagne du Feu, on croyait l'Anneau perdu depuis qu'un homme l'avait arraché au Seigneur des Ténèbres avant de le chasser hors du monde. A présent, de noirs présages s'étendent à nouveau sur la Terre du Milieu, les créatures maléfiques se multiplient et, dans les Montagnes de Brume, les Orques traquent les Nains.\nL'ennemi veut récupérer son bien afin de dominer le monde ; l'Œil de Sauron est désormais pointé sur le Comté. Heureusement Gandalf les a devancés. S'ils font vite, Frodo et lui parviendront peut-être à détruire l'Anneau à temps. Chef-d'oeuvre de la fantasy, découverte d'un monde imaginaire, de sa géographie, de son histoire et de ses langues, mais aussi réflexion sur le pouvoir et la mort, Le Seigneur des Anneaux est sans équivalent par sa puissance d'évocation, son souffle et son ampleur.\nCette traduction de Daniel Lauzon prend en compte la dernière version du texte anglais, les indications laissées par Tolkien à l'intention des traducteurs et les découvertes permises par les publications posthumes proposées par Christopher Tolkien. Ce volume contient 18 illustrations d'Alan Lee, ainsi que deux cartes en couleur de la Terre du Milieu et du Comté. ",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782267046885"
+          "href" : "http://localhost:12345/api/v1/editions/9782267046885"
         }
       }
     }, {
@@ -80,7 +80,7 @@
       "summary" : "La Fraternité de l'Anneau poursuit son voyage vers la Montagne du Feu où l'Anneau Unique fut forgé, et où Frodo a pour mission de le détruire. Cette quête terrible est parsemée d'embûches : Gandalf a disparu dans les Mines de la Moria et Boromir a succombé au pouvoir de l'Anneau. Frodo et Sam se sont échappés afin de poursuivre leur voyage jusqu'au coeur du Mordor. A présent, ils cheminent seuls dans la désolation qui entoure le pays de Sauron – mais c'est sans compter la mystérieuse silhouette qui les suit partout où ils vont.\nChef-d'oeuvre de la fantasy, découverte d'un monde imaginaire, de sa géographie, de son histoire et de ses langues, mais aussi réflexion sur le pouvoir et la mort, Le Seigneur des Anneaux est sans équivalent par sa puissance d'évocation, son souffle et son ampleur. Cette traduction de Daniel Lauzon prend en compte la dernière version du texte anglais, les indications laissées par Tolkien à l'intention des traducteurs et les découvertes permises par les publications posthumes proposées par Christopher Tolkien.\nCe volume contient 16 illustrations d'Alan Lee, ainsi qu'une carte en couleur de la Terre du Milieu.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782267046892"
+          "href" : "http://localhost:12345/api/v1/editions/9782267046892"
         }
       }
     }, {
@@ -91,7 +91,7 @@
       "summary" : "Alors que les armées de Sauron se rassemblent et que son ombre maléfique s'étend de plus en plus en Terre du Milieu, Hommes, Nains, Elfes et Ents unissent leurs forces pour se battre contre les Ténèbres. Gandalf, quant à lui, élabore une stratégie désespérée afin de triompher du mal. Le Mordor s'est armé, ses créatures malfaisantes se sont multipliées, la riposte se prépare. Si l'Anneau tombe entre les mains du Seigneur des Ténèbres, qui pourra l'arrêter ? Tous les espoirs reposent sur Frodo et Sam, qui peinent à atteindre la Montagne du Feu afin de détruire, une bonne fois pour toutes, l'Anneau de Sauron.\nChef-d'oeuvre de la fantasy, découverte d'un monde imaginaire, de sa géographie, de son histoire et de ses langues, mais aussi réflexion sur le pouvoir et la mort, Le Seigneur des Anneaux est sans équivalent par sa puissance d'évocation, son souffle et son ampleur.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782267046908"
+          "href" : "http://localhost:12345/api/v1/editions/9782267046908"
         }
       }
     }, {
@@ -102,7 +102,7 @@
       "summary" : "Bilbo, comme tous les hobbits, est un petit être paisible et sans histoires. Son quotidien est bouleversé un beau jour, lorsque Gandalf le magicien et treize nains barbus l'entraînent dans un voyage périlleux. C'est le début d'une grande aventure, d'une fantastique quête au trésor semée d'embûches et d'épreuves, qui mènera Bilbo jusqu'à la Montagne Solitaire gardée par le dragon Smaug...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782266339667"
+          "href" : "http://localhost:12345/api/v1/editions/9782266339667"
         }
       }
     }, {
@@ -113,7 +113,7 @@
       "summary" : "Composé de récits allant des Jours Anciens de la Terre du Milieu jusqu'à la fin de la Guerre de l'Anneau, en passant par le Second Age et la montée en puissance de Sauron, Le Silmarillion est au coeur de l'univers imaginé par J. R. R. Tolkien. Ces histoires se déroulent à une époque où Morgoth, le premier Seigneur des Ténèbres, habite la Terre du Milieu et où les Elfes lui font la guerre dans sa forteresse d'Angband pour récupérer les Silmarils.\nCes trois joyaux contenant la dernière lumière pure du Valinor ont été dérobés par Morgoth puis sertis dans sa couronne de fer. Ces contes sont accompagnés de plusieurs oeuvres plus courtes. L'Ainulindalë est un mythe de la Création tandis que la Valaquenta décrit la nature et les pouvoirs des dieux. L'Akallabêth raconte la destruction du grand royaume insulaire de Númenor à la fin du Second Age et Les Anneaux du Pouvoir relate les grands événements de la fin du Troisième Age, que raconte également Le Seigneur des Anneaux.\nJ. R. R. Tolkien n'a pas pu publier Le Silmarillion de son vivant, car il a évolué avec lui. Il a donc laissé à son fils Christopher le soin de faire paraître cette oeuvre à partir de nombreux manuscrits et de rendre publiable la grande vision de son père, terminant ainsi l'oeuvre littéraire de toute une vie. Cette édition spéciale présente sous une forme nouvelle ce premier pas fondamental dans l'édition posthume par Christopher Tolkien des volumes concernant la Terre du Milieu, début de quarante années d'une carrière illustre, avec la publication de plus de vingt livres célébrant l'héritage de son père.\nOn retrouvera aussi dans ce volume une lettre de J. R. R. Tolkien, écrite en 1951, qui fournit une passionnante exposition des Ages précédents, et près de 50 peintures en couleurs de Ted Nasmith, dont certaines apparaissent ici pour la première fois.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782267044706"
+          "href" : "http://localhost:12345/api/v1/editions/9782267044706"
         }
       }
     }, {
@@ -124,7 +124,7 @@
       "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782290208878"
+          "href" : "http://localhost:12345/api/v1/editions/9782290208878"
         }
       }
     }, {
@@ -135,7 +135,7 @@
       "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782290215661"
+          "href" : "http://localhost:12345/api/v1/editions/9782290215661"
         }
       }
     }, {
@@ -146,7 +146,7 @@
       "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782290221686"
+          "href" : "http://localhost:12345/api/v1/editions/9782290221686"
         }
       }
     }, {
@@ -157,7 +157,7 @@
       "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782290221693"
+          "href" : "http://localhost:12345/api/v1/editions/9782290221693"
         }
       }
     }, {
@@ -168,7 +168,7 @@
       "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782290221709"
+          "href" : "http://localhost:12345/api/v1/editions/9782290221709"
         }
       }
     }, {
@@ -179,7 +179,7 @@
       "summary" : "Winter is coming. Such is the stern motto of House Stark, the northernmost of the fiefdoms that owe allegiance to King Robert Baratheon in far-off King’s Landing. There Eddard Stark of Winterfell rules in Robert’s name. There his family dwells in peace and comfort: his proud wife, Catelyn; his sons Robb, Brandon, and Rickon; his daughters Sansa and Arya; and his bastard son, Jon Snow. Far to the north, behind the towering Wall, lie savage Wildings and worse—unnatural things relegated to myth during the centuries-long summer, but proving all too real and all too deadly in the turning of the season.\n\nYet a more immediate threat lurks to the south, where Jon Arryn, the Hand of the King, has died under mysterious circumstances. Now Robert is riding north to Winterfell, bringing his queen, the lovely but cold Cersei, his son, the cruel, vainglorious Prince Joffrey, and the queen’s brothers Jaime and Tyrion of the powerful and wealthy House Lannister—the first a swordsman without equal, the second a dwarf whose stunted stature belies a brilliant mind. All are heading for Winterfell and a fateful encounter that will change the course of kingdoms.\n\nMeanwhile, across the Narrow Sea, Prince Viserys, heir of the fallen House Targaryen, which once ruled all of Westeros, schemes to reclaim the throne with an army of barbarian Dothraki—whose loyalty he will purchase in the only coin left to him: his beautiful yet innocent sister, Daenerys.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9780553103540"
+          "href" : "http://localhost:12345/api/v1/editions/9780553103540"
         }
       }
     }, {
@@ -190,7 +190,7 @@
       "summary" : "Time is out of joint. The summer of peace and plenty, ten years long, is drawing to a close, and the harsh, chill winter approaches like an angry beast. Two great leaders—Lord Eddard Stark and Robert Baratheon—who held sway over an age of enforced peace are dead . . . victims of royal treachery. Now, from the ancient citadel of Dragonstone to the forbidding shores of Winterfell, chaos reigns, as pretenders to the Iron Throne of the Seven Kingdoms prepare to stake their claims through tempest, turmoil, and war.\n\nAs a prophecy of doom cuts across the sky—a comet the color of blood and flame—six factions struggle for control of a divided land. Eddard’s son Robb has declared himself King in the North. In the south, Joffrey, the heir apparent, rules in name only, victim of the scheming courtiers who teem over King’s Landing. Robert’s two brothers each seek their own dominion, while a disfavored house turns once more to conquest. And a continent away, an exiled queen, the Mother of Dragons, risks everything to lead her precious brood across a hard hot desert to win back the crown that is rightfully hers.\n\nA Clash of Kings transports us into a magnificent, forgotten land of revelry and revenge, wizardry and warfare. It is a tale in which maidens cavort with madmen, brother plots against brother, and the dead rise to walk in the night. Here a princess masquerades as an orphan boy; a knight of the mind prepares a poison for a treacherous sorceress; and wild men descend from the Mountains of the Moon to ravage the countryside.\n\nAgainst a backdrop of incest and fratricide, alchemy and murder, the price of glory may be measured in blood. And the spoils of victory may just go to the men and women possessed of the coldest steel . . . and the coldest hearts. For when rulers clash, all of the land feels the tremors.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9780553108033"
+          "href" : "http://localhost:12345/api/v1/editions/9780553108033"
         }
       }
     }, {
@@ -201,7 +201,7 @@
       "summary" : "Of the five contenders for power, one is dead, another in disfavor, and still the wars rage. Joffrey sits on the Iron Throne, the uneasy ruler of the Seven Kingdoms. His most bitter rival, Lord Stannis, stands defeated and disgraced, victim of the sorceress who holds him in her thrall. Young Robb still rules the North from the fortress of Riverrun. Meanwhile, making her way across a blood-drenched continent is the exiled queen, Daenerys, mistress of the only three dragons left in the world. As opposing forces maneuver for the final showdown, an army of barbaric wildlings arrives from the outermost limits of civilization, accompanied by a supernatural army of the living dead. As the future of the land hangs in the balance, no one will rest until the Seven Kingdoms have exploded in a veritable storm of swords...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9780553106633"
+          "href" : "http://localhost:12345/api/v1/editions/9780553106633"
         }
       }
     }, {
@@ -212,7 +212,7 @@
       "summary" : "After centuries of bitter strife, the seven powers dividing the land have beaten one another into an uneasy truce. But it’s not long before the survivors, outlaws, renegades, and carrion eaters of the Seven Kingdoms gather. Now, as the human crows assemble over a banquet of ashes, daring new plots and dangerous new alliances are formed while surprising faces—some familiar, others only just appearing—emerge from an ominous twilight of past struggles and chaos to take up the challenges of the terrible times ahead. Nobles and commoners, soldiers and sorcerers, assassins and sages, are coming together to stake their fortunes . . . and their lives. For at a feast for crows, many are the guests—but only a few are the survivors.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9780553801507"
+          "href" : "http://localhost:12345/api/v1/editions/9780553801507"
         }
       }
     }, {
@@ -223,7 +223,7 @@
       "summary" : "In the aftermath of a colossal battle, the future of the Seven Kingdoms hangs in the balance—beset by newly emerging threats from every direction. In the east, Daenerys Targaryen, the last scion of House Targaryen, rules with her three dragons as queen of a city built on dust and death. But Daenerys has thousands of enemies, and many have set out to find her. As they gather, one young man embarks upon his own quest for the queen, with an entirely different goal in mind.\n\nFleeing from Westeros with a price on his head, Tyrion Lannister, too, is making his way to Daenerys. But his newest allies in this quest are not the rag-tag band they seem, and at their heart lies one who could undo Daenerys’s claim to Westeros forever.\n\nMeanwhile, to the north lies the mammoth Wall of ice and stone—a structure only as strong as those guarding it. There, Jon Snow, 998th Lord Commander of the Night’s Watch, will face his greatest challenge. For he has powerful foes not only within the Watch but also beyond, in the land of the creatures of ice.\n\nFrom all corners, bitter conflicts reignite, intimate betrayals are perpetrated, and a grand cast of outlaws and priests, soldiers and skinchangers, nobles and slaves, will face seemingly insurmountable obstacles. Some will fail, others will grow in the strength of darkness. But in a time of rising restlessness, the tides of destiny and politics will lead inevitably to the greatest dance of all.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9780553801477"
+          "href" : "http://localhost:12345/api/v1/editions/9780553801477"
         }
       }
     }, {
@@ -234,7 +234,7 @@
       "summary" : "En ce début de treizième millénaire, l'Empire n'a jamais été aussi puissant, aussi étendu à travers toute la galaxie. C'est clans sa capitale, Trantor, que l'éminent savant Hari Seldon invente la psychohistoire, une science nouvelle permettant de prédire l'avenir. Grâce à elle, Seldon prévoit l'effondrement de l'Empire d'ici trois siècles, suivi d'une ère de ténèbres de trente mille ans. Réduire cette période à mille ans est peut-être possible, à condition de mener à terme son projet : la Fondation, chargée de rassembler toutes les connaissances humaines.\nUne entreprise visionnaire qui rencontre de nombreux et puissants détracteurs... Récompensé par le prix Hugo de la \"meilleure série de science-fiction de tous les temps Le cycle de Fondation est l'œuvre socle de la S-F moderne, celle que tous les amateurs du genre ont lue ou liront un jour.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070360536"
+          "href" : "http://localhost:12345/api/v1/editions/9782070360536"
         }
       }
     }, {
@@ -245,7 +245,7 @@
       "summary" : "Tandis que les crises qui secouent l'Empire redoublent de violence et annoncent son effondrement définitif, la Fondation créée par le psychohistorien Hari Seldon pour sauvegarder la civilisation devient de plus en plus puissante, suscitant naturellement convoitise et visées annexionnistes. En tout premier lieu, celles de Bel Riose, jeune général qui voit dans les secrets détenus par la Fondation le moyen de monter sur le trône.\nC'est alors qu'apparaît un mystérieux et invincible conquérant, surnommé le Mulet, que le plan de Seldon n'avait pas prévu...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070360550"
+          "href" : "http://localhost:12345/api/v1/editions/9782070360550"
         }
       }
     }, {
@@ -256,7 +256,7 @@
       "summary" : "Conçue par le psychohistorien Hari Seldon pour restreindre l'ère de chaos résultant de la décadence de l'Empire galactique, la Fondation est désormais aux mains du Mulet, un mutant imprévisible capable de manipuler les esprits et d'imposer sa volonté à quiconque. Avec ses pouvoirs et les immenses ressources que lui procure la Fondation, il s'est donné pour objectif d'étendre sa domination aux ultimes vestiges de l'Empire défunt.\nMais déjà une nouvelle légende prend forme : il existerait une Seconde Fondation, consacrée aux sciences mentales, œuvrant de façon occulte pour garantir l'accomplissement des desseins du légendaire Hari Seldon...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070360529"
+          "href" : "http://localhost:12345/api/v1/editions/9782070360529"
         }
       }
     }, {
@@ -267,7 +267,7 @@
       "summary" : "Prévoyant l'effondrement prochain de l'Empire galactique, le psychohistorien Hari Seldon a jadis créé deux Fondations, l'une officielle, l'autre occulte, afin de préserver la civilisation d'une interminable période de chaos. Pourtant, cinq siècles après leur établissement, alors même que la Première Fondation n'a jamais été aussi puissante, un nouveau protagoniste semble entrer en jeu, œuvrant dans l'ombre à l'insu de tous.\nPeut-être tient-il entre ses mains le devenir de l'humanité tout entière...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070360635"
+          "href" : "http://localhost:12345/api/v1/editions/9782070360635"
         }
       }
     }, {
@@ -278,7 +278,7 @@
       "summary" : "La Terre. Tout porte à croire que le légendaire berceau de l'humanité se trouve au cœur d'un vaste plan à l'échelle galactique, destiné à garantir en coulisse la pérennité de la civilisation : une synthèse parfaite entre le matérialisme de la Première Fondation et le mentalisme de la Seconde, mise en œuvre par une mystérieuse puissance. Mais comment trouver une planète que beaucoup croient mythique, et dont toute trace a inexplicablement disparu des archives galactiques ? Récompensé par le prix Hugo de la \"meilleure série de science-fiction de tous les temps Le cycle de Fondation est l'œuvre socle de la S-F moderne, celle que tous les amateurs du genre ont lue ou liront un jour.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070379668"
+          "href" : "http://localhost:12345/api/v1/editions/9782070379668"
         }
       }
     }, {
@@ -289,7 +289,7 @@
       "summary" : "Première Loi : Un robot ne peut porter atteinte à un être humain ni, restant passif, laisser cet être humain exposé au danger. Deuxième Loi : Un robot doit obéir aux ordres donnés par les êtres humains, sauf si de tels ordres entrent en contradiction avec la Première Loi. Troisième Loi : Un robot doit protéger son existence dans la mesure où cette protection n'entre pas en contradiction avec la Première ou la Deuxième Loi.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782290227268"
+          "href" : "http://localhost:12345/api/v1/editions/9782290227268"
         }
       }
     }, {
@@ -300,7 +300,7 @@
       "summary" : "Comment risque de réagir un robot programmé pour un environnement lunaire dès lors qu'il se retrouve égaré sur Terre ? Un robot peut-il mentir à un procès pour préserver les intérêts de son utilisateur ? Le docteur Susan Calvin, robopsychologue, dialogue avec les androïdes pour faire la lumière sur ces étranges affaires. Et découvre davantage de défauts de programmation chez l'homme que chez ses fidèles créations...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782290311257"
+          "href" : "http://localhost:12345/api/v1/editions/9782290311257"
         }
       }
     }, {
@@ -311,7 +311,7 @@
       "summary" : "L'assassinat du docteur Sarton à Spacetown jette le trouble dans la communauté. Qui aurait intérêt a faire disparaître celui-là même qui milite pour le rapprochement entre Terriens et Spaciens ? Les Médiévalistes, qui ne voient pas d'un très bon œil la prolifération des robots ? Les Spaciens eux-mêmes, prêts à tout pour conserver leurs privilèges ? Le problème du détective Baley, toutefois, n'est pas seulement de retrouver un meurtrier, mais aussi et surtout d'y parvenir avant son collègue robot R Daneel. Car celui-ci est l'un de ces androïdes au cerveau électronique ultra-perfectionné, créés certes par l'homme, mais qui n'attendent peut-être que l'occasion de prendre sa place...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782290319024"
+          "href" : "http://localhost:12345/api/v1/editions/9782290319024"
         }
       }
     }, {
@@ -322,7 +322,7 @@
       "summary" : "C'est désormais sur la lointaine planète Solaria qu'Elijah Baley et R. Daneel Olivaw vont exercer leurs talents d'enquêteurs. Sur ce monde, les hommes n'acceptent plus de se rencontrer physiquement mais se \"visionnent\" par le truchement de projections télévisées. Or, un meurtre a été commis, un meurtre apparemment impossible puisque aucun Solarien n'aurait assez de courage pour s'approcher d'un de ses compatriotes.\nQui plus est, tout semble indiquer qu'un robot est impliqué. Absurde ! Les Lois de la robotique interdisent à ces êtres artificiels de causer le moindre tort aux hommes...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782290327944"
+          "href" : "http://localhost:12345/api/v1/editions/9782290327944"
         }
       }
     }, {
@@ -333,7 +333,7 @@
       "summary" : "Quand Elijah Baley arrive sur Aurora, il pressent qu'il va au-devant de sa plus périlleuse mission. Il s'agit en effet pour lui de découvrir qui, pour la première fois dans la galaxie, s'est rendu coupable du meurtre de Jander Panell, le robot positronique le plus sophistiqué jamais créé, une créature atteignant un degré d'\" humanité \" très supérieur à tout ce que le Dr Susan Calvin aurait pu imaginer. Or le seul être qui possédait les compétences nécessaires pour commettre un tel crime n'est autre que son propre concepteur, le Dr Fastolfe ! Heureusement, Baley sera à nouveau assisté sur cette affaire de Daneel Olivaw, désormais l'unique robot humaniforme encore en activité...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782290332757"
+          "href" : "http://localhost:12345/api/v1/editions/9782290332757"
         }
       }
     }, {
@@ -344,7 +344,7 @@
       "summary" : "Plusieurs décennies se sont écoulées depuis les événements narrés dans \" les robots de l'aube \". Le docteur Amadiro voue une haine inextinguible à Glardia Gremionis pour avoir fait échouer ses plans de domination de la galaxie. Avec l'aide de Mandamus, un jeune et brillant scientifique, il ourdit à nouveau un plan d'éradication de l'humanité. Pour le contrer, Gladia est toujours assistée de Daneel, le robot humaniforme, et de Giskard, l'androïde télépathe, aux aptitudes nombreuses mais limitées par les restrictions qu'imposent les lois de la robotique. Et leurs choix seront d'autant plus ardus qu'une nouvelle loi, la loi zéro, va faire son apparition...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782290311165"
+          "href" : "http://localhost:12345/api/v1/editions/9782290311165"
         }
       }
     }, {
@@ -355,7 +355,7 @@
       "summary" : "Harry Potter est un garçon ordinaire. Mais le jour de ses onze ans, son existence bascule : un géant vient le chercher pour l'emmener dans une école de sorciers. Quel mystère entoure donc sa naissance et qui est l'effroyable V…, le mage dont personne n'ose prononcer le nom ? Voler à cheval sur des balais, jeter des sorts, combattre les Trolls : Harry Potter se révèle un sorcier vraiment doué. Quand il décide, avec ses amis, d'explorer les moindres recoins de son école, il va se trouver entraîné dans d'extraordinaires aventures.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070624522"
+          "href" : "http://localhost:12345/api/v1/editions/9782070624522"
         }
       }
     }, {
@@ -366,7 +366,7 @@
       "summary" : "Harry Potter fait une rentrée fracassante en voiture volante à l'école des sorciers. Cette deuxième année ne s'annonce pas de tout repos... surtout depuis qu'une étrange malédiction s'est abattue sur les élèves. Entre les cours de potion magique, les matches de Quidditch et les combats de mauvais sorts, Harry trouvera-t-il le temps de percer le mystère de la Chambre des Secrets ? Un livre magique pour sorciers confirmés.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070624539"
+          "href" : "http://localhost:12345/api/v1/editions/9782070624539"
         }
       }
     }, {
@@ -377,7 +377,7 @@
       "summary" : "\"Je jure solennellement que mes intentions sont mauvaises. \" Harry Potter",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070624546"
+          "href" : "http://localhost:12345/api/v1/editions/9782070624546"
         }
       }
     }, {
@@ -388,7 +388,7 @@
       "summary" : "Après un horrible été chez les Dursley, Harry Potter entre en quatrième année au collège de Poudlard. A quatorze ans, il voudrait simplement être un jeune sorcier comme les autres, retrouver ses amis Ron et Hermione, assister avec eux à la Coupe du Monde de Quidditch, apprendre de nouveaux sortilèges et essayer des potions inconnues. Une grande nouvelle l'attend à son arrivée : la tenue à Poudlard d'un tournoi de magie entre les plus célèbres écoles de sorcellerie.\nDéjà les spectaculaires délégations étrangères font leur entrée... Harry se réjouit. Trop vite. Il va se trouver plongé au coeur des événements les plus dramatiques qu'il ait jamais eu à affronter. Envoûtant, drôle, bouleversant, ce quatrième tome est le pilier central des aventures de Harry Potter.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070624553"
+          "href" : "http://localhost:12345/api/v1/editions/9782070624553"
         }
       }
     }, {
@@ -399,7 +399,7 @@
       "summary" : "A quinze ans, Harry s'apprête à entrer en cinquième année à Poudlard. Et s'il est heureux de retrouver le monde des sorciers, il n'a jamais été aussi anxieux. L'adolescence, la perspective des examens importants en fin d'année et ces étranges cauchemars.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070624560"
+          "href" : "http://localhost:12345/api/v1/editions/9782070624560"
         }
       }
     }, {
@@ -410,7 +410,7 @@
       "summary" : "\"C'est l'inconnu qui nous fait peur quand nous contemplons la mort ou l'obscurité, rien d'autre.\" Albus Dumbledore",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070624904"
+          "href" : "http://localhost:12345/api/v1/editions/9782070624904"
         }
       }
     }, {
@@ -421,7 +421,7 @@
       "summary" : "\"Harry est le meilleur espoir que nous ayons. Faites-lui confiance.\" Remus Lupin.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070624911"
+          "href" : "http://localhost:12345/api/v1/editions/9782070624911"
         }
       }
     }, {
@@ -432,7 +432,7 @@
       "summary" : "De nouvelles illustrations enchanteresses pour le joyau de la bibliothèque de Poudlard ! Aventure, ruse, amour, magie, voici les cinq contes qui bercent l'enfance des sorciers. Traduit des runes par Hermione Granger, commenté par Albus Dumbledore, avec une introduction par J. K. Rowling, ce classique vous fera tour à tour rire ou frissonner.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070625192"
+          "href" : "http://localhost:12345/api/v1/editions/9782070625192"
         }
       }
     }, {
@@ -443,7 +443,7 @@
       "summary" : "A Cuba, voilà quatre-vingt-quatre jours que le vieux Santiago rentre bredouille de la pêche, ses filets désespérément vides. La chance l'a déserté depuis longtemps. A l'aube du quatre-vingt-cinquième jour, son jeune ami Manolin lui fournit deux belles sardines fraîches pour appâter le poisson, et lui souhaite bonne chance en le regardant s'éloigner à bord de son petit bateau. Aujourd'hui, Santiago sent que la fortune lui revient.\nEt en effet, un poisson vient mordre à l'hameçon. C'est un marlin magnifique et gigantesque. Débute alors le plus âpre des duels. Combat de l'homme et de la nature, roman du courage et de l'espoir, Le vieil homme et la mer est un des plus grands livres de la littérature américaine.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782072762086"
+          "href" : "http://localhost:12345/api/v1/editions/9782072762086"
         }
       }
     }, {
@@ -454,7 +454,7 @@
       "summary" : "Paris, années 1920. Jake Barnes, journaliste américain, retrouve la belle et frivole Lady Ashley, perdue dans une quête effrénée d'amants. Nous les suivons, s'abîmant dans l'alcool, des bars parisiens aux arènes espagnoles, en passant par les ruisseaux à truites des Pyrénées. Leurs compagnons, Robert Cohn, Michael Campbell, sont autant d'hommes à la dérive, marqués au fer rouge par la Première Guerre mondiale.\nDans un style limpide, d'une efficacité redoutable, Hemingway dépeint le Paris des écrivains de l'entre-deux- guerres et les fameuses fêtes de San Fermín. Ses héros, oscillant sans cesse entre mal de vivre et jouissance de l'instant présent, sont devenus les emblèmes de cette génération que Gertrude Stein qualifia de \"perdue\".",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782073004215"
+          "href" : "http://localhost:12345/api/v1/editions/9782073004215"
         }
       }
     }, {
@@ -465,7 +465,7 @@
       "summary" : "\"Pas d'adieu, guapa, parce que nous ne sommes pas séparés. J'espère que tout ira bien dans les Gredos. Va maintenant. Va pour de bon. Non\", il continuait à parler tranquillement, sagement, tandis que Pilar entraînait la jeune fille. \"Ne te retourne pas. Mets ton pied dans l'étrier. Oui. Ton pied. Aide-la\", dit-il à Pilar. \"Soulève-la. Mets-la en selle\". Il tourna la tête, en sueur, et regarda vers le bas de la pente puis ramena son regard à l'endroit où la jeune fille était en selle avec Pilar auprès d'elle et Pablo juste derrière.\n\"Maintenant, va\", dit-il. \"Va\". Elle allait tourner la tête. \"Ne regarde pas en arrière\", dit Robert Jordan. \"Va\". Et Pablo frappa le cheval sur la croupe avec une entrave.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782072729935"
+          "href" : "http://localhost:12345/api/v1/editions/9782072729935"
         }
       }
     }, {
@@ -476,7 +476,7 @@
       "summary" : "... ils commencèrent à prendre de l'altitude en direction de l'Est, semblait-il ; après quoi, cela s'obscurcit et ils se trouvèrent en pleine tempête, la pluie tellement drue qu'on eût cru voler à travers une cascade, et puis ils en sortirent et Compie tourna la tête et sourit en montrant quelque chose du doigt et là, devant eux, tout ce qu'il pouvait voir, vaste comme le monde, immense, haut et incroyablement blanc dans le soleil, c'était le sommet carré du Kilimandjaro.\nEt alors il comprit que c'était là qu'il allait.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070361519"
+          "href" : "http://localhost:12345/api/v1/editions/9782070361519"
         }
       }
     }, {
@@ -487,7 +487,7 @@
       "summary" : "Rastignac est un jeune provincial qui cherche à s'insérer dans la société parisienne. Il lui manque les manières et l'argent. Pour parvenir, il côtoie les femmes du monde, mais reste attaché à son voisin de la pension Vauquer, le père Goriot, vieillard malheureux abandonné de ses filles. Vautrin, forçat évadé, Marsay, politicien ambitieux, et Rubempré, écrivain talentueux, sont animés du même désir de pouvoir.\nIls apprennent, chacun à leur manière, les complicités et les alliances indispensables dans une société gouvernée par les intérêts. Seules figures du désintéressement : le père Goriot, vaincu par son amour paternel, et Mme de Beauséant, abandonnée du Tout-Paris. La passion bout dans cette maison comme dans une cocotte-minute, les pages se tournent toutes seules; c'est que chaque palier de la pension Vauquer est devenu un étage de ce que Balzac vient de concevoir: La Comédie humaine.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070409341"
+          "href" : "http://localhost:12345/api/v1/editions/9782070409341"
         }
       }
     }, {
@@ -498,7 +498,7 @@
       "summary" : "Un jeune aristocrate désargenté et désespéré, Raphaël de Valentin, reçoit d'un vieil antiquaire une peau d'onagre miraculeuse et maléfique : elle satisfait tous ses désirs, mais sa superficie, liée par un charme mystérieux à la durée de la vie de son possesseur, rétrécit à chaque souhait exaucé. Raphaël, qui rêvait de conquérir le monde, découvre ainsi, au prix de sa propre existence, que \"Vouloir nous brûle et Pouvoir nous détruit\" .\nSeul face à sa mort, dont il peut chaque jour calculer l'échéance, il délaisse la société des hommes, renonce à la jouissance du monde : en vain, même l'amour pur et partagé ne pourra le sauver. Dans le décor très réaliste des années 1830, La Peau de chagrin plonge le lecteur dans un univers proprement fantastique, un univers de l'étrange qui illustre l'une des théories philosophiques fondamentales de l'oeuvre balzacienne : l'énergie vitale.\nIntroduction et notes de Jacques Martineau.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782253006305"
+          "href" : "http://localhost:12345/api/v1/editions/9782253006305"
         }
       }
     }, {
@@ -509,7 +509,7 @@
       "summary" : "Enfant trouvé fasciné par la carrière des armes, Hyacinthe dit Chabert s'est illustré aux premiers rangs de la Grande Armée. Laissé pour mort à Eylau, puis miraculeusement sauvé, il tentera quelques années plus tard de retrouver sa place dans une France bourgeoise qui veut oublier ses héros, auprès d'une femme qui lui doit tout, qui l'a dépouillé et qui le rejette. Nul destin, peut-être, n'éclaire mieux que le sien l'envers de la \" comédie humaine \", dans cette tragédie domestique doublée d'un drame social où le sublime côtoie constamment le sordide. \" Nous n'oublierons jamais l'entrée pitoyable de Chabert à l'étude Derville éclairée au gaz le matin, avec le déjeuner, réchauffé sur la cheminée, des clercs, des clercs rieurs, insolents et clabaudeurs, Chabert avec ses rides blanches, son vieux carrick, Chabert méprisé, aliéné de cette patrie et de cette femme qu'il continue à aimer, dénoncé de cette société où, bien qu'enfant trouvé, il s'était, si difficilement, fait un nom... Chabert a sa place dans toutes les mémoires, à côté du cousin Pons et du père Goriot, et sur le même rang. Le Colonel Chabert, admirable histoire de revenant. Paul MORAND.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782253098041"
+          "href" : "http://localhost:12345/api/v1/editions/9782253098041"
         }
       }
     }, {
@@ -520,7 +520,7 @@
       "summary" : "1572.\nLa France des guerres de religion est devenue le champ clos des grands seigneurs et des prétendants au trône. A Paris, le jeune roi protestant de Navarre, le futur Henri IV, vient d'épouser Marguerite de Valois dite Margot ; mariage politique qui n'empêche pas les Guise et le roi Charles IX de fomenter les horreurs de la Saint-Barthélémy. Sur les pas du jeune comte de La Mole, dont s'éprend éperdument la belle Margot, et de son compagnon, le tonitruant Annibal de Coconnas, nous entrons dans ce labyrinthe d'intrigues, d'alliances, de trahisons. Les poignards luisent sous les pourpoints. René le Florentin fournit les poisons à l'implacable Catherine de Médicis. Le vieux Louvre avec ses fêtes brillantes, ses passages secrets, son peuple de soldats et de jolies femmes, est le théâtre où se déploient en mille péripéties les jeux de l'amour, de la politique, de la haine. Le père des Trois Mousquetaires nous en donne une passionnante chronique où sa pétulante bonne humeur survit aux plus sanglants épisodes.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782253099994"
+          "href" : "http://localhost:12345/api/v1/editions/9782253099994"
         }
       }
     }, {
@@ -531,7 +531,7 @@
       "summary" : "1815. Louis XVIII rétabli sur le trône se heurte à une opposition dont l'Empereur, relégué à l'île d'Elbe, songe déjà à profiter. Dans Marseille livrée à la discorde civile, le moment est propice aux règlements de comptes politiques ou privés. C'est ainsi que le marin Edmond Dantès, à la veille de son mariage, se retrouve, sans savoir pourquoi, arrêté et conduit au château d'If... Paru en 1844-1846, Le Comte de Monte-Cristo connut un succès qui ne s'est pas démenti, ce qui en fait une des œuvres les plus populaires de la littérature mondiale.\nL'abbé Faria, l'évasion inouïe, le trésor grâce auquel les bons seront récompensés et les traîtres punis : le fabuleux destin d'Edmond Dantès possède la simplicité et la force des grands mythes. Conteur éblouissant, aussi à l'aise dans l'action que dans le dialogue, Dumas nous entraîne sans nous laisser reprendre souffle du cabinet de Louis XVIII à la Méditerranée des contrebandiers, des îles toscanes aux catacombes de Rome, puis aux salons parisiens où le mystérieux comte de Monte-Cristo se dispose à accomplir sa vengeance...",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782253098058"
+          "href" : "http://localhost:12345/api/v1/editions/9782253098058"
         }
       }
     }, {
@@ -542,7 +542,7 @@
       "summary" : "1838. Un seigneur étranger, le comte Monte-Cristo, intrigue le grand monde parisien par son faste extraordinaire, ses manières raffinées et fantasques, la jeune femme orientale qui vit dans son ombre. Qui - hormis peut-être la belle et mélancolique comtesse de Morcerf - pourrait reconnaître en lui le pauvre marin Dantès, arrêté à Marseille vingt-trois ans plus tôt ? A travers les péripéties d'une vengeance implacable, c'est le Paris de Balzac qui revit dans ce second volume.\nDandys, femmes du monde, personnages patibulaires ressurgis du bagne, se croisent autour d'inoubliables figures - le banquier politicien Danglars, le sévère procureur de Villefort, le hautain comte de Morcerf, pair de France. Romancier de l'histoire, l'auteur des Trois Mousquetaires et de La Reine Margot révèle dans ce chef-d'œuvre une autre facette de son génie : le roman de mœurs et de critique sociale, servi par un sens inégalé de l'action et du suspense.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782253098065"
+          "href" : "http://localhost:12345/api/v1/editions/9782253098065"
         }
       }
     }, {
@@ -553,7 +553,7 @@
       "summary" : "Dans Les Trois Mousquetaires revit toute l'Histoire : le Moyen Age parce que c'est une épopée chevaleresque ; le XVIIème siècle dominé par Richelieu fondateur de la France moderne ; le romantisme parce que des héros exceptionnels, qui ont disparu d'une société contemporaine dépoétisée, se réfugient dans le roman. L'auteur y a mis tout son art : la surprise, la vitesse, l'humour, la couleur, le sens du mystère et de la grandeur. Le lecteur se sent un instant aventureux comme d'Artagnan, séducteur comme Aramis, hercule comme Porthos, profond comme Athos, poète comme Dumas.",
       "_links" : {
         "self" : {
-          "href" : "http://localhost:12345/api/v1/books/9782070417681"
+          "href" : "http://localhost:12345/api/v1/editions/9782070417681"
         }
       }
     } ],

@@ -7,7 +7,7 @@
       "description": "Default website page request",
       "providerStates": [
         {
-          "name": "First page of 10 elements contains books"
+          "name": "First page of 10 elements contains editions"
         }
       ],
       "request": {
@@ -31,7 +31,7 @@
                 "name": "Jean-Jacques Rousseau"
               }
             ],
-            "books": [
+            "editions": [
               {
                 "authors": [
                   "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"
@@ -98,7 +98,7 @@
                 }
               ]
             },
-            "$._embedded.books": {
+            "$._embedded.editions": {
               "combine": "AND",
               "matchers": [
                 {
@@ -107,7 +107,7 @@
                 }
               ]
             },
-            "$._embedded.books[*].authors": {
+            "$._embedded.editions[*].authors": {
               "combine": "AND",
               "matchers": [
                 {
@@ -116,7 +116,7 @@
                 }
               ]
             },
-            "$._embedded.books[*].authors[*]": {
+            "$._embedded.editions[*].authors[*]": {
               "combine": "AND",
               "matchers": [
                 {
@@ -190,7 +190,7 @@
       "description": "Specific website page request",
       "providerStates": [
         {
-          "name": "Next page of 25 elements contains books"
+          "name": "Next page of 25 elements contains editions"
         }
       ],
       "request": {
@@ -214,7 +214,7 @@
                 "name": "Jean-Jacques Rousseau"
               }
             ],
-            "books": [
+            "editions": [
               {
                 "authors": [
                   "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"
@@ -288,7 +288,7 @@
                 }
               ]
             },
-            "$._embedded.books": {
+            "$._embedded.editions": {
               "combine": "AND",
               "matchers": [
                 {
@@ -297,7 +297,7 @@
                 }
               ]
             },
-            "$._embedded.books[*].authors": {
+            "$._embedded.editions[*].authors": {
               "combine": "AND",
               "matchers": [
                 {
@@ -306,7 +306,7 @@
                 }
               ]
             },
-            "$._embedded.books[*].authors[*]": {
+            "$._embedded.editions[*].authors[*]": {
               "combine": "AND",
               "matchers": [
                 {
