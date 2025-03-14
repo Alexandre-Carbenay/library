@@ -46,7 +46,7 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'au.com.dius.pact.consumer:junit5:4.6.17'
-	testImplementation 'org.aspectj:aspectjweaver:1.9.22.1'
+	testImplementation 'org.aspectj:aspectjweaver:1.9.23'
 
 	scss 'org.webjars.npm:bootstrap:5.3.3'
 }
