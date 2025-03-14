@@ -1,24 +1,24 @@
-Feature: Retrieve book details
-	As a library member, I want to retrieve book details from the catalog to get information about its author and content
+Feature: Retrieve edition details
+	As a library member, I want to retrieve edition details from the catalog to get information about its author and content
 
-	Rule: Unknown books cannot be found in the catalog
+	Rule: Unknown editions cannot be found in the catalog
 
-		Scenario Outline: Fail retrieving unknown book details
+		Scenario Outline: Fail retrieving unknown edition details
 			Given Georges is a library member
-			When he retrieves the details of a book with ISBN <isbn>
-			Then the book details cannot be retrieved because it does not exists
+			When he retrieves the details of an edition with ISBN <isbn>
+			Then the edition details cannot be retrieved because it does not exists
 			Examples:
 				| isbn          |
 				| 9782290385050 |
 				| 9782253160991 |
 				| 9782290365182 |
 
-	Rule: Books in the catalog have the expected details and embed their authors
+	Rule: Editions in the catalog have the expected details and embed their authors
 
-		Scenario Outline: Retrieve known book details
+		Scenario Outline: Retrieve known edition details
 			Given Georges is a library member
-			When he retrieves the details of a book with ISBN <isbn>
-			Then the book details have the expected "<title>", <publicationDate>, <language>, <authors> and "<summary>"
+			When he retrieves the details of an edition with ISBN <isbn>
+			Then the edition details have the expected "<title>", <publicationDate>, <language>, <authors> and "<summary>"
 			Examples:
 				| isbn          | title                                                          | publicationDate | language | authors                       | summary                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 				| 9782081275232 | Du contrat social                                              | 2012-01-04      | French   | Jean-Jacques Rousseau         | Paru en 1762, le Contrat social, en affirmant le principe de souveraineté du peuple, a constitué un tournant décisif pour la modernité et s'est imposé comme un des textes majeurs de la philosophie politique. Il a aussi acquis le statut de monument, plus célèbre que connu, plus révéré - ou honni - qu'interrogé. Retrouver, dans les formules fameuses et les pages d'anthologie, le mouvement de la réflexion et les questions vives qui nourrissent une œuvre beaucoup plus problématique qu'affirmative, c'est découvrir une pensée qui se tient au plus près des préoccupations d'aujourd'hui : comment intégrer les intérêts de tous dans la détermination de l'intérêt commun ? Comment lutter contre la pente de tout gouvernement à déposséder les citoyens de la souveraineté ? Comment former en chacun ce sentiment d'obligation sans lequel le lien social se défait ?\n |

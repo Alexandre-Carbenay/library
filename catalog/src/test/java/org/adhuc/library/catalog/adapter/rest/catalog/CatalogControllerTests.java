@@ -4,7 +4,7 @@ import net.jqwik.api.Arbitraries;
 import net.jqwik.api.Combinators;
 import org.adhuc.library.catalog.adapter.rest.PaginationSerializationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
-import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
+import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.books.Book;
@@ -50,7 +50,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SuppressWarnings("unused")
-@WebMvcTest(controllers = {CatalogController.class, BookModelAssembler.class, AuthorModelAssembler.class})
+@WebMvcTest(controllers = {CatalogController.class, EditionModelAssembler.class, AuthorModelAssembler.class})
 @Import({RequestValidationConfiguration.class, PaginationSerializationConfiguration.class})
 @DisplayName("Catalog controller should")
 class CatalogControllerTests {
@@ -344,9 +344,13 @@ class CatalogControllerTests {
     private void assertResponseContainsAllBooks(ResultActions result, List<Book> expected) throws Exception {
         result.andExpect(jsonPath("_embedded.books").exists())
                 .andExpect(jsonPath("_embedded.books").isArray())
-                .andExpect(jsonPath("_embedded.books", hasSize(expected.size())));
+                .andExpect(jsonPath("_embedded.books", hasSize(expected.size())))
+                .andExpect(jsonPath("_embedded.editions").exists())
+                .andExpect(jsonPath("_embedded.editions").isArray())
+                .andExpect(jsonPath("_embedded.editions", hasSize(expected.size())));
         for (int i = 0; i < expected.size(); i++) {
             assertResponseContainsBook(result, "_embedded.books[" + i + "].", expected.get(i));
+            assertResponseContainsBook(result, "_embedded.editions[" + i + "].", expected.get(i));
         }
     }
 
@@ -357,7 +361,7 @@ class CatalogControllerTests {
                         expected.authors().stream().map(Author::id).map(UUID::toString).toArray())))
                 .andExpect(jsonPath(jsonPrefix + "language", equalTo(expected.language())))
                 .andExpect(jsonPath(jsonPrefix + "summary", equalTo(expected.summary())))
-                .andExpect(jsonPath(jsonPrefix + "_links.self.href", equalTo("http://localhost/api/v1/books/" + expected.isbn())));
+                .andExpect(jsonPath(jsonPrefix + "_links.self.href", equalTo("http://localhost/api/v1/editions/" + expected.isbn())));
     }
 
     private void assertResponseContainsAllBooksAuthors(ResultActions result, Collection<Book> expectedBooks) throws Exception {

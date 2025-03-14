@@ -1,4 +1,4 @@
-package org.adhuc.library.catalog.adapter.rest.books;
+package org.adhuc.library.catalog.adapter.rest.editions;
 
 import org.adhuc.library.catalog.adapter.rest.ProblemError.ParameterError;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
@@ -25,18 +25,18 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 
 @RestController
-@RequestMapping(path = "/api/v1/books", produces = {APPLICATION_JSON_VALUE, HAL_JSON_VALUE})
-public class BooksController {
+@RequestMapping(path = "/api/v1/editions", produces = {APPLICATION_JSON_VALUE, HAL_JSON_VALUE})
+public class EditionsController {
 
-    private final BookDetailsModelAssembler bookModelAssembler;
+    private final EditionDetailsModelAssembler editionModelAssembler;
     private final AuthorModelAssembler authorModelAssembler;
     private final BooksService booksService;
     private final ISBNValidator isbnValidator = new ISBNValidator();
 
-    public BooksController(BookDetailsModelAssembler bookModelAssembler,
-                           AuthorModelAssembler authorModelAssembler,
-                           BooksService booksService) {
-        this.bookModelAssembler = bookModelAssembler;
+    public EditionsController(EditionDetailsModelAssembler editionModelAssembler,
+                              AuthorModelAssembler authorModelAssembler,
+                              BooksService booksService) {
+        this.editionModelAssembler = editionModelAssembler;
         this.authorModelAssembler = authorModelAssembler;
         this.booksService = booksService;
     }
@@ -46,18 +46,18 @@ public class BooksController {
         if (!isbnValidator.isValid(isbn)) {
             return prepareInvalidIsbnResponse(isbn);
         }
-        var book = booksService.getBook(isbn);
-        return book.isPresent()
-                ? prepareBookResponse(book.get())
+        var edition = booksService.getBook(isbn);
+        return edition.isPresent()
+                ? prepareEditionResponse(edition.get())
                 : prepareNotFoundResponse(isbn);
     }
 
-    private ResponseEntity<Object> prepareBookResponse(Book book) {
-        var bookDetails = bookModelAssembler.toModel(book);
+    private ResponseEntity<Object> prepareEditionResponse(Book book) {
+        var editionDetails = editionModelAssembler.toModel(book);
         var authors = authorModelAssembler.toCollectionModel(book.authors()).getContent();
         return ResponseEntity.status(OK)
-                .body(halModelOf(bookDetails)
-                        .links(bookDetails.getLinks())
+                .body(halModelOf(editionDetails)
+                        .links(editionDetails.getLinks())
                         .embed(authors, LinkRelation.of("authors"))
                         .build()
                 );
@@ -75,8 +75,8 @@ public class BooksController {
                 .body(Problem.create()
                         .withType(URI.create("/problems/unknown-entity"))
                         .withStatus(NOT_FOUND)
-                        .withTitle("Unknown book")
-                        .withDetail(STR."No book exists with ISBN '\{isbn}'")
+                        .withTitle("Unknown edition")
+                        .withDetail(STR."No edition exists with ISBN '\{isbn}'")
                 );
     }
 

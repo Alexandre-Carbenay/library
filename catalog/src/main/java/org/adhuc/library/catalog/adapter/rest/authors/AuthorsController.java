@@ -1,6 +1,6 @@
 package org.adhuc.library.catalog.adapter.rest.authors;
 
-import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
+import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.authors.AuthorsService;
 import org.adhuc.library.catalog.books.BooksService;
@@ -27,16 +27,16 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 public class AuthorsController {
 
     private final AuthorDetailsModelAssembler authorModelAssembler;
-    private final BookModelAssembler bookModelAssembler;
+    private final EditionModelAssembler editionModelAssembler;
     private final AuthorsService authorsService;
     private final BooksService booksService;
 
     public AuthorsController(AuthorDetailsModelAssembler authorModelAssembler,
-                             BookModelAssembler bookModelAssembler,
+                             EditionModelAssembler editionModelAssembler,
                              AuthorsService authorsService,
                              BooksService booksService) {
         this.authorModelAssembler = authorModelAssembler;
-        this.bookModelAssembler = bookModelAssembler;
+        this.editionModelAssembler = editionModelAssembler;
         this.authorsService = authorsService;
         this.booksService = booksService;
     }
@@ -54,7 +54,7 @@ public class AuthorsController {
         var notableBooks = booksService.getNotableBooks(author.id());
         var responseBody = halModelOf(authorDetails);
         if (!notableBooks.isEmpty()) {
-            responseBody.embed(bookModelAssembler.toCollectionModel(
+            responseBody.embed(editionModelAssembler.toCollectionModel(
                             notableBooks).getContent(),
                     LinkRelation.of("notable_books"));
         }

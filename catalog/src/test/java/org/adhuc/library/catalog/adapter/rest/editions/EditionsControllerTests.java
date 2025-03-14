@@ -1,4 +1,4 @@
-package org.adhuc.library.catalog.adapter.rest.books;
+package org.adhuc.library.catalog.adapter.rest.editions;
 
 import net.jqwik.api.Arbitrary;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
@@ -33,14 +33,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = {
-        BooksController.class,
-        BookModelAssembler.class,
-        BookDetailsModelAssembler.class,
+        EditionsController.class,
+        EditionModelAssembler.class,
+        EditionDetailsModelAssembler.class,
         AuthorModelAssembler.class
 })
 @Import(RequestValidationConfiguration.class)
-@DisplayName("Books controller should")
-class BooksControllerTests {
+@DisplayName("Editions controller should")
+class EditionsControllerTests {
 
     @Autowired
     private MockMvc mvc;
@@ -49,9 +49,9 @@ class BooksControllerTests {
 
     @ParameterizedTest
     @ValueSource(strings = {"123", "invalid"})
-    @DisplayName("refuse providing a book with invalid ISBN")
-    void invalidBookId(String invalidIsbn) throws Exception {
-        mvc.perform(get("/api/v1/books/{isbn}", invalidIsbn).accept("application/hal+json"))
+    @DisplayName("refuse providing an edition with invalid ISBN")
+    void invalidEditionId(String invalidIsbn) throws Exception {
+        mvc.perform(get("/api/v1/editions/{isbn}", invalidIsbn).accept("application/hal+json"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
@@ -66,58 +66,58 @@ class BooksControllerTests {
     }
 
     @Test
-    @DisplayName("not find a book corresponding to an unknown ISBN")
-    void unknownBookId() throws Exception {
+    @DisplayName("not find an edition corresponding to an unknown ISBN")
+    void unknownEditionId() throws Exception {
         var unknownIsbn = "9782081275232";
-        mvc.perform(get("/api/v1/books/{id}", unknownIsbn).accept("application/hal+json"))
+        mvc.perform(get("/api/v1/editions/{id}", unknownIsbn).accept("application/hal+json"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("type", equalTo("/problems/unknown-entity")))
                 .andExpect(jsonPath("status", equalTo(404)))
-                .andExpect(jsonPath("title", equalTo("Unknown book")))
+                .andExpect(jsonPath("title", equalTo("Unknown edition")))
                 .andExpect(jsonPath("detail", allOf(
-                        startsWith("No book exists with ISBN"),
+                        startsWith("No edition exists with ISBN"),
                         containsString(unknownIsbn))
                 ));
     }
 
     @ParameterizedTest
     @MethodSource({
-            "booksWithExactPublicationDateProvider",
-            "booksWithYearADPublicationDateProvider",
-            "booksWithYearBCPublicationDateProvider"
+            "editionsWithExactPublicationDateProvider",
+            "editionsWithYearADPublicationDateProvider",
+            "editionsWithYearBCPublicationDateProvider"
     })
-    @DisplayName("provide the book details corresponding to the ID")
-    void knownBookId(Book book) throws Exception {
+    @DisplayName("provide the edition details corresponding to the ID")
+    void knownEditionId(Book book) throws Exception {
         when(booksService.getBook(Mockito.any())).thenReturn(Optional.of(book));
 
-        var result = mvc.perform(get("/api/v1/books/{isbn}", book.isbn()).accept("application/hal+json"))
+        var result = mvc.perform(get("/api/v1/editions/{isbn}", book.isbn()).accept("application/hal+json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("isbn", equalTo(book.isbn())))
                 .andExpect(jsonPath("title", equalTo(book.title())))
                 .andExpect(jsonPath("publication_date", equalTo(book.publicationDate().toString())))
                 .andExpect(jsonPath("language", equalTo(book.language())))
                 .andExpect(jsonPath("summary", equalTo(book.summary())))
-                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/books/" + book.isbn())));
+                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/editions/\{book.isbn()}")));
 
         assertResponseContainsAllEmbeddedAuthors(result, book.authors());
 
         verify(booksService).getBook(book.isbn());
     }
 
-    static Stream<Arguments> booksWithExactPublicationDateProvider() {
-        return booksWithPublicationDateProvider(Books.exactPublicationDates());
+    static Stream<Arguments> editionsWithExactPublicationDateProvider() {
+        return editionsWithPublicationDateProvider(Books.exactPublicationDates());
     }
 
-    static Stream<Arguments> booksWithYearADPublicationDateProvider() {
-        return booksWithPublicationDateProvider(Books.yearADPublicationDates());
+    static Stream<Arguments> editionsWithYearADPublicationDateProvider() {
+        return editionsWithPublicationDateProvider(Books.yearADPublicationDates());
     }
 
-    static Stream<Arguments> booksWithYearBCPublicationDateProvider() {
-        return booksWithPublicationDateProvider(Books.yearBCPublicationDates());
+    static Stream<Arguments> editionsWithYearBCPublicationDateProvider() {
+        return editionsWithPublicationDateProvider(Books.yearBCPublicationDates());
     }
 
-    static Stream<Arguments> booksWithPublicationDateProvider(Arbitrary<PublicationDate> publicationDateArbitrary) {
+    static Stream<Arguments> editionsWithPublicationDateProvider(Arbitrary<PublicationDate> publicationDateArbitrary) {
         return publicationDateArbitrary
                 .map(publicationDate -> BooksMother.builder().publicationDate(publicationDate).build())
                 .map(Arguments::of)

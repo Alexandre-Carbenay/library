@@ -1,4 +1,4 @@
-package org.adhuc.library.catalog.adapter.rest.books;
+package org.adhuc.library.catalog.adapter.rest.editions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.adhuc.library.catalog.books.Book;
@@ -9,7 +9,7 @@ import java.util.Collection;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-public class BooksAssertions {
+public class EditionsAssertions {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -30,7 +30,7 @@ public class BooksAssertions {
                                 "&& @.title == \"" + book.title() + "\" " +
                                 "&& @.language == \"" + book.language() + "\" " +
                                 "&& @.summary == " + MAPPER.writeValueAsString(book.summary()) + " " +
-                                "&& @._links.self.href == \"http://localhost/api/v1/books/" + book.isbn() + "\")]").exists());
+                                "&& @._links.self.href == \"http://localhost/api/v1/editions/" + book.isbn() + "\")]").exists());
             }
         }
     }

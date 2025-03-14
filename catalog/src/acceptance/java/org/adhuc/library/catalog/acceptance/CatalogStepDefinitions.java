@@ -17,7 +17,7 @@ public class CatalogStepDefinitions {
 
     private ValidatableResponse response;
 
-    @When("he browses the catalog to page {int} showing {int} books")
+    @When("he browses the catalog to page {int} showing {int} editions")
     public void browseCatalogToPage(int page, int pageSize) {
         response = given().params(
                         "page", page,
@@ -38,16 +38,16 @@ public class CatalogStepDefinitions {
         response = when().get(link).then();
     }
 
-    @Then("the catalog returns page {int} containing {int} books over {int} requested")
+    @Then("the catalog returns page {int} containing {int} editions over {int} requested")
     public void catalogReturnedPage(int page, int pageElements, int pageSize) {
         response.statusCode(206)
                 .contentType("application/json")
                 .body("page.number", describedAs(STR."Page number = \{page}", equalTo(page)))
                 .body("page.size", describedAs(STR."Page size = \{pageSize}", equalTo(pageSize)))
-                .body("_embedded.books", describedAs(STR."Embedded books size = \{pageElements}", hasSize(pageElements)));
+                .body("_embedded.editions", describedAs(STR."Embedded editions size = \{pageElements}", hasSize(pageElements)));
     }
 
-    @Then("the catalog contains {int} books in a total of {int} pages")
+    @Then("the catalog contains {int} editions in a total of {int} pages")
     public void catalogReturnedElements(int totalElements, int totalPages) {
         response.statusCode(206)
                 .contentType("application/json")
@@ -66,16 +66,16 @@ public class CatalogStepDefinitions {
         linkNames.forEach(link -> response.body("_links", describedAs(STR."Link \{link} must be present in catalog links", hasKey(link))));
     }
 
-    @Then("the page {int} contains books corresponding to the expected {isbns}")
+    @Then("the page {int} contains editions corresponding to the expected {isbns}")
     public void catalogPageWithIsbns(int page, List<String> isbns) {
         for (int index = 0; index < isbns.size(); index++) {
             var isbn = isbns.get(index);
-            response.body("_embedded.books[%d].isbn", withArgs(index),
-                    describedAs(STR."Book with index \{index} within page \{page} must have ISBN = \{isbn}", equalTo(isbn)));
+            response.body("_embedded.editions[%d].isbn", withArgs(index),
+                    describedAs(STR."Edition with index \{index} within page \{page} must have ISBN = \{isbn}", equalTo(isbn)));
         }
     }
 
-    @Then("the page {int} contains {authorNames} corresponding to the books")
+    @Then("the page {int} contains {authorNames} corresponding to the editions")
     public void catalogPageWithAuthors(int page, List<String> authorNames) {
         assertResponseEmbedsAuthors(response, authorNames, name -> STR."Catalog page \{page} must contain author named \{name}");
     }
