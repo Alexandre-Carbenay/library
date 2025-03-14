@@ -1,7 +1,6 @@
 package org.adhuc.library.website.catalog;
 
 import org.adhuc.library.website.support.pagination.NavigablePage;
-import org.springframework.data.domain.Pageable;
 
 public interface CatalogClient {
 
