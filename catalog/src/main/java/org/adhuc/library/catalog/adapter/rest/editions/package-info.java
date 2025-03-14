@@ -1,2 +1,2 @@
 @org.jmolecules.architecture.onion.classical.InfrastructureRing
-package org.adhuc.library.catalog.adapter.rest.books;
+package org.adhuc.library.catalog.adapter.rest.editions;

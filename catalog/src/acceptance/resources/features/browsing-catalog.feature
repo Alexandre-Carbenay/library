@@ -5,9 +5,9 @@ Feature: Browse the catalog
 
 		Scenario Outline: Retrieve the catalog pages
 			Given Georges is a library member
-			When he browses the catalog to page <page> showing <pageSize> books
-			Then the catalog returns page <page> containing <pageElements> books over <pageSize> requested
-			And the catalog contains <totalElements> books in a total of <totalPages> pages
+			When he browses the catalog to page <page> showing <pageSize> editions
+			Then the catalog returns page <page> containing <pageElements> editions over <pageSize> requested
+			And the catalog contains <totalElements> editions in a total of <totalPages> pages
 			Examples:
 				| page | pageSize | pageElements | totalElements | totalPages |
 				| 0    | 10       | 10           | 67            | 7          |
@@ -21,7 +21,7 @@ Feature: Browse the catalog
 		Scenario: Retrieve the catalog by default will get the first page with 50 elements
 			Given Georges is a library member
 			When he browses the catalog for the first time
-			Then the catalog returns page 0 containing 50 books over 50 requested
+			Then the catalog returns page 0 containing 50 editions over 50 requested
 
 	Rule: The catalog provides links to navigate through pagination:
 	- first: navigates to the first page
@@ -33,7 +33,7 @@ Feature: Browse the catalog
 
 		Scenario Outline:
 			Given Georges is a library member
-			When he browses the catalog to page <page> showing <pageSize> books
+			When he browses the catalog to page <page> showing <pageSize> editions
 			Then the catalog returns page <page> with available <navigation> links
 			Examples:
 				| page | pageSize | navigation                    |
@@ -47,9 +47,9 @@ Feature: Browse the catalog
 
 		Scenario Outline:
 			Given Georges is a library member
-			When he browses the catalog to page <page> showing <pageSize> books
+			When he browses the catalog to page <page> showing <pageSize> editions
 			And he navigates through the catalog with <navigation> link
-			Then the catalog returns page <newPage> containing <pageElements> books over <pageSize> requested
+			Then the catalog returns page <newPage> containing <pageElements> editions over <pageSize> requested
 			Examples:
 				| page | pageSize | navigation | newPage | pageElements |
 				| 0    | 10       | self       | 0       | 10           |
@@ -65,12 +65,12 @@ Feature: Browse the catalog
 				| 1    | 25       | prev       | 0       | 25           |
 				| 1    | 25       | next       | 2       | 17           |
 
-	Rule: The catalog provides each book only one time within all pages
+	Rule: The catalog provides each edition only one time within all pages
 
 		Scenario Outline:
 			Given Georges is a library member
-			When he browses the catalog to page <page> showing <pageSize> books
-			Then the page <page> contains books corresponding to the expected <isbns>
+			When he browses the catalog to page <page> showing <pageSize> editions
+			Then the page <page> contains editions corresponding to the expected <isbns>
 			Examples:
 				| page | pageSize | isbns                                                                                                                                                |
 				| 0    | 10       | 9782081275232, 9782081275256, 9782081206922, 9782070399697, 9782081409842, 9782267046885, 9782267046892, 9782267046908, 9782266339667, 9782267044706 |
@@ -81,12 +81,12 @@ Feature: Browse the catalog
 				| 5    | 10       | 9791020923769, 9782330061258, 9791020924636, 9782070449996, 9782070450022, 9782070449941, 9782070449934, 9782070409181, 9782070468485, 9782070468508 |
 				| 6    | 10       | 9788490019481, 9780192862426, 9782072927522, 9782072927515, 9782072847929, 9782070462872, 9782073052872                                              |
 
-	Rule: The catalog provides author for each book within a page
+	Rule: The catalog provides author for each edition within a page
 
 		Scenario Outline:
 			Given Georges is a library member
-			When he browses the catalog to page <page> showing <pageSize> books
-			Then the page <page> contains <authors> corresponding to the books
+			When he browses the catalog to page <page> showing <pageSize> editions
+			Then the page <page> contains <authors> corresponding to the editions
 			Examples:
 				| page | pageSize | authors                                                                      |
 				| 0    | 10       | Jean-Jacques Rousseau, John Ronald Reuel Tolkien                             |

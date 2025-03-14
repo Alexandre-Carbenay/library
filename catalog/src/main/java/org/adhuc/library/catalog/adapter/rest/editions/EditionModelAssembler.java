@@ -1,4 +1,4 @@
-package org.adhuc.library.catalog.adapter.rest.books;
+package org.adhuc.library.catalog.adapter.rest.editions;
 
 import org.adhuc.library.catalog.books.Book;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -9,22 +9,22 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class BookModelAssembler extends RepresentationModelAssemblerSupport<Book, BookModel> {
-    public BookModelAssembler() {
-        super(BooksController.class, BookModel.class);
+public class EditionModelAssembler extends RepresentationModelAssemblerSupport<Book, EditionModel> {
+    public EditionModelAssembler() {
+        super(EditionsController.class, EditionModel.class);
     }
 
     @NonNull
     @Override
-    public BookModel toModel(@NonNull Book book) {
+    public EditionModel toModel(@NonNull Book book) {
         var model = instantiateModel(book);
-        model.add(linkTo(methodOn(BooksController.class).getBook(book.isbn())).withSelfRel());
+        model.add(linkTo(methodOn(EditionsController.class).getBook(book.isbn())).withSelfRel());
         return model;
     }
 
     @NonNull
     @Override
-    protected BookModel instantiateModel(@NonNull Book book) {
-        return new BookModel(book);
+    protected EditionModel instantiateModel(@NonNull Book book) {
+        return new EditionModel(book);
     }
 }

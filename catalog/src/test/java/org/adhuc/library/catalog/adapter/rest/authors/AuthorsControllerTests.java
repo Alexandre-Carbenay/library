@@ -1,6 +1,6 @@
 package org.adhuc.library.catalog.adapter.rest.authors;
 
-import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
+import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.authors.AuthorsService;
@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static org.adhuc.library.catalog.adapter.rest.books.BooksAssertions.assertResponseContainsAllEmbeddedBooks;
+import static org.adhuc.library.catalog.adapter.rest.editions.EditionsAssertions.assertResponseContainsAllEmbeddedBooks;
 import static org.adhuc.library.catalog.authors.AuthorsMother.Authors.*;
 import static org.adhuc.library.catalog.authors.AuthorsMother.authors;
 import static org.adhuc.library.catalog.authors.AuthorsMother.builder;
@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = {
         AuthorsController.class,
         AuthorDetailsModelAssembler.class,
-        BookModelAssembler.class
+        EditionModelAssembler.class
 })
 @Import(RequestValidationConfiguration.class)
 @DisplayName("Authors controller should")

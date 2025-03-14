@@ -30,24 +30,24 @@ paths:
           $ref: '#/components/responses/InvalidPaginationParameters'
         '500':
           $ref: '#/components/responses/GeneralError'
-  /v1/books/{isbn}:
+  /v1/editions/{isbn}:
     get:
       tags:
         - Books
-      summary: Gets the details of a book based on its ISBN.
+      summary: Gets the details of a book edition based on its ISBN.
       description: |
-        The details of a book contain all its information and the relation to
+        The details of an edition contain all its information and the relation to
         its authors.
-      operationId: getBook
+      operationId: getEdition
       parameters:
         - $ref: '#/components/parameters/ISBN'
       responses:
         '200':
-          $ref: '#/components/responses/BookDetails'
+          $ref: '#/components/responses/EditionDetails'
         '400':
-          $ref: '#/components/responses/InvalidBookISBN'
+          $ref: '#/components/responses/InvalidEditionISBN'
         '404':
-          $ref: '#/components/responses/UnknownBook'
+          $ref: '#/components/responses/UnknownEdition'
         '500':
           $ref: '#/components/responses/GeneralError'
   /v1/authors/{id}:
@@ -74,7 +74,7 @@ components:
   parameters:
     ISBN:
       name: isbn
-      description: Book ISBN.
+      description: Book edition ISBN.
       in: path
       required: true
       schema:
@@ -125,17 +125,17 @@ components:
         application/hal+json:
           schema:
             $ref: '#/components/schemas/Catalog'
-    BookDetails:
-      description: A book details.
+    EditionDetails:
+      description: A book edition details.
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/BookDetails'
+            $ref: '#/components/schemas/EditionDetails'
         application/hal+json:
           schema:
-            $ref: '#/components/schemas/BookDetails'
-    InvalidBookISBN:
-      description: Invalid book ISBN.
+            $ref: '#/components/schemas/EditionDetails'
+    InvalidEditionISBN:
+      description: Invalid edition ISBN.
       content:
         application/problem+json:
           schema:
@@ -143,15 +143,15 @@ components:
           examples:
             invalidId:
               $ref: '#/components/examples/InvalidISBN'
-    UnknownBook:
-      description: No book corresponds to the specified identity.
+    UnknownEdition:
+      description: No edition corresponds to the specified identity.
       content:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
           examples:
             unknown:
-              $ref: '#/components/examples/UnknownBook'
+              $ref: '#/components/examples/UnknownEdition'
     AuthorDetails:
       description: An author details.
       content:
@@ -209,14 +209,22 @@ components:
           type: object
           readOnly: true
           required:
-            - books
+            - editions
             - authors
           properties:
             books:
-              description: The books collection, containing basic information for each book.
+              description: |
+                The book editions collection, containing basic information for each edition.
+                This property is deprecated in favor of editions and will be removed soon.
+              type: array
+              deprecated: true
+              items:
+                $ref: '#/components/schemas/Edition'
+            editions:
+              description: The book editions collection, containing basic information for each edition.
               type: array
               items:
-                $ref: '#/components/schemas/Book'
+                $ref: '#/components/schemas/Edition'
             authors:
               description: The authors related to the books in the collection.
               type: array
@@ -287,7 +295,7 @@ components:
                 href:
                   type: string
                   example: 'https://catalog.library.adhuc.org/api/v1/catalog?page=8&size=50'
-    Book:
+    Edition:
       type: object
       required:
         - isbn
@@ -314,15 +322,15 @@ components:
             - self
           properties:
             self:
-              description: Link to this book. Can be used to see the details of this book.
+              description: Link to this edition. Can be used to see the details of this edition.
               type: object
               required:
                 - href
               properties:
                 href:
                   type: string
-                  example: 'https://catalog.library.adhuc.org/api/v1/books/baa19c4e-a347-45bd-8caf-e150aa8203e9'
-    BookDetails:
+                  example: 'https://catalog.library.adhuc.org/api/v1/editions/baa19c4e-a347-45bd-8caf-e150aa8203e9'
+    EditionDetails:
       type: object
       required:
         - isbn
@@ -349,14 +357,14 @@ components:
             - self
           properties:
             self:
-              description: Link to this book. Can be used to see the details of this book.
+              description: Link to this edition. Can be used to see the details of this edition.
               type: object
               required:
                 - href
               properties:
                 href:
                   type: string
-                  example: 'https://catalog.library.adhuc.org/api/v1/books/baa19c4e-a347-45bd-8caf-e150aa8203e9'
+                  example: 'https://catalog.library.adhuc.org/api/v1/editions/baa19c4e-a347-45bd-8caf-e150aa8203e9'
         '_embedded':
           type: object
           readOnly: true
@@ -452,7 +460,7 @@ components:
               description: The author's books, containing basic information for each book.
               type: array
               items:
-                $ref: '#/components/schemas/Book'
+                $ref: '#/components/schemas/Edition'
     AuthorId:
       type: string
       format: uuid
@@ -604,13 +612,13 @@ components:
           - detail: 'Input string "1234" is not a valid ISBN'
             parameter: isbn
       summary: Invalid UUID passed as id in the path.
-    UnknownBook:
+    UnknownEdition:
       value:
         type: /problems/unknown-entity
         status: 404
-        title: Unknown book
-        detail: No book exists with ISBN '9782081275232'
-      summary: Error when no book corresponds to the specified ISBN.
+        title: Unknown edition
+        detail: No edition exists with ISBN '9782081275232'
+      summary: Error when no edition corresponds to the specified ISBN.
     UnknownAuthor:
       value:
         type: /problems/unknown-entity
