@@ -47,7 +47,7 @@ class AuthorsServiceTests {
     }
 
     @Nested
-    @DisplayName("when some authors have books in the catalog")
+    @DisplayName("when some authors have editions in the catalog")
     class WithAuthorsTests {
 
         private static List<Author> AUTHORS;

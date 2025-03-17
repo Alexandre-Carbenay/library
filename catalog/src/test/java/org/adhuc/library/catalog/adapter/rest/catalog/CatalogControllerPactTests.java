@@ -7,9 +7,9 @@ import au.com.dius.pact.provider.junitsupport.Provider;
 import au.com.dius.pact.provider.junitsupport.State;
 import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
 import org.adhuc.library.catalog.authors.Author;
-import org.adhuc.library.catalog.books.Book;
-import org.adhuc.library.catalog.books.CatalogService;
-import org.adhuc.library.catalog.books.PublicationDate;
+import org.adhuc.library.catalog.editions.Edition;
+import org.adhuc.library.catalog.editions.CatalogService;
+import org.adhuc.library.catalog.editions.PublicationDate;
 import org.apache.hc.core5.http.HttpRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
@@ -52,7 +52,7 @@ class CatalogControllerPactTests {
     void page0Size10() {
         var request = PageRequest.of(0, 10);
         when(catalogService.getPage(request)).thenReturn(new PageImpl<>(List.of(
-                new Book(
+                new Edition(
                         "9782081275232",
                         "Du contrat social",
                         PublicationDate.of(LocalDate.parse("2012-01-04")),
@@ -72,7 +72,7 @@ class CatalogControllerPactTests {
     void page1Size25() {
         var request = PageRequest.of(1, 25);
         when(catalogService.getPage(request)).thenReturn(new PageImpl<>(List.of(
-                new Book(
+                new Edition(
                         "9782081275232",
                         "Du contrat social",
                         PublicationDate.of(LocalDate.parse("2012-01-04")),

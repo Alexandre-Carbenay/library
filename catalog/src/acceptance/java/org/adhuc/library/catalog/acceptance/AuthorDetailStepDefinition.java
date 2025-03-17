@@ -19,7 +19,7 @@ public class AuthorDetailStepDefinition {
     private ValidatableResponse response;
 
     @When("he retrieves the details of an author with ID {uuid}")
-    public void retrieveBookDetails(UUID authorId) {
+    public void retrieveAuthorDetails(UUID authorId) {
         this.authorId = authorId;
         response = when().get("/v1/authors/{id}", authorId)
                 .then();
@@ -36,7 +36,7 @@ public class AuthorDetailStepDefinition {
     }
 
     @Then("the author details have the expected {string}, {date}, {date} and authored notable {isbns}")
-    public void existingAuthorDetails(String name, LocalDate dateOfBirth, LocalDate dateOfDeath, List<String> bookIsbns) {
+    public void existingAuthorDetails(String name, LocalDate dateOfBirth, LocalDate dateOfDeath, List<String> editionIsbns) {
         response.statusCode(200)
                 .contentType("application/json")
                 .body("id", equalTo(authorId.toString()))
@@ -47,9 +47,9 @@ public class AuthorDetailStepDefinition {
         } else {
             response.body("date_of_death", nullValue());
         }
-        bookIsbns.forEach(isbn ->
+        editionIsbns.forEach(isbn ->
                 response.body("_embedded.notable_books.find { it.isbn == '%s' }", withArgs(isbn),
-                        describedAs(STR."Author \{authorId} details must contain book with ISBN \{isbn}", notNullValue()))
+                        describedAs(STR."Author \{authorId} details must contain edition with ISBN \{isbn}", notNullValue()))
         );
     }
 

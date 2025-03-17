@@ -4,8 +4,8 @@ import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.authors.AuthorsService;
-import org.adhuc.library.catalog.books.Book;
-import org.adhuc.library.catalog.books.BooksService;
+import org.adhuc.library.catalog.editions.Edition;
+import org.adhuc.library.catalog.editions.EditionsService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,11 +25,11 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static org.adhuc.library.catalog.adapter.rest.editions.EditionsAssertions.assertResponseContainsAllEmbeddedBooks;
+import static org.adhuc.library.catalog.adapter.rest.editions.EditionsAssertions.assertResponseContainsAllEmbeddedEditions;
 import static org.adhuc.library.catalog.authors.AuthorsMother.Authors.*;
 import static org.adhuc.library.catalog.authors.AuthorsMother.authors;
 import static org.adhuc.library.catalog.authors.AuthorsMother.builder;
-import static org.adhuc.library.catalog.books.BooksMother.notableBooksOf;
+import static org.adhuc.library.catalog.editions.EditionsMother.notableEditionsOf;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,7 +50,7 @@ class AuthorsControllerTests {
     @MockitoBean
     private AuthorsService authorsService;
     @MockitoBean
-    private BooksService booksService;
+    private EditionsService editionsService;
 
     @ParameterizedTest
     @ValueSource(strings = {"123", "invalid"})
@@ -90,12 +90,12 @@ class AuthorsControllerTests {
     @MethodSource({
             "aliveAuthorProvider",
             "deadAuthorProvider",
-            "authorWithNotableBookProvider"
+            "authorWithNotableEditionProvider"
     })
     @DisplayName("provide the author details corresponding to the ID")
-    void knownAuthorId(Author author, List<Book> notableBooks) throws Exception {
+    void knownAuthorId(Author author, List<Edition> notableEditions) throws Exception {
         when(authorsService.getAuthor(Mockito.any())).thenReturn(Optional.of(author));
-        when(booksService.getNotableBooks(author.id())).thenReturn(notableBooks);
+        when(editionsService.getNotableEditions(author.id())).thenReturn(notableEditions);
 
         var result = mvc.perform(get("/api/v1/authors/{id}", author.id()).accept("application/hal+json"))
                 .andExpect(status().isOk())
@@ -109,7 +109,7 @@ class AuthorsControllerTests {
             result.andExpect(jsonPath("date_of_death").doesNotExist());
         }
 
-        assertResponseContainsAllEmbeddedBooks(result, "notable_books", notableBooks);
+        assertResponseContainsAllEmbeddedEditions(result, "notable_books", notableEditions);
 
         verify(authorsService).getAuthor(author.id());
     }
@@ -129,9 +129,9 @@ class AuthorsControllerTests {
                 .sampleStream().limit(3);
     }
 
-    static Stream<Arguments> authorWithNotableBookProvider() {
-        return authors().flatMap(author -> notableBooksOf(author.id()).list().ofMinSize(1).ofMaxSize(10)
-                        .map(notableBooks -> Arguments.of(author, notableBooks))
+    static Stream<Arguments> authorWithNotableEditionProvider() {
+        return authors().flatMap(author -> notableEditionsOf(author.id()).list().ofMinSize(1).ofMaxSize(10)
+                        .map(notableEditions -> Arguments.of(author, notableEditions))
                 )
                 .sampleStream().limit(3);
     }

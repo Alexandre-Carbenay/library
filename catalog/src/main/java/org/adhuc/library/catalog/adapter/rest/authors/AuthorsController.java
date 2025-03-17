@@ -3,7 +3,7 @@ package org.adhuc.library.catalog.adapter.rest.authors;
 import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.authors.AuthorsService;
-import org.adhuc.library.catalog.books.BooksService;
+import org.adhuc.library.catalog.editions.EditionsService;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.ResponseEntity;
@@ -29,16 +29,16 @@ public class AuthorsController {
     private final AuthorDetailsModelAssembler authorModelAssembler;
     private final EditionModelAssembler editionModelAssembler;
     private final AuthorsService authorsService;
-    private final BooksService booksService;
+    private final EditionsService editionsService;
 
     public AuthorsController(AuthorDetailsModelAssembler authorModelAssembler,
                              EditionModelAssembler editionModelAssembler,
                              AuthorsService authorsService,
-                             BooksService booksService) {
+                             EditionsService editionsService) {
         this.authorModelAssembler = authorModelAssembler;
         this.editionModelAssembler = editionModelAssembler;
         this.authorsService = authorsService;
-        this.booksService = booksService;
+        this.editionsService = editionsService;
     }
 
     @GetMapping("/{id}")
@@ -51,11 +51,11 @@ public class AuthorsController {
 
     private ResponseEntity<Object> prepareAuthorResponse(Author author) {
         var authorDetails = authorModelAssembler.toModel(author);
-        var notableBooks = booksService.getNotableBooks(author.id());
+        var notableEditions = editionsService.getNotableEditions(author.id());
         var responseBody = halModelOf(authorDetails);
-        if (!notableBooks.isEmpty()) {
+        if (!notableEditions.isEmpty()) {
             responseBody.embed(editionModelAssembler.toCollectionModel(
-                            notableBooks).getContent(),
+                            notableEditions).getContent(),
                     LinkRelation.of("notable_books"));
         }
         return ResponseEntity.status(OK)

@@ -25,7 +25,7 @@ public class EditionDetailStepDefinitions {
     }
 
     @Then("the edition details cannot be retrieved because it does not exists")
-    public void nonExistingBook() {
+    public void nonExistingEdition() {
         response.statusCode(404)
                 .contentType("application/problem+json")
                 .body("type", equalTo("/problems/unknown-entity"))

@@ -2,7 +2,7 @@ package org.adhuc.library.catalog.adapter.rest.editions;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.adhuc.library.catalog.authors.Author;
-import org.adhuc.library.catalog.books.Book;
+import org.adhuc.library.catalog.editions.Edition;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Comparator;
@@ -20,11 +20,11 @@ public class EditionModel extends RepresentationModel<EditionModel> {
     private final String language;
     private final String summary;
 
-    EditionModel(Book book) {
-        this.isbn = book.isbn();
-        this.title = book.title();
-        this.authors = book.authors().stream().sorted(Comparator.comparing(Author::name)).map(Author::id).toList();
-        this.language = book.language();
-        this.summary = book.summary();
+    EditionModel(Edition edition) {
+        this.isbn = edition.isbn();
+        this.title = edition.title();
+        this.authors = edition.authors().stream().sorted(Comparator.comparing(Author::name)).map(Author::id).toList();
+        this.language = edition.language();
+        this.summary = edition.summary();
     }
 }

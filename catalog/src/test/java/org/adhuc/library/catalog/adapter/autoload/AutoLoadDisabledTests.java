@@ -1,7 +1,7 @@
 package org.adhuc.library.catalog.adapter.autoload;
 
 import org.adhuc.library.catalog.authors.internal.InMemoryAuthorsRepository;
-import org.adhuc.library.catalog.books.internal.InMemoryBooksRepository;
+import org.adhuc.library.catalog.editions.internal.InMemoryEditionsRepository;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,15 +17,15 @@ import org.springframework.test.context.TestPropertySource;
 class AutoLoadDisabledTests {
 
     @Autowired
-    private InMemoryBooksRepository booksRepository;
+    private InMemoryEditionsRepository editionsRepository;
     @Autowired
     private InMemoryAuthorsRepository authorsRepository;
 
     @Test
-    @DisplayName("not load any author nor book in repositories")
+    @DisplayName("not load any author nor edition in repositories")
     void noDataLoaded() {
         SoftAssertions.assertSoftly(s -> {
-            s.assertThat(booksRepository.findAll()).as("No book should have been loaded").isEmpty();
+            s.assertThat(editionsRepository.findAll()).as("No editions should have been loaded").isEmpty();
             s.assertThat(authorsRepository.findAll()).as("No authors should have been loaded").isEmpty();
         });
     }

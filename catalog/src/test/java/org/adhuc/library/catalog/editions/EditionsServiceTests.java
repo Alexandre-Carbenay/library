@@ -1,7 +1,7 @@
-package org.adhuc.library.catalog.books;
+package org.adhuc.library.catalog.editions;
 
 import net.jqwik.api.Arbitraries;
-import org.adhuc.library.catalog.books.internal.InMemoryBooksRepository;
+import org.adhuc.library.catalog.editions.internal.InMemoryEditionsRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -13,43 +13,43 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.adhuc.library.catalog.authors.AuthorsMother.Real.*;
-import static org.adhuc.library.catalog.books.BooksMother.Real.*;
+import static org.adhuc.library.catalog.editions.EditionsMother.Real.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DisplayName("Books service should")
-class BooksServiceTests {
+@DisplayName("Editions service should")
+class EditionsServiceTests {
 
-    private BooksService service;
-    private InMemoryBooksRepository booksRepository;
+    private EditionsService service;
+    private InMemoryEditionsRepository editionsRepository;
 
     @BeforeEach
     void setUp() {
-        booksRepository = new InMemoryBooksRepository();
-        service = new BooksService(booksRepository);
+        editionsRepository = new InMemoryEditionsRepository();
+        service = new EditionsService(editionsRepository);
     }
 
     @Test
-    @DisplayName("refuse getting book with null ISBN")
-    void errorGetBookNullIsbn() {
-        assertThrows(IllegalArgumentException.class, () -> service.getBook(null));
+    @DisplayName("refuse getting edition with null ISBN")
+    void errorGetEditionNullIsbn() {
+        assertThrows(IllegalArgumentException.class, () -> service.getEdition(null));
     }
 
     @Test
-    @DisplayName("refuse getting notable books for a null author")
-    void errorGetNotableBooksNullAuthorId() {
-        assertThrows(IllegalArgumentException.class, () -> service.getNotableBooks(null));
+    @DisplayName("refuse getting notable editions for a null author")
+    void errorGetNotableEditionsNullAuthorId() {
+        assertThrows(IllegalArgumentException.class, () -> service.getNotableEditions(null));
     }
 
     @Nested
-    @DisplayName("when some books are in the catalog")
-    class BooksInCatalogTests {
+    @DisplayName("when some editions are in the catalog")
+    class EditionsInCatalogTests {
 
-        private static List<Book> BOOKS;
+        private static List<Edition> EDITIONS;
 
         @BeforeAll
         static void initCatalog() {
-            BOOKS = List.of(
+            EDITIONS = List.of(
                     L_ETRANGER,
                     LA_PESTE,
                     LA_CHUTE,
@@ -71,7 +71,7 @@ class BooksServiceTests {
 
         @BeforeEach
         void setUp() {
-            booksRepository.saveAll(BOOKS);
+            editionsRepository.saveAll(EDITIONS);
         }
 
         @ParameterizedTest
@@ -80,20 +80,20 @@ class BooksServiceTests {
                 "9782267046892",
                 "9782072730672"
         })
-        @DisplayName("not find any book with unknown ISBN")
+        @DisplayName("not find any edition with unknown ISBN")
         void unknownIsbn(String isbn) {
-            assertThat(service.getBook(isbn)).isEmpty();
+            assertThat(service.getEdition(isbn)).isEmpty();
         }
 
         @ParameterizedTest
         @MethodSource("knownIsbnsProvider")
-        @DisplayName("find book with known ISBN")
-        void knownIsbn(Book expected) {
-            assertThat(service.getBook(expected.isbn())).isPresent().contains(expected);
+        @DisplayName("find edition with known ISBN")
+        void knownIsbn(Edition expected) {
+            assertThat(service.getEdition(expected.isbn())).isPresent().contains(expected);
         }
 
         private static Stream<Arguments> knownIsbnsProvider() {
-            return Arbitraries.of(BOOKS).map(Arguments::of).sampleStream().limit(3);
+            return Arbitraries.of(EDITIONS).map(Arguments::of).sampleStream().limit(3);
         }
 
         @ParameterizedTest
@@ -102,19 +102,19 @@ class BooksServiceTests {
                 "a3f3928f-929b-4b08-859c-f2567c295f21",
                 "7f91c0f6-dc86-4772-bbff-3b3b6eeedcd6"
         })
-        @DisplayName("not find any notable book for unknown authors")
-        void unknownAuthorNotableBooks(UUID authorId) {
-            assertThat(service.getNotableBooks(authorId)).isEmpty();
+        @DisplayName("not find any notable edition for unknown authors")
+        void unknownAuthorNotableEditions(UUID authorId) {
+            assertThat(service.getNotableEditions(authorId)).isEmpty();
         }
 
         @ParameterizedTest
-        @MethodSource("knownAuthorNotableBooksProvider")
-        @DisplayName("find notable books for known authors")
-        void knownAuthorNotableBooks(UUID authorId, List<Book> expected) {
-            assertThat(service.getNotableBooks(authorId)).containsExactlyInAnyOrderElementsOf(expected);
+        @MethodSource("knownAuthorNotableEditionsProvider")
+        @DisplayName("find notable editions for known authors")
+        void knownAuthorNotableEditions(UUID authorId, List<Edition> expected) {
+            assertThat(service.getNotableEditions(authorId)).containsExactlyInAnyOrderElementsOf(expected);
         }
 
-        private static Stream<Arguments> knownAuthorNotableBooksProvider() {
+        private static Stream<Arguments> knownAuthorNotableEditionsProvider() {
             return Stream.of(
                     Arguments.of(ALBERT_CAMUS.id(), List.of(L_ETRANGER, LA_PESTE, LA_CHUTE)),
                     Arguments.of(LEON_TOLSTOI.id(), List.of(ANNA_KARENINE, LA_GUERRE_ET_LA_PAIX_1, LA_GUERRE_ET_LA_PAIX_2, LES_COSAQUES)),

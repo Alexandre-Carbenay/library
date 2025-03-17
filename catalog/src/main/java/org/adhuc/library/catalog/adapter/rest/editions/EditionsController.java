@@ -2,8 +2,8 @@ package org.adhuc.library.catalog.adapter.rest.editions;
 
 import org.adhuc.library.catalog.adapter.rest.ProblemError.ParameterError;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
-import org.adhuc.library.catalog.books.Book;
-import org.adhuc.library.catalog.books.BooksService;
+import org.adhuc.library.catalog.editions.Edition;
+import org.adhuc.library.catalog.editions.EditionsService;
 import org.apache.commons.validator.routines.ISBNValidator;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.mediatype.problem.Problem;
@@ -30,31 +30,31 @@ public class EditionsController {
 
     private final EditionDetailsModelAssembler editionModelAssembler;
     private final AuthorModelAssembler authorModelAssembler;
-    private final BooksService booksService;
+    private final EditionsService editionsService;
     private final ISBNValidator isbnValidator = new ISBNValidator();
 
     public EditionsController(EditionDetailsModelAssembler editionModelAssembler,
                               AuthorModelAssembler authorModelAssembler,
-                              BooksService booksService) {
+                              EditionsService editionsService) {
         this.editionModelAssembler = editionModelAssembler;
         this.authorModelAssembler = authorModelAssembler;
-        this.booksService = booksService;
+        this.editionsService = editionsService;
     }
 
     @GetMapping("/{isbn}")
-    public ResponseEntity<?> getBook(@PathVariable String isbn) {
+    public ResponseEntity<?> getEdition(@PathVariable String isbn) {
         if (!isbnValidator.isValid(isbn)) {
             return prepareInvalidIsbnResponse(isbn);
         }
-        var edition = booksService.getBook(isbn);
+        var edition = editionsService.getEdition(isbn);
         return edition.isPresent()
                 ? prepareEditionResponse(edition.get())
                 : prepareNotFoundResponse(isbn);
     }
 
-    private ResponseEntity<Object> prepareEditionResponse(Book book) {
-        var editionDetails = editionModelAssembler.toModel(book);
-        var authors = authorModelAssembler.toCollectionModel(book.authors()).getContent();
+    private ResponseEntity<Object> prepareEditionResponse(Edition edition) {
+        var editionDetails = editionModelAssembler.toModel(edition);
+        var authors = authorModelAssembler.toCollectionModel(edition.authors()).getContent();
         return ResponseEntity.status(OK)
                 .body(halModelOf(editionDetails)
                         .links(editionDetails.getLinks())
