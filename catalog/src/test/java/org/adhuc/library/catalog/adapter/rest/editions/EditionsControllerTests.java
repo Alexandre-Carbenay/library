@@ -98,7 +98,8 @@ class EditionsControllerTests {
                 .andExpect(jsonPath("publication_date", equalTo(edition.publicationDate().toString())))
                 .andExpect(jsonPath("language", equalTo(edition.language())))
                 .andExpect(jsonPath("summary", equalTo(edition.summary())))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/editions/\{edition.isbn()}")));
+                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/editions/\{edition.isbn()}")))
+                .andExpect(jsonPath("_links.book.href", equalTo(STR."http://localhost/api/v1/books/\{edition.book().id()}")));
 
         assertResponseContainsAllEmbeddedAuthors(result, edition.book().authors());
 

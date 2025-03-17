@@ -1,6 +1,6 @@
-package org.adhuc.library.catalog.editions;
+package org.adhuc.library.catalog.books;
 
-import org.adhuc.library.catalog.editions.internal.InMemoryEditionsRepository;
+import org.adhuc.library.catalog.books.internal.InMemoryBooksRepository;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,7 +10,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.data.domain.PageRequest;
 
-import static org.adhuc.library.catalog.editions.EditionsMother.editions;
+import static org.adhuc.library.catalog.books.BooksMother.books;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -18,12 +18,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class CatalogServiceTests {
 
     private CatalogService service;
-    private InMemoryEditionsRepository editionsRepository;
+    private InMemoryBooksRepository booksRepository;
 
     @BeforeEach
     void setUp() {
-        editionsRepository = new InMemoryEditionsRepository();
-        service = new CatalogService(editionsRepository);
+        booksRepository = new InMemoryBooksRepository();
+        service = new CatalogService(booksRepository);
     }
 
     @Test
@@ -40,18 +40,18 @@ class CatalogServiceTests {
             "10, 100"
     })
     @DisplayName("return an empty page when the catalog is empty")
-    void getEmptyPageNoEditionInCatalog(int number, int size) {
+    void getEmptyPageNoBookInCatalog(int number, int size) {
         var page = service.getPage(PageRequest.of(number, size));
         assertThat(page.isEmpty()).isTrue();
     }
 
     @Nested
-    @DisplayName("when 106 editions are in the catalog")
-    class EditionsInCatalogTests {
+    @DisplayName("when 106 books are in the catalog")
+    class BooksInCatalogTests {
 
         @BeforeEach
         void setUp() {
-            editionsRepository.saveAll(editions().list().ofSize(106).sample());
+            booksRepository.saveAll(books().list().ofSize(106).sample());
         }
 
         @ParameterizedTest
@@ -68,7 +68,7 @@ class CatalogServiceTests {
                 "0, 53, 2, 106",
                 "1, 37, 3, 106"
         })
-        @DisplayName("return a full page of editions when requested page is not beyond the catalog size")
+        @DisplayName("return a full page of books when requested page is not beyond the catalog size")
         void getFullPage(int number, int size, int totalPages, int totalElements) {
             var page = service.getPage(PageRequest.of(number, size));
             SoftAssertions.assertSoftly(s -> {
@@ -89,7 +89,7 @@ class CatalogServiceTests {
                 "1, 100, 6, 2, 106",
                 "2, 37, 32, 3, 106"
         })
-        @DisplayName("return a partial page of editions when requested page reaches the end of the catalog")
+        @DisplayName("return a partial page of books when requested page reaches the end of the catalog")
         void getPartialPage(int number, int size, int elements, int totalPages, int totalElements) {
             var page = service.getPage(PageRequest.of(number, size));
             SoftAssertions.assertSoftly(s -> {
@@ -111,7 +111,7 @@ class CatalogServiceTests {
                 "2, 53",
                 "3, 37"
         })
-        @DisplayName("return an empty page of editions when requested page is beyond the catalog size")
+        @DisplayName("return an empty page of books when requested page is beyond the catalog size")
         void getEmptyPageBeyondSize(int number, int size) {
             var page = service.getPage(PageRequest.of(number, size));
             assertThat(page.isEmpty()).isTrue();

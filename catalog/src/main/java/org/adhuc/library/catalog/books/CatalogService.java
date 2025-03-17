@@ -1,4 +1,4 @@
-package org.adhuc.library.catalog.editions;
+package org.adhuc.library.catalog.books;
 
 import org.jmolecules.architecture.onion.classical.ApplicationServiceRing;
 import org.springframework.data.domain.Page;
@@ -10,13 +10,13 @@ import org.springframework.util.Assert;
 @ApplicationServiceRing
 public class CatalogService {
 
-    private final EditionsRepository repository;
+    private final BooksRepository repository;
 
-    CatalogService(EditionsRepository repository) {
+    CatalogService(BooksRepository repository) {
         this.repository = repository;
     }
 
-    public Page<Edition> getPage(Pageable request) {
+    public Page<Book> getPage(Pageable request) {
         Assert.notNull(request, "Cannot get catalog page from null request");
         return repository.find(request);
     }

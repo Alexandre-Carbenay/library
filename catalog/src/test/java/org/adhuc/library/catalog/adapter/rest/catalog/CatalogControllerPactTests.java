@@ -8,10 +8,11 @@ import au.com.dius.pact.provider.junitsupport.State;
 import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.books.Book;
+import org.adhuc.library.catalog.books.CatalogService;
 import org.adhuc.library.catalog.books.ExternalLink;
 import org.adhuc.library.catalog.books.LocalizedDetails;
-import org.adhuc.library.catalog.editions.CatalogService;
 import org.adhuc.library.catalog.editions.Edition;
+import org.adhuc.library.catalog.editions.EditionsService;
 import org.adhuc.library.catalog.editions.PublicationDate;
 import org.apache.hc.core5.http.HttpRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,6 +40,8 @@ class CatalogControllerPactTests {
     int port;
     @MockitoBean
     private CatalogService catalogService;
+    @MockitoBean
+    private EditionsService editionsService;
 
     @BeforeEach
     void setUp(PactVerificationContext context) {
@@ -53,66 +56,74 @@ class CatalogControllerPactTests {
 
     @State("First page of 10 elements contains editions")
     void page0Size10() {
+        var bookId = UUID.fromString("b6608a30-1e9b-4ae0-a89d-624c3ca85da4");
+        var book = new Book(
+                bookId,
+                Set.of(new Author(
+                        UUID.fromString("83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"),
+                        "Jean-Jacques Rousseau",
+                        LocalDate.parse("1712-06-28"),
+                        LocalDate.parse("1778-07-02")
+                )),
+                "fr",
+                Set.of(new LocalizedDetails(
+                        "fr",
+                        "Du contrat social",
+                        "Du contrat social est un traité de philosophie politique présentant ...",
+                        Set.of(
+                                new ExternalLink("wikipedia", "https://fr.wikipedia.org/wiki/Du_contrat_social")
+                        )
+                ))
+        );
+
         var request = PageRequest.of(0, 10);
-        when(catalogService.getPage(request)).thenReturn(new PageImpl<>(List.of(
+        when(catalogService.getPage(request)).thenReturn(new PageImpl<>(List.of(book), request, 67));
+        when(editionsService.getBooksEditions(List.of(bookId))).thenReturn(List.of(
                 new Edition(
                         "9782081275232",
                         "Du contrat social",
                         PublicationDate.of(LocalDate.parse("2012-01-04")),
-                        new Book(
-                                UUID.fromString("b6608a30-1e9b-4ae0-a89d-624c3ca85da4"),
-                                Set.of(new Author(
-                                        UUID.fromString("83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"),
-                                        "Jean-Jacques Rousseau",
-                                        LocalDate.parse("1712-06-28"),
-                                        LocalDate.parse("1778-07-02")
-                                )),
-                                "fr",
-                                Set.of(new LocalizedDetails(
-                                        "fr",
-                                        "Du contrat social",
-                                        "Du contrat social est un traité de philosophie politique présentant ...",
-                                        Set.of(
-                                                new ExternalLink("wikipedia", "https://fr.wikipedia.org/wiki/Du_contrat_social")
-                                        )
-                                ))
-                        ),
+                        book,
                         "fr",
                         "Paru en 1762, le Contrat social, ..."
                 )
-        ), request, 67));
+        ));
     }
 
     @State("Next page of 25 elements contains editions")
     void page1Size25() {
+        var bookId = UUID.fromString("b6608a30-1e9b-4ae0-a89d-624c3ca85da4");
+        var book = new Book(
+                bookId,
+                Set.of(new Author(
+                        UUID.fromString("83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"),
+                        "Jean-Jacques Rousseau",
+                        LocalDate.parse("1712-06-28"),
+                        LocalDate.parse("1778-07-02")
+                )),
+                "fr",
+                Set.of(new LocalizedDetails(
+                        "fr",
+                        "Du contrat social",
+                        "Du contrat social est un traité de philosophie politique présentant ...",
+                        Set.of(
+                                new ExternalLink("wikipedia", "https://fr.wikipedia.org/wiki/Du_contrat_social")
+                        )
+                ))
+        );
+
         var request = PageRequest.of(1, 25);
-        when(catalogService.getPage(request)).thenReturn(new PageImpl<>(List.of(
+        when(catalogService.getPage(request)).thenReturn(new PageImpl<>(List.of(book), request, 67));
+        when(editionsService.getBooksEditions(List.of(bookId))).thenReturn(List.of(
                 new Edition(
                         "9782081275232",
                         "Du contrat social",
                         PublicationDate.of(LocalDate.parse("2012-01-04")),
-                        new Book(
-                                UUID.fromString("b6608a30-1e9b-4ae0-a89d-624c3ca85da4"),
-                                Set.of(new Author(
-                                        UUID.fromString("83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"),
-                                        "Jean-Jacques Rousseau",
-                                        LocalDate.parse("1712-06-28"),
-                                        LocalDate.parse("1778-07-02")
-                                )),
-                                "fr",
-                                Set.of(new LocalizedDetails(
-                                        "fr",
-                                        "Du contrat social",
-                                        "Du contrat social est un traité de philosophie politique présentant ...",
-                                        Set.of(
-                                                new ExternalLink("wikipedia", "https://fr.wikipedia.org/wiki/Du_contrat_social")
-                                        )
-                                ))
-                        ),
+                        book,
                         "fr",
                         "Paru en 1762, le Contrat social, ..."
                 )
-        ), request, 67));
+        ));
     }
 
 }

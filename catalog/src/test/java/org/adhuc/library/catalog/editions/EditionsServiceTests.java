@@ -1,6 +1,8 @@
 package org.adhuc.library.catalog.editions;
 
 import net.jqwik.api.Arbitraries;
+import org.adhuc.library.catalog.books.BooksMother;
+import org.adhuc.library.catalog.books.BooksMother.Books;
 import org.adhuc.library.catalog.editions.internal.InMemoryEditionsRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -33,6 +35,12 @@ class EditionsServiceTests {
     @DisplayName("refuse getting edition with null ISBN")
     void errorGetEditionNullIsbn() {
         assertThrows(IllegalArgumentException.class, () -> service.getEdition(null));
+    }
+
+    @Test
+    @DisplayName("refuse getting editions for a null list of books")
+    void errorGetEditionsNullBookIds() {
+        assertThrows(IllegalArgumentException.class, () -> service.getBooksEditions(null));
     }
 
     @Test
@@ -94,6 +102,62 @@ class EditionsServiceTests {
 
         private static Stream<Arguments> knownIsbnsProvider() {
             return Arbitraries.of(EDITIONS).map(Arguments::of).sampleStream().limit(3);
+        }
+
+        @ParameterizedTest
+        @MethodSource("unknownBookEditionsProvider")
+        @DisplayName("not find any editions for unknown books")
+        void unknownBooksEditions(List<UUID> bookIds) {
+            assertThat(service.getBooksEditions(bookIds)).isEmpty();
+        }
+
+        private static Stream<Arguments> unknownBookEditionsProvider() {
+            return Books.ids().list().ofMinSize(0).ofMaxSize(10)
+                    .map(Arguments::of)
+                    .sampleStream()
+                    .limit(3);
+        }
+
+        @ParameterizedTest
+        @MethodSource("knownBookEditionsProvider")
+        @DisplayName("find editions for known books")
+        void knownBooksEditions(List<UUID> bookIds, List<Edition> expected) {
+            assertThat(service.getBooksEditions(bookIds)).containsExactlyInAnyOrderElementsOf(expected);
+        }
+
+        private static Stream<Arguments> knownBookEditionsProvider() {
+            return Stream.of(
+                    Arguments.of(
+                            List.of(BooksMother.Real.L_ETRANGER.id()),
+                            List.of(L_ETRANGER)
+                    ),
+                    Arguments.of(
+                            List.of(
+                                    BooksMother.Real.L_ETRANGER.id(),
+                                    BooksMother.Real.ANNA_KARENINE.id()
+                            ),
+                            List.of(
+                                    L_ETRANGER,
+                                    ANNA_KARENINE
+                            )
+                    ),
+                    Arguments.of(
+                            List.of(BooksMother.Real.GUERRE_ET_PAIX.id()),
+                            List.of(LA_GUERRE_ET_LA_PAIX_1, LA_GUERRE_ET_LA_PAIX_2)
+                    ),
+                    Arguments.of(
+                            List.of(
+                                    BooksMother.Real.GUERRE_ET_PAIX.id(),
+                                    BooksMother.Real.ANNA_KARENINE.id()
+                            ),
+                            List.of(
+                                    LA_GUERRE_ET_LA_PAIX_1,
+                                    LA_GUERRE_ET_LA_PAIX_2,
+                                    ANNA_KARENINE
+                            )
+                    )
+
+            );
         }
 
         @ParameterizedTest

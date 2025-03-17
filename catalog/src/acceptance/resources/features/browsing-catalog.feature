@@ -5,9 +5,9 @@ Feature: Browse the catalog
 
 		Scenario Outline: Retrieve the catalog pages
 			Given Georges is a library member
-			When he browses the catalog to page <page> showing <pageSize> editions
-			Then the catalog returns page <page> containing <pageElements> editions over <pageSize> requested
-			And the catalog contains <totalElements> editions in a total of <totalPages> pages
+			When he browses the catalog to page <page> showing <pageSize> books
+			Then the catalog returns page <page> containing <pageElements> books over <pageSize> requested
+			And the catalog contains <totalElements> books in a total of <totalPages> pages
 			Examples:
 				| page | pageSize | pageElements | totalElements | totalPages |
 				| 0    | 10       | 10           | 67            | 7          |
@@ -21,7 +21,7 @@ Feature: Browse the catalog
 		Scenario: Retrieve the catalog by default will get the first page with 50 elements
 			Given Georges is a library member
 			When he browses the catalog for the first time
-			Then the catalog returns page 0 containing 50 editions over 50 requested
+			Then the catalog returns page 0 containing 50 books over 50 requested
 
 	Rule: The catalog provides links to navigate through pagination:
 	- first: navigates to the first page
@@ -33,7 +33,7 @@ Feature: Browse the catalog
 
 		Scenario Outline:
 			Given Georges is a library member
-			When he browses the catalog to page <page> showing <pageSize> editions
+			When he browses the catalog to page <page> showing <pageSize> books
 			Then the catalog returns page <page> with available <navigation> links
 			Examples:
 				| page | pageSize | navigation                    |
@@ -47,9 +47,9 @@ Feature: Browse the catalog
 
 		Scenario Outline:
 			Given Georges is a library member
-			When he browses the catalog to page <page> showing <pageSize> editions
+			When he browses the catalog to page <page> showing <pageSize> books
 			And he navigates through the catalog with <navigation> link
-			Then the catalog returns page <newPage> containing <pageElements> editions over <pageSize> requested
+			Then the catalog returns page <newPage> containing <pageElements> books over <pageSize> requested
 			Examples:
 				| page | pageSize | navigation | newPage | pageElements |
 				| 0    | 10       | self       | 0       | 10           |
@@ -65,34 +65,34 @@ Feature: Browse the catalog
 				| 1    | 25       | prev       | 0       | 25           |
 				| 1    | 25       | next       | 2       | 17           |
 
-	Rule: The catalog provides each edition only one time within all pages
+	Rule: The catalog provides each books only one time within all pages
 
 		Scenario Outline:
 			Given Georges is a library member
-			When he browses the catalog to page <page> showing <pageSize> editions
-			Then the page <page> contains editions corresponding to the expected <isbns>
+			When he browses the catalog to page <page> showing <pageSize> books
+			Then the page <page> contains books corresponding to the expected <ids>
 			Examples:
-				| page | pageSize | isbns                                                                                                                                                |
-				| 0    | 10       | 9782081275232, 9782081275256, 9782081206922, 9782070399697, 9782081409842, 9782267046885, 9782267046892, 9782267046908, 9782266339667, 9782267044706 |
-				| 1    | 10       | 9782290208878, 9782290215661, 9782290221686, 9782290221693, 9782290221709, 9780553103540, 9780553108033, 9780553106633, 9780553801507, 9780553801477 |
-				| 2    | 10       | 9782070360536, 9782070360550, 9782070360529, 9782070360635, 9782070379668, 9782290227268, 9782290311257, 9782290319024, 9782290327944, 9782290332757 |
-				| 3    | 10       | 9782290311165, 9782070624522, 9782070624539, 9782070624546, 9782070624553, 9782070624560, 9782070624904, 9782070624911, 9782070625192, 9782072762086 |
-				| 4    | 10       | 9782073004215, 9782072729935, 9782070361519, 9782070409341, 9782253006305, 9782253098041, 9782253099994, 9782253098058, 9782253098065, 9782070417681 |
-				| 5    | 10       | 9791020923769, 9782330061258, 9791020924636, 9782070449996, 9782070450022, 9782070449941, 9782070449934, 9782070409181, 9782070468485, 9782070468508 |
-				| 6    | 10       | 9788490019481, 9780192862426, 9782072927522, 9782072927515, 9782072847929, 9782070462872, 9782073052872                                              |
+				| page | pageSize | ids                                                                                                |
+				| 0    | 10       | b6608a30, 74d88208, 94856bb6, 5a47a523, 4082a49e, c2dd1a78, 434fcb17, e8cbad19, e3957d3f, aafe7eb6 |
+				| 1    | 10       | 3b35e0ae, 2e601f14, 0a881b54, 907716df, 2869e847, e6854cf5, 273c8353, b7392578, 699b97dc, 65e5d471 |
+				| 2    | 10       | 80211681, 1881ab54, 41e9e43c, c18a14f2, fddf98d1, 5df9d315, cfa4ce14, 14185458, 6cef0208, 3df147a8 |
+				| 3    | 10       | a49d474e, 2ad81543, 9157773d, a8e23d8c, 105be558, f1e5c7c6, ac9526cd, d56a66a3, f1dbbe65, e2b0c423 |
+				| 4    | 10       | 874c578c, ae5a92fc, ade812f1, a093173a, eb99a4d5, 481bb3f4, df2c8d87, 7b2eb526, d035a894, ac702d27 |
+				| 5    | 10       | 89c1cce8, 809d3368, 9eab131c, 3c25ef66, c12f91f3, 1517f41e, 858eba66, 824ea2db, 97611133, e568c46d |
+				| 6    | 10       | f4d4542f, fbd4d363, ea6cc5dc, bdd603ba, e1030011, 0c959d74, ace93305                               |
 
-	Rule: The catalog provides author for each edition within a page
+	Rule: The catalog provides author for each book within a page
 
 		Scenario Outline:
 			Given Georges is a library member
-			When he browses the catalog to page <page> showing <pageSize> editions
-			Then the page <page> contains <authors> corresponding to the editions
+			When he browses the catalog to page <page> showing <pageSize> books
+			Then the page <page> contains <authors> corresponding to the books
 			Examples:
-				| page | pageSize | authors                                                                      |
-				| 0    | 10       | Jean-Jacques Rousseau, John Ronald Reuel Tolkien                             |
-				| 1    | 10       | George Raymond Richard Martin                                                |
-				| 2    | 10       | Isaac Asimov                                                                 |
-				| 3    | 10       | Isaac Asimov, J. K. Rowling, Ernest Hemingway                                |
-				| 4    | 10       | Ernest Hemingway, Honoré de Balzac, Alexandre Dumas                          |
-				| 5    | 10       | David Graeber, David Wengrow, Molière, Pierre Corneille, William Shakespeare |
-				| 6    | 10       | William Shakespeare, Alain Damasio, Franz Kafka                              |
+				| page | pageSize | authors                                                                    |
+				| 0    | 10       | Jean-Jacques Rousseau, John Ronald Reuel Tolkien                           |
+				| 1    | 10       | George Raymond Richard Martin, Isaac Asimov                                |
+				| 2    | 10       | Isaac Asimov, J. K. Rowling                                                |
+				| 3    | 10       | J. K. Rowling, Ernest Hemingway, Honoré de Balzac                          |
+				| 4    | 10       | Honoré de Balzac, Alexandre Dumas, David Graeber, David Wengrow, Molière   |
+				| 5    | 10       | Molière, Pierre Corneille, William Shakespeare, Alain Damasio, Franz Kafka |
+				| 6    | 10       | Daniel Pennac, George Orwell                                               |

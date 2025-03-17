@@ -84,5 +84,16 @@
     "name": "Franz Kafka",
     "dateOfBirth": "1883-07-03",
     "dateOfDeath": "1924-06-03"
+  },
+  {
+    "id": "5033571c-baeb-459b-9547-35ca77618048",
+    "name": "Daniel Pennac",
+    "dateOfBirth": "1944-12-01"
+  },
+  {
+    "id": "69831d56-5843-409b-9101-fc66bea8fc2f",
+    "name": "George Orwell",
+    "dateOfBirth": "1903-06-25",
+    "dateOfDeath": "1950-01-21"
   }
 ]

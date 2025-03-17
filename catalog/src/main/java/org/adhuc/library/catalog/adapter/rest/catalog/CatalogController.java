@@ -1,11 +1,12 @@
 package org.adhuc.library.catalog.adapter.rest.catalog;
 
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
+import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.books.Book;
-import org.adhuc.library.catalog.editions.Edition;
-import org.adhuc.library.catalog.editions.CatalogService;
+import org.adhuc.library.catalog.books.CatalogService;
+import org.adhuc.library.catalog.editions.EditionsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -32,19 +33,25 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(path = "/api/v1/catalog", produces = {APPLICATION_JSON_VALUE, HAL_JSON_VALUE})
 public class CatalogController {
 
-    private final PagedResourcesAssembler<Edition> pageAssembler;
+    private final PagedResourcesAssembler<Book> pageAssembler;
+    private final BookModelAssembler bookModelAssembler;
     private final EditionModelAssembler editionModelAssembler;
     private final AuthorModelAssembler authorModelAssembler;
     private final CatalogService catalogService;
+    private final EditionsService editionsService;
 
-    public CatalogController(PagedResourcesAssembler<Edition> pageAssembler,
+    public CatalogController(PagedResourcesAssembler<Book> pageAssembler,
+                             BookModelAssembler bookModelAssembler,
                              EditionModelAssembler editionModelAssembler,
                              AuthorModelAssembler authorModelAssembler,
-                             CatalogService catalogService) {
+                             CatalogService catalogService,
+                             EditionsService editionsService) {
         this.pageAssembler = pageAssembler;
+        this.bookModelAssembler = bookModelAssembler;
         this.editionModelAssembler = editionModelAssembler;
         this.authorModelAssembler = authorModelAssembler;
         this.catalogService = catalogService;
+        this.editionsService = editionsService;
     }
 
     @GetMapping
@@ -60,19 +67,21 @@ public class CatalogController {
         var responseBody = HalModelBuilder.halModelOf(requireNonNull(response.getMetadata()))
                 .links(response.getLinks());
         if (!catalogPage.isEmpty()) {
-            var editions = editionModelAssembler.toCollectionModel(catalogPage).getContent();
-            var authors = authorModelAssembler.toCollectionModel(editionsAuthors(catalogPage)).getContent();
+            var books = bookModelAssembler.toCollectionModel(catalogPage).getContent();
+            var editionsInPage = editionsService.getBooksEditions(catalogPage.stream().map(Book::id).toList());
+            var editions = editionModelAssembler.toCollectionModel(editionsInPage).getContent();
+            var authors = authorModelAssembler.toCollectionModel(booksAuthors(catalogPage)).getContent();
             responseBody = responseBody
                     // Temporarily keep the editions relation to let API consumers move to the editions relation
-                    .embed(editions, LinkRelation.of("books"))
+                    .embed(books, LinkRelation.of("books"))
                     .embed(editions, LinkRelation.of("editions"))
                     .embed(authors, LinkRelation.of("authors"));
         }
         return ResponseEntity.status(PARTIAL_CONTENT).body(responseBody.build());
     }
 
-    private Set<Author> editionsAuthors(Page<Edition> editions) {
-        return editions.stream().map(Edition::book).map(Book::authors).flatMap(Collection::stream).collect(toSet());
+    private Set<Author> booksAuthors(Page<Book> books) {
+        return books.stream().map(Book::authors).flatMap(Collection::stream).collect(toSet());
     }
 
 }
