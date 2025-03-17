@@ -9,15 +9,15 @@ servers:
   - url: https://catalog.library.adhuc.org/api
 tags:
   - name: Books
-    description: Access the editions in the catalog of the library.
+    description: Access the books and their editions in the catalog of the library.
   - name: Authors
-    description: Access the authors of the editions in the catalog of the library.
+    description: Access the authors of the books in the catalog of the library.
 paths:
   /v1/catalog:
     get:
       tags:
         - Books
-      summary: Gets a paginated list of editions based on filters.
+      summary: Gets a paginated list of books based on filters.
       description: The catalog can be sorted and filtered in many different ways.
       operationId: getCatalog
       parameters:
@@ -308,14 +308,26 @@ components:
           type: object
           readOnly: true
           required:
-            - editions
+            - books
             - authors
           properties:
+            books:
+              description: |
+                The books collection, containing basic information for each book.
+              type: array
+              items:
+                $ref: '#/components/schemas/Book'
             editions:
-              description: The book editions collection, containing basic information for each edition.
+              description: |
+                The book editions corresponding to the books in the collection,
+                containing basic information for each edition.
+
+                This field is deprecated and will be replaced by the books and
+                their editions.
               type: array
               items:
                 $ref: '#/components/schemas/Edition'
+              deprecated: true
             authors:
               description: The authors related to the editions in the collection.
               type: array
@@ -512,7 +524,6 @@ components:
       required:
         - isbn
         - title
-        - authors
         - language
         - summary
         - '_links'
@@ -521,8 +532,6 @@ components:
           $ref: '#/components/schemas/ISBN'
         title:
           $ref: '#/components/schemas/Title'
-        authors:
-          $ref: '#/components/schemas/BookAuthors'
         language:
           $ref: '#/components/schemas/Language'
         summary:
@@ -532,9 +541,12 @@ components:
           readOnly: true
           required:
             - self
+            - book
           properties:
             self:
               $ref: '#/components/schemas/EditionLink'
+            book:
+              $ref: '#/components/schemas/BookLink'
     EditionDetails:
       type: object
       required:
@@ -560,6 +572,7 @@ components:
           readOnly: true
           required:
             - self
+            - book
           properties:
             self:
               $ref: '#/components/schemas/EditionLink'
@@ -662,7 +675,7 @@ components:
           required:
             - notable_books
           properties:
-            books:
+            notable_books:
               description: The author's editions, containing basic information for each book.
               type: array
               items:

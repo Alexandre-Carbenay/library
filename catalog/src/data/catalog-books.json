@@ -1679,5 +1679,178 @@
         ]
       }
     ]
+  },
+  {
+    "id": "f4d4542f-9fd3-44e8-8052-5ff63bf1b53c",
+    "authors": [
+      "5033571c-baeb-459b-9547-35ca77618048"
+    ],
+    "originalLanguage": "fr",
+    "details": [
+      {
+        "language": "fr",
+        "title": "Cabot-Caboche",
+        "description": "Cabot-Caboche est un roman pour la jeunesse de Daniel Pennac, paru en 1982.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://fr.wikipedia.org/wiki/Cabot-Caboche"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "fbd4d363-102c-419d-a6dc-67180a4ccb5d",
+    "authors": [
+      "5033571c-baeb-459b-9547-35ca77618048"
+    ],
+    "originalLanguage": "fr",
+    "details": [
+      {
+        "language": "fr",
+        "title": "Au bonheur des ogres",
+        "description": "Au bonheur des ogres est un roman policier de Daniel Pennac paru en 1985. Il constitue le premier de la Saga Malaussène. Le titre est inspiré du roman Au Bonheur des Dames d'Émile Zola, dans lequel le récit entraîne le lecteur dans le monde des grands magasins. Le livre est traduit dans plus d'une dizaine de langues.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://fr.wikipedia.org/wiki/Au_bonheur_des_ogres"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ea6cc5dc-2f1a-4baa-88b5-6c1f5cb34965",
+    "authors": [
+      "5033571c-baeb-459b-9547-35ca77618048"
+    ],
+    "originalLanguage": "fr",
+    "details": [
+      {
+        "language": "fr",
+        "title": "La Fée Carabine",
+        "description": "La Fée Carabine est un roman policier de Daniel Pennac paru en 1987 et édité par Gallimard dans la collection Folio. Cet ouvrage est le deuxième titre de la Saga Malaussène. Le roman a été écrit à Cossogno, un petit village d'Italie du Nord.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://fr.wikipedia.org/wiki/La_Fée_Carabine"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bdd603ba-43f3-4253-9b30-8e0c864a03f7",
+    "authors": [
+      "5033571c-baeb-459b-9547-35ca77618048"
+    ],
+    "originalLanguage": "fr",
+    "details": [
+      {
+        "language": "fr",
+        "title": "Comme un roman",
+        "description": " Comme un roman est un essai de Daniel Pennac paru en 1992 aux éditions Gallimard.\n\nCet essai se veut à la fois un hymne et une désacralisation de la lecture, ainsi qu'une invitation à réfléchir à la manière pédagogique de l'appréhender. Il constitue ainsi une critique des techniques, exigences et recommandations de l'éducation nationale.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://fr.wikipedia.org/wiki/Comme_un_roman"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "e1030011-98d0-48b6-bc68-3176c4ec0dd9",
+    "authors": [
+      "69831d56-5843-409b-9101-fc66bea8fc2f"
+    ],
+    "originalLanguage": "en",
+    "details": [
+      {
+        "language": "en",
+        "title": "Homage to Catalonia",
+        "description": "Homage to Catalonia is a 1938 memoir by English writer George Orwell, in which he accounts his personal experiences and observations while fighting in the Spanish Civil War.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://en.wikipedia.org/wiki/Homage_to_Catalonia"
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "title": "Hommage à la Catalogne",
+        "description": "Hommage à la Catalogne (titre original : Homage to Catalonia) est un ouvrage de l’écrivain britannique George Orwell, qui traite de la guerre civile espagnole, paru en 1938. L’édition française, dans une traduction d'Yvonne Davet, est publiée pour la première fois en 1955 aux éditions Gallimard sous le titre La Catalogne libre.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://fr.wikipedia.org/wiki/Hommage_à_la_Catalogne"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "0c959d74-591c-489c-a7ca-4d7acb0ceba8",
+    "authors": [
+      "69831d56-5843-409b-9101-fc66bea8fc2f"
+    ],
+    "originalLanguage": "en",
+    "details": [
+      {
+        "language": "en",
+        "title": "Animal Farm",
+        "description": "Animal Farm is a satirical allegorical novella, in the form of a beast fable, by George Orwell, first published in England on 17 August 1945. It tells the story of a group of anthropomorphic farm animals who rebel against their human farmer, hoping to create a society where the animals can be equal, free, and happy. Ultimately, the rebellion is betrayed, and under the dictatorship of a pig named Napoleon, the farm ends up in a far worse state than before.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://en.wikipedia.org/wiki/Animal_Farm"
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "title": "La Ferme des animaux",
+        "description": "La Ferme des animaux (titre original : Animal Farm. A Fairy Story) est un roman court de George Orwell, publié en 1945. Découpé en dix chapitres, il décrit une ferme dans laquelle les animaux se révoltent contre leur maître, prennent le pouvoir, chassent les hommes et vivent en autarcie.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://fr.wikipedia.org/wiki/La_Ferme_des_animaux"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ace93305-508e-490c-ad93-f69d4beeb7a4",
+    "authors": [
+      "69831d56-5843-409b-9101-fc66bea8fc2f"
+    ],
+    "originalLanguage": "en",
+    "details": [
+      {
+        "language": "en",
+        "title": "Nineteen Eighty-Four",
+        "description": "Nineteen Eighty-Four (also published as 1984) is a dystopian novel and cautionary tale by English writer George Orwell. It was published on 8 June 1949 by Secker & Warburg as Orwell's ninth and final completed book. Thematically, it centres on the consequences of totalitarianism, mass surveillance, and repressive regimentation of people and behaviours within society. Orwell, a staunch believer in democratic socialism and member of the anti-Stalinist Left, modelled the Britain under authoritarian socialism in the novel on the Soviet Union in the era of Stalinism and on the very similar practices of both censorship and propaganda in Nazi Germany. More broadly, the novel examines the role of truth and facts within societies and the ways in which they can be manipulated.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://en.wikipedia.org/wiki/Nineteen_Eighty-Four"
+          }
+        ]
+      },
+      {
+        "language": "fr",
+        "title": "1984",
+        "description": "1984 ou en toutes lettres Mil neuf cent quatre-vingt-quatre (titre original : Nineteen Eighty-Four), est un roman dystopique de l'écrivain britannique George Orwell. Publié le 8 juin 1949 par Secker & Warburg, il s'agit du neuvième et dernier livre d'Orwell achevé de son vivant. Thématiquement, il se concentre sur les conséquences du totalitarisme, de la surveillance de masse, et de l'enrégimentement répressif des personnes et des comportements au sein de la société. Orwell, fervent partisan du socialisme démocratique et membre de la gauche antistalinienne, décrit dans son roman une Grande-Bretagne, trente ans après une guerre nucléaire entre l'Est et l'Ouest censée avoir eu lieu dans les années 1950, et où s'est instauré un régime totalitaire fortement inspiré à la fois de certains éléments du stalinisme et du nazisme. Plus largement, le roman examine le rôle de la vérité et des faits au sein des sociétés et les manières dont ils peuvent être manipulés.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://fr.wikipedia.org/wiki/1984_(roman)"
+          }
+        ]
+      }
+    ]
   }
 ]

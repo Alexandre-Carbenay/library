@@ -9,7 +9,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class AuthorDetailsModelAssembler extends RepresentationModelAssemblerSupport<Author, AuthorDetailsModel> {
+class AuthorDetailsModelAssembler extends RepresentationModelAssemblerSupport<Author, AuthorDetailsModel> {
     public AuthorDetailsModelAssembler() {
         super(AuthorsController.class, AuthorDetailsModel.class);
     }
