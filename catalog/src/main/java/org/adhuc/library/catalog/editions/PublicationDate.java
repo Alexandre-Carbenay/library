@@ -1,4 +1,4 @@
-package org.adhuc.library.catalog.books;
+package org.adhuc.library.catalog.editions;
 
 import java.time.LocalDate;
 

@@ -1,4 +1,4 @@
-package org.adhuc.library.catalog.books;
+package org.adhuc.library.catalog.editions;
 
 import org.jmolecules.architecture.onion.classical.DomainServiceRing;
 import org.springframework.data.domain.Page;
@@ -9,12 +9,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @DomainServiceRing
-public interface BooksRepository {
+public interface EditionsRepository {
 
-    Page<Book> find(Pageable request);
+    Page<Edition> find(Pageable request);
 
-    Optional<Book> findByIsbn(String isbn);
+    Optional<Edition> findByIsbn(String isbn);
 
-    Collection<Book> findNotableByAuthor(UUID authorId);
+    Collection<Edition> findNotableByAuthor(UUID authorId);
 
 }

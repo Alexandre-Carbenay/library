@@ -3,11 +3,11 @@ package org.adhuc.library.catalog.adapter.rest.editions;
 import net.jqwik.api.Arbitrary;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
-import org.adhuc.library.catalog.books.Book;
-import org.adhuc.library.catalog.books.BooksMother;
-import org.adhuc.library.catalog.books.BooksMother.Books;
-import org.adhuc.library.catalog.books.BooksService;
-import org.adhuc.library.catalog.books.PublicationDate;
+import org.adhuc.library.catalog.editions.Edition;
+import org.adhuc.library.catalog.editions.EditionsMother;
+import org.adhuc.library.catalog.editions.EditionsMother.Editions;
+import org.adhuc.library.catalog.editions.EditionsService;
+import org.adhuc.library.catalog.editions.PublicationDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -45,7 +45,7 @@ class EditionsControllerTests {
     @Autowired
     private MockMvc mvc;
     @MockitoBean
-    private BooksService booksService;
+    private EditionsService editionsService;
 
     @ParameterizedTest
     @ValueSource(strings = {"123", "invalid"})
@@ -88,38 +88,38 @@ class EditionsControllerTests {
             "editionsWithYearBCPublicationDateProvider"
     })
     @DisplayName("provide the edition details corresponding to the ID")
-    void knownEditionId(Book book) throws Exception {
-        when(booksService.getBook(Mockito.any())).thenReturn(Optional.of(book));
+    void knownEditionId(Edition edition) throws Exception {
+        when(editionsService.getEdition(Mockito.any())).thenReturn(Optional.of(edition));
 
-        var result = mvc.perform(get("/api/v1/editions/{isbn}", book.isbn()).accept("application/hal+json"))
+        var result = mvc.perform(get("/api/v1/editions/{isbn}", edition.isbn()).accept("application/hal+json"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("isbn", equalTo(book.isbn())))
-                .andExpect(jsonPath("title", equalTo(book.title())))
-                .andExpect(jsonPath("publication_date", equalTo(book.publicationDate().toString())))
-                .andExpect(jsonPath("language", equalTo(book.language())))
-                .andExpect(jsonPath("summary", equalTo(book.summary())))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/editions/\{book.isbn()}")));
+                .andExpect(jsonPath("isbn", equalTo(edition.isbn())))
+                .andExpect(jsonPath("title", equalTo(edition.title())))
+                .andExpect(jsonPath("publication_date", equalTo(edition.publicationDate().toString())))
+                .andExpect(jsonPath("language", equalTo(edition.language())))
+                .andExpect(jsonPath("summary", equalTo(edition.summary())))
+                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/editions/\{edition.isbn()}")));
 
-        assertResponseContainsAllEmbeddedAuthors(result, book.authors());
+        assertResponseContainsAllEmbeddedAuthors(result, edition.authors());
 
-        verify(booksService).getBook(book.isbn());
+        verify(editionsService).getEdition(edition.isbn());
     }
 
     static Stream<Arguments> editionsWithExactPublicationDateProvider() {
-        return editionsWithPublicationDateProvider(Books.exactPublicationDates());
+        return editionsWithPublicationDateProvider(Editions.exactPublicationDates());
     }
 
     static Stream<Arguments> editionsWithYearADPublicationDateProvider() {
-        return editionsWithPublicationDateProvider(Books.yearADPublicationDates());
+        return editionsWithPublicationDateProvider(Editions.yearADPublicationDates());
     }
 
     static Stream<Arguments> editionsWithYearBCPublicationDateProvider() {
-        return editionsWithPublicationDateProvider(Books.yearBCPublicationDates());
+        return editionsWithPublicationDateProvider(Editions.yearBCPublicationDates());
     }
 
     static Stream<Arguments> editionsWithPublicationDateProvider(Arbitrary<PublicationDate> publicationDateArbitrary) {
         return publicationDateArbitrary
-                .map(publicationDate -> BooksMother.builder().publicationDate(publicationDate).build())
+                .map(publicationDate -> EditionsMother.builder().publicationDate(publicationDate).build())
                 .map(Arguments::of)
                 .sampleStream().limit(3);
     }

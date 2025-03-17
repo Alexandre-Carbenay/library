@@ -9,15 +9,15 @@ servers:
   - url: https://catalog.library.adhuc.org/api
 tags:
   - name: Books
-    description: Access the books in the catalog of the library.
+    description: Access the editions in the catalog of the library.
   - name: Authors
-    description: Access the authors of the books in the catalog of the library.
+    description: Access the authors of the editions in the catalog of the library.
 paths:
   /v1/catalog:
     get:
       tags:
         - Books
-      summary: Gets a paginated list of books based on filters.
+      summary: Gets a paginated list of editions based on filters.
       description: The catalog can be sorted and filtered in many different ways.
       operationId: getCatalog
       parameters:
@@ -317,7 +317,7 @@ components:
               items:
                 $ref: '#/components/schemas/Edition'
             authors:
-              description: The authors related to the books in the collection.
+              description: The authors related to the editions in the collection.
               type: array
               items:
                 $ref: '#/components/schemas/Author'
@@ -634,7 +634,7 @@ components:
             - notable_books
           properties:
             books:
-              description: The author's books, containing basic information for each book.
+              description: The author's editions, containing basic information for each book.
               type: array
               items:
                 $ref: '#/components/schemas/Edition'

@@ -24,7 +24,7 @@ library.catalog:
   data.auto-load:
     enabled: false
     authors.resource: 'classpath:data/catalog-authors.json'
-    books.resource: 'classpath:data/catalog-books.json'
+    editions.resource: 'classpath:data/catalog-editions.json'
 
 logging:
   level:
