@@ -30,14 +30,47 @@ paths:
           $ref: '#/components/responses/InvalidPaginationParameters'
         '500':
           $ref: '#/components/responses/GeneralError'
+  /v1/books/{id}:
+    get:
+      tags:
+        - Books
+      summary: Gets the details of a book based on its identity.
+      description: |
+        A book corresponds to the work of an author or a group of authors,
+        resulting in the publication of a first edition. It can later be published
+        by other editors, or re-edited in different formats. A book can also be
+        translated and published in different languages.
+        
+        The details of a book contain all its localized information and the
+        relation to its authors and editions.
+        
+        Localization depends on the `Accept-Language` header. If none is provided,
+        or the language does not correspond to any available for the book, a
+        default one is provided.
+      operationId: getBook
+      parameters:
+        - $ref: '#/components/parameters/BookId'
+        - $ref: '#/components/parameters/AcceptLanguage'
+      responses:
+        '200':
+          $ref: '#/components/responses/BookDetails'
+        '400':
+          $ref: '#/components/responses/InvalidBookId'
+        '404':
+          $ref: '#/components/responses/UnknownBook'
+        '500':
+          $ref: '#/components/responses/GeneralError'
   /v1/editions/{isbn}:
     get:
       tags:
         - Books
       summary: Gets the details of a book edition based on its ISBN.
       description: |
+        An edition corresponds to a book's publication in a given language and format,
+        resulting in a different ISBN for each edition.
+
         The details of an edition contain all its information and the relation to
-        its authors.
+        its book's authors.
       operationId: getEdition
       parameters:
         - $ref: '#/components/parameters/ISBN'
@@ -72,6 +105,15 @@ paths:
           $ref: '#/components/responses/GeneralError'
 components:
   parameters:
+    BookId:
+      name: id
+      description: Book identity.
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: b6608a30-1e9b-4ae0-a89d-624c3ca85da4
     ISBN:
       name: isbn
       description: Book edition ISBN.
@@ -115,6 +157,23 @@ components:
         minimum: 1
         default: 50
         example: 50
+    AcceptLanguage:
+      name: Accept-Language
+      description: |
+        Indicates the expected language(s) for localized resources. If none of the
+        accept languages is provided or available, a default one is provided.
+
+        Accept languages can be wildcarded or weighted with the quality value syntax:
+
+        `Accept-Language: fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5`
+
+        See [documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Accept-Language)
+        for more information about this header.
+      in: header
+      required: false
+      schema:
+        type: string
+        example: fr
   responses:
     Catalog:
       description: Books returned from catalog.
@@ -125,6 +184,36 @@ components:
         application/hal+json:
           schema:
             $ref: '#/components/schemas/Catalog'
+    BookDetails:
+      description: A book details.
+      headers:
+        Content-Language:
+          $ref: '#/components/headers/ContentLanguage'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BookDetails'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/BookDetails'
+    InvalidBookId:
+      description: Invalid book ID.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            invalidId:
+              $ref: '#/components/examples/InvalidUUIDId'
+    UnknownBook:
+      description: No book corresponds to the specified identity.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            unknown:
+              $ref: '#/components/examples/UnknownBook'
     EditionDetails:
       description: A book edition details.
       content:
@@ -196,6 +285,16 @@ components:
         application/problem+json:
           schema:
             $ref: '#/components/schemas/Problem'
+  headers:
+    ContentLanguage:
+      schema:
+        type: string
+      description: |
+        The language of the localized resource, ideally corresponding to one of
+        those provided in the `Accept-Language` header.
+
+        See [documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Language)
+        for more information about this header.
   schemas:
     Catalog:
       type: object
@@ -212,14 +311,6 @@ components:
             - editions
             - authors
           properties:
-            books:
-              description: |
-                The book editions collection, containing basic information for each edition.
-                This property is deprecated in favor of editions and will be removed soon.
-              type: array
-              deprecated: true
-              items:
-                $ref: '#/components/schemas/Edition'
             editions:
               description: The book editions collection, containing basic information for each edition.
               type: array
@@ -295,6 +386,116 @@ components:
                 href:
                   type: string
                   example: 'https://catalog.library.adhuc.org/api/v1/catalog?page=8&size=50'
+    Book:
+      type: object
+      required:
+        - id
+        - authors
+        - title
+        - summary
+        - '_links'
+      properties:
+        id:
+          $ref: '#/components/schemas/BookId'
+        authors:
+          $ref: '#/components/schemas/BookAuthors'
+        title:
+          $ref: '#/components/schemas/Title'
+        summary:
+          $ref: '#/components/schemas/Summary'
+        '_links':
+          type: object
+          readOnly: true
+          required:
+            - self
+          properties:
+            self:
+              $ref: '#/components/schemas/BookLink'
+            wikipedia:
+              $ref: '#/components/schemas/WikipediaLink'
+    BookDetails:
+      type: object
+      required:
+        - id
+        - title
+        - summary
+        - '_links'
+        - '_embedded'
+      properties:
+        id:
+          $ref: '#/components/schemas/BookId'
+        title:
+          $ref: '#/components/schemas/Title'
+        summary:
+          $ref: '#/components/schemas/Summary'
+        '_links':
+          type: object
+          readOnly: true
+          required:
+            - self
+          properties:
+            self:
+              $ref: '#/components/schemas/BookLink'
+            wikipedia:
+              $ref: '#/components/schemas/WikipediaLink'
+        '_embedded':
+          type: object
+          readOnly: true
+          required:
+            - authors
+          properties:
+            authors:
+              description: The authors related to the book.
+              type: array
+              items:
+                $ref: '#/components/schemas/Author'
+            editions:
+              description: The editions corresponding to the book.
+              type: array
+              items:
+                $ref: '#/components/schemas/Edition'
+    BookId:
+      type: string
+      format: uuid
+      example: b6608a30-1e9b-4ae0-a89d-624c3ca85da4
+    BookLink:
+      type: object
+      description: Link to the book. Can be used to see the details of the book.
+      required:
+        - href
+      properties:
+        href:
+          type: string
+          example: 'https://catalog.library.adhuc.org/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4'
+    WikipediaLink:
+      type: object
+      description: Link to the wikipedia page of the book.
+      required:
+        - href
+      properties:
+        href:
+          type: string
+          example: 'https://fr.wikipedia.org/wiki/Du_contrat_social'
+    Title:
+      type: string
+      example: Du contrat social
+    Summary:
+      type: string
+      example: >
+        Paru en 1762, le Contrat social, en affirmant le principe de souveraineté du peuple,
+        a constitué un tournant décisif pour la modernité et s'est imposé comme un des textes
+        majeurs de la philosophie politique. Il a aussi acquis le statut de monument, plus
+        célèbre que connu, plus révéré - ou honni - qu'interrogé. Retrouver, dans les formules
+        fameuses et les pages d'anthologie, le mouvement de la réflexion et les questions vives
+        qui nourrissent une œuvre beaucoup plus problématique qu'affirmative, c'est découvrir
+        une pensée qui se tient au plus près des préoccupations d'aujourd'hui : comment intégrer
+        les intérêts de tous dans la détermination de l'intérêt commun ? Comment lutter contre
+        la pente de tout gouvernement à déposséder les citoyens de la souveraineté ? Comment
+        former en chacun ce sentiment d'obligation sans lequel le lien social se défait ?
+    BookAuthors:
+      type: array
+      items:
+        $ref: '#/components/schemas/AuthorId'
     Edition:
       type: object
       required:
@@ -322,14 +523,7 @@ components:
             - self
           properties:
             self:
-              description: Link to this edition. Can be used to see the details of this edition.
-              type: object
-              required:
-                - href
-              properties:
-                href:
-                  type: string
-                  example: 'https://catalog.library.adhuc.org/api/v1/editions/baa19c4e-a347-45bd-8caf-e150aa8203e9'
+              $ref: '#/components/schemas/EditionLink'
     EditionDetails:
       type: object
       required:
@@ -357,14 +551,9 @@ components:
             - self
           properties:
             self:
-              description: Link to this edition. Can be used to see the details of this edition.
-              type: object
-              required:
-                - href
-              properties:
-                href:
-                  type: string
-                  example: 'https://catalog.library.adhuc.org/api/v1/editions/baa19c4e-a347-45bd-8caf-e150aa8203e9'
+              $ref: '#/components/schemas/EditionLink'
+            book:
+              $ref: '#/components/schemas/BookLink'
         '_embedded':
           type: object
           readOnly: true
@@ -380,19 +569,21 @@ components:
       type: string
       format: isbn
       example: 9782081275232
-    Title:
-      type: string
-      example: Du contrat social
     PublicationDate:
       type: string
       description: |
         The publication date can be either an exact date, in 'yyy-MM-dd' format,
         or a year, either negative (BC) or positive (AD).
       example: 1762
-    BookAuthors:
-      type: array
-      items:
-        $ref: '#/components/schemas/AuthorId'
+    EditionLink:
+      type: object
+      description: Link to the edition. Can be used to see the details of the edition.
+      required:
+        - href
+      properties:
+        href:
+          type: string
+          example: 'https://catalog.library.adhuc.org/api/v1/editions/9782081275232'
     Author:
       type: object
       required:
@@ -411,14 +602,7 @@ components:
             - self
           properties:
             self:
-              description: Link to this author. Can be used to see the detail of this author.
-              type: object
-              required:
-                - href
-              properties:
-                href:
-                  type: string
-                  example: 'https://catalog.library.adhuc.org/api/v1/authors/99287cef-2c8c-4a4d-a82e-f1a8452dcfe2'
+              $ref: '#/components/schemas/AuthorLink'
     AuthorDetails:
       type: object
       required:
@@ -442,14 +626,7 @@ components:
             - self
           properties:
             self:
-              description: Link to this author. Can be used to see the detail of this author.
-              type: object
-              required:
-                - href
-              properties:
-                href:
-                  type: string
-                  example: 'https://catalog.library.adhuc.org/api/v1/authors/99287cef-2c8c-4a4d-a82e-f1a8452dcfe2'
+              $ref: '#/components/schemas/AuthorLink'
         '_embedded':
           type: object
           readOnly: true
@@ -465,6 +642,15 @@ components:
       type: string
       format: uuid
       example: 99287cef-2c8c-4a4d-a82e-f1a8452dcfe2
+    AuthorLink:
+      type: object
+      description: Link to the author. Can be used to see the detail of the author.
+      required:
+        - href
+      properties:
+        href:
+          type: string
+          example: 'https://catalog.library.adhuc.org/api/v1/authors/99287cef-2c8c-4a4d-a82e-f1a8452dcfe2'
     AuthorName:
       type: string
       example: Jean-Jacques Rousseau
@@ -479,19 +665,6 @@ components:
     Language:
       type: string
       example: French
-    Summary:
-      type: string
-      example: >
-        Paru en 1762, le Contrat social, en affirmant le principe de souveraineté du peuple,
-        a constitué un tournant décisif pour la modernité et s'est imposé comme un des textes
-        majeurs de la philosophie politique. Il a aussi acquis le statut de monument, plus
-        célèbre que connu, plus révéré - ou honni - qu'interrogé. Retrouver, dans les formules
-        fameuses et les pages d'anthologie, le mouvement de la réflexion et les questions vives
-        qui nourrissent une œuvre beaucoup plus problématique qu'affirmative, c'est découvrir
-        une pensée qui se tient au plus près des préoccupations d'aujourd'hui : comment intégrer
-        les intérêts de tous dans la détermination de l'intérêt commun ? Comment lutter contre
-        la pente de tout gouvernement à déposséder les citoyens de la souveraineté ? Comment
-        former en chacun ce sentiment d'obligation sans lequel le lien social se défait ?
     Page:
       type: object
       readOnly: true
@@ -612,6 +785,13 @@ components:
           - detail: 'Input string "1234" is not a valid ISBN'
             parameter: isbn
       summary: Invalid UUID passed as id in the path.
+    UnknownBook:
+      value:
+        type: /problems/unknown-entity
+        status: 404
+        title: Unknown book
+        detail: No book exists with id 'b94329cb-8767-4438-b802-d85a268fb3e3'
+      summary: Error when no book corresponds to the specified identity.
     UnknownEdition:
       value:
         type: /problems/unknown-entity

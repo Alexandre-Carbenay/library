@@ -48,7 +48,7 @@ class CatalogControllerPactTests {
         context.verifyInteraction();
     }
 
-    @State("First page of 10 elements contains books")
+    @State("First page of 10 elements contains editions")
     void page0Size10() {
         var request = PageRequest.of(0, 10);
         when(catalogService.getPage(request)).thenReturn(new PageImpl<>(List.of(
@@ -68,7 +68,7 @@ class CatalogControllerPactTests {
         ), request, 67));
     }
 
-    @State("Next page of 25 elements contains books")
+    @State("Next page of 25 elements contains editions")
     void page1Size25() {
         var request = PageRequest.of(1, 25);
         when(catalogService.getPage(request)).thenReturn(new PageImpl<>(List.of(
