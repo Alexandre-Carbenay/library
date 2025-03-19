@@ -29,6 +29,7 @@ public class Parameters {
         return switch (source) {
             case "French" -> Locale.FRENCH;
             case "English" -> Locale.ENGLISH;
+            case "German" -> Locale.GERMAN;
             default -> throw new IllegalArgumentException("Unknown language " + source);
         };
     }
