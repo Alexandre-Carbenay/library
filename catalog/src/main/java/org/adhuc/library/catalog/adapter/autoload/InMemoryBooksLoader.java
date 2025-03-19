@@ -86,7 +86,7 @@ public class InMemoryBooksLoader {
             var externalLinks = this.links.stream()
                     .map(dto -> dto.convert(id, language))
                     .collect(toSet());
-            return null;
+            return new LocalizedDetails(language, title, description, externalLinks);
         }
     }
 
@@ -94,7 +94,7 @@ public class InMemoryBooksLoader {
         ExternalLink convert(UUID id, String language) {
             Assert.hasText(source, () -> STR."Book \{id} external link source for language \{language} must be filled");
             Assert.hasText(value, () -> STR."Book \{id} external link value for source \{source} for language \{language} must be filled");
-            return null;
+            return new ExternalLink(source, value);
         }
     }
 

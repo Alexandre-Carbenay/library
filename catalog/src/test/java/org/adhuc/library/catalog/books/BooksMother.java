@@ -6,31 +6,44 @@ import net.jqwik.api.Combinators;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.authors.AuthorsMother;
 
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Function;
 
-import static java.util.stream.Collectors.toSet;
+import static java.util.stream.Collectors.toMap;
 import static net.jqwik.api.Arbitraries.strings;
 import static org.adhuc.library.catalog.authors.AuthorsMother.Real.*;
+import static org.adhuc.library.catalog.books.BooksMother.Books.externalLinksSets;
+import static org.adhuc.library.catalog.books.BooksMother.Books.wikipediaLinks;
 
 public class BooksMother {
 
     public static Arbitrary<Book> books() {
-        return Combinators.combine(
-                Books.ids(),
-                Books.authors(),
-                Books.languages(),
-                Books.details()
-        ).as(Book::new);
+        return books(Books.authors());
     }
 
     public static Arbitrary<Book> notableBooksOf(UUID authorId) {
-        return Combinators.combine(
-                Books.ids(),
-                Books.authoredWith(authorId),
-                Books.languages(),
-                Books.details()
-        ).as(Book::new);
+        return books(Books.authoredWith(authorId));
+    }
+
+    private static Arbitrary<Book> books(Arbitrary<Set<Author>> authorsArbitrary) {
+        return Books.languages()
+                .flatMap(originalLanguage -> Combinators.combine(
+                                Books.ids(),
+                                authorsArbitrary,
+                                Books.detailsSets(originalLanguage)
+                        ).as((id, authors, details) -> new Book(id, authors, originalLanguage, details))
+                );
+    }
+
+    public static BookBuilder builder() {
+        return new BookBuilder();
+    }
+
+    public static LocalizedDetailsBuilder detailsBuilder() {
+        return new LocalizedDetailsBuilder();
     }
 
     public static final class Books {
@@ -56,23 +69,25 @@ public class BooksMother {
             return Arbitraries.of("fr", "en", "de", "it");
         }
 
-        public static Arbitrary<Set<LocalizedDetails>> details() {
-            var languages = languages().set().ofMinSize(1).ofMaxSize(3).uniqueElements();
-            return details(languages);
+        public static Arbitrary<Set<LocalizedDetails>> detailsSets(String originalLanguage) {
+            var originalDetails = details(originalLanguage).sample();
+            var otherDetails = languages().filter(language -> !language.equals(originalLanguage))
+                    .set().ofMinSize(0).ofMaxSize(2).uniqueElements()
+                    .sample()
+                    .stream()
+                    .map(language -> details(language).sample())
+                    .toList();
+            var details = new HashSet<>(otherDetails);
+            details.add(originalDetails);
+            return Arbitraries.just(details);
         }
 
-        public static Arbitrary<Set<LocalizedDetails>> details(Arbitrary<Set<String>> languagesArbitrary) {
-            return languagesArbitrary.map(languages -> languages
-                    .stream()
-                    .map(language -> Combinators.combine(
-                                            titles(),
-                                            descriptions(),
-                                            externalLinks()
-                                    ).as((title, description, externalLinks) -> new LocalizedDetails(language, title, description, externalLinks))
-                                    .sample()
-                    )
-                    .collect(toSet())
-            );
+        public static Arbitrary<LocalizedDetails> details(String language) {
+            return Combinators.combine(
+                    titles(),
+                    descriptions(),
+                    externalLinksSets()
+            ).as((title, description, externalLinks) -> new LocalizedDetails(language, title, description, externalLinks));
         }
 
         public static Arbitrary<String> titles() {
@@ -85,12 +100,114 @@ public class BooksMother {
                     .filter(s -> !s.isBlank());
         }
 
-        public static Arbitrary<Set<ExternalLink>> externalLinks() {
-            return strings().alpha().ofMinLength(1).ofMaxLength(30)
+        public static Arbitrary<Set<ExternalLink>> externalLinksSets() {
+            return Combinators.combine(
+                    wikipediaLinks().set().ofMinSize(0).ofMaxSize(1),
+                    otherLinks().set().ofMinSize(0).ofMaxSize(1)
+            ).as((wikipediaLink, otherLink) -> {
+                var links = new HashSet<>(wikipediaLink);
+                links.addAll(otherLink);
+                return links;
+            });
+        }
+
+        public static Arbitrary<ExternalLink> externalLinks() {
+            return Arbitraries.oneOf(wikipediaLinks(), otherLinks());
+        }
+
+        public static Arbitrary<ExternalLink> wikipediaLinks() {
+            return links("wikipedia", "https://wikipedia.org/");
+        }
+
+        public static Arbitrary<ExternalLink> otherLinks() {
+            return links("other", "https://example.com/");
+        }
+
+        private static Arbitrary<ExternalLink> links(String source, String baseUrl) {
+            return strings().alpha().withChars("-_/").ofMinLength(1).ofMaxLength(30)
                     .flatMap(linkValue -> Arbitraries.of(
-                            new ExternalLink("wikipedia", "https://wikipedia.org/" + linkValue),
-                            new ExternalLink("other", "https://example.com/" + linkValue)
-                    )).set().ofMinSize(1);
+                            new ExternalLink(source, baseUrl + linkValue)
+                    ));
+        }
+    }
+
+    public static class BookBuilder {
+        private Book book = books().sample();
+
+        public BookBuilder id(UUID id) {
+            book = new Book(id, book.authors(), book.originalLanguage(), book.details());
+            return this;
+        }
+
+        public BookBuilder authors(Set<Author> authors) {
+            book = new Book(book.id(), authors, book.originalLanguage(), book.details());
+            return this;
+        }
+
+        public BookBuilder originalLanguage(String originalLanguage) {
+            book = new Book(book.id(), book.authors(), originalLanguage, book.details());
+            return this;
+        }
+
+        public BookBuilder details(Set<LocalizedDetails> localizedDetails) {
+            book = new Book(book.id(), book.authors(), book.originalLanguage(), localizedDetails);
+            return this;
+        }
+
+        public Book build() {
+            return book;
+        }
+    }
+
+    public static class LocalizedDetailsBuilder {
+        private String language;
+        private String title;
+        private String description;
+        private Map<String, ExternalLink> links;
+
+        private LocalizedDetailsBuilder() {
+            language = Books.languages().sample();
+            title = Books.titles().sample();
+            description = Books.descriptions().sample();
+            links(externalLinksSets().sample());
+        }
+
+        public LocalizedDetailsBuilder language(String language) {
+            this.language = language;
+            return this;
+        }
+
+        public LocalizedDetailsBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public LocalizedDetailsBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public LocalizedDetailsBuilder links(Set<ExternalLink> links) {
+            this.links = links.stream().collect(toMap(ExternalLink::source, Function.identity()));
+            return this;
+        }
+
+        public LocalizedDetailsBuilder withWikipediaLink() {
+            return additionalLink(wikipediaLinks().sample());
+        }
+
+        public LocalizedDetailsBuilder withoutWikipediaLink() {
+            links.remove("wikipedia");
+            return this;
+        }
+
+        public LocalizedDetailsBuilder additionalLink(ExternalLink link) {
+            this.links.put(link.source(), link);
+            return this;
+        }
+
+        public LocalizedDetails build() {
+            return new LocalizedDetails(language, title, description, Set.copyOf(links.values()));
         }
     }
 

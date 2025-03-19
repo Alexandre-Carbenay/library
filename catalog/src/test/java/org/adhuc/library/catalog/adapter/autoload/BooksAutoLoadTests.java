@@ -111,7 +111,7 @@ class BooksAutoLoadTests {
         booksLoader.load();
 
         var actual = repository.findAll();
-        assertThat(actual).containsExactlyInAnyOrderElementsOf(expected);
+        assertThat(actual).usingRecursiveFieldByFieldElementComparator().containsExactlyInAnyOrderElementsOf(expected);
     }
 
     static Stream<Arguments> booksLoadingProvider() {
