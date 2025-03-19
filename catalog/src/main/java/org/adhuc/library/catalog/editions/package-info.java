@@ -1,5 +1,5 @@
 @org.springframework.modulith.ApplicationModule(
-        allowedDependencies = "authors"
+        allowedDependencies = {"books", "authors"}
 )
 // By default, all classes are domain model
 @org.jmolecules.architecture.onion.classical.DomainModelRing

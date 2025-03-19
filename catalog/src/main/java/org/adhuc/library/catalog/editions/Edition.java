@@ -1,6 +1,6 @@
 package org.adhuc.library.catalog.editions;
 
-import org.adhuc.library.catalog.authors.Author;
+import org.adhuc.library.catalog.books.Book;
 
 import java.util.Objects;
 import java.util.Set;
@@ -8,7 +8,7 @@ import java.util.Set;
 public record Edition(String isbn,
                       String title,
                       PublicationDate publicationDate,
-                      Set<Author> authors,
+                      Book book,
                       String language,
                       String summary) {
 

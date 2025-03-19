@@ -23,7 +23,7 @@ public class EditionModel extends RepresentationModel<EditionModel> {
     EditionModel(Edition edition) {
         this.isbn = edition.isbn();
         this.title = edition.title();
-        this.authors = edition.authors().stream().sorted(Comparator.comparing(Author::name)).map(Author::id).toList();
+        this.authors = edition.book().authors().stream().sorted(Comparator.comparing(Author::name)).map(Author::id).toList();
         this.language = edition.language();
         this.summary = edition.summary();
     }
