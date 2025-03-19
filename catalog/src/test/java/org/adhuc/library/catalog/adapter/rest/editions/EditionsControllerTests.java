@@ -100,7 +100,7 @@ class EditionsControllerTests {
                 .andExpect(jsonPath("summary", equalTo(edition.summary())))
                 .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/editions/\{edition.isbn()}")));
 
-        assertResponseContainsAllEmbeddedAuthors(result, edition.authors());
+        assertResponseContainsAllEmbeddedAuthors(result, edition.book().authors());
 
         verify(editionsService).getEdition(edition.isbn());
     }

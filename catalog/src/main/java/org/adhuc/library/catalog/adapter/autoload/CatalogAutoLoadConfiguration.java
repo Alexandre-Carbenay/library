@@ -1,6 +1,7 @@
 package org.adhuc.library.catalog.adapter.autoload;
 
 import org.adhuc.library.catalog.authors.internal.InMemoryAuthorsRepository;
+import org.adhuc.library.catalog.books.internal.InMemoryBooksRepository;
 import org.adhuc.library.catalog.editions.internal.InMemoryEditionsRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,10 +24,20 @@ class CatalogAutoLoadConfiguration {
 
     @Bean
     @DependsOn("authorsLoader")
+    InMemoryBooksLoader booksLoader(InMemoryBooksRepository booksRepository,
+                                    InMemoryAuthorsRepository authorsRepository,
+                                    CatalogAutoLoadProperties properties) {
+        var loader = new InMemoryBooksLoader(booksRepository, authorsRepository, properties.books().resource());
+        loader.load();
+        return loader;
+    }
+
+    @Bean
+    @DependsOn("booksLoader")
     InMemoryEditionsLoader editionsLoader(InMemoryEditionsRepository editionsRepository,
-                                          InMemoryAuthorsRepository authorsRepository,
+                                          InMemoryBooksRepository booksRepository,
                                           CatalogAutoLoadProperties properties) {
-        var loader = new InMemoryEditionsLoader(editionsRepository, authorsRepository, properties.editions().resource());
+        var loader = new InMemoryEditionsLoader(editionsRepository, booksRepository, properties.editions().resource());
         loader.load();
         return loader;
     }

@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1234",
+    "authors": [
+      "f921c511-6341-494a-8152-c92613db248b"
+    ],
+    "originalLanguage": "fr",
+    "details": [
+      {
+        "language": "fr",
+        "title": "L'Étranger",
+        "description": "L'Étranger est le premier roman publié d'Albert Camus, paru en 1942. Les premières esquisses datent de 1938, mais le roman ne prend vraiment forme que dans les premiers mois de 1940 et sera travaillé par Camus jusqu’en 1941. Il prend place dans la tétralogie que Camus nommera « cycle de l'absurde » qui décrit les fondements de la philosophie camusienne : l'absurde. Cette tétralogie comprend également l'essai Le Mythe de Sisyphe ainsi que les pièces de théâtre Caligula et Le Malentendu.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://fr.wikipedia.org/wiki/L'Étranger"
+          }
+        ]
+      }
+    ]
+  }
+]

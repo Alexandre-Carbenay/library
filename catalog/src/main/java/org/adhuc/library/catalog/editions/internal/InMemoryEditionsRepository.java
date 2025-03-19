@@ -36,7 +36,7 @@ public class InMemoryEditionsRepository implements EditionsRepository {
     @Override
     public Collection<Edition> findNotableByAuthor(UUID authorId) {
         return editions.stream()
-                .filter(edition -> edition.authors().stream().anyMatch(author -> author.id().equals(authorId)))
+                .filter(edition -> edition.book().authors().stream().anyMatch(author -> author.id().equals(authorId)))
                 .toList();
     }
 

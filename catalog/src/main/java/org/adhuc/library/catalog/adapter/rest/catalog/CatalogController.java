@@ -3,6 +3,7 @@ package org.adhuc.library.catalog.adapter.rest.catalog;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
 import org.adhuc.library.catalog.authors.Author;
+import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.editions.Edition;
 import org.adhuc.library.catalog.editions.CatalogService;
 import org.springframework.data.domain.Page;
@@ -71,7 +72,7 @@ public class CatalogController {
     }
 
     private Set<Author> editionsAuthors(Page<Edition> editions) {
-        return editions.stream().map(Edition::authors).flatMap(Collection::stream).collect(toSet());
+        return editions.stream().map(Edition::book).map(Book::authors).flatMap(Collection::stream).collect(toSet());
     }
 
 }

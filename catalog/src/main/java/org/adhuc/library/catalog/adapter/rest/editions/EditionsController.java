@@ -54,7 +54,7 @@ public class EditionsController {
 
     private ResponseEntity<Object> prepareEditionResponse(Edition edition) {
         var editionDetails = editionModelAssembler.toModel(edition);
-        var authors = authorModelAssembler.toCollectionModel(edition.authors()).getContent();
+        var authors = authorModelAssembler.toCollectionModel(edition.book().authors()).getContent();
         return ResponseEntity.status(OK)
                 .body(halModelOf(editionDetails)
                         .links(editionDetails.getLinks())

@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.adhuc.library.catalog.adapter.autoload.InMemoryEditionsLoader.EditionsAutoLoadException;
-import org.adhuc.library.catalog.authors.internal.InMemoryAuthorsRepository;
+import org.adhuc.library.catalog.books.BooksMother;
+import org.adhuc.library.catalog.books.internal.InMemoryBooksRepository;
 import org.adhuc.library.catalog.editions.Edition;
 import org.adhuc.library.catalog.editions.internal.InMemoryEditionsRepository;
 import org.assertj.core.api.Condition;
@@ -21,7 +22,6 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.adhuc.library.catalog.authors.AuthorsMother.Real.*;
 import static org.adhuc.library.catalog.editions.EditionsMother.Real.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,24 +30,35 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class EditionsAutoLoadTests {
 
     private InMemoryEditionsRepository repository;
-    private InMemoryAuthorsRepository authorsRepository;
+    private InMemoryBooksRepository booksRepository;
 
     @BeforeEach
     void setUp() {
         repository = new InMemoryEditionsRepository();
-        authorsRepository = new InMemoryAuthorsRepository();
-        authorsRepository.saveAll(List.of(
-                ALBERT_CAMUS,
-                GUSTAVE_FLAUBERT,
-                LEON_TOLSTOI,
-                VIRGINIE_DESPENTES
+        booksRepository = new InMemoryBooksRepository();
+        booksRepository.saveAll(List.of(
+                BooksMother.Real.L_ETRANGER,
+                BooksMother.Real.LA_PESTE,
+                BooksMother.Real.LA_CHUTE,
+                BooksMother.Real.MADAME_BOVARY,
+                BooksMother.Real.SALAMMBO,
+                BooksMother.Real.ANNA_KARENINE,
+                BooksMother.Real.GUERRE_ET_PAIX,
+                BooksMother.Real.LES_COSAQUES,
+                BooksMother.Real.CHER_CONNARD,
+                BooksMother.Real.BAISE_MOI,
+                BooksMother.Real.APOCALYPSE_BEBE,
+                BooksMother.Real.ASTERIX_LE_GAULOIS,
+                BooksMother.Real.LA_SERPE_D_OR,
+                BooksMother.Real.ASTERIX_ET_CLEOPATRE,
+                BooksMother.Real.LE_PETIT_NICOLAS
         ));
     }
 
     @Test
     @DisplayName("fail if the provided JSON resource does not exist")
     void failNonExistingResource() {
-        var editionsLoader = new InMemoryEditionsLoader(repository, authorsRepository, "classpath:unknown.json");
+        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, "classpath:unknown.json");
         var exception = assertThrows(EditionsAutoLoadException.class, editionsLoader::load);
         assertThat(exception).hasCauseInstanceOf(FileNotFoundException.class);
     }
@@ -60,7 +71,7 @@ class EditionsAutoLoadTests {
     })
     @DisplayName("fail if the content does not correspond to valid JSON")
     void failNotJson(String resourcePath) {
-        var editionsLoader = new InMemoryEditionsLoader(repository, authorsRepository, resourcePath);
+        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, resourcePath);
         var exception = assertThrows(EditionsAutoLoadException.class, editionsLoader::load);
         assertThat(exception).hasCauseInstanceOf(JsonParseException.class);
     }
@@ -68,7 +79,7 @@ class EditionsAutoLoadTests {
     @Test
     @DisplayName("fail if the JSON root element is not an array")
     void failNotArray() {
-        var editionsLoader = new InMemoryEditionsLoader(repository, authorsRepository, "classpath:auto-load/editions/editions-test-root-not-array.json");
+        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, "classpath:auto-load/editions/editions-test-root-not-array.json");
         var exception = assertThrows(EditionsAutoLoadException.class, editionsLoader::load);
         assertThat(exception).hasCauseInstanceOf(MismatchedInputException.class);
     }
@@ -80,18 +91,16 @@ class EditionsAutoLoadTests {
             "classpath:auto-load/editions/editions-test-no-title.json",
             "classpath:auto-load/editions/editions-test-no-publication-date.json",
             "classpath:auto-load/editions/editions-test-publication-date-not-valid.json",
-            "classpath:auto-load/editions/editions-test-no-authors.json",
-            "classpath:auto-load/editions/editions-test-empty-authors.json",
-            "classpath:auto-load/editions/editions-test-invalid-author.json",
-            "classpath:auto-load/editions/editions-test-unknown-author.json",
-            "classpath:auto-load/editions/editions-test-unknown-author-of-many.json",
+            "classpath:auto-load/editions/editions-test-no-book.json",
+            "classpath:auto-load/editions/editions-test-invalid-book.json",
+            "classpath:auto-load/editions/editions-test-unknown-book.json",
             "classpath:auto-load/editions/editions-test-no-language.json",
             "classpath:auto-load/editions/editions-test-unknown-language.json",
             "classpath:auto-load/editions/editions-test-no-summary.json"
     })
     @DisplayName("fail if the editions data is invalid because a field does not have expected value")
-    void failInvalidAuthorsUnexpectedValue(String resourcePath) {
-        var editionsLoader = new InMemoryEditionsLoader(repository, authorsRepository, resourcePath);
+    void failInvalidUnexpectedValue(String resourcePath) {
+        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, resourcePath);
         var exception = assertThrows(EditionsAutoLoadException.class, editionsLoader::load);
         assertThat(exception.getCause()).isNotNull().has(new Condition<>(
                 cause -> IllegalArgumentException.class.isAssignableFrom(cause.getClass())
@@ -103,8 +112,8 @@ class EditionsAutoLoadTests {
     @ParameterizedTest
     @MethodSource("editionsLoadingProvider")
     @DisplayName("contain expected editions as defined in the configured resource")
-    void containExpectedAuthors(String resourcePath, List<Edition> expected) {
-        var editionsLoader = new InMemoryEditionsLoader(repository, authorsRepository, resourcePath);
+    void containExpectedEditions(String resourcePath, List<Edition> expected) {
+        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, resourcePath);
         editionsLoader.load();
 
         var actual = repository.findAll();

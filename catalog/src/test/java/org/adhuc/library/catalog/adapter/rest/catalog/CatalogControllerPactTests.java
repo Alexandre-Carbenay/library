@@ -7,8 +7,11 @@ import au.com.dius.pact.provider.junitsupport.Provider;
 import au.com.dius.pact.provider.junitsupport.State;
 import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
 import org.adhuc.library.catalog.authors.Author;
-import org.adhuc.library.catalog.editions.Edition;
+import org.adhuc.library.catalog.books.Book;
+import org.adhuc.library.catalog.books.ExternalLink;
+import org.adhuc.library.catalog.books.LocalizedDetails;
 import org.adhuc.library.catalog.editions.CatalogService;
+import org.adhuc.library.catalog.editions.Edition;
 import org.adhuc.library.catalog.editions.PublicationDate;
 import org.apache.hc.core5.http.HttpRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,12 +59,24 @@ class CatalogControllerPactTests {
                         "9782081275232",
                         "Du contrat social",
                         PublicationDate.of(LocalDate.parse("2012-01-04")),
-                        Set.of(new Author(
-                                UUID.fromString("83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"),
-                                "Jean-Jacques Rousseau",
-                                LocalDate.parse("1712-06-28"),
-                                LocalDate.parse("1778-07-02")
-                        )),
+                        new Book(
+                                UUID.fromString("b6608a30-1e9b-4ae0-a89d-624c3ca85da4"),
+                                Set.of(new Author(
+                                        UUID.fromString("83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"),
+                                        "Jean-Jacques Rousseau",
+                                        LocalDate.parse("1712-06-28"),
+                                        LocalDate.parse("1778-07-02")
+                                )),
+                                "fr",
+                                Set.of(new LocalizedDetails(
+                                        "fr",
+                                        "Du contrat social",
+                                        "Du contrat social est un traité de philosophie politique présentant ...",
+                                        Set.of(
+                                                new ExternalLink("wikipedia", "https://fr.wikipedia.org/wiki/Du_contrat_social")
+                                        )
+                                ))
+                        ),
                         "fr",
                         "Paru en 1762, le Contrat social, ..."
                 )
@@ -76,12 +91,24 @@ class CatalogControllerPactTests {
                         "9782081275232",
                         "Du contrat social",
                         PublicationDate.of(LocalDate.parse("2012-01-04")),
-                        Set.of(new Author(
-                                UUID.fromString("83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"),
-                                "Jean-Jacques Rousseau",
-                                LocalDate.parse("1712-06-28"),
-                                LocalDate.parse("1778-07-02")
-                        )),
+                        new Book(
+                                UUID.fromString("b6608a30-1e9b-4ae0-a89d-624c3ca85da4"),
+                                Set.of(new Author(
+                                        UUID.fromString("83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"),
+                                        "Jean-Jacques Rousseau",
+                                        LocalDate.parse("1712-06-28"),
+                                        LocalDate.parse("1778-07-02")
+                                )),
+                                "fr",
+                                Set.of(new LocalizedDetails(
+                                        "fr",
+                                        "Du contrat social",
+                                        "Du contrat social est un traité de philosophie politique présentant ...",
+                                        Set.of(
+                                                new ExternalLink("wikipedia", "https://fr.wikipedia.org/wiki/Du_contrat_social")
+                                        )
+                                ))
+                        ),
                         "fr",
                         "Paru en 1762, le Contrat social, ..."
                 )

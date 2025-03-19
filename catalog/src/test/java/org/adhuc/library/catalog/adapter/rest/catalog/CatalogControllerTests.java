@@ -7,8 +7,9 @@ import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.authors.Author;
-import org.adhuc.library.catalog.editions.Edition;
+import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.editions.CatalogService;
+import org.adhuc.library.catalog.editions.Edition;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -358,14 +359,14 @@ class CatalogControllerTests {
         result.andExpect(jsonPath(jsonPrefix + "isbn", equalTo(expected.isbn())))
                 .andExpect(jsonPath(jsonPrefix + "title", equalTo(expected.title())))
                 .andExpect(jsonPath(jsonPrefix + "authors", containsInAnyOrder(
-                        expected.authors().stream().map(Author::id).map(UUID::toString).toArray())))
+                        expected.book().authors().stream().map(Author::id).map(UUID::toString).toArray())))
                 .andExpect(jsonPath(jsonPrefix + "language", equalTo(expected.language())))
                 .andExpect(jsonPath(jsonPrefix + "summary", equalTo(expected.summary())))
                 .andExpect(jsonPath(jsonPrefix + "_links.self.href", equalTo("http://localhost/api/v1/editions/" + expected.isbn())));
     }
 
     private void assertResponseContainsAllEditionsAuthors(ResultActions result, Collection<Edition> expectedEditions) throws Exception {
-        var expectedAuthors = expectedEditions.stream().map(Edition::authors).flatMap(Collection::stream).collect(toSet());
+        var expectedAuthors = expectedEditions.stream().map(Edition::book).map(Book::authors).flatMap(Collection::stream).collect(toSet());
         assertResponseContainsAllEmbeddedAuthors(result, expectedAuthors);
     }
 
