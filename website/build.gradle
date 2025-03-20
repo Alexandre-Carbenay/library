@@ -31,7 +31,7 @@ configurations {
 }
 
 ext {
-	springCloudVersion = '3.2.0'
+	springCloudVersion = '3.2.1'
 	bootstrapVersion = '5.3.3'
 }
 
