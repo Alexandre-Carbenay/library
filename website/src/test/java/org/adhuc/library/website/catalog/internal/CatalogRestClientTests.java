@@ -147,16 +147,16 @@ class CatalogRestClientTests {
             var resourceLoader = new DefaultResourceLoader();
             return Stream.of(
                     Arguments.of(0, 10, resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
-                            List.of(DU_CONTRAT_SOCIAL, LA_FRATERNITE_DE_L_ANNEAU),
+                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
                             List.of(A_DANCE_WITH_DRAGONS)
                     ),
                     Arguments.of(1, 10, resourceLoader.getResource("classpath:client/catalog/page-1-size-10.json"),
                             List.of(A_DANCE_WITH_DRAGONS),
-                            List.of(DU_CONTRAT_SOCIAL, LA_FRATERNITE_DE_L_ANNEAU)
+                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU)
                     ),
                     Arguments.of(0, 50, resourceLoader.getResource("classpath:client/catalog/page-0-size-50.json"),
-                            List.of(DU_CONTRAT_SOCIAL, LA_FRATERNITE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS),
-                            List.of(BULLSHIT_JOBS)
+                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS, BULLSHIT_JOBS),
+                            List.of(LA_FERME_DES_ANIMAUX)
                     )
             );
         }
@@ -177,7 +177,7 @@ class CatalogRestClientTests {
             var resourceLoader = new DefaultResourceLoader();
 
             var page0Size10 = new NavigablePageImpl<>(
-                    List.of(DU_CONTRAT_SOCIAL, LA_FRATERNITE_DE_L_ANNEAU),
+                    List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
                     PageRequest.of(0, 10), 67,
                     List.of(
                             new Link("first", "http://localhost:12345/test/api/v1/catalog?page=0&size=10"),
@@ -196,7 +196,7 @@ class CatalogRestClientTests {
                     )
             );
             var page1Size50 = new NavigablePageImpl<>(
-                    List.of(BULLSHIT_JOBS),
+                    List.of(LA_FERME_DES_ANIMAUX),
                     PageRequest.of(1, 50), 67,
                     List.of(
                             new Link("first", "http://localhost:12345/test/api/v1/catalog?page=0&size=50"),
@@ -209,32 +209,32 @@ class CatalogRestClientTests {
                     Arguments.of(page1Size10, "first",
                             "http://localhost:12345/test/api/v1/catalog?page=0&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
-                            List.of(DU_CONTRAT_SOCIAL, LA_FRATERNITE_DE_L_ANNEAU),
+                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
                             List.of(A_DANCE_WITH_DRAGONS)
                     ),
                     Arguments.of(page1Size10, "prev",
                             "http://localhost:12345/test/api/v1/catalog?page=0&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
-                            List.of(DU_CONTRAT_SOCIAL, LA_FRATERNITE_DE_L_ANNEAU),
+                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
                             List.of(A_DANCE_WITH_DRAGONS)
                     ),
                     Arguments.of(page0Size10, "next",
                             "http://localhost:12345/test/api/v1/catalog?page=1&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-1-size-10.json"),
                             List.of(A_DANCE_WITH_DRAGONS),
-                            List.of(DU_CONTRAT_SOCIAL, LA_FRATERNITE_DE_L_ANNEAU)
+                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU)
                     ),
                     Arguments.of(page0Size10, "last",
                             "http://localhost:12345/test/api/v1/catalog?page=6&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-6-size-10.json"),
-                            List.of(HAMLET),
-                            List.of(DU_CONTRAT_SOCIAL, LA_FRATERNITE_DE_L_ANNEAU)
+                            List.of(LA_FERME_DES_ANIMAUX),
+                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, HAMLET)
                     ),
                     Arguments.of(page1Size50, "prev",
                             "http://localhost:12345/test/api/v1/catalog?page=0&size=50",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-50.json"),
-                            List.of(DU_CONTRAT_SOCIAL, LA_FRATERNITE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS),
-                            List.of(BULLSHIT_JOBS)
+                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS, BULLSHIT_JOBS),
+                            List.of(LA_FERME_DES_ANIMAUX)
                     )
             );
         }
@@ -248,7 +248,7 @@ class CatalogRestClientTests {
 
         static Stream<Arguments> pageBooksFromUnknownLinkProvider() {
             var page0Size10 = new NavigablePageImpl<>(
-                    List.of(DU_CONTRAT_SOCIAL, LA_FRATERNITE_DE_L_ANNEAU),
+                    List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
                     PageRequest.of(0, 10), 67,
                     List.of(
                             new Link("first", "http://localhost:12345/test/api/v1/catalog?page=0&size=10"),

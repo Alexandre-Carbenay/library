@@ -1,147 +1,179 @@
 {
-  "page" : {
-    "size" : 10,
-    "total_elements" : 67,
-    "total_pages" : 7,
-    "number" : 1
+  "page": {
+    "size": 10,
+    "total_elements": 67,
+    "total_pages": 7,
+    "number": 1
   },
-  "_embedded" : {
-    "editions" : [ {
-      "isbn" : "9782290208878",
-      "title" : "Le trône de fer l'intégrale 1",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "fr",
-      "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290208878"
+  "_embedded": {
+    "books": [
+      {
+        "id": "3b35e0ae-14b7-4bbb-a2ff-868f0927f722",
+        "title": "A Game of Thrones",
+        "description": "A Game of Thrones (littéralement « un jeu de trônes ») est le premier livre de la saga Le Trône de fer écrite par George R. R. Martin. Le livre, d'ambiance médiévale1, a été publié en version originale en 1996, puis en version française de 1998 à 1999. Il a remporté le prix Locus du meilleur roman de fantasy en 1997.",
+        "authors": [
+          "c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/3b35e0ae-14b7-4bbb-a2ff-868f0927f722"
+          }
+        }
+      },
+      {
+        "id": "2e601f14-fb9c-41bc-a207-6a1c5ee6eff3",
+        "title": "A Clash of Kings",
+        "description": "A Clash of Kings (littéralement « un choc de rois ») est le deuxième livre de la saga Le Trône de fer écrite par George R. R. Martin. Le livre a été publié en version originale en 1998, puis en version française en 2000. Il a remporté le prix Locus du meilleur roman de fantasy en 1999.",
+        "authors": [
+          "c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/2e601f14-fb9c-41bc-a207-6a1c5ee6eff3"
+          }
+        }
+      },
+      {
+        "id": "0a881b54-2682-408d-9646-fbf6eef562e4",
+        "title": "A Storm of Swords",
+        "description": "A Storm of Swords (littéralement « une tempête d'épées ») est le troisième livre de la saga Le Trône de fer écrite par George R. R. Martin. Le livre a été publié en version originale en 2000, puis en version française de 2001 à 2003. Il a remporté le prix Locus du meilleur roman de fantasy en 2001.",
+        "authors": [
+          "c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/0a881b54-2682-408d-9646-fbf6eef562e4"
+          }
+        }
+      },
+      {
+        "id": "907716df-6a8b-4623-af90-695c1b209df6",
+        "title": "A Feast for Crows",
+        "description": "A Feast for Crows (littéralement « Un festin pour les corbeaux ») est le quatrième livre de la saga Le Trône de fer écrite par George R. R. Martin. Le livre a été publié en version originale en 2005, puis en version française de 2006 à 2007. Il se concentre sur les événements se déroulant dans la partie centrale (Conflans, Val d'Arryn, Port-Réal) et méridionale (Bief, Dorne) du continent de Westeros.",
+        "authors": [
+          "c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/907716df-6a8b-4623-af90-695c1b209df6"
+          }
+        }
+      },
+      {
+        "id": "2869e847-dcf8-457f-8824-9489da2630ce",
+        "title": "A Dance with Dragons",
+        "description": "A Dance with Dragons (littéralement « une danse avec les dragons ») est le cinquième livre de la saga Le Trône de fer écrite par George R. R. Martin. Le livre a été publié en version originale le 12 juillet 2011, alors que la publication de sa traduction française s'est étalée entre mars 2012 et janvier 2013. Il se concentre principalement sur les évènements se déroulant au nord du continent de Westeros et sur le continent oriental, les événements de la première moitié du roman se déroulant en même temps que ceux de A Feast for Crows alors que ceux de la deuxième moitié du roman se passent plus tard, certains cliffhangers d’A Feast for Crows trouvant leur résolution dans ce volume.",
+        "authors": [
+          "c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/2869e847-dcf8-457f-8824-9489da2630ce"
+          }
+        }
+      },
+      {
+        "id": "e6854cf5-c6f0-4c4d-88ba-587bd2de78de",
+        "title": "Fondation",
+        "description": "Fondation (titre original : Foundation) est un roman de science-fiction rédigé par Isaac Asimov et composé de cinq nouvelles, dont quatre publiées individuellement entre 1942 et 1944 dans la revue Astounding Science-Fiction et à laquelle une cinquième fut ajoutée pour former ce livre publié pour la première fois en 1951. C'est le premier volet du Cycle de Fondation. Bien qu’il constitue aujourd'hui le troisième épisode chronologique de ce cycle, il est le premier à avoir été écrit et peut donc être lu indépendamment de Prélude à Fondation et L'Aube de Fondation.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/e6854cf5-c6f0-4c4d-88ba-587bd2de78de"
+          }
+        }
+      },
+      {
+        "id": "273c8353-ed92-401c-960b-40b67a17386a",
+        "title": "Fondation et Empire",
+        "description": "Fondation et Empire (titre original : Foundation and Empire) est un roman de science-fiction d’Isaac Asimov publié en 1952. Il est le deuxième tome du Cycle de Fondation et contient deux romans courts initialement publiés de façon séparée dans la revue Astounding Science-Fiction : Le Général et Le Mulet (ce dernier étant lui-même composé de deux parties, intitulées « Le Mulet » et « Le Clown »). Bien qu’il constitue aujourd'hui le quatrième épisode chronologique de ce cycle, il est le deuxième à avoir été écrit et peut donc être lu indépendamment de Prélude à Fondation et L'Aube de Fondation.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/273c8353-ed92-401c-960b-40b67a17386a"
+          }
+        }
+      },
+      {
+        "id": "b7392578-7008-47ab-931b-12c3ceb127e0",
+        "title": "Seconde Fondation",
+        "description": "Seconde Fondation (titre original : Second Foundation) est un roman de science-fiction rédigé par Isaac Asimov en 1953. Il est le troisième tome du cycle de Fondation et contient deux romans courts initialement publiés de façon séparée dans la revue Astounding Science-Fiction : La Quête du Mulet et La Quête de la Fondation. Bien qu’il constitue aujourd'hui le cinquième épisode chronologique de ce cycle, il est le troisième à avoir été écrit et peut donc être lu indépendamment de Prélude à Fondation et L'Aube de Fondation.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/b7392578-7008-47ab-931b-12c3ceb127e0"
+          }
+        }
+      },
+      {
+        "id": "699b97dc-deeb-4df3-9495-6329255d1f6f",
+        "title": "Fondation foudroyée",
+        "description": "Fondation foudroyée (titre original : Foundation's Edge) est un roman de science-fiction écrit par Isaac Asimov, paru en 1982 et faisant partie du cycle de Fondation. L’année suivant sa publication, il remporta le prix Hugo du meilleur roman et le prix Locus du meilleur roman.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/699b97dc-deeb-4df3-9495-6329255d1f6f"
+          }
+        }
+      },
+      {
+        "id": "65e5d471-d203-4bfe-b438-9c1635546760",
+        "title": "Terre et Fondation",
+        "description": "Terre et Fondation (titre original : Foundation and Earth) est un roman de science-fiction écrit par Isaac Asimov, paru en 1986. Il est le dernier volume du cycle de Fondation.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/65e5d471-d203-4bfe-b438-9c1635546760"
+          }
         }
       }
-    }, {
-      "isbn" : "9782290215661",
-      "title" : "Le trône de fer l'intégrale 2",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "fr",
-      "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290215661"
+    ],
+    "authors": [
+      {
+        "id": "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5",
+        "name": "Isaac Asimov",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+          }
+        }
+      },
+      {
+        "id": "c5f1361f-61b4-42c4-9cf1-d82e9a45317a",
+        "name": "George Raymond Richard Martin",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
+          }
         }
       }
-    }, {
-      "isbn" : "9782290221686",
-      "title" : "Le trône de fer l'intégrale 3",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "fr",
-      "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290221686"
-        }
-      }
-    }, {
-      "isbn" : "9782290221693",
-      "title" : "Le trône de fer l'intégrale 4",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "fr",
-      "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290221693"
-        }
-      }
-    }, {
-      "isbn" : "9782290221709",
-      "title" : "Le trône de fer l'intégrale 5",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "fr",
-      "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290221709"
-        }
-      }
-    }, {
-      "isbn" : "9780553103540",
-      "title" : "A Game of Thrones",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "en",
-      "summary" : "Winter is coming. Such is the stern motto of House Stark, the northernmost of the fiefdoms that owe allegiance to King Robert Baratheon in far-off King’s Landing. There Eddard Stark of Winterfell rules in Robert’s name. There his family dwells in peace and comfort: his proud wife, Catelyn; his sons Robb, Brandon, and Rickon; his daughters Sansa and Arya; and his bastard son, Jon Snow. Far to the north, behind the towering Wall, lie savage Wildings and worse—unnatural things relegated to myth during the centuries-long summer, but proving all too real and all too deadly in the turning of the season.\n\nYet a more immediate threat lurks to the south, where Jon Arryn, the Hand of the King, has died under mysterious circumstances. Now Robert is riding north to Winterfell, bringing his queen, the lovely but cold Cersei, his son, the cruel, vainglorious Prince Joffrey, and the queen’s brothers Jaime and Tyrion of the powerful and wealthy House Lannister—the first a swordsman without equal, the second a dwarf whose stunted stature belies a brilliant mind. All are heading for Winterfell and a fateful encounter that will change the course of kingdoms.\n\nMeanwhile, across the Narrow Sea, Prince Viserys, heir of the fallen House Targaryen, which once ruled all of Westeros, schemes to reclaim the throne with an army of barbarian Dothraki—whose loyalty he will purchase in the only coin left to him: his beautiful yet innocent sister, Daenerys.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9780553103540"
-        }
-      }
-    }, {
-      "isbn" : "9780553108033",
-      "title" : "A Clash of Kings",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "en",
-      "summary" : "Time is out of joint. The summer of peace and plenty, ten years long, is drawing to a close, and the harsh, chill winter approaches like an angry beast. Two great leaders—Lord Eddard Stark and Robert Baratheon—who held sway over an age of enforced peace are dead . . . victims of royal treachery. Now, from the ancient citadel of Dragonstone to the forbidding shores of Winterfell, chaos reigns, as pretenders to the Iron Throne of the Seven Kingdoms prepare to stake their claims through tempest, turmoil, and war.\n\nAs a prophecy of doom cuts across the sky—a comet the color of blood and flame—six factions struggle for control of a divided land. Eddard’s son Robb has declared himself King in the North. In the south, Joffrey, the heir apparent, rules in name only, victim of the scheming courtiers who teem over King’s Landing. Robert’s two brothers each seek their own dominion, while a disfavored house turns once more to conquest. And a continent away, an exiled queen, the Mother of Dragons, risks everything to lead her precious brood across a hard hot desert to win back the crown that is rightfully hers.\n\nA Clash of Kings transports us into a magnificent, forgotten land of revelry and revenge, wizardry and warfare. It is a tale in which maidens cavort with madmen, brother plots against brother, and the dead rise to walk in the night. Here a princess masquerades as an orphan boy; a knight of the mind prepares a poison for a treacherous sorceress; and wild men descend from the Mountains of the Moon to ravage the countryside.\n\nAgainst a backdrop of incest and fratricide, alchemy and murder, the price of glory may be measured in blood. And the spoils of victory may just go to the men and women possessed of the coldest steel . . . and the coldest hearts. For when rulers clash, all of the land feels the tremors.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9780553108033"
-        }
-      }
-    }, {
-      "isbn" : "9780553106633",
-      "title" : "A Storm of Swords",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "en",
-      "summary" : "Of the five contenders for power, one is dead, another in disfavor, and still the wars rage. Joffrey sits on the Iron Throne, the uneasy ruler of the Seven Kingdoms. His most bitter rival, Lord Stannis, stands defeated and disgraced, victim of the sorceress who holds him in her thrall. Young Robb still rules the North from the fortress of Riverrun. Meanwhile, making her way across a blood-drenched continent is the exiled queen, Daenerys, mistress of the only three dragons left in the world. As opposing forces maneuver for the final showdown, an army of barbaric wildlings arrives from the outermost limits of civilization, accompanied by a supernatural army of the living dead. As the future of the land hangs in the balance, no one will rest until the Seven Kingdoms have exploded in a veritable storm of swords...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9780553106633"
-        }
-      }
-    }, {
-      "isbn" : "9780553801507",
-      "title" : "A Feast for Crows",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "en",
-      "summary" : "After centuries of bitter strife, the seven powers dividing the land have beaten one another into an uneasy truce. But it’s not long before the survivors, outlaws, renegades, and carrion eaters of the Seven Kingdoms gather. Now, as the human crows assemble over a banquet of ashes, daring new plots and dangerous new alliances are formed while surprising faces—some familiar, others only just appearing—emerge from an ominous twilight of past struggles and chaos to take up the challenges of the terrible times ahead. Nobles and commoners, soldiers and sorcerers, assassins and sages, are coming together to stake their fortunes . . . and their lives. For at a feast for crows, many are the guests—but only a few are the survivors.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9780553801507"
-        }
-      }
-    }, {
-      "isbn" : "9780553801477",
-      "title" : "A Dance with Dragons",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "en",
-      "summary" : "In the aftermath of a colossal battle, the future of the Seven Kingdoms hangs in the balance—beset by newly emerging threats from every direction. In the east, Daenerys Targaryen, the last scion of House Targaryen, rules with her three dragons as queen of a city built on dust and death. But Daenerys has thousands of enemies, and many have set out to find her. As they gather, one young man embarks upon his own quest for the queen, with an entirely different goal in mind.\n\nFleeing from Westeros with a price on his head, Tyrion Lannister, too, is making his way to Daenerys. But his newest allies in this quest are not the rag-tag band they seem, and at their heart lies one who could undo Daenerys’s claim to Westeros forever.\n\nMeanwhile, to the north lies the mammoth Wall of ice and stone—a structure only as strong as those guarding it. There, Jon Snow, 998th Lord Commander of the Night’s Watch, will face his greatest challenge. For he has powerful foes not only within the Watch but also beyond, in the land of the creatures of ice.\n\nFrom all corners, bitter conflicts reignite, intimate betrayals are perpetrated, and a grand cast of outlaws and priests, soldiers and skinchangers, nobles and slaves, will face seemingly insurmountable obstacles. Some will fail, others will grow in the strength of darkness. But in a time of rising restlessness, the tides of destiny and politics will lead inevitably to the greatest dance of all.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9780553801477"
-        }
-      }
-    } ],
-    "authors" : [ {
-      "id" : "c5f1361f-61b4-42c4-9cf1-d82e9a45317a",
-      "name" : "George Raymond Richard Martin",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/authors/c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
-        }
-      }
-    } ]
+    ]
   },
-  "_links" : {
-    "first" : {
-      "href" : "http://localhost:12345/api/v1/catalog?page=0&size=10"
+  "_links": {
+    "first": {
+      "href": "https://localhost:12345/api/v1/catalog?page=0&size=10"
     },
-    "prev" : {
-      "href" : "http://localhost:12345/api/v1/catalog?page=0&size=10"
+    "prev": {
+      "href": "https://localhost:12345/api/v1/catalog?page=0&size=10"
     },
-    "self" : {
-      "href" : "http://localhost:12345/api/v1/catalog?page=1&size=10"
+    "self": {
+      "href": "https://localhost:12345/api/v1/catalog?page=1&size=10"
     },
-    "next" : {
-      "href" : "http://localhost:12345/api/v1/catalog?page=2&size=10"
+    "next": {
+      "href": "https://localhost:12345/api/v1/catalog?page=2&size=10"
     },
-    "last" : {
-      "href" : "http://localhost:12345/api/v1/catalog?page=6&size=10"
+    "last": {
+      "href": "https://localhost:12345/api/v1/catalog?page=6&size=10"
     }
   }
 }

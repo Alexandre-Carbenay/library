@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record BookDto(String title, List<UUID> authors, String summary) {
+public record BookDto(String title, List<UUID> authors, String description) {
 
     public Book withAuthorsFrom(List<AuthorDto> authors) {
         return new Book(
@@ -20,7 +20,7 @@ public record BookDto(String title, List<UUID> authors, String summary) {
                                 .stream()
                         )
                         .toList(),
-                summary
+                description
         );
     }
 }

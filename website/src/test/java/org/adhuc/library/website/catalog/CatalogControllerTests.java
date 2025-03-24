@@ -46,7 +46,7 @@ class CatalogControllerTests {
     private static final String LAST_PAGE_LINK_ATTRIBUTE = "lastPageLinkName";
 
     private static final List<Book> PAGE_CONTENT = List.of(
-            DU_CONTRAT_SOCIAL, LA_FRATERNITE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS, BULLSHIT_JOBS
+            DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS, BULLSHIT_JOBS
     );
 
     @Autowired
