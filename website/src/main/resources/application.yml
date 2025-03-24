@@ -1,6 +1,8 @@
 server.http2.enabled: true
 
-spring.application.name: Library website
+spring:
+  application.name: Library website
+  messages.basename: i18n/messages
 
 management:
   endpoints:
