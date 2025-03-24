@@ -3,7 +3,7 @@
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'catalog')}">
 <body>
 
-<h2>Library catalog</h2>
+<h2 th:text="#{catalog.header}"></h2>
 
 <div>
     <span><a th:if="${firstPageLinkName != null}" th:href="@{/catalog(link=${firstPageLinkName})}" title="First" class="fa fa-fast-backward"></a></span>
@@ -15,9 +15,9 @@
 <table id="catalog" class="table table-striped">
     <thead>
     <tr>
-        <th>Title</th>
-        <th>Authors</th>
-        <th>Description</th>
+        <th th:text="#{catalog.books.title}"></th>
+        <th th:text="#{catalog.books.authors}">Authors</th>
+        <th th:text="#{catalog.books.description}">Description</th>
     </tr>
     </thead>
     <tbody>

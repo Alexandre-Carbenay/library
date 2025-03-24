@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Library website</title>
+    <title th:text="#{home.title}"></title>
 
     <link th:href="@{/webjars/font-awesome/4.7.0/css/font-awesome.min.css}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/resources/css/library.css}" />
@@ -31,14 +31,10 @@
             </ul>
 
             <ul class="nav navbar-nav me-auto">
-                <li th:replace="~{::menuItem ('/','home','home page','home','Home')}">
-                    <span class="fa fa-home" aria-hidden="true"></span>
-                    <span>Home</span>
+                <li th:replace="~{::menuItem ('/','home','home page','home',#{menu.home})}">
                 </li>
 
-                <li th:replace="~{::menuItem ('/catalog','catalog','library catalog','search','Browse catalog')}">
-                    <span class="fa fa-search" aria-hidden="true"></span>
-                    <span>Browse catalog</span>
+                <li th:replace="~{::menuItem ('/catalog','catalog','library catalog','search',#{menu.catalog})}">
                 </li>
             </ul>
         </div>
