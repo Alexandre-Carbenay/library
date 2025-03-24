@@ -6,144 +6,134 @@
     "number": 0
   },
   "_embedded": {
-    "editions": [
+    "books": [
       {
-        "isbn": "9782081275232",
+        "id": "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
         "title": "Du contrat social",
+        "description": "Du contrat social est un traité de philosophie politique présentant comment l’homme, passant de l’état de nature à l’état de société, peut instituer un ordre social au service de l'intérêt commun. Le pacte social que propose Rousseau établit que chacun doit renoncer à tous ses droits particuliers ou du plus fort pour obtenir l'égalité des droits que procure la société. Cette aliénation de chaque sujet de l’État est ce pacte qui offre à chacun l’égalité : « Les clauses [du pacte social] se réduisent toutes à une seule : l’aliénation totale de chaque associé avec tous ses droits à toute la communauté : car premièrement, chacun se donnant tout entier, la condition est égale pour tous ; et la condition étant égale pour tous, nul n’a intérêt de la rendre onéreuse aux autres. » (Livre I, Chapitre 6) La légitimité du pacte social repose sur le fait que l’homme n’aliène pas au sens propre (il ne l'échange pas ni ne le donne) son droit naturel mais il comprend que le pacte social est au contraire la condition de l’existence de ses droits naturels.",
         "authors": [
           "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
         ],
-        "language": "fr",
-        "summary": "Paru en 1762, le Contrat social, en affirmant le principe de souveraineté du peuple, a constitué un tournant décisif pour la modernité et s'est imposé comme un des textes majeurs de la philosophie politique. Il a aussi acquis le statut de monument, plus célèbre que connu, plus révéré - ou honni - qu'interrogé. Retrouver, dans les formules fameuses et les pages d'anthologie, le mouvement de la réflexion et les questions vives qui nourrissent une œuvre beaucoup plus problématique qu'affirmative, c'est découvrir une pensée qui se tient au plus près des préoccupations d'aujourd'hui : comment intégrer les intérêts de tous dans la détermination de l'intérêt commun ? Comment lutter contre la pente de tout gouvernement à déposséder les citoyens de la souveraineté ? Comment former en chacun ce sentiment d'obligation sans lequel le lien social se défait ?\n",
         "_links": {
           "self": {
-            "href": "http://localhost:12345/api/v1/editions/9782081275232"
+            "href": "https://localhost:12345/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4"
           }
         }
       },
       {
-        "isbn": "9782081275256",
+        "id": "74d88208-86db-4112-a0a3-614b282d0ea3",
         "title": "Discours sur l'origine et les fondements de l'inégalité parmi les hommes",
+        "description": "Le Discours sur l'origine de l'inégalité parmi les hommes est un essai philosophique d'une centaine de pages environ, richement annoté par l'auteur.\n\nIl est accompagné, dans beaucoup d'éditions récentes, d'un virulent échange entre Voltaire et Rousseau où le premier fustige la vision optimiste de la nature humaine du second, ainsi que sa vision de l'homme en société.\n\nLe texte, enfin, est amené par la question de l'Académie de Dijon : « Quelle est l'origine de l'inégalité parmi les hommes et si elle est autorisée par la loi naturelle ? », sur laquelle repose l'essai entier.",
         "authors": [
           "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
         ],
-        "language": "fr",
-        "summary": "Paru en 1755, le Discours sur l'origine et les fondements de l'inégalité parmi les hommes peut être considéré comme la matrice de l'oeuvre morale et politique de Rousseau : il y affirme sa stature de philosophe, l'originalité de sa voix, la force de son \"système\". Résoudre le problème posé par l'Académie de Dijon - \"quelle est la source de l'inégalité parmi les hommes et si elle est autorisée par la loi naturelle ? \"-, en d'autres termes expliquer que riches et puissants dominent leurs semblables sur lesquels ils n'ont pas de réelle supériorité, exige aux yeux de Rousseau de poser à nouveaux frais la question \"qu'est-ce que l'homme ? \".\nPour cela, il faut comprendre comment s'est formée sa \"nature actuelle\", si éloignée de ce que serait son état de nature : \"Si je me suis étendu si longtemps sur la supposition de cette condition primitive, c'est qu'ayant d'anciennes erreurs et des préjugés invétérés à détruire, j'ai cru devoir creuser jusqu'à la racine.",
         "_links": {
           "self": {
-            "href": "http://localhost:12345/api/v1/editions/9782081275256"
+            "href": "https://localhost:12345/api/v1/books/74d88208-86db-4112-a0a3-614b282d0ea3"
           }
         }
       },
       {
-        "isbn": "9782081206922",
+        "id": "94856bb6-b2d3-4939-a05a-cc2219309740",
         "title": "Emile ou de l'éducation",
+        "description": "L’Émile porte sur « l'art de former les hommes ».\n\nLes quatre premiers livres décrivent l’éducation idéale d’un jeune garçon fictif, Émile, et sont ordonnés chronologiquement, abordant, étape par étape, les questions éducatives qui émergent à mesure qu’il grandit. Le dernier livre traite de l’« éducation », ou plutôt le manque d'éducation des filles à partir d’un autre exemple fictionnel : Sophie, élevée et éduquée pour être l’épouse d’Émile.\n\nParallèlement aux théories proprement pédagogiques, l’Émile comprend la célèbre Profession de foi du Vicaire savoyard (livre IV), qui fournit de précieuses indications sur les idées religieuses de Rousseau. Elle se voulait un modèle quant à la manière d’introduire les jeunes gens aux questions religieuses. Le personnage du vicaire savoyard mêlerait les caractères de deux religieux que Rousseau avait connus étant enfant : l’abbé Gaime, natif d'Héry-sur-Alby et en poste à Turin, et l’abbé Gâtier, d’Annecy.",
         "authors": [
           "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
         ],
-        "language": "fr",
-        "summary": "La publication de l'Emile, en 1762, restitue au problème de l'éducation sa place centrale en philosophie. De ses premiers mois jusqu'à la rencontre amoureuse, Emile est suivi dans chaque étape, à travers des expériences qui attestent d'abord le souci de considérer « l'enfant dans l'enfant », au lieu de le sortir de son âge. Rousseau montre qu'il est possible d'éduquer un homme selon la nature et de quelle façon les vices et l'inégalité caractérisent désormais la condition humaine : double enjeu qui constitue sa « théorie de l'homme ».\nLa richesse incomparable de ce maître-livre tient aussi aux tensions qui le parcourent. Rousseau refuse le péché originel mais il doit rendre raison du mal et de la souffrance que ce dogme interdisait d'ignorer; il critique les philosophes de son temps mais il pousse à ses limites leur méthode empiriste; il proclame: «je hais les livres», mais il fournit le panorama le plus juste et le plus instruit de la culture du XVIIIe siècle, en face de l'Encyclopédie et, pour partie, contre elle.\nParus ensemble, Emile et le Contrat social furent condamnés à Paris puis à Genève: la force du traité d'éducation n'échappa pas aux censeurs, même si Rousseau prétendait ne livrer que « les rêveries d'un visionnaire ». Car la forme même de la fiction arrache l'ouvrage aux circonstances : pas plus que ses lecteurs des Lumières, nous ne sommes à l'abri de ses leçons. ",
         "_links": {
           "self": {
-            "href": "http://localhost:12345/api/v1/editions/9782081206922"
+            "href": "https://localhost:12345/api/v1/books/94856bb6-b2d3-4939-a05a-cc2219309740"
           }
         }
       },
       {
-        "isbn": "9782070399697",
+        "id": "5a47a523-67a5-45f9-b690-c9c731cdb2e1",
         "title": "Les Confessions",
+        "description": "Les Confessions de Jean-Jacques Rousseau est une autobiographie couvrant les cinquante-trois premières années de la vie de Rousseau, jusqu'à 1765.\n\nLes douze livres des Confessions se divisent en deux ensembles distincts, définis par Rousseau lui-même : la première partie constituée par les livres I à VI avec le Préambule, rédigée en 1765-1767, couvre les années 1712-1740 (années de formation, de la naissance à Genève à l'installation à Paris à 28 ans) alors que la deuxième partie, constituée par les livres VII à XII et rédigée en 1769-1770, couvre les années 1741-1765, c'est-à-dire sa vie à Paris dans les milieux de la musique et des philosophes, avec ses réussites (Discours - La Nouvelle Héloïse) et ses déboires, comme les attaques qui suivent la publication de l'Émile, qui l'obligent à fuir en Suisse.\n\nL'œuvre aura une publication entièrement posthume : en 1782 pour la première partie et en 1789 pour la deuxième1. Rousseau avait cependant déjà fait des lectures publiques de certains extraits.\n\nLe titre des Confessions a sans doute été choisi en référence aux Confessions de saint Augustin, publiées au IVe siècle. Rousseau accomplit ainsi un acte sans valeur religieuse à proprement parler, mais doté d’une forte connotation symbolique : celui de l’aveu des péchés, de la confession. Associant sincérité, humilité et plaidoyer pour lui-même, Rousseau cherche à brosser un portrait positif de lui-même et se présente essentiellement comme une victime de la vie2. L'œuvre des Confessions fonde néanmoins le genre moderne de l'autobiographie et constitue un texte marquant de la littérature française.",
         "authors": [
           "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
         ],
-        "language": "fr",
-        "summary": "Je forme une entreprise qui n'eut jamais d'exemple et dont l'exécution n'aura point d'imitateur. Je veux montrer à mes semblables un homme dans toute la vérité de la nature; et cet homme ce sera moi. Moi, seul. Je sens mon cœur et je connais les hommes. Je ne suis fait comme aucun de ceux que j'ai vus; j'ose croire n'être fait comme aucun de ceux qui existent. Si je ne vaux pas mieux, au moins je suis autre. Si la nature a bien ou mal fait de briser le moule dans lequel elle m'a jeté, c'est ce dont on ne peut juger qu'après m'avoir lu. ",
         "_links": {
           "self": {
-            "href": "http://localhost:12345/api/v1/editions/9782070399697"
+            "href": "https://localhost:12345/api/v1/books/5a47a523-67a5-45f9-b690-c9c731cdb2e1"
           }
         }
       },
       {
-        "isbn": "9782081409842",
+        "id": "4082a49e-477c-47f3-83c2-41d114827a0e",
         "title": "Julie ou la Nouvelle Héloïse",
+        "description": "Julie relate la passion amoureuse entre Julie d’Étange, une jeune noble suisse, et son précepteur, St Preux, un homme d’origine humble. Après avoir tenté de s’en défendre, ce dernier est tombé sous le charme de son élève. St Preux et Julie vont alors s’aimer dans le décor du lac Léman, mais leur différence de classe sociale les force à garder leur relation secrète. En raison des conventions sociales qui empêchent cet amour de s’exprimer au grand jour, St Preux quitte enfin la Suisse pour Paris et Londres. Les deux personnages échangent alors de nombreuses lettres et billets amoureux délibératifs, cherchant une réponse au dilemme que leur pose leur amour et à la situation catastrophique qu’elle engendre, jusqu’à ce que la famille d’Étange, ayant découvert cette relation, persuade Julie d’épouser un autre homme, le vieux M. de Wolmar, ancien camarade militaire du baron d'Étange, qui secrètement sait toute l'histoire des amants. Lorsque St Preux rentre, des années plus tard, Julie a déjà choisi d’honorer ses vœux matrimoniaux et de remplir ses devoirs d’épouse et de mère ; elle est pourtant incapable d’oublier St Preux.",
         "authors": [
           "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
         ],
-        "language": "fr",
-        "summary": "\"J'ai vu les moeurs de mon temps, et j'ai publié ces lettres\" : c'est par ces mots que l'\"éditeur\" Rousseau ouvre La Nouvelle Héloïse, correspondance amoureuse entre Julie d'Etange et son précepteur Saint-Preux. Sur les rives du lac Léman, ces \"belles âmes\" forment une petite société idéale, où priment les passions douces et la sincérité du sentiment, à l'écart des maux de la civilisation. Dans la lignée des Lettres persanes de Montesquieu, Rousseau conçoit son oeuvre comme un laboratoire d'idées nouvelles, qui concentre les questionnements de son époque sur l'homme et ses passions.\nRoman d'amour, chant élégiaque, mais aussi fiction expérimentale au croisement de l'anthropologie et de la politique : La Nouvelle Héloïse, plus grand succès de librairie de son temps, consacre avec éclat les noces du roman et de la philosophie au XVIIIe siècle. ",
         "_links": {
           "self": {
-            "href": "http://localhost:12345/api/v1/editions/9782081409842"
+            "href": "https://localhost:12345/api/v1/books/4082a49e-477c-47f3-83c2-41d114827a0e"
           }
         }
       },
       {
-        "isbn": "9782267046885",
-        "title": "Le Seigneur des Anneaux - La fraternité de l'anneau",
+        "id": "c2dd1a78-80da-42da-9051-b642ea089e7c",
+        "title": "La Communauté de l'Anneau",
+        "description": "La Fraternité de l'Anneau (The Fellowship of the Ring dans son titre original, La Communauté de l'Anneau dans la première traduction de Francis Ledoux) est la première partie du Seigneur des anneaux, roman en trois volumes de l'écrivain britannique J. R. R. Tolkien, parue le 29 juillet 1954 au Royaume-Uni. ",
         "authors": [
           "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
         ],
-        "language": "fr",
-        "summary": "Dans un paisible village du Comté, le jeune Frodo est sur le point de recevoir un cadeau qui changera sa vie à jamais : l'Anneau de Pouvoir. Forgé par Sauron au coeur de la Montagne du Feu, on croyait l'Anneau perdu depuis qu'un homme l'avait arraché au Seigneur des Ténèbres avant de le chasser hors du monde. A présent, de noirs présages s'étendent à nouveau sur la Terre du Milieu, les créatures maléfiques se multiplient et, dans les Montagnes de Brume, les Orques traquent les Nains.\nL'ennemi veut récupérer son bien afin de dominer le monde ; l'Œil de Sauron est désormais pointé sur le Comté. Heureusement Gandalf les a devancés. S'ils font vite, Frodo et lui parviendront peut-être à détruire l'Anneau à temps. Chef-d'oeuvre de la fantasy, découverte d'un monde imaginaire, de sa géographie, de son histoire et de ses langues, mais aussi réflexion sur le pouvoir et la mort, Le Seigneur des Anneaux est sans équivalent par sa puissance d'évocation, son souffle et son ampleur.\nCette traduction de Daniel Lauzon prend en compte la dernière version du texte anglais, les indications laissées par Tolkien à l'intention des traducteurs et les découvertes permises par les publications posthumes proposées par Christopher Tolkien. Ce volume contient 18 illustrations d'Alan Lee, ainsi que deux cartes en couleur de la Terre du Milieu et du Comté. ",
         "_links": {
           "self": {
-            "href": "http://localhost:12345/api/v1/editions/9782267046885"
+            "href": "https://localhost:12345/api/v1/books/c2dd1a78-80da-42da-9051-b642ea089e7c"
           }
         }
       },
       {
-        "isbn": "9782267046892",
-        "title": "Le Seigneur des Anneaux - Les deux tours",
+        "id": "434fcb17-1eb2-476b-902e-fb4fd6cd87b8",
+        "title": "Les Deux Tours",
+        "description": "Les Deux Tours (The Two Towers) est le second volet du roman Le Seigneur des anneaux de J. R. R. Tolkien. Il a paru au Royaume-Uni chez Allen & Unwin le 11 novembre 1954, et chez Houghton Mifflin aux États-Unis le 21 avril 1955.",
         "authors": [
           "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
         ],
-        "language": "fr",
-        "summary": "La Fraternité de l'Anneau poursuit son voyage vers la Montagne du Feu où l'Anneau Unique fut forgé, et où Frodo a pour mission de le détruire. Cette quête terrible est parsemée d'embûches : Gandalf a disparu dans les Mines de la Moria et Boromir a succombé au pouvoir de l'Anneau. Frodo et Sam se sont échappés afin de poursuivre leur voyage jusqu'au coeur du Mordor. A présent, ils cheminent seuls dans la désolation qui entoure le pays de Sauron – mais c'est sans compter la mystérieuse silhouette qui les suit partout où ils vont.\nChef-d'oeuvre de la fantasy, découverte d'un monde imaginaire, de sa géographie, de son histoire et de ses langues, mais aussi réflexion sur le pouvoir et la mort, Le Seigneur des Anneaux est sans équivalent par sa puissance d'évocation, son souffle et son ampleur. Cette traduction de Daniel Lauzon prend en compte la dernière version du texte anglais, les indications laissées par Tolkien à l'intention des traducteurs et les découvertes permises par les publications posthumes proposées par Christopher Tolkien.\nCe volume contient 16 illustrations d'Alan Lee, ainsi qu'une carte en couleur de la Terre du Milieu.",
         "_links": {
           "self": {
-            "href": "http://localhost:12345/api/v1/editions/9782267046892"
+            "href": "https://localhost:12345/api/v1/books/434fcb17-1eb2-476b-902e-fb4fd6cd87b8"
           }
         }
       },
       {
-        "isbn": "9782267046908",
-        "title": "Le Seigneur des Anneaux - Le retour du roi",
+        "id": "e8cbad19-2f3d-438f-985f-1ee85cf24ba3",
+        "title": "Le Retour du roi",
+        "description": "Le Retour du roi (The Return of the King) est la troisième et dernière partie du roman Le Seigneur des anneaux de l'écrivain britannique J. R. R. Tolkien. Il est paru chez Allen & Unwin au Royaume-Uni le 20 octobre 1955, et chez Houghton Mifflin aux États-Unis le 5 janvier 1956.",
         "authors": [
           "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
         ],
-        "language": "fr",
-        "summary": "Alors que les armées de Sauron se rassemblent et que son ombre maléfique s'étend de plus en plus en Terre du Milieu, Hommes, Nains, Elfes et Ents unissent leurs forces pour se battre contre les Ténèbres. Gandalf, quant à lui, élabore une stratégie désespérée afin de triompher du mal. Le Mordor s'est armé, ses créatures malfaisantes se sont multipliées, la riposte se prépare. Si l'Anneau tombe entre les mains du Seigneur des Ténèbres, qui pourra l'arrêter ? Tous les espoirs reposent sur Frodo et Sam, qui peinent à atteindre la Montagne du Feu afin de détruire, une bonne fois pour toutes, l'Anneau de Sauron.\nChef-d'oeuvre de la fantasy, découverte d'un monde imaginaire, de sa géographie, de son histoire et de ses langues, mais aussi réflexion sur le pouvoir et la mort, Le Seigneur des Anneaux est sans équivalent par sa puissance d'évocation, son souffle et son ampleur.",
         "_links": {
           "self": {
-            "href": "http://localhost:12345/api/v1/editions/9782267046908"
+            "href": "https://localhost:12345/api/v1/books/e8cbad19-2f3d-438f-985f-1ee85cf24ba3"
           }
         }
       },
       {
-        "isbn": "9782266339667",
+        "id": "e3957d3f-6f12-4934-a1a3-5c87f743399d",
         "title": "Le Hobbit",
+        "description": "Le Hobbit (The Hobbit) ou Bilbo le Hobbit est un roman de fantasy de l’écrivain britannique J. R. R. Tolkien. Il narre les aventures du hobbit Bilbo (ou Bilbon), entraîné malgré lui par le magicien Gandalf et une compagnie de treize nains dans leur voyage vers la Montagne Solitaire, avec pour but de se réapproprier le trésor volé et gardé par le dragon Smaug.",
         "authors": [
           "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
         ],
-        "language": "fr",
-        "summary": "Bilbo, comme tous les hobbits, est un petit être paisible et sans histoires. Son quotidien est bouleversé un beau jour, lorsque Gandalf le magicien et treize nains barbus l'entraînent dans un voyage périlleux. C'est le début d'une grande aventure, d'une fantastique quête au trésor semée d'embûches et d'épreuves, qui mènera Bilbo jusqu'à la Montagne Solitaire gardée par le dragon Smaug...",
         "_links": {
           "self": {
-            "href": "http://localhost:12345/api/v1/editions/9782266339667"
+            "href": "https://localhost:12345/api/v1/books/e3957d3f-6f12-4934-a1a3-5c87f743399d"
           }
         }
       },
       {
-        "isbn": "9782267044706",
+        "id": "aafe7eb6-fc50-485f-adf9-fc0d4870094b",
         "title": "Le Silmarillion",
+        "description": "Le Silmarillion (titre original The Silmarillion) est une œuvre de J. R. R. Tolkien, publiée à titre posthume en 1977 par son fils Christopher (avec l'aide de Guy Gavriel Kay). Il retrace la genèse et les premiers Âges de l'univers de la Terre du Milieu, cadre des romans Le Hobbit et Le Seigneur des anneaux.",
         "authors": [
           "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
         ],
-        "language": "fr",
-        "summary": "Composé de récits allant des Jours Anciens de la Terre du Milieu jusqu'à la fin de la Guerre de l'Anneau, en passant par le Second Age et la montée en puissance de Sauron, Le Silmarillion est au coeur de l'univers imaginé par J. R. R. Tolkien. Ces histoires se déroulent à une époque où Morgoth, le premier Seigneur des Ténèbres, habite la Terre du Milieu et où les Elfes lui font la guerre dans sa forteresse d'Angband pour récupérer les Silmarils.\nCes trois joyaux contenant la dernière lumière pure du Valinor ont été dérobés par Morgoth puis sertis dans sa couronne de fer. Ces contes sont accompagnés de plusieurs oeuvres plus courtes. L'Ainulindalë est un mythe de la Création tandis que la Valaquenta décrit la nature et les pouvoirs des dieux. L'Akallabêth raconte la destruction du grand royaume insulaire de Númenor à la fin du Second Age et Les Anneaux du Pouvoir relate les grands événements de la fin du Troisième Age, que raconte également Le Seigneur des Anneaux.\nJ. R. R. Tolkien n'a pas pu publier Le Silmarillion de son vivant, car il a évolué avec lui. Il a donc laissé à son fils Christopher le soin de faire paraître cette oeuvre à partir de nombreux manuscrits et de rendre publiable la grande vision de son père, terminant ainsi l'oeuvre littéraire de toute une vie. Cette édition spéciale présente sous une forme nouvelle ce premier pas fondamental dans l'édition posthume par Christopher Tolkien des volumes concernant la Terre du Milieu, début de quarante années d'une carrière illustre, avec la publication de plus de vingt livres célébrant l'héritage de son père.\nOn retrouvera aussi dans ce volume une lettre de J. R. R. Tolkien, écrite en 1951, qui fournit une passionnante exposition des Ages précédents, et près de 50 peintures en couleurs de Ted Nasmith, dont certaines apparaissent ici pour la première fois.",
         "_links": {
           "self": {
-            "href": "http://localhost:12345/api/v1/editions/9782267044706"
+            "href": "https://localhost:12345/api/v1/books/aafe7eb6-fc50-485f-adf9-fc0d4870094b"
           }
         }
       }
@@ -154,7 +144,7 @@
         "name": "Jean-Jacques Rousseau",
         "_links": {
           "self": {
-            "href": "http://localhost:12345/api/v1/authors/83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+            "href": "https://localhost:12345/api/v1/authors/83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
           }
         }
       },
@@ -163,7 +153,7 @@
         "name": "John Ronald Reuel Tolkien",
         "_links": {
           "self": {
-            "href": "http://localhost:12345/api/v1/authors/d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+            "href": "https://localhost:12345/api/v1/authors/d8d94b64-603d-4fae-90dd-5296cde7fa2c"
           }
         }
       }
@@ -171,16 +161,16 @@
   },
   "_links": {
     "first": {
-      "href": "http://localhost:12345/api/v1/catalog?page=0&size=10"
+      "href": "https://localhost:12345/api/v1/catalog?page=0&size=10"
     },
     "self": {
-      "href": "http://localhost:12345/api/v1/catalog?page=0&size=10"
+      "href": "https://localhost:12345/api/v1/catalog?page=0&size=10"
     },
     "next": {
-      "href": "http://localhost:12345/api/v1/catalog?page=1&size=10"
+      "href": "https://localhost:12345/api/v1/catalog?page=1&size=10"
     },
     "last": {
-      "href": "http://localhost:12345/api/v1/catalog?page=6&size=10"
+      "href": "https://localhost:12345/api/v1/catalog?page=6&size=10"
     }
   }
 }

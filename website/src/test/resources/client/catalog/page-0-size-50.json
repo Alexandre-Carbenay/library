@@ -1,640 +1,778 @@
 {
-  "page" : {
-    "size" : 50,
-    "total_elements" : 67,
-    "total_pages" : 2,
-    "number" : 0
+  "page": {
+    "size": 50,
+    "total_elements": 67,
+    "total_pages": 2,
+    "number": 0
   },
-  "_embedded" : {
-    "editions" : [ {
-      "isbn" : "9782081275232",
-      "title" : "Du contrat social",
-      "authors" : [ "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725" ],
-      "language" : "fr",
-      "summary" : "Paru en 1762, le Contrat social, en affirmant le principe de souveraineté du peuple, a constitué un tournant décisif pour la modernité et s'est imposé comme un des textes majeurs de la philosophie politique. Il a aussi acquis le statut de monument, plus célèbre que connu, plus révéré - ou honni - qu'interrogé. Retrouver, dans les formules fameuses et les pages d'anthologie, le mouvement de la réflexion et les questions vives qui nourrissent une œuvre beaucoup plus problématique qu'affirmative, c'est découvrir une pensée qui se tient au plus près des préoccupations d'aujourd'hui : comment intégrer les intérêts de tous dans la détermination de l'intérêt commun ? Comment lutter contre la pente de tout gouvernement à déposséder les citoyens de la souveraineté ? Comment former en chacun ce sentiment d'obligation sans lequel le lien social se défait ?\n",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782081275232"
+  "_embedded": {
+    "books": [
+      {
+        "id": "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
+        "title": "Du contrat social",
+        "description": "Du contrat social est un traité de philosophie politique présentant comment l’homme, passant de l’état de nature à l’état de société, peut instituer un ordre social au service de l'intérêt commun. Le pacte social que propose Rousseau établit que chacun doit renoncer à tous ses droits particuliers ou du plus fort pour obtenir l'égalité des droits que procure la société. Cette aliénation de chaque sujet de l’État est ce pacte qui offre à chacun l’égalité : « Les clauses [du pacte social] se réduisent toutes à une seule : l’aliénation totale de chaque associé avec tous ses droits à toute la communauté : car premièrement, chacun se donnant tout entier, la condition est égale pour tous ; et la condition étant égale pour tous, nul n’a intérêt de la rendre onéreuse aux autres. » (Livre I, Chapitre 6) La légitimité du pacte social repose sur le fait que l’homme n’aliène pas au sens propre (il ne l'échange pas ni ne le donne) son droit naturel mais il comprend que le pacte social est au contraire la condition de l’existence de ses droits naturels.",
+        "authors": [
+          "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4"
+          }
+        }
+      },
+      {
+        "id": "74d88208-86db-4112-a0a3-614b282d0ea3",
+        "title": "Discours sur l'origine et les fondements de l'inégalité parmi les hommes",
+        "description": "Le Discours sur l'origine de l'inégalité parmi les hommes est un essai philosophique d'une centaine de pages environ, richement annoté par l'auteur.\n\nIl est accompagné, dans beaucoup d'éditions récentes, d'un virulent échange entre Voltaire et Rousseau où le premier fustige la vision optimiste de la nature humaine du second, ainsi que sa vision de l'homme en société.\n\nLe texte, enfin, est amené par la question de l'Académie de Dijon : « Quelle est l'origine de l'inégalité parmi les hommes et si elle est autorisée par la loi naturelle ? », sur laquelle repose l'essai entier.",
+        "authors": [
+          "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/74d88208-86db-4112-a0a3-614b282d0ea3"
+          }
+        }
+      },
+      {
+        "id": "94856bb6-b2d3-4939-a05a-cc2219309740",
+        "title": "Emile ou de l'éducation",
+        "description": "L’Émile porte sur « l'art de former les hommes ».\n\nLes quatre premiers livres décrivent l’éducation idéale d’un jeune garçon fictif, Émile, et sont ordonnés chronologiquement, abordant, étape par étape, les questions éducatives qui émergent à mesure qu’il grandit. Le dernier livre traite de l’« éducation », ou plutôt le manque d'éducation des filles à partir d’un autre exemple fictionnel : Sophie, élevée et éduquée pour être l’épouse d’Émile.\n\nParallèlement aux théories proprement pédagogiques, l’Émile comprend la célèbre Profession de foi du Vicaire savoyard (livre IV), qui fournit de précieuses indications sur les idées religieuses de Rousseau. Elle se voulait un modèle quant à la manière d’introduire les jeunes gens aux questions religieuses. Le personnage du vicaire savoyard mêlerait les caractères de deux religieux que Rousseau avait connus étant enfant : l’abbé Gaime, natif d'Héry-sur-Alby et en poste à Turin, et l’abbé Gâtier, d’Annecy.",
+        "authors": [
+          "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/94856bb6-b2d3-4939-a05a-cc2219309740"
+          }
+        }
+      },
+      {
+        "id": "5a47a523-67a5-45f9-b690-c9c731cdb2e1",
+        "title": "Les Confessions",
+        "description": "Les Confessions de Jean-Jacques Rousseau est une autobiographie couvrant les cinquante-trois premières années de la vie de Rousseau, jusqu'à 1765.\n\nLes douze livres des Confessions se divisent en deux ensembles distincts, définis par Rousseau lui-même : la première partie constituée par les livres I à VI avec le Préambule, rédigée en 1765-1767, couvre les années 1712-1740 (années de formation, de la naissance à Genève à l'installation à Paris à 28 ans) alors que la deuxième partie, constituée par les livres VII à XII et rédigée en 1769-1770, couvre les années 1741-1765, c'est-à-dire sa vie à Paris dans les milieux de la musique et des philosophes, avec ses réussites (Discours - La Nouvelle Héloïse) et ses déboires, comme les attaques qui suivent la publication de l'Émile, qui l'obligent à fuir en Suisse.\n\nL'œuvre aura une publication entièrement posthume : en 1782 pour la première partie et en 1789 pour la deuxième1. Rousseau avait cependant déjà fait des lectures publiques de certains extraits.\n\nLe titre des Confessions a sans doute été choisi en référence aux Confessions de saint Augustin, publiées au IVe siècle. Rousseau accomplit ainsi un acte sans valeur religieuse à proprement parler, mais doté d’une forte connotation symbolique : celui de l’aveu des péchés, de la confession. Associant sincérité, humilité et plaidoyer pour lui-même, Rousseau cherche à brosser un portrait positif de lui-même et se présente essentiellement comme une victime de la vie2. L'œuvre des Confessions fonde néanmoins le genre moderne de l'autobiographie et constitue un texte marquant de la littérature française.",
+        "authors": [
+          "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/5a47a523-67a5-45f9-b690-c9c731cdb2e1"
+          }
+        }
+      },
+      {
+        "id": "4082a49e-477c-47f3-83c2-41d114827a0e",
+        "title": "Julie ou la Nouvelle Héloïse",
+        "description": "Julie relate la passion amoureuse entre Julie d’Étange, une jeune noble suisse, et son précepteur, St Preux, un homme d’origine humble. Après avoir tenté de s’en défendre, ce dernier est tombé sous le charme de son élève. St Preux et Julie vont alors s’aimer dans le décor du lac Léman, mais leur différence de classe sociale les force à garder leur relation secrète. En raison des conventions sociales qui empêchent cet amour de s’exprimer au grand jour, St Preux quitte enfin la Suisse pour Paris et Londres. Les deux personnages échangent alors de nombreuses lettres et billets amoureux délibératifs, cherchant une réponse au dilemme que leur pose leur amour et à la situation catastrophique qu’elle engendre, jusqu’à ce que la famille d’Étange, ayant découvert cette relation, persuade Julie d’épouser un autre homme, le vieux M. de Wolmar, ancien camarade militaire du baron d'Étange, qui secrètement sait toute l'histoire des amants. Lorsque St Preux rentre, des années plus tard, Julie a déjà choisi d’honorer ses vœux matrimoniaux et de remplir ses devoirs d’épouse et de mère ; elle est pourtant incapable d’oublier St Preux.",
+        "authors": [
+          "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/4082a49e-477c-47f3-83c2-41d114827a0e"
+          }
+        }
+      },
+      {
+        "id": "c2dd1a78-80da-42da-9051-b642ea089e7c",
+        "title": "La Communauté de l'Anneau",
+        "description": "La Fraternité de l'Anneau (The Fellowship of the Ring dans son titre original, La Communauté de l'Anneau dans la première traduction de Francis Ledoux) est la première partie du Seigneur des anneaux, roman en trois volumes de l'écrivain britannique J. R. R. Tolkien, parue le 29 juillet 1954 au Royaume-Uni. ",
+        "authors": [
+          "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/c2dd1a78-80da-42da-9051-b642ea089e7c"
+          }
+        }
+      },
+      {
+        "id": "434fcb17-1eb2-476b-902e-fb4fd6cd87b8",
+        "title": "Les Deux Tours",
+        "description": "Les Deux Tours (The Two Towers) est le second volet du roman Le Seigneur des anneaux de J. R. R. Tolkien. Il a paru au Royaume-Uni chez Allen & Unwin le 11 novembre 1954, et chez Houghton Mifflin aux États-Unis le 21 avril 1955.",
+        "authors": [
+          "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/434fcb17-1eb2-476b-902e-fb4fd6cd87b8"
+          }
+        }
+      },
+      {
+        "id": "e8cbad19-2f3d-438f-985f-1ee85cf24ba3",
+        "title": "Le Retour du roi",
+        "description": "Le Retour du roi (The Return of the King) est la troisième et dernière partie du roman Le Seigneur des anneaux de l'écrivain britannique J. R. R. Tolkien. Il est paru chez Allen & Unwin au Royaume-Uni le 20 octobre 1955, et chez Houghton Mifflin aux États-Unis le 5 janvier 1956.",
+        "authors": [
+          "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/e8cbad19-2f3d-438f-985f-1ee85cf24ba3"
+          }
+        }
+      },
+      {
+        "id": "e3957d3f-6f12-4934-a1a3-5c87f743399d",
+        "title": "Le Hobbit",
+        "description": "Le Hobbit (The Hobbit) ou Bilbo le Hobbit est un roman de fantasy de l’écrivain britannique J. R. R. Tolkien. Il narre les aventures du hobbit Bilbo (ou Bilbon), entraîné malgré lui par le magicien Gandalf et une compagnie de treize nains dans leur voyage vers la Montagne Solitaire, avec pour but de se réapproprier le trésor volé et gardé par le dragon Smaug.",
+        "authors": [
+          "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/e3957d3f-6f12-4934-a1a3-5c87f743399d"
+          }
+        }
+      },
+      {
+        "id": "aafe7eb6-fc50-485f-adf9-fc0d4870094b",
+        "title": "Le Silmarillion",
+        "description": "Le Silmarillion (titre original The Silmarillion) est une œuvre de J. R. R. Tolkien, publiée à titre posthume en 1977 par son fils Christopher (avec l'aide de Guy Gavriel Kay). Il retrace la genèse et les premiers Âges de l'univers de la Terre du Milieu, cadre des romans Le Hobbit et Le Seigneur des anneaux.",
+        "authors": [
+          "d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/aafe7eb6-fc50-485f-adf9-fc0d4870094b"
+          }
+        }
+      },
+      {
+        "id": "3b35e0ae-14b7-4bbb-a2ff-868f0927f722",
+        "title": "A Game of Thrones",
+        "description": "A Game of Thrones (littéralement « un jeu de trônes ») est le premier livre de la saga Le Trône de fer écrite par George R. R. Martin. Le livre, d'ambiance médiévale1, a été publié en version originale en 1996, puis en version française de 1998 à 1999. Il a remporté le prix Locus du meilleur roman de fantasy en 1997.",
+        "authors": [
+          "c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/3b35e0ae-14b7-4bbb-a2ff-868f0927f722"
+          }
+        }
+      },
+      {
+        "id": "2e601f14-fb9c-41bc-a207-6a1c5ee6eff3",
+        "title": "A Clash of Kings",
+        "description": "A Clash of Kings (littéralement « un choc de rois ») est le deuxième livre de la saga Le Trône de fer écrite par George R. R. Martin. Le livre a été publié en version originale en 1998, puis en version française en 2000. Il a remporté le prix Locus du meilleur roman de fantasy en 1999.",
+        "authors": [
+          "c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/2e601f14-fb9c-41bc-a207-6a1c5ee6eff3"
+          }
+        }
+      },
+      {
+        "id": "0a881b54-2682-408d-9646-fbf6eef562e4",
+        "title": "A Storm of Swords",
+        "description": "A Storm of Swords (littéralement « une tempête d'épées ») est le troisième livre de la saga Le Trône de fer écrite par George R. R. Martin. Le livre a été publié en version originale en 2000, puis en version française de 2001 à 2003. Il a remporté le prix Locus du meilleur roman de fantasy en 2001.",
+        "authors": [
+          "c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/0a881b54-2682-408d-9646-fbf6eef562e4"
+          }
+        }
+      },
+      {
+        "id": "907716df-6a8b-4623-af90-695c1b209df6",
+        "title": "A Feast for Crows",
+        "description": "A Feast for Crows (littéralement « Un festin pour les corbeaux ») est le quatrième livre de la saga Le Trône de fer écrite par George R. R. Martin. Le livre a été publié en version originale en 2005, puis en version française de 2006 à 2007. Il se concentre sur les événements se déroulant dans la partie centrale (Conflans, Val d'Arryn, Port-Réal) et méridionale (Bief, Dorne) du continent de Westeros.",
+        "authors": [
+          "c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/907716df-6a8b-4623-af90-695c1b209df6"
+          }
+        }
+      },
+      {
+        "id": "2869e847-dcf8-457f-8824-9489da2630ce",
+        "title": "A Dance with Dragons",
+        "description": "A Dance with Dragons (littéralement « une danse avec les dragons ») est le cinquième livre de la saga Le Trône de fer écrite par George R. R. Martin. Le livre a été publié en version originale le 12 juillet 2011, alors que la publication de sa traduction française s'est étalée entre mars 2012 et janvier 2013. Il se concentre principalement sur les évènements se déroulant au nord du continent de Westeros et sur le continent oriental, les événements de la première moitié du roman se déroulant en même temps que ceux de A Feast for Crows alors que ceux de la deuxième moitié du roman se passent plus tard, certains cliffhangers d’A Feast for Crows trouvant leur résolution dans ce volume.",
+        "authors": [
+          "c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/2869e847-dcf8-457f-8824-9489da2630ce"
+          }
+        }
+      },
+      {
+        "id": "e6854cf5-c6f0-4c4d-88ba-587bd2de78de",
+        "title": "Fondation",
+        "description": "Fondation (titre original : Foundation) est un roman de science-fiction rédigé par Isaac Asimov et composé de cinq nouvelles, dont quatre publiées individuellement entre 1942 et 1944 dans la revue Astounding Science-Fiction et à laquelle une cinquième fut ajoutée pour former ce livre publié pour la première fois en 1951. C'est le premier volet du Cycle de Fondation. Bien qu’il constitue aujourd'hui le troisième épisode chronologique de ce cycle, il est le premier à avoir été écrit et peut donc être lu indépendamment de Prélude à Fondation et L'Aube de Fondation.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/e6854cf5-c6f0-4c4d-88ba-587bd2de78de"
+          }
+        }
+      },
+      {
+        "id": "273c8353-ed92-401c-960b-40b67a17386a",
+        "title": "Fondation et Empire",
+        "description": "Fondation et Empire (titre original : Foundation and Empire) est un roman de science-fiction d’Isaac Asimov publié en 1952. Il est le deuxième tome du Cycle de Fondation et contient deux romans courts initialement publiés de façon séparée dans la revue Astounding Science-Fiction : Le Général et Le Mulet (ce dernier étant lui-même composé de deux parties, intitulées « Le Mulet » et « Le Clown »). Bien qu’il constitue aujourd'hui le quatrième épisode chronologique de ce cycle, il est le deuxième à avoir été écrit et peut donc être lu indépendamment de Prélude à Fondation et L'Aube de Fondation.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/273c8353-ed92-401c-960b-40b67a17386a"
+          }
+        }
+      },
+      {
+        "id": "b7392578-7008-47ab-931b-12c3ceb127e0",
+        "title": "Seconde Fondation",
+        "description": "Seconde Fondation (titre original : Second Foundation) est un roman de science-fiction rédigé par Isaac Asimov en 1953. Il est le troisième tome du cycle de Fondation et contient deux romans courts initialement publiés de façon séparée dans la revue Astounding Science-Fiction : La Quête du Mulet et La Quête de la Fondation. Bien qu’il constitue aujourd'hui le cinquième épisode chronologique de ce cycle, il est le troisième à avoir été écrit et peut donc être lu indépendamment de Prélude à Fondation et L'Aube de Fondation.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/b7392578-7008-47ab-931b-12c3ceb127e0"
+          }
+        }
+      },
+      {
+        "id": "699b97dc-deeb-4df3-9495-6329255d1f6f",
+        "title": "Fondation foudroyée",
+        "description": "Fondation foudroyée (titre original : Foundation's Edge) est un roman de science-fiction écrit par Isaac Asimov, paru en 1982 et faisant partie du cycle de Fondation. L’année suivant sa publication, il remporta le prix Hugo du meilleur roman et le prix Locus du meilleur roman.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/699b97dc-deeb-4df3-9495-6329255d1f6f"
+          }
+        }
+      },
+      {
+        "id": "65e5d471-d203-4bfe-b438-9c1635546760",
+        "title": "Terre et Fondation",
+        "description": "Terre et Fondation (titre original : Foundation and Earth) est un roman de science-fiction écrit par Isaac Asimov, paru en 1986. Il est le dernier volume du cycle de Fondation.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/65e5d471-d203-4bfe-b438-9c1635546760"
+          }
+        }
+      },
+      {
+        "id": "80211681-15fe-42e1-843e-c861dfa24bf9",
+        "title": "Les Robots",
+        "description": "Les Robots (titre original : I, Robot) est un recueil de neuf nouvelles de science-fiction écrites par Isaac Asimov, publié la première fois par Gnome Press en 1950 et traduit en France en 1967.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/80211681-15fe-42e1-843e-c861dfa24bf9"
+          }
+        }
+      },
+      {
+        "id": "1881ab54-01c5-4121-af03-f4657634e20d",
+        "title": "Un défilé de robots",
+        "description": "Un défilé de robots (titre original : The Rest of the Robots) est un recueil de nouvelles de science-fiction d'Isaac Asimov paru en 1964 et publié pour la première fois en France en 1967. Ces nouvelles sont originellement parues dans diverses revues et magazines de science-fiction entre 1942 et 1958. Le recueil contient quelques-uns des premiers textes de l'auteur. Ce recueil se situe dans le cycle des robots et est constitué de nouvelles indépendantes, même si elles partagent leur thème et la nature de leurs personnages principaux (i.e. les robots). L'ouvrage est paru quatorze ans après le premier recueil de nouvelles consacré aux robots (Les Robots).",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/1881ab54-01c5-4121-af03-f4657634e20d"
+          }
+        }
+      },
+      {
+        "id": "41e9e43c-dfaa-498b-8dd2-080c0fb9e933",
+        "title": "Les Cavernes d'acier",
+        "description": "Les Cavernes d'acier (titre original : The Caves of Steel) est un roman d'Isaac Asimov publié en 1954. L'ouvrage fait partie du Cycle des robots, à la suite des deux recueils de nouvelles Les Robots et Un défilé de robots.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/41e9e43c-dfaa-498b-8dd2-080c0fb9e933"
+          }
+        }
+      },
+      {
+        "id": "c18a14f2-7e53-44cd-9f1f-76ae5fc86feb",
+        "title": "Face aux feux du soleil",
+        "description": "Face aux feux du soleil (titre original : The Naked Sun) est un roman de science-fiction d'Isaac Asimov, paru en 1957. Il fait partie du cycle des robots, faisant suite au roman Les Cavernes d'acier.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/c18a14f2-7e53-44cd-9f1f-76ae5fc86feb"
+          }
+        }
+      },
+      {
+        "id": "fddf98d1-3c8b-49bd-8771-2c6b1fc00b33",
+        "title": "Les Robots de l'aube",
+        "description": "Les Robots de l'aube (titre original : The Robots of Dawn) est un roman de science-fiction d'Isaac Asimov publié en 1983, venant après Les Cavernes d'acier et Face aux feux du soleil dans le cycle des robots.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/fddf98d1-3c8b-49bd-8771-2c6b1fc00b33"
+          }
+        }
+      },
+      {
+        "id": "5df9d315-20dd-4378-acb0-c44e151e265d",
+        "title": "Les Robots et l'Empire",
+        "description": "Les Robots et l'Empire (titre original : Robots and Empire) est un roman de science-fiction d'Isaac Asimov publié en 1985, venant après Les Cavernes d'acier, Face aux feux du soleil et Les Robots de l'aube dans le Cycle des robots.",
+        "authors": [
+          "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/5df9d315-20dd-4378-acb0-c44e151e265d"
+          }
+        }
+      },
+      {
+        "id": "cfa4ce14-98da-482c-a46d-9b3d1d272386",
+        "title": "Harry Potter à l'école des sorciers",
+        "description": "Harry Potter à l'école des sorciers (Harry Potter and the Philosopher's Stone) est le premier roman de la série littéraire centrée sur le personnage de Harry Potter, créé par J. K. Rowling. Sorti à Londres le 26 juin 1997, il est initialement tiré à 500 exemplaires, puis connaît au fil des mois un succès grandissant. En 2001, le volume est adapté au cinéma.",
+        "authors": [
+          "298b695e-306c-4b41-b2d1-95f295c88c37"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/cfa4ce14-98da-482c-a46d-9b3d1d272386"
+          }
+        }
+      },
+      {
+        "id": "14185458-a9f5-4db6-bcc0-da3bff65c099",
+        "title": "Harry Potter et la Chambre des secrets",
+        "description": "Harry Potter et la Chambre des secrets (Harry Potter and the Chamber of Secrets) est le deuxième roman de la série littéraire centrée sur le personnage de Harry Potter créé par J. K. Rowling. Il a été publié le 2 juillet 1998 par Bloomsbury et le 23 mars 1999 en France.",
+        "authors": [
+          "298b695e-306c-4b41-b2d1-95f295c88c37"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/14185458-a9f5-4db6-bcc0-da3bff65c099"
+          }
+        }
+      },
+      {
+        "id": "6cef0208-b4a0-49ca-a1e5-5f80d4a0f98b",
+        "title": "Harry Potter et le Prisonnier d'Azkaban",
+        "description": "Harry Potter et le Prisonnier d'Azkaban (Harry Potter and the Prisoner of Azkaban) est le troisième roman de la série littéraire centrée sur le personnage de Harry Potter créé par J. K. Rowling. Il a été publié le 19 octobre 1999 en France.",
+        "authors": [
+          "298b695e-306c-4b41-b2d1-95f295c88c37"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/6cef0208-b4a0-49ca-a1e5-5f80d4a0f98b"
+          }
+        }
+      },
+      {
+        "id": "3df147a8-af2f-46dc-a344-2307cfb8dc66",
+        "title": "Harry Potter et la Coupe de feu",
+        "description": "Harry Potter et la Coupe de feu (Harry Potter and the Goblet of Fire) est le quatrième roman de la série littéraire centrée sur le personnage de Harry Potter créé par J. K. Rowling. Il a été publié le 29 novembre 2000 en France.",
+        "authors": [
+          "298b695e-306c-4b41-b2d1-95f295c88c37"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/3df147a8-af2f-46dc-a344-2307cfb8dc66"
+          }
+        }
+      },
+      {
+        "id": "a49d474e-4228-47cc-8891-640c4db990ff",
+        "title": "Harry Potter et l'Ordre du Phénix",
+        "description": "Harry Potter et l'Ordre du Phénix (Harry Potter and the Order of the Phoenix) est le cinquième roman de la série littéraire Harry Potter créée par J. K. Rowling et centrée sur le personnage du même nom. Il a été publié le 3 décembre 2003 en France.",
+        "authors": [
+          "298b695e-306c-4b41-b2d1-95f295c88c37"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/a49d474e-4228-47cc-8891-640c4db990ff"
+          }
+        }
+      },
+      {
+        "id": "2ad81543-f742-489b-bc56-b939adec8a30",
+        "title": "Harry Potter et le Prince de sang-mêlé",
+        "description": "Harry Potter et le Prince de sang-mêlé (Harry Potter and the Half-Blood Prince) est le sixième roman de la série littéraire centrée sur le personnage de Harry Potter créé par J. K. Rowling. La version anglaise est sortie simultanément, le 16 juillet 2005, à minuit, dans un grand nombre de pays anglophones. La version française est sortie le 1er octobre 2005, à minuit. Il s'en est vendu 800 000 exemplaires dans les 24 heures qui ont suivi sa mise en vente, un record historique.",
+        "authors": [
+          "298b695e-306c-4b41-b2d1-95f295c88c37"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/2ad81543-f742-489b-bc56-b939adec8a30"
+          }
+        }
+      },
+      {
+        "id": "9157773d-ea06-42c7-b33d-3c2b46bf030b",
+        "title": "Harry Potter et les Reliques de la Mort",
+        "description": "Harry Potter et les Reliques de la Mort (Harry Potter and the Deathly Hallows) est le septième et dernier roman de la série littéraire centrée sur le personnage de Harry Potter créé par J. K. Rowling. La version anglaise est sortie le 21 juillet 2007 à 00 h 01 et fait 607 pages. La version française a été mise en vente le 26 octobre 2007, également à 00 h 01 ; elle fait 816 pages.",
+        "authors": [
+          "298b695e-306c-4b41-b2d1-95f295c88c37"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/9157773d-ea06-42c7-b33d-3c2b46bf030b"
+          }
+        }
+      },
+      {
+        "id": "a8e23d8c-6770-4304-b829-21cdf3974386",
+        "title": "Les Contes de Beedle le Barde",
+        "description": "Les Contes de Beedle le Barde (titre original : The Tales of Beedle the Bard) est un livre pour enfants de la romancière britannique J. K. Rowling. Il est présenté comme issu du monde de Harry Potter, prétendument traduit par Hermione Granger d'après les runes originales de Beedle le Barde et accompagné de commentaires d'Albus Dumbledore.",
+        "authors": [
+          "298b695e-306c-4b41-b2d1-95f295c88c37"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/a8e23d8c-6770-4304-b829-21cdf3974386"
+          }
+        }
+      },
+      {
+        "id": "105be558-1e10-469a-bc84-5793f5aae4f0",
+        "title": "Le Vieil Homme et la Mer",
+        "description": "Le Vieil Homme et la Mer (The Old Man and the Sea) est un roman court écrit par l'écrivain américain Ernest Hemingway à Cuba en 1951 et publié le premier septembre 1952. Il s'agit de la dernière œuvre de fiction majeure produite par Hemingway et publiée de son vivant. Elle demeure son œuvre la plus célèbre. Elle traite d'un vieux pêcheur cubain appelé Santiago, en lutte avec un énorme marlin au large du Gulf Stream. Bien que le roman ait été l'objet de critiques disparates, la sélection de son auteur pour le prix Nobel de littérature en 1954 réaffirme dans la littérature mondiale l'importance et la portée de l'ensemble des créations de Hemingway et dans la fiction du XXe siècle.",
+        "authors": [
+          "88a5e171-9ac6-41d5-b6ac-aa9a93d12004"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/105be558-1e10-469a-bc84-5793f5aae4f0"
+          }
+        }
+      },
+      {
+        "id": "f1e5c7c6-0f02-41cf-ae2c-22e9b3a4d0e0",
+        "title": "Le soleil se lève aussi",
+        "description": "Le soleil se lève aussi (The Sun Also Rises, éd. américaine ou Fiesta, éd. anglaise) est un roman de l'écrivain américain Ernest Hemingway, publié en 1926. Premier grand succès d'Hemingway, ce roman est considéré comme l'un des grands romans de langue anglaise du XXe siècle.",
+        "authors": [
+          "88a5e171-9ac6-41d5-b6ac-aa9a93d12004"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/f1e5c7c6-0f02-41cf-ae2c-22e9b3a4d0e0"
+          }
+        }
+      },
+      {
+        "id": "ac9526cd-53ae-4523-a555-741f4a1d1217",
+        "title": "Pour qui sonne le glas",
+        "description": "Pour qui sonne le glas (titre original : For Whom the Bell Tolls) est un roman d'Ernest Hemingway publié en 1940 et fortement inspiré de son vécu de journaliste pendant la guerre civile espagnole, dont il fait revivre l'ambiance.",
+        "authors": [
+          "88a5e171-9ac6-41d5-b6ac-aa9a93d12004"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/ac9526cd-53ae-4523-a555-741f4a1d1217"
+          }
+        }
+      },
+      {
+        "id": "d56a66a3-9c0d-4609-982b-64a442bfeb85",
+        "title": "Les Neiges du Kilimandjaro",
+        "description": "Les Neiges du Kilimandjaro (The Snows of Kilimanjaro) est une nouvelle d'Ernest Hemingway. D'abord publiée dans Esquire en 1936, reprise dans le recueil The Fifth Column and the First Forty-Nine Stories en 1938 et dans le recueil homonyme en 1961.",
+        "authors": [
+          "88a5e171-9ac6-41d5-b6ac-aa9a93d12004"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/d56a66a3-9c0d-4609-982b-64a442bfeb85"
+          }
+        }
+      },
+      {
+        "id": "f1dbbe65-f962-4e2a-addf-afacd2fe4881",
+        "title": "Le Père Goriot",
+        "description": "Le Père Goriot est un roman d’Honoré de Balzac, commencé à Saché en 1834, dont la publication commence dans la Revue de Paris et qui paraît en 1835 en librairie. Il fait partie des Scènes de la vie privée de La Comédie humaine. Le Père Goriot établit les bases de ce qui deviendra un véritable édifice : La Comédie humaine, construction littéraire unique en son genre, avec des liens entre les volumes, des passerelles, des références. Le roman est dédié « au grand et illustre Geoffroy Saint-Hilaire ». Il est composé de 4 parties.",
+        "authors": [
+          "4d5a8b1a-8d69-43c3-95e5-0c87f0883937"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/f1dbbe65-f962-4e2a-addf-afacd2fe4881"
+          }
+        }
+      },
+      {
+        "id": "e2b0c423-7835-4f53-9aa6-1c5b6f510499",
+        "title": "La Peau de chagrin",
+        "description": "La Peau de chagrin est un roman d'Honoré de Balzac, faisant partie de La Comédie humaine, publié en 1831 par Gosselin et Canel dans les Romans et contes philanthropiques, puis en 1834 aux éditions Werdet dans les Études philosophiques. Une édition illustrée de 1837 chez Delloye et Lecou fait appel, avant Furne, à 124 artistes. L'édition Furne de 1845 place La Peau de chagrin en tête des Études philosophiques. Elle est dédiée à l'astronome Félix Savary.",
+        "authors": [
+          "4d5a8b1a-8d69-43c3-95e5-0c87f0883937"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/e2b0c423-7835-4f53-9aa6-1c5b6f510499"
+          }
+        }
+      },
+      {
+        "id": "874c578c-3672-49da-80a5-f53e6724debb",
+        "title": "Le Colonel Chabert",
+        "description": "Le Colonel Chabert est un roman court d’Honoré de Balzac, paru d'abord en 1832, puis sous sa forme définitive en 1844.\n\nHyacinthe Chabert est un colonel de l'armée impériale de Napoléon Ier laissé pour mort à la bataille d'Eylau en 1807. Sa veuve Rose Chapotel hérite de sa fortune puis se remarie avec le comte Ferraud, aristocrate émigré qui ambitionne une carrière politique une fois la monarchie restaurée. ",
+        "authors": [
+          "4d5a8b1a-8d69-43c3-95e5-0c87f0883937"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/874c578c-3672-49da-80a5-f53e6724debb"
+          }
+        }
+      },
+      {
+        "id": "ae5a92fc-04df-4347-b762-c85a840afcfe",
+        "title": "La Reine Margot",
+        "description": "La Reine Margot est un roman écrit par Alexandre Dumas. Sorti en 1845, il a été publié initialement dans le quotidien La Presse en roman-feuilleton entre le 25 décembre 1844 et le 5 avril 1845. Alexandre Dumas en a tiré un drame du même nom, représenté en 1847. Deux romans font suite à La Reine Margot : La Dame de Monsoreau et Les Quarante-cinq, formant ainsi ce qu'on appelle parfois la « trilogie des Valois ».",
+        "authors": [
+          "3d9c3009-32d0-49d0-a29e-d48ab05b8a61"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/ae5a92fc-04df-4347-b762-c85a840afcfe"
+          }
+        }
+      },
+      {
+        "id": "ade812f1-4355-46f2-afd3-9fedec29a06d",
+        "title": "Le Comte de Monte-Cristo",
+        "description": "Le Comte de Monte-Cristo est un roman d'Alexandre Dumas, écrit avec la collaboration d'Auguste Maquet et dont la publication commence pendant l'été 1844. Il est partiellement inspiré du récit d'un fait divers, « Le Diamant et la Vengeance » (voir Pierre Picaud), publié en 1838 dans les Mémoires tirés des archives de la police (tome V, chapitre LXXIV), mémoires apocryphes rédigés en large partie par l'écrivain Étienne-Léon de Lamothe-Langon à partir des notes de Jacques Peuchet, archiviste de la préfecture de police.",
+        "authors": [
+          "3d9c3009-32d0-49d0-a29e-d48ab05b8a61"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/ade812f1-4355-46f2-afd3-9fedec29a06d"
+          }
+        }
+      },
+      {
+        "id": "a093173a-be2a-4f67-942d-db26ba9c7750",
+        "title": "Les Trois Mousquetaires",
+        "description": "Les Trois Mousquetaires est le plus célèbre des romans d'Alexandre Dumas père, initialement publié en feuilleton dans le journal Le Siècle de mars à juillet 1844, puis édité en volume dès 1844 aux éditions Baudry et réédité en 1846 chez J. B. Fellens et L. P. Dufour avec des illustrations de Vivant Beaucé. Il est le premier volet de la trilogie romanesque dite « des mousquetaires », à laquelle il donne son nom, suivi par Vingt Ans après (1845) et Le Vicomte de Bragelonne (1847).",
+        "authors": [
+          "3d9c3009-32d0-49d0-a29e-d48ab05b8a61"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/a093173a-be2a-4f67-942d-db26ba9c7750"
+          }
+        }
+      },
+      {
+        "id": "eb99a4d5-79fb-4848-a441-799943c3b7a7",
+        "title": "Bullshit jobs",
+        "description": "L'étude de David Graeber sur les « Bullshit jobs » (expression en anglais américain signifiant « emplois à la con »), a été l'objet au départ d'un article de 2013, puis a été approfondie et publiée dans un ouvrage paru en 2018. Cette étude est largement médiatisée et suscite de nombreuses controverses sur sa pertinence. Les psychologues du travail ont repris le concept pour décrire une pathologie des travailleurs affectés à ce type de travail qui peut entraîner une « démission intérieure » encore appelée « brown-out ».",
+        "authors": [
+          "060d74f4-1d42-4087-b4ef-07dd00bb559c"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/eb99a4d5-79fb-4848-a441-799943c3b7a7"
+          }
+        }
+      },
+      {
+        "id": "481bb3f4-4f6f-4ef3-94a4-28f0c43bbe93",
+        "title": "Dette : 5000 ans d'histoire",
+        "description": "Dette : 5000 ans d'histoire est un livre de l'anthropologue David Graeber publié en 2011 et paru pour la première fois en France en 2013 aux éditions Les liens qui libèrent.\n\nIl s'agit d'une analyse historique du concept de dette à l'aune de différents faits sociaux comme le troc, le mariage, l'esclavage, la loi, la religion, la guerre et l'État. Il y est fait usage d'un large matériel anthropologique et historique remontant jusqu'à la première mention connue de la dette à Sumer en 3500 avant notre ère. ",
+        "authors": [
+          "060d74f4-1d42-4087-b4ef-07dd00bb559c"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/481bb3f4-4f6f-4ef3-94a4-28f0c43bbe93"
+          }
+        }
+      },
+      {
+        "id": "df2c8d87-a334-4c44-9d2b-77c01d172daa",
+        "title": "Au commencement était... - Une nouvelle histoire de l'humanité",
+        "description": "Au commencement était... - Une nouvelle histoire de l'humanité est un livre de l'anthropologue David Graeber et de l'archéologue David Wengrow publié en 2021 aux États-Unis et paru la même année en France aux éditions Les Liens qui libèrent.\n\nEn mettant l'accent sur la diversité des premières sociétés humaines, les auteurs critiquent les récits classiques sur le développement linéaire de l'histoire, du primitivisme à la civilisation. Au commencement était postule au contraire que les humains ont vécu pendant des millénaires au sein de polités vastes et complexes, mais décentralisées. Les auteurs s'appuient sur des preuves archéologiques pour montrer que les premières sociétés étaient diverses et ont développé une grande variété de structures politiques.",
+        "authors": [
+          "060d74f4-1d42-4087-b4ef-07dd00bb559c",
+          "6e2051c4-8c1a-4611-9be1-0ff5755771d7"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/df2c8d87-a334-4c44-9d2b-77c01d172daa"
+          }
+        }
+      },
+      {
+        "id": "7b2eb526-4240-4fc3-b43e-8becff1ac249",
+        "title": "Les Fourberies de Scapin",
+        "description": "Les Fourberies de Scapin est une comédie de Molière en trois actes (comportant respectivement cinq, huit, et treize scènes) et en prose, créée au théâtre du Palais-Royal à Paris le 24 mai 1671.",
+        "authors": [
+          "9fdf9832-59d0-47e0-bfdf-1f7e1ce12b91"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/7b2eb526-4240-4fc3-b43e-8becff1ac249"
+          }
+        }
+      },
+      {
+        "id": "d035a894-0e56-4cd3-8b0d-a1fc2a9f85d8",
+        "title": "L'Avare",
+        "description": "L'Avare est une comédie de Molière en cinq actes et en prose, inspirée par La Marmite (Aulularia) de Plaute et représentée pour la première fois sur la scène du Palais-Royal le 9 septembre 1668. Il s'agit d'une comédie de caractère dont le personnage principal, Harpagon, est caractérisé par son avarice caricaturale. Harpagon tente de marier sa fille de force, tout en protégeant obstinément une cassette pleine d'or. Les cinq actes comportent respectivement cinq, cinq, neuf, sept et six scènes.",
+        "authors": [
+          "9fdf9832-59d0-47e0-bfdf-1f7e1ce12b91"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/d035a894-0e56-4cd3-8b0d-a1fc2a9f85d8"
+          }
+        }
+      },
+      {
+        "id": "ac702d27-872a-4374-8898-5b485bb1de14",
+        "title": "Le Tartuffe ou l'Imposteur",
+        "description": "Le Tartuffe ou l'Imposteur est une comédie de Molière en cinq actes et en vers créée le 5 février 1669 sur la scène du Théâtre du Palais-Royal.",
+        "authors": [
+          "9fdf9832-59d0-47e0-bfdf-1f7e1ce12b91"
+        ],
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/books/ac702d27-872a-4374-8898-5b485bb1de14"
+          }
         }
       }
-    }, {
-      "isbn" : "9782081275256",
-      "title" : "Discours sur l'origine et les fondements de l'inégalité parmi les hommes",
-      "authors" : [ "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725" ],
-      "language" : "fr",
-      "summary" : "Paru en 1755, le Discours sur l'origine et les fondements de l'inégalité parmi les hommes peut être considéré comme la matrice de l'oeuvre morale et politique de Rousseau : il y affirme sa stature de philosophe, l'originalité de sa voix, la force de son \"système\". Résoudre le problème posé par l'Académie de Dijon - \"quelle est la source de l'inégalité parmi les hommes et si elle est autorisée par la loi naturelle ? \"-, en d'autres termes expliquer que riches et puissants dominent leurs semblables sur lesquels ils n'ont pas de réelle supériorité, exige aux yeux de Rousseau de poser à nouveaux frais la question \"qu'est-ce que l'homme ? \".\nPour cela, il faut comprendre comment s'est formée sa \"nature actuelle\", si éloignée de ce que serait son état de nature : \"Si je me suis étendu si longtemps sur la supposition de cette condition primitive, c'est qu'ayant d'anciennes erreurs et des préjugés invétérés à détruire, j'ai cru devoir creuser jusqu'à la racine.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782081275256"
+    ],
+    "authors": [
+      {
+        "id": "298b695e-306c-4b41-b2d1-95f295c88c37",
+        "name": "J. K. Rowling",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/298b695e-306c-4b41-b2d1-95f295c88c37"
+          }
+        }
+      },
+      {
+        "id": "88a5e171-9ac6-41d5-b6ac-aa9a93d12004",
+        "name": "Ernest Hemingway",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/88a5e171-9ac6-41d5-b6ac-aa9a93d12004"
+          }
+        }
+      },
+      {
+        "id": "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725",
+        "name": "Jean-Jacques Rousseau",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+          }
+        }
+      },
+      {
+        "id": "4d5a8b1a-8d69-43c3-95e5-0c87f0883937",
+        "name": "Honoré de Balzac",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/4d5a8b1a-8d69-43c3-95e5-0c87f0883937"
+          }
+        }
+      },
+      {
+        "id": "060d74f4-1d42-4087-b4ef-07dd00bb559c",
+        "name": "David Graeber",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/060d74f4-1d42-4087-b4ef-07dd00bb559c"
+          }
+        }
+      },
+      {
+        "id": "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5",
+        "name": "Isaac Asimov",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
+          }
+        }
+      },
+      {
+        "id": "3d9c3009-32d0-49d0-a29e-d48ab05b8a61",
+        "name": "Alexandre Dumas",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/3d9c3009-32d0-49d0-a29e-d48ab05b8a61"
+          }
+        }
+      },
+      {
+        "id": "6e2051c4-8c1a-4611-9be1-0ff5755771d7",
+        "name": "David Wengrow",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/6e2051c4-8c1a-4611-9be1-0ff5755771d7"
+          }
+        }
+      },
+      {
+        "id": "9fdf9832-59d0-47e0-bfdf-1f7e1ce12b91",
+        "name": "Molière",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/9fdf9832-59d0-47e0-bfdf-1f7e1ce12b91"
+          }
+        }
+      },
+      {
+        "id": "d8d94b64-603d-4fae-90dd-5296cde7fa2c",
+        "name": "John Ronald Reuel Tolkien",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/d8d94b64-603d-4fae-90dd-5296cde7fa2c"
+          }
+        }
+      },
+      {
+        "id": "c5f1361f-61b4-42c4-9cf1-d82e9a45317a",
+        "name": "George Raymond Richard Martin",
+        "_links": {
+          "self": {
+            "href": "https://localhost:12345/api/v1/authors/c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
+          }
         }
       }
-    }, {
-      "isbn" : "9782081206922",
-      "title" : "Emile ou de l'éducation",
-      "authors" : [ "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725" ],
-      "language" : "fr",
-      "summary" : "La publication de l'Emile, en 1762, restitue au problème de l'éducation sa place centrale en philosophie. De ses premiers mois jusqu'à la rencontre amoureuse, Emile est suivi dans chaque étape, à travers des expériences qui attestent d'abord le souci de considérer « l'enfant dans l'enfant », au lieu de le sortir de son âge. Rousseau montre qu'il est possible d'éduquer un homme selon la nature et de quelle façon les vices et l'inégalité caractérisent désormais la condition humaine : double enjeu qui constitue sa « théorie de l'homme ».\nLa richesse incomparable de ce maître-livre tient aussi aux tensions qui le parcourent. Rousseau refuse le péché originel mais il doit rendre raison du mal et de la souffrance que ce dogme interdisait d'ignorer; il critique les philosophes de son temps mais il pousse à ses limites leur méthode empiriste; il proclame: «je hais les livres», mais il fournit le panorama le plus juste et le plus instruit de la culture du XVIIIe siècle, en face de l'Encyclopédie et, pour partie, contre elle.\nParus ensemble, Emile et le Contrat social furent condamnés à Paris puis à Genève: la force du traité d'éducation n'échappa pas aux censeurs, même si Rousseau prétendait ne livrer que « les rêveries d'un visionnaire ». Car la forme même de la fiction arrache l'ouvrage aux circonstances : pas plus que ses lecteurs des Lumières, nous ne sommes à l'abri de ses leçons. ",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782081206922"
-        }
-      }
-    }, {
-      "isbn" : "9782070399697",
-      "title" : "Les Confessions",
-      "authors" : [ "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725" ],
-      "language" : "fr",
-      "summary" : "Je forme une entreprise qui n'eut jamais d'exemple et dont l'exécution n'aura point d'imitateur. Je veux montrer à mes semblables un homme dans toute la vérité de la nature; et cet homme ce sera moi. Moi, seul. Je sens mon cœur et je connais les hommes. Je ne suis fait comme aucun de ceux que j'ai vus; j'ose croire n'être fait comme aucun de ceux qui existent. Si je ne vaux pas mieux, au moins je suis autre. Si la nature a bien ou mal fait de briser le moule dans lequel elle m'a jeté, c'est ce dont on ne peut juger qu'après m'avoir lu. ",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070399697"
-        }
-      }
-    }, {
-      "isbn" : "9782081409842",
-      "title" : "Julie ou la Nouvelle Héloïse",
-      "authors" : [ "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725" ],
-      "language" : "fr",
-      "summary" : "\"J'ai vu les moeurs de mon temps, et j'ai publié ces lettres\" : c'est par ces mots que l'\"éditeur\" Rousseau ouvre La Nouvelle Héloïse, correspondance amoureuse entre Julie d'Etange et son précepteur Saint-Preux. Sur les rives du lac Léman, ces \"belles âmes\" forment une petite société idéale, où priment les passions douces et la sincérité du sentiment, à l'écart des maux de la civilisation. Dans la lignée des Lettres persanes de Montesquieu, Rousseau conçoit son oeuvre comme un laboratoire d'idées nouvelles, qui concentre les questionnements de son époque sur l'homme et ses passions.\nRoman d'amour, chant élégiaque, mais aussi fiction expérimentale au croisement de l'anthropologie et de la politique : La Nouvelle Héloïse, plus grand succès de librairie de son temps, consacre avec éclat les noces du roman et de la philosophie au XVIIIe siècle. ",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782081409842"
-        }
-      }
-    }, {
-      "isbn" : "9782267046885",
-      "title" : "Le Seigneur des Anneaux - La fraternité de l'anneau",
-      "authors" : [ "d8d94b64-603d-4fae-90dd-5296cde7fa2c" ],
-      "language" : "fr",
-      "summary" : "Dans un paisible village du Comté, le jeune Frodo est sur le point de recevoir un cadeau qui changera sa vie à jamais : l'Anneau de Pouvoir. Forgé par Sauron au coeur de la Montagne du Feu, on croyait l'Anneau perdu depuis qu'un homme l'avait arraché au Seigneur des Ténèbres avant de le chasser hors du monde. A présent, de noirs présages s'étendent à nouveau sur la Terre du Milieu, les créatures maléfiques se multiplient et, dans les Montagnes de Brume, les Orques traquent les Nains.\nL'ennemi veut récupérer son bien afin de dominer le monde ; l'Œil de Sauron est désormais pointé sur le Comté. Heureusement Gandalf les a devancés. S'ils font vite, Frodo et lui parviendront peut-être à détruire l'Anneau à temps. Chef-d'oeuvre de la fantasy, découverte d'un monde imaginaire, de sa géographie, de son histoire et de ses langues, mais aussi réflexion sur le pouvoir et la mort, Le Seigneur des Anneaux est sans équivalent par sa puissance d'évocation, son souffle et son ampleur.\nCette traduction de Daniel Lauzon prend en compte la dernière version du texte anglais, les indications laissées par Tolkien à l'intention des traducteurs et les découvertes permises par les publications posthumes proposées par Christopher Tolkien. Ce volume contient 18 illustrations d'Alan Lee, ainsi que deux cartes en couleur de la Terre du Milieu et du Comté. ",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782267046885"
-        }
-      }
-    }, {
-      "isbn" : "9782267046892",
-      "title" : "Le Seigneur des Anneaux - Les deux tours",
-      "authors" : [ "d8d94b64-603d-4fae-90dd-5296cde7fa2c" ],
-      "language" : "fr",
-      "summary" : "La Fraternité de l'Anneau poursuit son voyage vers la Montagne du Feu où l'Anneau Unique fut forgé, et où Frodo a pour mission de le détruire. Cette quête terrible est parsemée d'embûches : Gandalf a disparu dans les Mines de la Moria et Boromir a succombé au pouvoir de l'Anneau. Frodo et Sam se sont échappés afin de poursuivre leur voyage jusqu'au coeur du Mordor. A présent, ils cheminent seuls dans la désolation qui entoure le pays de Sauron – mais c'est sans compter la mystérieuse silhouette qui les suit partout où ils vont.\nChef-d'oeuvre de la fantasy, découverte d'un monde imaginaire, de sa géographie, de son histoire et de ses langues, mais aussi réflexion sur le pouvoir et la mort, Le Seigneur des Anneaux est sans équivalent par sa puissance d'évocation, son souffle et son ampleur. Cette traduction de Daniel Lauzon prend en compte la dernière version du texte anglais, les indications laissées par Tolkien à l'intention des traducteurs et les découvertes permises par les publications posthumes proposées par Christopher Tolkien.\nCe volume contient 16 illustrations d'Alan Lee, ainsi qu'une carte en couleur de la Terre du Milieu.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782267046892"
-        }
-      }
-    }, {
-      "isbn" : "9782267046908",
-      "title" : "Le Seigneur des Anneaux - Le retour du roi",
-      "authors" : [ "d8d94b64-603d-4fae-90dd-5296cde7fa2c" ],
-      "language" : "fr",
-      "summary" : "Alors que les armées de Sauron se rassemblent et que son ombre maléfique s'étend de plus en plus en Terre du Milieu, Hommes, Nains, Elfes et Ents unissent leurs forces pour se battre contre les Ténèbres. Gandalf, quant à lui, élabore une stratégie désespérée afin de triompher du mal. Le Mordor s'est armé, ses créatures malfaisantes se sont multipliées, la riposte se prépare. Si l'Anneau tombe entre les mains du Seigneur des Ténèbres, qui pourra l'arrêter ? Tous les espoirs reposent sur Frodo et Sam, qui peinent à atteindre la Montagne du Feu afin de détruire, une bonne fois pour toutes, l'Anneau de Sauron.\nChef-d'oeuvre de la fantasy, découverte d'un monde imaginaire, de sa géographie, de son histoire et de ses langues, mais aussi réflexion sur le pouvoir et la mort, Le Seigneur des Anneaux est sans équivalent par sa puissance d'évocation, son souffle et son ampleur.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782267046908"
-        }
-      }
-    }, {
-      "isbn" : "9782266339667",
-      "title" : "Le Hobbit",
-      "authors" : [ "d8d94b64-603d-4fae-90dd-5296cde7fa2c" ],
-      "language" : "fr",
-      "summary" : "Bilbo, comme tous les hobbits, est un petit être paisible et sans histoires. Son quotidien est bouleversé un beau jour, lorsque Gandalf le magicien et treize nains barbus l'entraînent dans un voyage périlleux. C'est le début d'une grande aventure, d'une fantastique quête au trésor semée d'embûches et d'épreuves, qui mènera Bilbo jusqu'à la Montagne Solitaire gardée par le dragon Smaug...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782266339667"
-        }
-      }
-    }, {
-      "isbn" : "9782267044706",
-      "title" : "Le Silmarillion",
-      "authors" : [ "d8d94b64-603d-4fae-90dd-5296cde7fa2c" ],
-      "language" : "fr",
-      "summary" : "Composé de récits allant des Jours Anciens de la Terre du Milieu jusqu'à la fin de la Guerre de l'Anneau, en passant par le Second Age et la montée en puissance de Sauron, Le Silmarillion est au coeur de l'univers imaginé par J. R. R. Tolkien. Ces histoires se déroulent à une époque où Morgoth, le premier Seigneur des Ténèbres, habite la Terre du Milieu et où les Elfes lui font la guerre dans sa forteresse d'Angband pour récupérer les Silmarils.\nCes trois joyaux contenant la dernière lumière pure du Valinor ont été dérobés par Morgoth puis sertis dans sa couronne de fer. Ces contes sont accompagnés de plusieurs oeuvres plus courtes. L'Ainulindalë est un mythe de la Création tandis que la Valaquenta décrit la nature et les pouvoirs des dieux. L'Akallabêth raconte la destruction du grand royaume insulaire de Númenor à la fin du Second Age et Les Anneaux du Pouvoir relate les grands événements de la fin du Troisième Age, que raconte également Le Seigneur des Anneaux.\nJ. R. R. Tolkien n'a pas pu publier Le Silmarillion de son vivant, car il a évolué avec lui. Il a donc laissé à son fils Christopher le soin de faire paraître cette oeuvre à partir de nombreux manuscrits et de rendre publiable la grande vision de son père, terminant ainsi l'oeuvre littéraire de toute une vie. Cette édition spéciale présente sous une forme nouvelle ce premier pas fondamental dans l'édition posthume par Christopher Tolkien des volumes concernant la Terre du Milieu, début de quarante années d'une carrière illustre, avec la publication de plus de vingt livres célébrant l'héritage de son père.\nOn retrouvera aussi dans ce volume une lettre de J. R. R. Tolkien, écrite en 1951, qui fournit une passionnante exposition des Ages précédents, et près de 50 peintures en couleurs de Ted Nasmith, dont certaines apparaissent ici pour la première fois.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782267044706"
-        }
-      }
-    }, {
-      "isbn" : "9782290208878",
-      "title" : "Le trône de fer l'intégrale 1",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "fr",
-      "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290208878"
-        }
-      }
-    }, {
-      "isbn" : "9782290215661",
-      "title" : "Le trône de fer l'intégrale 2",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "fr",
-      "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290215661"
-        }
-      }
-    }, {
-      "isbn" : "9782290221686",
-      "title" : "Le trône de fer l'intégrale 3",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "fr",
-      "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290221686"
-        }
-      }
-    }, {
-      "isbn" : "9782290221693",
-      "title" : "Le trône de fer l'intégrale 4",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "fr",
-      "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290221693"
-        }
-      }
-    }, {
-      "isbn" : "9782290221709",
-      "title" : "Le trône de fer l'intégrale 5",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "fr",
-      "summary" : "Le royaume des Sept Couronnes est sur le point de connaître son plus terrible hiver : par-delà le Mur qui garde sa frontière nord, une armée de ténèbres se lève, menaçant de tout détruire sur son passage. Mais il en faut plus pour refroidir les ardeurs des rois, des reines, des chevaliers et des renégats qui se disputent le trône de fer. Tous les coups sont permis, et seuls les plus forts, ou les plus retors, s'en sortiront indemnes...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290221709"
-        }
-      }
-    }, {
-      "isbn" : "9780553103540",
-      "title" : "A Game of Thrones",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "en",
-      "summary" : "Winter is coming. Such is the stern motto of House Stark, the northernmost of the fiefdoms that owe allegiance to King Robert Baratheon in far-off King’s Landing. There Eddard Stark of Winterfell rules in Robert’s name. There his family dwells in peace and comfort: his proud wife, Catelyn; his sons Robb, Brandon, and Rickon; his daughters Sansa and Arya; and his bastard son, Jon Snow. Far to the north, behind the towering Wall, lie savage Wildings and worse—unnatural things relegated to myth during the centuries-long summer, but proving all too real and all too deadly in the turning of the season.\n\nYet a more immediate threat lurks to the south, where Jon Arryn, the Hand of the King, has died under mysterious circumstances. Now Robert is riding north to Winterfell, bringing his queen, the lovely but cold Cersei, his son, the cruel, vainglorious Prince Joffrey, and the queen’s brothers Jaime and Tyrion of the powerful and wealthy House Lannister—the first a swordsman without equal, the second a dwarf whose stunted stature belies a brilliant mind. All are heading for Winterfell and a fateful encounter that will change the course of kingdoms.\n\nMeanwhile, across the Narrow Sea, Prince Viserys, heir of the fallen House Targaryen, which once ruled all of Westeros, schemes to reclaim the throne with an army of barbarian Dothraki—whose loyalty he will purchase in the only coin left to him: his beautiful yet innocent sister, Daenerys.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9780553103540"
-        }
-      }
-    }, {
-      "isbn" : "9780553108033",
-      "title" : "A Clash of Kings",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "en",
-      "summary" : "Time is out of joint. The summer of peace and plenty, ten years long, is drawing to a close, and the harsh, chill winter approaches like an angry beast. Two great leaders—Lord Eddard Stark and Robert Baratheon—who held sway over an age of enforced peace are dead . . . victims of royal treachery. Now, from the ancient citadel of Dragonstone to the forbidding shores of Winterfell, chaos reigns, as pretenders to the Iron Throne of the Seven Kingdoms prepare to stake their claims through tempest, turmoil, and war.\n\nAs a prophecy of doom cuts across the sky—a comet the color of blood and flame—six factions struggle for control of a divided land. Eddard’s son Robb has declared himself King in the North. In the south, Joffrey, the heir apparent, rules in name only, victim of the scheming courtiers who teem over King’s Landing. Robert’s two brothers each seek their own dominion, while a disfavored house turns once more to conquest. And a continent away, an exiled queen, the Mother of Dragons, risks everything to lead her precious brood across a hard hot desert to win back the crown that is rightfully hers.\n\nA Clash of Kings transports us into a magnificent, forgotten land of revelry and revenge, wizardry and warfare. It is a tale in which maidens cavort with madmen, brother plots against brother, and the dead rise to walk in the night. Here a princess masquerades as an orphan boy; a knight of the mind prepares a poison for a treacherous sorceress; and wild men descend from the Mountains of the Moon to ravage the countryside.\n\nAgainst a backdrop of incest and fratricide, alchemy and murder, the price of glory may be measured in blood. And the spoils of victory may just go to the men and women possessed of the coldest steel . . . and the coldest hearts. For when rulers clash, all of the land feels the tremors.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9780553108033"
-        }
-      }
-    }, {
-      "isbn" : "9780553106633",
-      "title" : "A Storm of Swords",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "en",
-      "summary" : "Of the five contenders for power, one is dead, another in disfavor, and still the wars rage. Joffrey sits on the Iron Throne, the uneasy ruler of the Seven Kingdoms. His most bitter rival, Lord Stannis, stands defeated and disgraced, victim of the sorceress who holds him in her thrall. Young Robb still rules the North from the fortress of Riverrun. Meanwhile, making her way across a blood-drenched continent is the exiled queen, Daenerys, mistress of the only three dragons left in the world. As opposing forces maneuver for the final showdown, an army of barbaric wildlings arrives from the outermost limits of civilization, accompanied by a supernatural army of the living dead. As the future of the land hangs in the balance, no one will rest until the Seven Kingdoms have exploded in a veritable storm of swords...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9780553106633"
-        }
-      }
-    }, {
-      "isbn" : "9780553801507",
-      "title" : "A Feast for Crows",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "en",
-      "summary" : "After centuries of bitter strife, the seven powers dividing the land have beaten one another into an uneasy truce. But it’s not long before the survivors, outlaws, renegades, and carrion eaters of the Seven Kingdoms gather. Now, as the human crows assemble over a banquet of ashes, daring new plots and dangerous new alliances are formed while surprising faces—some familiar, others only just appearing—emerge from an ominous twilight of past struggles and chaos to take up the challenges of the terrible times ahead. Nobles and commoners, soldiers and sorcerers, assassins and sages, are coming together to stake their fortunes . . . and their lives. For at a feast for crows, many are the guests—but only a few are the survivors.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9780553801507"
-        }
-      }
-    }, {
-      "isbn" : "9780553801477",
-      "title" : "A Dance with Dragons",
-      "authors" : [ "c5f1361f-61b4-42c4-9cf1-d82e9a45317a" ],
-      "language" : "en",
-      "summary" : "In the aftermath of a colossal battle, the future of the Seven Kingdoms hangs in the balance—beset by newly emerging threats from every direction. In the east, Daenerys Targaryen, the last scion of House Targaryen, rules with her three dragons as queen of a city built on dust and death. But Daenerys has thousands of enemies, and many have set out to find her. As they gather, one young man embarks upon his own quest for the queen, with an entirely different goal in mind.\n\nFleeing from Westeros with a price on his head, Tyrion Lannister, too, is making his way to Daenerys. But his newest allies in this quest are not the rag-tag band they seem, and at their heart lies one who could undo Daenerys’s claim to Westeros forever.\n\nMeanwhile, to the north lies the mammoth Wall of ice and stone—a structure only as strong as those guarding it. There, Jon Snow, 998th Lord Commander of the Night’s Watch, will face his greatest challenge. For he has powerful foes not only within the Watch but also beyond, in the land of the creatures of ice.\n\nFrom all corners, bitter conflicts reignite, intimate betrayals are perpetrated, and a grand cast of outlaws and priests, soldiers and skinchangers, nobles and slaves, will face seemingly insurmountable obstacles. Some will fail, others will grow in the strength of darkness. But in a time of rising restlessness, the tides of destiny and politics will lead inevitably to the greatest dance of all.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9780553801477"
-        }
-      }
-    }, {
-      "isbn" : "9782070360536",
-      "title" : "Le cycle de Fondation Tome 1 - Fondation",
-      "authors" : [ "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5" ],
-      "language" : "fr",
-      "summary" : "En ce début de treizième millénaire, l'Empire n'a jamais été aussi puissant, aussi étendu à travers toute la galaxie. C'est clans sa capitale, Trantor, que l'éminent savant Hari Seldon invente la psychohistoire, une science nouvelle permettant de prédire l'avenir. Grâce à elle, Seldon prévoit l'effondrement de l'Empire d'ici trois siècles, suivi d'une ère de ténèbres de trente mille ans. Réduire cette période à mille ans est peut-être possible, à condition de mener à terme son projet : la Fondation, chargée de rassembler toutes les connaissances humaines.\nUne entreprise visionnaire qui rencontre de nombreux et puissants détracteurs... Récompensé par le prix Hugo de la \"meilleure série de science-fiction de tous les temps Le cycle de Fondation est l'œuvre socle de la S-F moderne, celle que tous les amateurs du genre ont lue ou liront un jour.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070360536"
-        }
-      }
-    }, {
-      "isbn" : "9782070360550",
-      "title" : "Le cycle de Fondation Tome 2 - Fondation et Empire",
-      "authors" : [ "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5" ],
-      "language" : "fr",
-      "summary" : "Tandis que les crises qui secouent l'Empire redoublent de violence et annoncent son effondrement définitif, la Fondation créée par le psychohistorien Hari Seldon pour sauvegarder la civilisation devient de plus en plus puissante, suscitant naturellement convoitise et visées annexionnistes. En tout premier lieu, celles de Bel Riose, jeune général qui voit dans les secrets détenus par la Fondation le moyen de monter sur le trône.\nC'est alors qu'apparaît un mystérieux et invincible conquérant, surnommé le Mulet, que le plan de Seldon n'avait pas prévu...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070360550"
-        }
-      }
-    }, {
-      "isbn" : "9782070360529",
-      "title" : "Le cycle de Fondation Tome 3 - Seconde Fondation",
-      "authors" : [ "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5" ],
-      "language" : "fr",
-      "summary" : "Conçue par le psychohistorien Hari Seldon pour restreindre l'ère de chaos résultant de la décadence de l'Empire galactique, la Fondation est désormais aux mains du Mulet, un mutant imprévisible capable de manipuler les esprits et d'imposer sa volonté à quiconque. Avec ses pouvoirs et les immenses ressources que lui procure la Fondation, il s'est donné pour objectif d'étendre sa domination aux ultimes vestiges de l'Empire défunt.\nMais déjà une nouvelle légende prend forme : il existerait une Seconde Fondation, consacrée aux sciences mentales, œuvrant de façon occulte pour garantir l'accomplissement des desseins du légendaire Hari Seldon...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070360529"
-        }
-      }
-    }, {
-      "isbn" : "9782070360635",
-      "title" : "Le cycle de Fondation Tome 4 - Fondation foudroyée",
-      "authors" : [ "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5" ],
-      "language" : "fr",
-      "summary" : "Prévoyant l'effondrement prochain de l'Empire galactique, le psychohistorien Hari Seldon a jadis créé deux Fondations, l'une officielle, l'autre occulte, afin de préserver la civilisation d'une interminable période de chaos. Pourtant, cinq siècles après leur établissement, alors même que la Première Fondation n'a jamais été aussi puissante, un nouveau protagoniste semble entrer en jeu, œuvrant dans l'ombre à l'insu de tous.\nPeut-être tient-il entre ses mains le devenir de l'humanité tout entière...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070360635"
-        }
-      }
-    }, {
-      "isbn" : "9782070379668",
-      "title" : "Le cycle de Fondation Tome 5 - Terre et Fondation",
-      "authors" : [ "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5" ],
-      "language" : "fr",
-      "summary" : "La Terre. Tout porte à croire que le légendaire berceau de l'humanité se trouve au cœur d'un vaste plan à l'échelle galactique, destiné à garantir en coulisse la pérennité de la civilisation : une synthèse parfaite entre le matérialisme de la Première Fondation et le mentalisme de la Seconde, mise en œuvre par une mystérieuse puissance. Mais comment trouver une planète que beaucoup croient mythique, et dont toute trace a inexplicablement disparu des archives galactiques ? Récompensé par le prix Hugo de la \"meilleure série de science-fiction de tous les temps Le cycle de Fondation est l'œuvre socle de la S-F moderne, celle que tous les amateurs du genre ont lue ou liront un jour.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070379668"
-        }
-      }
-    }, {
-      "isbn" : "9782290227268",
-      "title" : "Le cycle des robots Tome 1 - Les robots",
-      "authors" : [ "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5" ],
-      "language" : "fr",
-      "summary" : "Première Loi : Un robot ne peut porter atteinte à un être humain ni, restant passif, laisser cet être humain exposé au danger. Deuxième Loi : Un robot doit obéir aux ordres donnés par les êtres humains, sauf si de tels ordres entrent en contradiction avec la Première Loi. Troisième Loi : Un robot doit protéger son existence dans la mesure où cette protection n'entre pas en contradiction avec la Première ou la Deuxième Loi.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290227268"
-        }
-      }
-    }, {
-      "isbn" : "9782290311257",
-      "title" : "Le cycle des robots Tome 2 - Un défilé de robots",
-      "authors" : [ "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5" ],
-      "language" : "fr",
-      "summary" : "Comment risque de réagir un robot programmé pour un environnement lunaire dès lors qu'il se retrouve égaré sur Terre ? Un robot peut-il mentir à un procès pour préserver les intérêts de son utilisateur ? Le docteur Susan Calvin, robopsychologue, dialogue avec les androïdes pour faire la lumière sur ces étranges affaires. Et découvre davantage de défauts de programmation chez l'homme que chez ses fidèles créations...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290311257"
-        }
-      }
-    }, {
-      "isbn" : "9782290319024",
-      "title" : "Le cycle des robots Tome 3 - Les cavernes d'acier",
-      "authors" : [ "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5" ],
-      "language" : "fr",
-      "summary" : "L'assassinat du docteur Sarton à Spacetown jette le trouble dans la communauté. Qui aurait intérêt a faire disparaître celui-là même qui milite pour le rapprochement entre Terriens et Spaciens ? Les Médiévalistes, qui ne voient pas d'un très bon œil la prolifération des robots ? Les Spaciens eux-mêmes, prêts à tout pour conserver leurs privilèges ? Le problème du détective Baley, toutefois, n'est pas seulement de retrouver un meurtrier, mais aussi et surtout d'y parvenir avant son collègue robot R Daneel. Car celui-ci est l'un de ces androïdes au cerveau électronique ultra-perfectionné, créés certes par l'homme, mais qui n'attendent peut-être que l'occasion de prendre sa place...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290319024"
-        }
-      }
-    }, {
-      "isbn" : "9782290327944",
-      "title" : "Le cycle des robots Tome 4 - Face aux feux du soleil",
-      "authors" : [ "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5" ],
-      "language" : "fr",
-      "summary" : "C'est désormais sur la lointaine planète Solaria qu'Elijah Baley et R. Daneel Olivaw vont exercer leurs talents d'enquêteurs. Sur ce monde, les hommes n'acceptent plus de se rencontrer physiquement mais se \"visionnent\" par le truchement de projections télévisées. Or, un meurtre a été commis, un meurtre apparemment impossible puisque aucun Solarien n'aurait assez de courage pour s'approcher d'un de ses compatriotes.\nQui plus est, tout semble indiquer qu'un robot est impliqué. Absurde ! Les Lois de la robotique interdisent à ces êtres artificiels de causer le moindre tort aux hommes...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290327944"
-        }
-      }
-    }, {
-      "isbn" : "9782290332757",
-      "title" : "Le cycle des robots Tome 5 - Les robots de l'aube",
-      "authors" : [ "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5" ],
-      "language" : "fr",
-      "summary" : "Quand Elijah Baley arrive sur Aurora, il pressent qu'il va au-devant de sa plus périlleuse mission. Il s'agit en effet pour lui de découvrir qui, pour la première fois dans la galaxie, s'est rendu coupable du meurtre de Jander Panell, le robot positronique le plus sophistiqué jamais créé, une créature atteignant un degré d'\" humanité \" très supérieur à tout ce que le Dr Susan Calvin aurait pu imaginer. Or le seul être qui possédait les compétences nécessaires pour commettre un tel crime n'est autre que son propre concepteur, le Dr Fastolfe ! Heureusement, Baley sera à nouveau assisté sur cette affaire de Daneel Olivaw, désormais l'unique robot humaniforme encore en activité...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290332757"
-        }
-      }
-    }, {
-      "isbn" : "9782290311165",
-      "title" : "Le cycle des robots Tome 6 - Les robots et l'empire",
-      "authors" : [ "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5" ],
-      "language" : "fr",
-      "summary" : "Plusieurs décennies se sont écoulées depuis les événements narrés dans \" les robots de l'aube \". Le docteur Amadiro voue une haine inextinguible à Glardia Gremionis pour avoir fait échouer ses plans de domination de la galaxie. Avec l'aide de Mandamus, un jeune et brillant scientifique, il ourdit à nouveau un plan d'éradication de l'humanité. Pour le contrer, Gladia est toujours assistée de Daneel, le robot humaniforme, et de Giskard, l'androïde télépathe, aux aptitudes nombreuses mais limitées par les restrictions qu'imposent les lois de la robotique. Et leurs choix seront d'autant plus ardus qu'une nouvelle loi, la loi zéro, va faire son apparition...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782290311165"
-        }
-      }
-    }, {
-      "isbn" : "9782070624522",
-      "title" : "Harry Potter à l'école des sorciers",
-      "authors" : [ "298b695e-306c-4b41-b2d1-95f295c88c37" ],
-      "language" : "fr",
-      "summary" : "Harry Potter est un garçon ordinaire. Mais le jour de ses onze ans, son existence bascule : un géant vient le chercher pour l'emmener dans une école de sorciers. Quel mystère entoure donc sa naissance et qui est l'effroyable V…, le mage dont personne n'ose prononcer le nom ? Voler à cheval sur des balais, jeter des sorts, combattre les Trolls : Harry Potter se révèle un sorcier vraiment doué. Quand il décide, avec ses amis, d'explorer les moindres recoins de son école, il va se trouver entraîné dans d'extraordinaires aventures.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070624522"
-        }
-      }
-    }, {
-      "isbn" : "9782070624539",
-      "title" : "Harry Potter et la chambre des secrets",
-      "authors" : [ "298b695e-306c-4b41-b2d1-95f295c88c37" ],
-      "language" : "fr",
-      "summary" : "Harry Potter fait une rentrée fracassante en voiture volante à l'école des sorciers. Cette deuxième année ne s'annonce pas de tout repos... surtout depuis qu'une étrange malédiction s'est abattue sur les élèves. Entre les cours de potion magique, les matches de Quidditch et les combats de mauvais sorts, Harry trouvera-t-il le temps de percer le mystère de la Chambre des Secrets ? Un livre magique pour sorciers confirmés.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070624539"
-        }
-      }
-    }, {
-      "isbn" : "9782070624546",
-      "title" : "Harry Potter et le prisonnier d'Azkaban",
-      "authors" : [ "298b695e-306c-4b41-b2d1-95f295c88c37" ],
-      "language" : "fr",
-      "summary" : "\"Je jure solennellement que mes intentions sont mauvaises. \" Harry Potter",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070624546"
-        }
-      }
-    }, {
-      "isbn" : "9782070624553",
-      "title" : "Harry Potter et la coupe de feu",
-      "authors" : [ "298b695e-306c-4b41-b2d1-95f295c88c37" ],
-      "language" : "fr",
-      "summary" : "Après un horrible été chez les Dursley, Harry Potter entre en quatrième année au collège de Poudlard. A quatorze ans, il voudrait simplement être un jeune sorcier comme les autres, retrouver ses amis Ron et Hermione, assister avec eux à la Coupe du Monde de Quidditch, apprendre de nouveaux sortilèges et essayer des potions inconnues. Une grande nouvelle l'attend à son arrivée : la tenue à Poudlard d'un tournoi de magie entre les plus célèbres écoles de sorcellerie.\nDéjà les spectaculaires délégations étrangères font leur entrée... Harry se réjouit. Trop vite. Il va se trouver plongé au coeur des événements les plus dramatiques qu'il ait jamais eu à affronter. Envoûtant, drôle, bouleversant, ce quatrième tome est le pilier central des aventures de Harry Potter.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070624553"
-        }
-      }
-    }, {
-      "isbn" : "9782070624560",
-      "title" : "Harry Potter et l'ordre du Phénix",
-      "authors" : [ "298b695e-306c-4b41-b2d1-95f295c88c37" ],
-      "language" : "fr",
-      "summary" : "A quinze ans, Harry s'apprête à entrer en cinquième année à Poudlard. Et s'il est heureux de retrouver le monde des sorciers, il n'a jamais été aussi anxieux. L'adolescence, la perspective des examens importants en fin d'année et ces étranges cauchemars.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070624560"
-        }
-      }
-    }, {
-      "isbn" : "9782070624904",
-      "title" : "Harry Potter et le prince de sang-mêlé",
-      "authors" : [ "298b695e-306c-4b41-b2d1-95f295c88c37" ],
-      "language" : "fr",
-      "summary" : "\"C'est l'inconnu qui nous fait peur quand nous contemplons la mort ou l'obscurité, rien d'autre.\" Albus Dumbledore",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070624904"
-        }
-      }
-    }, {
-      "isbn" : "9782070624911",
-      "title" : "Harry Potter et les reliques de la mort",
-      "authors" : [ "298b695e-306c-4b41-b2d1-95f295c88c37" ],
-      "language" : "fr",
-      "summary" : "\"Harry est le meilleur espoir que nous ayons. Faites-lui confiance.\" Remus Lupin.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070624911"
-        }
-      }
-    }, {
-      "isbn" : "9782070625192",
-      "title" : "Les contes de Beedle le Barde",
-      "authors" : [ "298b695e-306c-4b41-b2d1-95f295c88c37" ],
-      "language" : "fr",
-      "summary" : "De nouvelles illustrations enchanteresses pour le joyau de la bibliothèque de Poudlard ! Aventure, ruse, amour, magie, voici les cinq contes qui bercent l'enfance des sorciers. Traduit des runes par Hermione Granger, commenté par Albus Dumbledore, avec une introduction par J. K. Rowling, ce classique vous fera tour à tour rire ou frissonner.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070625192"
-        }
-      }
-    }, {
-      "isbn" : "9782072762086",
-      "title" : "Le vieil homme et la mer",
-      "authors" : [ "88a5e171-9ac6-41d5-b6ac-aa9a93d12004" ],
-      "language" : "fr",
-      "summary" : "A Cuba, voilà quatre-vingt-quatre jours que le vieux Santiago rentre bredouille de la pêche, ses filets désespérément vides. La chance l'a déserté depuis longtemps. A l'aube du quatre-vingt-cinquième jour, son jeune ami Manolin lui fournit deux belles sardines fraîches pour appâter le poisson, et lui souhaite bonne chance en le regardant s'éloigner à bord de son petit bateau. Aujourd'hui, Santiago sent que la fortune lui revient.\nEt en effet, un poisson vient mordre à l'hameçon. C'est un marlin magnifique et gigantesque. Débute alors le plus âpre des duels. Combat de l'homme et de la nature, roman du courage et de l'espoir, Le vieil homme et la mer est un des plus grands livres de la littérature américaine.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782072762086"
-        }
-      }
-    }, {
-      "isbn" : "9782073004215",
-      "title" : "Le soleil se lève aussi",
-      "authors" : [ "88a5e171-9ac6-41d5-b6ac-aa9a93d12004" ],
-      "language" : "fr",
-      "summary" : "Paris, années 1920. Jake Barnes, journaliste américain, retrouve la belle et frivole Lady Ashley, perdue dans une quête effrénée d'amants. Nous les suivons, s'abîmant dans l'alcool, des bars parisiens aux arènes espagnoles, en passant par les ruisseaux à truites des Pyrénées. Leurs compagnons, Robert Cohn, Michael Campbell, sont autant d'hommes à la dérive, marqués au fer rouge par la Première Guerre mondiale.\nDans un style limpide, d'une efficacité redoutable, Hemingway dépeint le Paris des écrivains de l'entre-deux- guerres et les fameuses fêtes de San Fermín. Ses héros, oscillant sans cesse entre mal de vivre et jouissance de l'instant présent, sont devenus les emblèmes de cette génération que Gertrude Stein qualifia de \"perdue\".",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782073004215"
-        }
-      }
-    }, {
-      "isbn" : "9782072729935",
-      "title" : "Pour qui sonne le glas",
-      "authors" : [ "88a5e171-9ac6-41d5-b6ac-aa9a93d12004" ],
-      "language" : "fr",
-      "summary" : "\"Pas d'adieu, guapa, parce que nous ne sommes pas séparés. J'espère que tout ira bien dans les Gredos. Va maintenant. Va pour de bon. Non\", il continuait à parler tranquillement, sagement, tandis que Pilar entraînait la jeune fille. \"Ne te retourne pas. Mets ton pied dans l'étrier. Oui. Ton pied. Aide-la\", dit-il à Pilar. \"Soulève-la. Mets-la en selle\". Il tourna la tête, en sueur, et regarda vers le bas de la pente puis ramena son regard à l'endroit où la jeune fille était en selle avec Pilar auprès d'elle et Pablo juste derrière.\n\"Maintenant, va\", dit-il. \"Va\". Elle allait tourner la tête. \"Ne regarde pas en arrière\", dit Robert Jordan. \"Va\". Et Pablo frappa le cheval sur la croupe avec une entrave.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782072729935"
-        }
-      }
-    }, {
-      "isbn" : "9782070361519",
-      "title" : "Les neiges du Kilimandjaro",
-      "authors" : [ "88a5e171-9ac6-41d5-b6ac-aa9a93d12004" ],
-      "language" : "fr",
-      "summary" : "... ils commencèrent à prendre de l'altitude en direction de l'Est, semblait-il ; après quoi, cela s'obscurcit et ils se trouvèrent en pleine tempête, la pluie tellement drue qu'on eût cru voler à travers une cascade, et puis ils en sortirent et Compie tourna la tête et sourit en montrant quelque chose du doigt et là, devant eux, tout ce qu'il pouvait voir, vaste comme le monde, immense, haut et incroyablement blanc dans le soleil, c'était le sommet carré du Kilimandjaro.\nEt alors il comprit que c'était là qu'il allait.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070361519"
-        }
-      }
-    }, {
-      "isbn" : "9782070409341",
-      "title" : "Le père Goriot",
-      "authors" : [ "4d5a8b1a-8d69-43c3-95e5-0c87f0883937" ],
-      "language" : "fr",
-      "summary" : "Rastignac est un jeune provincial qui cherche à s'insérer dans la société parisienne. Il lui manque les manières et l'argent. Pour parvenir, il côtoie les femmes du monde, mais reste attaché à son voisin de la pension Vauquer, le père Goriot, vieillard malheureux abandonné de ses filles. Vautrin, forçat évadé, Marsay, politicien ambitieux, et Rubempré, écrivain talentueux, sont animés du même désir de pouvoir.\nIls apprennent, chacun à leur manière, les complicités et les alliances indispensables dans une société gouvernée par les intérêts. Seules figures du désintéressement : le père Goriot, vaincu par son amour paternel, et Mme de Beauséant, abandonnée du Tout-Paris. La passion bout dans cette maison comme dans une cocotte-minute, les pages se tournent toutes seules; c'est que chaque palier de la pension Vauquer est devenu un étage de ce que Balzac vient de concevoir: La Comédie humaine.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070409341"
-        }
-      }
-    }, {
-      "isbn" : "9782253006305",
-      "title" : "La peau de chagrin",
-      "authors" : [ "4d5a8b1a-8d69-43c3-95e5-0c87f0883937" ],
-      "language" : "fr",
-      "summary" : "Un jeune aristocrate désargenté et désespéré, Raphaël de Valentin, reçoit d'un vieil antiquaire une peau d'onagre miraculeuse et maléfique : elle satisfait tous ses désirs, mais sa superficie, liée par un charme mystérieux à la durée de la vie de son possesseur, rétrécit à chaque souhait exaucé. Raphaël, qui rêvait de conquérir le monde, découvre ainsi, au prix de sa propre existence, que \"Vouloir nous brûle et Pouvoir nous détruit\" .\nSeul face à sa mort, dont il peut chaque jour calculer l'échéance, il délaisse la société des hommes, renonce à la jouissance du monde : en vain, même l'amour pur et partagé ne pourra le sauver. Dans le décor très réaliste des années 1830, La Peau de chagrin plonge le lecteur dans un univers proprement fantastique, un univers de l'étrange qui illustre l'une des théories philosophiques fondamentales de l'oeuvre balzacienne : l'énergie vitale.\nIntroduction et notes de Jacques Martineau.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782253006305"
-        }
-      }
-    }, {
-      "isbn" : "9782253098041",
-      "title" : "Le colonel Chabert",
-      "authors" : [ "4d5a8b1a-8d69-43c3-95e5-0c87f0883937" ],
-      "language" : "fr",
-      "summary" : "Enfant trouvé fasciné par la carrière des armes, Hyacinthe dit Chabert s'est illustré aux premiers rangs de la Grande Armée. Laissé pour mort à Eylau, puis miraculeusement sauvé, il tentera quelques années plus tard de retrouver sa place dans une France bourgeoise qui veut oublier ses héros, auprès d'une femme qui lui doit tout, qui l'a dépouillé et qui le rejette. Nul destin, peut-être, n'éclaire mieux que le sien l'envers de la \" comédie humaine \", dans cette tragédie domestique doublée d'un drame social où le sublime côtoie constamment le sordide. \" Nous n'oublierons jamais l'entrée pitoyable de Chabert à l'étude Derville éclairée au gaz le matin, avec le déjeuner, réchauffé sur la cheminée, des clercs, des clercs rieurs, insolents et clabaudeurs, Chabert avec ses rides blanches, son vieux carrick, Chabert méprisé, aliéné de cette patrie et de cette femme qu'il continue à aimer, dénoncé de cette société où, bien qu'enfant trouvé, il s'était, si difficilement, fait un nom... Chabert a sa place dans toutes les mémoires, à côté du cousin Pons et du père Goriot, et sur le même rang. Le Colonel Chabert, admirable histoire de revenant. Paul MORAND.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782253098041"
-        }
-      }
-    }, {
-      "isbn" : "9782253099994",
-      "title" : "La reine Margot",
-      "authors" : [ "3d9c3009-32d0-49d0-a29e-d48ab05b8a61" ],
-      "language" : "fr",
-      "summary" : "1572.\nLa France des guerres de religion est devenue le champ clos des grands seigneurs et des prétendants au trône. A Paris, le jeune roi protestant de Navarre, le futur Henri IV, vient d'épouser Marguerite de Valois dite Margot ; mariage politique qui n'empêche pas les Guise et le roi Charles IX de fomenter les horreurs de la Saint-Barthélémy. Sur les pas du jeune comte de La Mole, dont s'éprend éperdument la belle Margot, et de son compagnon, le tonitruant Annibal de Coconnas, nous entrons dans ce labyrinthe d'intrigues, d'alliances, de trahisons. Les poignards luisent sous les pourpoints. René le Florentin fournit les poisons à l'implacable Catherine de Médicis. Le vieux Louvre avec ses fêtes brillantes, ses passages secrets, son peuple de soldats et de jolies femmes, est le théâtre où se déploient en mille péripéties les jeux de l'amour, de la politique, de la haine. Le père des Trois Mousquetaires nous en donne une passionnante chronique où sa pétulante bonne humeur survit aux plus sanglants épisodes.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782253099994"
-        }
-      }
-    }, {
-      "isbn" : "9782253098058",
-      "title" : "Le Comte de Monte Cristo Tome 1",
-      "authors" : [ "3d9c3009-32d0-49d0-a29e-d48ab05b8a61" ],
-      "language" : "fr",
-      "summary" : "1815. Louis XVIII rétabli sur le trône se heurte à une opposition dont l'Empereur, relégué à l'île d'Elbe, songe déjà à profiter. Dans Marseille livrée à la discorde civile, le moment est propice aux règlements de comptes politiques ou privés. C'est ainsi que le marin Edmond Dantès, à la veille de son mariage, se retrouve, sans savoir pourquoi, arrêté et conduit au château d'If... Paru en 1844-1846, Le Comte de Monte-Cristo connut un succès qui ne s'est pas démenti, ce qui en fait une des œuvres les plus populaires de la littérature mondiale.\nL'abbé Faria, l'évasion inouïe, le trésor grâce auquel les bons seront récompensés et les traîtres punis : le fabuleux destin d'Edmond Dantès possède la simplicité et la force des grands mythes. Conteur éblouissant, aussi à l'aise dans l'action que dans le dialogue, Dumas nous entraîne sans nous laisser reprendre souffle du cabinet de Louis XVIII à la Méditerranée des contrebandiers, des îles toscanes aux catacombes de Rome, puis aux salons parisiens où le mystérieux comte de Monte-Cristo se dispose à accomplir sa vengeance...",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782253098058"
-        }
-      }
-    }, {
-      "isbn" : "9782253098065",
-      "title" : "Le Comte de Monte Cristo Tome 2",
-      "authors" : [ "3d9c3009-32d0-49d0-a29e-d48ab05b8a61" ],
-      "language" : "fr",
-      "summary" : "1838. Un seigneur étranger, le comte Monte-Cristo, intrigue le grand monde parisien par son faste extraordinaire, ses manières raffinées et fantasques, la jeune femme orientale qui vit dans son ombre. Qui - hormis peut-être la belle et mélancolique comtesse de Morcerf - pourrait reconnaître en lui le pauvre marin Dantès, arrêté à Marseille vingt-trois ans plus tôt ? A travers les péripéties d'une vengeance implacable, c'est le Paris de Balzac qui revit dans ce second volume.\nDandys, femmes du monde, personnages patibulaires ressurgis du bagne, se croisent autour d'inoubliables figures - le banquier politicien Danglars, le sévère procureur de Villefort, le hautain comte de Morcerf, pair de France. Romancier de l'histoire, l'auteur des Trois Mousquetaires et de La Reine Margot révèle dans ce chef-d'œuvre une autre facette de son génie : le roman de mœurs et de critique sociale, servi par un sens inégalé de l'action et du suspense.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782253098065"
-        }
-      }
-    }, {
-      "isbn" : "9782070417681",
-      "title" : "Les Trois Mousquetaires",
-      "authors" : [ "3d9c3009-32d0-49d0-a29e-d48ab05b8a61" ],
-      "language" : "fr",
-      "summary" : "Dans Les Trois Mousquetaires revit toute l'Histoire : le Moyen Age parce que c'est une épopée chevaleresque ; le XVIIème siècle dominé par Richelieu fondateur de la France moderne ; le romantisme parce que des héros exceptionnels, qui ont disparu d'une société contemporaine dépoétisée, se réfugient dans le roman. L'auteur y a mis tout son art : la surprise, la vitesse, l'humour, la couleur, le sens du mystère et de la grandeur. Le lecteur se sent un instant aventureux comme d'Artagnan, séducteur comme Aramis, hercule comme Porthos, profond comme Athos, poète comme Dumas.",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/editions/9782070417681"
-        }
-      }
-    } ],
-    "authors" : [ {
-      "id" : "298b695e-306c-4b41-b2d1-95f295c88c37",
-      "name" : "J. K. Rowling",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/authors/298b695e-306c-4b41-b2d1-95f295c88c37"
-        }
-      }
-    }, {
-      "id" : "88a5e171-9ac6-41d5-b6ac-aa9a93d12004",
-      "name" : "Ernest Hemingway",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/authors/88a5e171-9ac6-41d5-b6ac-aa9a93d12004"
-        }
-      }
-    }, {
-      "id" : "83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725",
-      "name" : "Jean-Jacques Rousseau",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/authors/83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
-        }
-      }
-    }, {
-      "id" : "4d5a8b1a-8d69-43c3-95e5-0c87f0883937",
-      "name" : "Honoré de Balzac",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/authors/4d5a8b1a-8d69-43c3-95e5-0c87f0883937"
-        }
-      }
-    }, {
-      "id" : "ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5",
-      "name" : "Isaac Asimov",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/authors/ce4f9f7a-3d0d-47b0-acad-dd0103eaa1b5"
-        }
-      }
-    }, {
-      "id" : "3d9c3009-32d0-49d0-a29e-d48ab05b8a61",
-      "name" : "Alexandre Dumas",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/authors/3d9c3009-32d0-49d0-a29e-d48ab05b8a61"
-        }
-      }
-    }, {
-      "id" : "d8d94b64-603d-4fae-90dd-5296cde7fa2c",
-      "name" : "John Ronald Reuel Tolkien",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/authors/d8d94b64-603d-4fae-90dd-5296cde7fa2c"
-        }
-      }
-    }, {
-      "id" : "c5f1361f-61b4-42c4-9cf1-d82e9a45317a",
-      "name" : "George Raymond Richard Martin",
-      "_links" : {
-        "self" : {
-          "href" : "http://localhost:12345/api/v1/authors/c5f1361f-61b4-42c4-9cf1-d82e9a45317a"
-        }
-      }
-    } ]
+    ]
   },
-  "_links" : {
-    "first" : {
-      "href" : "http://localhost:12345/api/v1/catalog?page=0&size=50"
+  "_links": {
+    "first": {
+      "href": "https://localhost:12345/api/v1/catalog?page=0&size=50"
     },
-    "self" : {
-      "href" : "http://localhost:12345/api/v1/catalog?page=0&size=50"
+    "self": {
+      "href": "https://localhost:12345/api/v1/catalog?page=0&size=50"
     },
-    "next" : {
-      "href" : "http://localhost:12345/api/v1/catalog?page=1&size=50"
+    "next": {
+      "href": "https://localhost:12345/api/v1/catalog?page=1&size=50"
     },
-    "last" : {
-      "href" : "http://localhost:12345/api/v1/catalog?page=1&size=50"
+    "last": {
+      "href": "https://localhost:12345/api/v1/catalog?page=1&size=50"
     }
   }
 }

@@ -7,7 +7,7 @@
       "description": "Default website page request",
       "providerStates": [
         {
-          "name": "First page of 10 elements contains editions"
+          "name": "First page of 10 elements contains books"
         }
       ],
       "request": {
@@ -31,12 +31,12 @@
                 "name": "Jean-Jacques Rousseau"
               }
             ],
-            "editions": [
+            "books": [
               {
                 "authors": [
                   "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"
                 ],
-                "summary": "Paru en 1762, le Contrat social, ...",
+                "description": "Paru en 1762, le Contrat social, ...",
                 "title": "Du contrat social"
               }
             ]
@@ -98,7 +98,7 @@
                 }
               ]
             },
-            "$._embedded.editions": {
+            "$._embedded.books": {
               "combine": "AND",
               "matchers": [
                 {
@@ -107,7 +107,7 @@
                 }
               ]
             },
-            "$._embedded.editions[*].authors": {
+            "$._embedded.books[*].authors": {
               "combine": "AND",
               "matchers": [
                 {
@@ -116,7 +116,7 @@
                 }
               ]
             },
-            "$._embedded.editions[*].authors[*]": {
+            "$._embedded.books[*].authors[*]": {
               "combine": "AND",
               "matchers": [
                 {
@@ -190,7 +190,7 @@
       "description": "Specific website page request",
       "providerStates": [
         {
-          "name": "Next page of 25 elements contains editions"
+          "name": "Next page of 25 elements contains books"
         }
       ],
       "request": {
@@ -214,12 +214,12 @@
                 "name": "Jean-Jacques Rousseau"
               }
             ],
-            "editions": [
+            "books": [
               {
                 "authors": [
                   "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"
                 ],
-                "summary": "Paru en 1762, le Contrat social, ...",
+                "description": "Paru en 1762, le Contrat social, ...",
                 "title": "Du contrat social"
               }
             ]
@@ -288,7 +288,7 @@
                 }
               ]
             },
-            "$._embedded.editions": {
+            "$._embedded.books": {
               "combine": "AND",
               "matchers": [
                 {
@@ -297,7 +297,7 @@
                 }
               ]
             },
-            "$._embedded.editions[*].authors": {
+            "$._embedded.books[*].authors": {
               "combine": "AND",
               "matchers": [
                 {
@@ -306,7 +306,7 @@
                 }
               ]
             },
-            "$._embedded.editions[*].authors[*]": {
+            "$._embedded.books[*].authors[*]": {
               "combine": "AND",
               "matchers": [
                 {

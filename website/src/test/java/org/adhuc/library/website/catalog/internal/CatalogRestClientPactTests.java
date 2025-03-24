@@ -41,7 +41,7 @@ public class CatalogRestClientPactTests {
     @Pact(consumer = "library-website", provider = "library-catalog")
     public RequestResponsePact defaultPage(PactDslWithProvider builder) {
         return builder
-                .given("First page of 10 elements contains editions")
+                .given("First page of 10 elements contains books")
                 .uponReceiving("Default website page request")
                 .method("GET")
                 .path("/api/v1/catalog")
@@ -62,10 +62,10 @@ public class CatalogRestClientPactTests {
                         links.object("last", last -> last.stringType("href"));
                     });
                     root.object("_embedded", embedded -> {
-                        embedded.maxArrayLike("editions", 10, book -> {
+                        embedded.maxArrayLike("books", 10, book -> {
                             book.stringValue("title", "Du contrat social");
                             book.minArrayLike("authors", 1, stringMatcher(UUID_REGEX, "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), 1);
-                            book.stringValue("summary", "Paru en 1762, le Contrat social, ...");
+                            book.stringValue("description", "Paru en 1762, le Contrat social, ...");
                         });
                         embedded.minArrayLike("authors", 1, author -> {
                             author.stringMatcher("id", UUID_REGEX, "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2");
@@ -115,7 +115,7 @@ public class CatalogRestClientPactTests {
     @Pact(consumer = "library-website", provider = "library-catalog")
     public RequestResponsePact otherPage(PactDslWithProvider builder) {
         return builder
-                .given("Next page of 25 elements contains editions")
+                .given("Next page of 25 elements contains books")
                 .uponReceiving("Specific website page request")
                 .method("GET")
                 .path("/api/v1/catalog")
@@ -137,10 +137,10 @@ public class CatalogRestClientPactTests {
                         links.object("last", last -> last.stringType("href"));
                     });
                     root.object("_embedded", embedded -> {
-                        embedded.maxArrayLike("editions", 10, book -> {
+                        embedded.maxArrayLike("books", 10, book -> {
                             book.stringValue("title", "Du contrat social");
                             book.minArrayLike("authors", 1, stringMatcher(UUID_REGEX, "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), 1);
-                            book.stringValue("summary", "Paru en 1762, le Contrat social, ...");
+                            book.stringValue("description", "Paru en 1762, le Contrat social, ...");
                         });
                         embedded.minArrayLike("authors", 1, author -> {
                             author.stringMatcher("id", UUID_REGEX, "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2");

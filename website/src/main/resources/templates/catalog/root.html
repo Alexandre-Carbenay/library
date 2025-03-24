@@ -17,7 +17,7 @@
     <tr>
         <th>Title</th>
         <th>Authors</th>
-        <th>Summary</th>
+        <th>Description</th>
     </tr>
     </thead>
     <tbody>
@@ -26,7 +26,7 @@
         <td>
             <span th:each="author : ${book.authors}" th:text="${author.name + ' '}"/>
         </td>
-        <td th:text="${book.summary}"></td>
+        <td th:text="${book.description}"></td>
     </tr>
     </tbody>
 </table>
