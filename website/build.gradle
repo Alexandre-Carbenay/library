@@ -32,7 +32,7 @@ configurations {
 
 ext {
 	springCloudVersion = '3.2.1'
-	bootstrapVersion = '5.3.3'
+	bootstrapVersion = '5.3.5'
 }
 
 dependencies {
@@ -48,7 +48,7 @@ dependencies {
 	testImplementation 'au.com.dius.pact.consumer:junit5:4.6.17'
 	testImplementation 'org.aspectj:aspectjweaver:1.9.23'
 
-	scss 'org.webjars.npm:bootstrap:5.3.3'
+	scss 'org.webjars.npm:bootstrap:5.3.5'
 }
 
 task extractBootstrap(type: Copy) {
