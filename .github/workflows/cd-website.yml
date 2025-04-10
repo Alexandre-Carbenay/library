@@ -28,9 +28,8 @@ jobs:
     with:
       app-name: 'website'
       working-directory: './website'
-      github-package: 'library/website'
+      github-package: 'library%2Fwebsite'
       docker-image: 'website'
       publish-pacts: true
       run-acceptance: false
     secrets: inherit
-

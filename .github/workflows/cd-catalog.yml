@@ -28,6 +28,6 @@ jobs:
     with:
       app-name: 'catalog'
       working-directory: './catalog'
-      github-package: 'library/catalog'
+      github-package: 'library%2Fcatalog'
       docker-image: 'catalog'
     secrets: inherit

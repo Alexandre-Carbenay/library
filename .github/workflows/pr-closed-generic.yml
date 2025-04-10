@@ -6,6 +6,9 @@ on:
         required: false
         type: string
         default: 'ghcr.io'
+      app-name:
+        required: true
+        type: string
       github-package:
         required: true
         type: string
@@ -26,7 +29,7 @@ jobs:
 
       - name: "🐳 📦 🧹 Remove artifact from Docker registry"
         run: |
-          package=$(gh api /user/packages?package_type=container | jq -r '.[] | select(.name == "${{ inputs.github-package }}") | .name')
+          package=$(gh api /user/packages?package_type=container | jq -r '.[] | select(.name == "library/${{ inputs.app-name }}") | .name')
           if [ ${package} != "" ]
           then
             version=$(gh api /user/packages/container/${{ inputs.github-package }}/versions | jq -r '.[] | select(.metadata.container.tags[] | contains("${{ env.tag }}")) | .id')
