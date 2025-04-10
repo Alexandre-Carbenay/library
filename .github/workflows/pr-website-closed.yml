@@ -16,5 +16,6 @@ jobs:
   pr-closed:
     uses: ./.github/workflows/pr-closed-generic.yml
     with:
-      github-package: 'library/website'
+      app-name: 'website'
+      github-package: 'library%2Fwebsite'
     secrets: inherit
