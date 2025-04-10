@@ -54,7 +54,7 @@ class CatalogControllerPactTests {
         context.verifyInteraction();
     }
 
-    @State("First page of 10 elements contains editions")
+    @State("First page of 10 elements contains books")
     void page0Size10() {
         var bookId = UUID.fromString("b6608a30-1e9b-4ae0-a89d-624c3ca85da4");
         var book = new Book(
@@ -90,7 +90,7 @@ class CatalogControllerPactTests {
         ));
     }
 
-    @State("Next page of 25 elements contains editions")
+    @State("Next page of 25 elements contains books")
     void page1Size25() {
         var bookId = UUID.fromString("b6608a30-1e9b-4ae0-a89d-624c3ca85da4");
         var book = new Book(
