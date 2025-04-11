@@ -5,6 +5,7 @@ import io.cucumber.java.en.When;
 import io.restassured.response.ValidatableResponse;
 
 import java.util.List;
+import java.util.Locale;
 
 import static io.restassured.RestAssured.*;
 import static org.adhuc.library.catalog.acceptance.assertions.EmbeddedAuthorsAssertions.assertResponseEmbedsAuthors;
@@ -15,15 +16,19 @@ public class CatalogStepDefinitions {
 
     private static final List<String> NAVIGATION_LINKS = List.of("first", "prev", "next", "last");
 
+    private Locale language;
     private ValidatableResponse response;
 
-    @When("he browses the catalog to page {int} showing {int} books")
-    public void browseCatalogToPage(int page, int pageSize) {
+    @When("he browses the catalog to page {int} showing {int} books in {language}")
+    public void browseCatalogToPage(int page, int pageSize, Locale language) {
+        this.language = language;
         response = given().params(
                         "page", page,
                         "size", pageSize
                 )
-                .when().get("/v1/catalog")
+                .header("Accept-Language", language.getLanguage())
+                .when()
+                .get("/v1/catalog")
                 .then();
     }
 
@@ -35,7 +40,11 @@ public class CatalogStepDefinitions {
     @When("he navigates through the catalog with {word} link")
     public void navigatesWithLink(String linkName) {
         var link = response.extract().jsonPath().getString(STR."_links.\{linkName}.href");
-        response = when().get(link).then();
+        response = given()
+                .header("Accept-Language", language.getLanguage())
+                .when()
+                .get(link)
+                .then();
     }
 
     @Then("the catalog returns page {int} containing {int} books over {int} requested")
@@ -78,6 +87,11 @@ public class CatalogStepDefinitions {
     @Then("the page {int} contains {authorNames} corresponding to the books")
     public void catalogPageWithAuthors(int page, List<String> authorNames) {
         assertResponseEmbedsAuthors(response, authorNames, name -> STR."Catalog page \{page} must contain author named \{name}");
+    }
+
+    @Then("the catalog returns page in {language}")
+    public void catalogPageInLanguage(Locale language) {
+        response.header("Content-Language", language.getLanguage());
     }
 
 }

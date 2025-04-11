@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toMap;
 import static net.jqwik.api.Arbitraries.strings;
@@ -26,6 +27,14 @@ public class BooksMother {
 
     public static Arbitrary<Book> notableBooksOf(UUID authorId) {
         return books(Books.authoredWith(authorId));
+    }
+
+    public static Arbitrary<Book> books(String originalLanguage, Set<String> languages) {
+        return Combinators.combine(
+                Books.ids(),
+                Books.authors(),
+                Books.detailsSets(originalLanguage, languages)
+        ).as((id, authors, details) -> new Book(id, authors, originalLanguage, details));
     }
 
     private static Arbitrary<Book> books(Arbitrary<Set<Author>> authorsArbitrary) {
@@ -69,12 +78,28 @@ public class BooksMother {
             return Arbitraries.of("fr", "en", "de", "it");
         }
 
+        public static Arbitrary<String> otherLanguages(String originalLanguage) {
+            return languages().filter(language -> !language.equals(originalLanguage));
+        }
+
         public static Arbitrary<Set<LocalizedDetails>> detailsSets(String originalLanguage) {
             var originalDetails = details(originalLanguage).sample();
-            var otherDetails = languages().filter(language -> !language.equals(originalLanguage))
+            var otherDetails = otherLanguages(originalLanguage)
                     .set().ofMinSize(0).ofMaxSize(2).uniqueElements()
                     .sample()
                     .stream()
+                    .map(language -> details(language).sample())
+                    .toList();
+            var details = new HashSet<>(otherDetails);
+            details.add(originalDetails);
+            return Arbitraries.just(details);
+        }
+
+        public static Arbitrary<Set<LocalizedDetails>> detailsSets(String originalLanguage, Set<String> languages) {
+            var originalDetails = details(originalLanguage).sample();
+            var otherDetails = Arbitraries.of(languages).filter(language -> !language.equals(originalLanguage))
+                    .allValues()
+                    .orElse(Stream.of())
                     .map(language -> details(language).sample())
                     .toList();
             var details = new HashSet<>(otherDetails);

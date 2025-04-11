@@ -21,9 +21,15 @@ public class InMemoryBooksRepository implements BooksRepository {
     }
 
     @Override
-    public Page<Book> find(Pageable request) {
-        var pageBooks = books.stream().skip(request.getOffset()).limit(request.getPageSize()).toList();
-        return new PageImpl<>(pageBooks, request, books.size());
+    public Page<Book> findByLanguage(Locale language, Pageable request) {
+        var booksWithLanguage = books.stream()
+                .filter(book -> book.acceptsLanguage(language))
+                .toList();
+        var pageBooks = booksWithLanguage.stream()
+                .skip(request.getOffset())
+                .limit(request.getPageSize())
+                .toList();
+        return new PageImpl<>(pageBooks, request, booksWithLanguage.size());
     }
 
     @Override
@@ -34,6 +40,7 @@ public class InMemoryBooksRepository implements BooksRepository {
     }
 
     public void saveAll(Collection<Book> books) {
+        this.books.clear();
         this.books.addAll(books);
     }
 
