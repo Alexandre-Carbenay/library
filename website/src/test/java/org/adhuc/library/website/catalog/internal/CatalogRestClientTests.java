@@ -36,8 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.PARTIAL_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestToUriTemplate;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
 @ExtendWith(MockitoExtension.class)
@@ -80,11 +79,11 @@ class CatalogRestClientTests {
         @DisplayName("list books for the default page")
         void getDefaultPage() {
             var response = new DefaultResourceLoader().getResource("classpath:client/catalog/page-0-size-10.json");
-            mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page=0&size=10")).andRespond(
-                    withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON)
-            );
+            mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page=0&size=10"))
+                    .andExpect(header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
+                    .andRespond(withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON));
 
-            var actual = catalogRestClient.listBooks();
+            var actual = catalogRestClient.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3");
             SoftAssertions.assertSoftly(s -> {
                 s.assertThat(actual.getSize()).isEqualTo(10);
                 s.assertThat(actual.getTotalElements()).isEqualTo(67);
@@ -101,12 +100,12 @@ class CatalogRestClientTests {
         @ParameterizedTest
         @MethodSource("pageProvider")
         @DisplayName("list books for a page")
-        void getPage(int page, int size, Resource response, int expectedTotalPages, int expectedSize, boolean hasPrev, boolean hasNext) {
-            mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page={page}&size={size}", page, size)).andRespond(
-                    withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON)
-            );
+        void getPage(int page, int size, String acceptLanguages, Resource response, int expectedTotalPages, int expectedSize, boolean hasPrev, boolean hasNext) {
+            mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page={page}&size={size}", page, size))
+                    .andExpect(header("Accept-Language", acceptLanguages))
+                    .andRespond(withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON));
 
-            var actual = catalogRestClient.listBooks(PageRequest.of(page, size));
+            var actual = catalogRestClient.listBooks(PageRequest.of(page, size), acceptLanguages);
             SoftAssertions.assertSoftly(s -> {
                 s.assertThat(actual.getSize()).isEqualTo(size);
                 s.assertThat(actual.getTotalElements()).isEqualTo(67);
@@ -123,38 +122,50 @@ class CatalogRestClientTests {
         static Stream<Arguments> pageProvider() {
             var resourceLoader = new DefaultResourceLoader();
             return Stream.of(
-                    Arguments.of(0, 10, resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"), 7, 10, false, true),
-                    Arguments.of(1, 10, resourceLoader.getResource("classpath:client/catalog/page-1-size-10.json"), 7, 10, true, true),
-                    Arguments.of(6, 10, resourceLoader.getResource("classpath:client/catalog/page-6-size-10.json"), 7, 7, true, false),
-                    Arguments.of(0, 50, resourceLoader.getResource("classpath:client/catalog/page-0-size-50.json"), 2, 50, false, true),
-                    Arguments.of(1, 50, resourceLoader.getResource("classpath:client/catalog/page-1-size-50.json"), 2, 17, true, false)
+                    Arguments.of(0, 10, "fr",
+                            resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"), 7, 10, false, true),
+                    Arguments.of(0, 10, "en",
+                            resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"), 7, 10, false, true),
+                    Arguments.of(0, 10, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                            resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"), 7, 10, false, true),
+                    Arguments.of(1, 10, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                            resourceLoader.getResource("classpath:client/catalog/page-1-size-10.json"), 7, 10, true, true),
+                    Arguments.of(6, 10, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                            resourceLoader.getResource("classpath:client/catalog/page-6-size-10.json"), 7, 7, true, false),
+                    Arguments.of(0, 50, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                            resourceLoader.getResource("classpath:client/catalog/page-0-size-50.json"), 2, 50, false, true),
+                    Arguments.of(1, 50, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                            resourceLoader.getResource("classpath:client/catalog/page-1-size-50.json"), 2, 17, true, false)
             );
         }
 
         @ParameterizedTest
         @MethodSource("pageBooksProvider")
         @DisplayName("list books for a page with expected books contained and non expected books not contained")
-        void getPageContainingBooks(int page, int size, Resource response, List<Book> expectedBooks, List<Book> nonExpectedBooks) {
-            mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page={page}&size={size}", page, size)).andRespond(
-                    withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON)
-            );
+        void getPageContainingBooks(int page, int size, String acceptLanguages, Resource response, List<Book> expectedBooks, List<Book> nonExpectedBooks) {
+            mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page={page}&size={size}", page, size))
+                    .andExpect(header("Accept-Language", acceptLanguages))
+                    .andRespond(withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON));
 
-            var actual = catalogRestClient.listBooks(PageRequest.of(page, size));
+            var actual = catalogRestClient.listBooks(PageRequest.of(page, size), acceptLanguages);
             assertThat(actual.getContent()).containsAll(expectedBooks).doesNotContainAnyElementsOf(nonExpectedBooks);
         }
 
         static Stream<Arguments> pageBooksProvider() {
             var resourceLoader = new DefaultResourceLoader();
             return Stream.of(
-                    Arguments.of(0, 10, resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
+                    Arguments.of(0, 10, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                            resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
                             List.of(A_DANCE_WITH_DRAGONS)
                     ),
-                    Arguments.of(1, 10, resourceLoader.getResource("classpath:client/catalog/page-1-size-10.json"),
+                    Arguments.of(1, 10, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                            resourceLoader.getResource("classpath:client/catalog/page-1-size-10.json"),
                             List.of(A_DANCE_WITH_DRAGONS),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU)
                     ),
-                    Arguments.of(0, 50, resourceLoader.getResource("classpath:client/catalog/page-0-size-50.json"),
+                    Arguments.of(0, 50, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                            resourceLoader.getResource("classpath:client/catalog/page-0-size-50.json"),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS, BULLSHIT_JOBS),
                             List.of(LA_FERME_DES_ANIMAUX)
                     )
@@ -164,12 +175,12 @@ class CatalogRestClientTests {
         @ParameterizedTest
         @MethodSource("pageBooksFromLinkProvider")
         @DisplayName("list books for a link from the previously browsed page with expected books contained and non expected books not contained")
-        void getPageFromLink(NavigablePage<Book> currentPage, String linkName, String url, Resource response, List<Book> expectedBooks, List<Book> nonExpectedBooks) {
-            mockServer.expect(requestTo(url)).andRespond(
-                    withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON)
-            );
+        void getPageFromLink(NavigablePage<Book> currentPage, String linkName, String acceptLanguages,
+                             String url, Resource response, List<Book> expectedBooks, List<Book> nonExpectedBooks) {
+            mockServer.expect(requestTo(url)).andExpect(header("Accept-Language", acceptLanguages))
+                    .andRespond(withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON));
 
-            var actual = catalogRestClient.listBooks(currentPage, linkName);
+            var actual = catalogRestClient.listBooks(currentPage, linkName, acceptLanguages);
             assertThat(actual.getContent()).containsAll(expectedBooks).doesNotContainAnyElementsOf(nonExpectedBooks);
         }
 
@@ -207,30 +218,49 @@ class CatalogRestClientTests {
 
             return Stream.of(
                     Arguments.of(page1Size10, "first",
+                            "fr",
+                            "http://localhost:12345/test/api/v1/catalog?page=0&size=10",
+                            resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
+                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
+                            List.of(A_DANCE_WITH_DRAGONS)
+                    ),
+                    Arguments.of(page1Size10, "first",
+                            "en",
+                            "http://localhost:12345/test/api/v1/catalog?page=0&size=10",
+                            resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
+                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
+                            List.of(A_DANCE_WITH_DRAGONS)
+                    ),
+                    Arguments.of(page1Size10, "first",
+                            "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             "http://localhost:12345/test/api/v1/catalog?page=0&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
                             List.of(A_DANCE_WITH_DRAGONS)
                     ),
                     Arguments.of(page1Size10, "prev",
+                            "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             "http://localhost:12345/test/api/v1/catalog?page=0&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
                             List.of(A_DANCE_WITH_DRAGONS)
                     ),
                     Arguments.of(page0Size10, "next",
+                            "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             "http://localhost:12345/test/api/v1/catalog?page=1&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-1-size-10.json"),
                             List.of(A_DANCE_WITH_DRAGONS),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU)
                     ),
                     Arguments.of(page0Size10, "last",
+                            "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             "http://localhost:12345/test/api/v1/catalog?page=6&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-6-size-10.json"),
                             List.of(LA_FERME_DES_ANIMAUX),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, HAMLET)
                     ),
                     Arguments.of(page1Size50, "prev",
+                            "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             "http://localhost:12345/test/api/v1/catalog?page=0&size=50",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-50.json"),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS, BULLSHIT_JOBS),
@@ -243,7 +273,7 @@ class CatalogRestClientTests {
         @MethodSource("pageBooksFromUnknownLinkProvider")
         @DisplayName("refuse listing books for an unknown link from the previously browsed page")
         void getPageFromUnknownLink(NavigablePage<Book> currentPage, String linkName) {
-            assertThrows(IllegalArgumentException.class, () -> catalogRestClient.listBooks(currentPage, linkName));
+            assertThrows(IllegalArgumentException.class, () -> catalogRestClient.listBooks(currentPage, linkName, "fr"));
         }
 
         static Stream<Arguments> pageBooksFromUnknownLinkProvider() {
@@ -291,7 +321,7 @@ class CatalogRestClientTests {
         @Test
         @DisplayName("fail listing books for a page")
         void getPage() {
-            var error = assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.listBooks(PageRequest.of(0, 10)));
+            var error = assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.listBooks(PageRequest.of(0, 10), "fr"));
             assertThat(error).hasMessage("No fallback available");
         }
     }

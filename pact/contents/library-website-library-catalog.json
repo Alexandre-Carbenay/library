@@ -4,7 +4,193 @@
   },
   "interactions": [
     {
-      "description": "Default website page request",
+      "description": "Default website page request in french",
+      "providerStates": [
+        {
+          "name": "First page of 10 elements contains books"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept-Language": "fr, fr-FR;q=0.8, en-US;q=0.5, en;q=0.3"
+        },
+        "method": "GET",
+        "path": "/api/v1/catalog",
+        "query": {
+          "page": [
+            "0"
+          ],
+          "size": [
+            "10"
+          ]
+        }
+      },
+      "response": {
+        "body": {
+          "_embedded": {
+            "authors": [
+              {
+                "id": "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2",
+                "name": "Jean-Jacques Rousseau"
+              }
+            ],
+            "books": [
+              {
+                "authors": [
+                  "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"
+                ],
+                "description": "Paru en 1762, le Contrat social, ...",
+                "title": "Du contrat social"
+              }
+            ]
+          },
+          "_links": {
+            "first": {
+              "href": "string"
+            },
+            "last": {
+              "href": "string"
+            },
+            "next": {
+              "href": "string"
+            }
+          },
+          "page": {
+            "number": 0,
+            "size": 10,
+            "total_elements": 67,
+            "total_pages": 7
+          }
+        },
+        "generators": {
+          "body": {
+            "$._links.first.href": {
+              "size": 20,
+              "type": "RandomString"
+            },
+            "$._links.last.href": {
+              "size": 20,
+              "type": "RandomString"
+            },
+            "$._links.next.href": {
+              "size": 20,
+              "type": "RandomString"
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$._embedded.authors": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$._embedded.authors[*].id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$._embedded.books": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "max": 10
+                }
+              ]
+            },
+            "$._embedded.books[*].authors": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$._embedded.books[*].authors[*]": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$._links.first.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$._links.last.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$._links.next.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.page.number": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.page.size": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.page.total_elements": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.page.total_pages": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            }
+          }
+        },
+        "status": 206
+      }
+    },
+    {
+      "description": "Default website page request without accept language",
       "providerStates": [
         {
           "name": "First page of 10 elements contains books"
@@ -38,6 +224,192 @@
                 ],
                 "description": "Paru en 1762, le Contrat social, ...",
                 "title": "Du contrat social"
+              }
+            ]
+          },
+          "_links": {
+            "first": {
+              "href": "string"
+            },
+            "last": {
+              "href": "string"
+            },
+            "next": {
+              "href": "string"
+            }
+          },
+          "page": {
+            "number": 0,
+            "size": 10,
+            "total_elements": 67,
+            "total_pages": 7
+          }
+        },
+        "generators": {
+          "body": {
+            "$._links.first.href": {
+              "size": 20,
+              "type": "RandomString"
+            },
+            "$._links.last.href": {
+              "size": 20,
+              "type": "RandomString"
+            },
+            "$._links.next.href": {
+              "size": 20,
+              "type": "RandomString"
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$._embedded.authors": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$._embedded.authors[*].id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$._embedded.books": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "max": 10
+                }
+              ]
+            },
+            "$._embedded.books[*].authors": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$._embedded.books[*].authors[*]": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$._links.first.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$._links.last.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$._links.next.href": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.page.number": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.page.size": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.page.total_elements": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.page.total_pages": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            }
+          }
+        },
+        "status": 206
+      }
+    },
+    {
+      "description": "Default website page request in english",
+      "providerStates": [
+        {
+          "name": "First page of 10 elements in english contains books"
+        }
+      ],
+      "request": {
+        "headers": {
+          "Accept-Language": "en, en-US;q=0.8, fr-FR;q=0.5, fr;q=0.3"
+        },
+        "method": "GET",
+        "path": "/api/v1/catalog",
+        "query": {
+          "page": [
+            "0"
+          ],
+          "size": [
+            "10"
+          ]
+        }
+      },
+      "response": {
+        "body": {
+          "_embedded": {
+            "authors": [
+              {
+                "id": "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2",
+                "name": "Jean-Jacques Rousseau"
+              }
+            ],
+            "books": [
+              {
+                "authors": [
+                  "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"
+                ],
+                "description": "The Social Contract, originally published as On the Social Contract; or, Principles of Political Right...",
+                "title": "The Social Contract"
               }
             ]
           },

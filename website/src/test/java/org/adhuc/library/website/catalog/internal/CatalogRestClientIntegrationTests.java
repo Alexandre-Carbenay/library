@@ -34,6 +34,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.PARTIAL_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestToUriTemplate;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
@@ -60,11 +61,11 @@ class CatalogRestClientIntegrationTests {
     @DisplayName("list books page without timeout")
     void getPage() {
         var response = new DefaultResourceLoader().getResource("classpath:client/catalog/page-0-size-10.json");
-        mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page=0&size=10")).andRespond(
-                withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON)
-        );
+        mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page=0&size=10"))
+                .andExpect(header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
+                .andRespond(withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON));
 
-        var actual = catalogRestClient.listBooks();
+        var actual = catalogRestClient.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3");
         SoftAssertions.assertSoftly(s -> {
             s.assertThat(actual.getSize()).isEqualTo(10);
             s.assertThat(actual.getTotalElements()).isEqualTo(67);
@@ -91,7 +92,7 @@ class CatalogRestClientIntegrationTests {
             return withStatus(PARTIAL_CONTENT).body(response).contentType(APPLICATION_JSON).createResponse(request);
         });
 
-        assertThrows(NoFallbackAvailableException.class, catalogRestClient::listBooks);
+        assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
     }
 
     @Test
@@ -100,7 +101,7 @@ class CatalogRestClientIntegrationTests {
         mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page=0&size=10"))
                 .andRespond(withStatus(INTERNAL_SERVER_ERROR));
 
-        assertThrows(NoFallbackAvailableException.class, catalogRestClient::listBooks);
+        assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
     }
 
     @Test
@@ -111,7 +112,7 @@ class CatalogRestClientIntegrationTests {
                 .forEach(i -> mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page=0&size=10"))
                         .andRespond(withStatus(INTERNAL_SERVER_ERROR)));
         IntStream.rangeClosed(1, 10)
-                .forEach(i -> assertThrows(NoFallbackAvailableException.class, catalogRestClient::listBooks));
+                .forEach(i -> assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3")));
         mockServer.verify();
     }
 
