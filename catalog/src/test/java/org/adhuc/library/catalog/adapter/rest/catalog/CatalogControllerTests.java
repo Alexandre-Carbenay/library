@@ -137,7 +137,7 @@ class CatalogControllerTests {
     }
 
     @ParameterizedTest
-    @MethodSource("uniqueDefaultPageProvider")
+    @MethodSource({"uniqueDefaultPageProvider", "uniqueDefaultPageWithOtherLanguageProvider"})
     @DisplayName("provide a unique page when the number of books in the catalog is lower than or equal to the requested page size")
     void uniqueDefaultPage(int numberOfElements, String language, List<Book> books, List<Edition> editions) throws Exception {
         var request = PageRequest.of(0, 50);
@@ -187,6 +187,21 @@ class CatalogControllerTests {
                                         books(language, otherLanguages).list().ofSize(numberOfElements),
                                         editions().list().ofMinSize(numberOfElements).ofMaxSize(numberOfElements * 2)
                                 ).as((books, editions) -> Arguments.of(numberOfElements, language, books, editions))
+                        )
+                )
+                .sampleStream().limit(5);
+    }
+
+    private static Stream<Arguments> uniqueDefaultPageWithOtherLanguageProvider() {
+        return Combinators.combine(
+                        integers().between(1, 50),
+                        languages()
+                )
+                .flatAs((numberOfElements, language) -> otherLanguages(language).list().ofMinSize(1)
+                        .flatMap(otherLanguages -> Combinators.combine(
+                                        books(language, Set.copyOf(otherLanguages)).list().ofSize(numberOfElements),
+                                        editions().list().ofMinSize(numberOfElements).ofMaxSize(numberOfElements * 2)
+                                ).as((books, editions) -> Arguments.of(numberOfElements, otherLanguages.getFirst(), books, editions))
                         )
                 )
                 .sampleStream().limit(5);

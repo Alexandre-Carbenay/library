@@ -69,7 +69,7 @@ public class CatalogController {
         var responseBody = HalModelBuilder.halModelOf(requireNonNull(response.getMetadata()))
                 .links(response.getLinks());
         if (!catalogPage.isEmpty()) {
-            var books = bookModelAssembler.toCollectionModel(catalogPage).getContent();
+            var books = bookModelAssembler.toCollectionModel(catalogPage, catalogLanguage.getLanguage()).getContent();
             var editionsInPage = editionsService.getBooksEditions(catalogPage.stream().map(Book::id).toList());
             var editions = editionModelAssembler.toCollectionModel(editionsInPage).getContent();
             var authors = authorModelAssembler.toCollectionModel(booksAuthors(catalogPage)).getContent();
