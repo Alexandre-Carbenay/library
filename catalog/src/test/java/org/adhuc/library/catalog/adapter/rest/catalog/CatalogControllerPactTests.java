@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import static java.util.Locale.ENGLISH;
+import static java.util.Locale.FRENCH;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -77,7 +79,7 @@ class CatalogControllerPactTests {
         );
 
         var request = PageRequest.of(0, 10);
-        when(catalogService.getPage(request)).thenReturn(new PageImpl<>(List.of(book), request, 67));
+        when(catalogService.getPage(request, FRENCH)).thenReturn(new PageImpl<>(List.of(book), request, 67));
         when(editionsService.getBooksEditions(List.of(bookId))).thenReturn(List.of(
                 new Edition(
                         "9782081275232",
@@ -86,6 +88,49 @@ class CatalogControllerPactTests {
                         book,
                         "fr",
                         "Paru en 1762, le Contrat social, ..."
+                )
+        ));
+    }
+
+    @State("First page of 10 elements in english contains books")
+    void page0Size10English() {
+        var bookId = UUID.fromString("b6608a30-1e9b-4ae0-a89d-624c3ca85da4");
+        var book = new Book(
+                bookId,
+                Set.of(new Author(
+                        UUID.fromString("83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"),
+                        "Jean-Jacques Rousseau",
+                        LocalDate.parse("1712-06-28"),
+                        LocalDate.parse("1778-07-02")
+                )),
+                "fr",
+                Set.of(new LocalizedDetails(
+                        "fr",
+                        "Du contrat social",
+                        "Du contrat social est un traité de philosophie politique présentant ...",
+                        Set.of(
+                                new ExternalLink("wikipedia", "https://fr.wikipedia.org/wiki/Du_contrat_social")
+                        )
+                ), new LocalizedDetails(
+                        "en",
+                        "The Social Contract",
+                        "The Social Contract, originally published as On the Social Contract; or, Principles of Political Right...",
+                        Set.of(
+                                new ExternalLink("wikipedia", "https://en.wikipedia.org/wiki/The_Social_Contract")
+                        )
+                ))
+        );
+
+        var request = PageRequest.of(0, 10);
+        when(catalogService.getPage(request, ENGLISH)).thenReturn(new PageImpl<>(List.of(book), request, 67));
+        when(editionsService.getBooksEditions(List.of(bookId))).thenReturn(List.of(
+                new Edition(
+                        "9798680022764",
+                        "The Social Contract",
+                        PublicationDate.of(LocalDate.parse("2020-08-27")),
+                        book,
+                        "en",
+                        "The Social Contract, written by the influential philosopher Jean-Jacques Rousseau, ..."
                 )
         ));
     }
@@ -113,7 +158,7 @@ class CatalogControllerPactTests {
         );
 
         var request = PageRequest.of(1, 25);
-        when(catalogService.getPage(request)).thenReturn(new PageImpl<>(List.of(book), request, 67));
+        when(catalogService.getPage(request, FRENCH)).thenReturn(new PageImpl<>(List.of(book), request, 67));
         when(editionsService.getBooksEditions(List.of(bookId))).thenReturn(List.of(
                 new Edition(
                         "9782081275232",

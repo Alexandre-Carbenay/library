@@ -12,13 +12,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.mediatype.hal.HalModelBuilder;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -26,6 +25,7 @@ import static java.util.stream.Collectors.toSet;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static org.springframework.http.HttpHeaders.CONTENT_LANGUAGE;
 import static org.springframework.http.HttpStatus.PARTIAL_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -56,12 +56,14 @@ public class CatalogController {
 
     @GetMapping
     public ResponseEntity<Object> getCatalog(@RequestParam(required = false, defaultValue = "0") Integer page,
-                                             @RequestParam(required = false, defaultValue = "50") Integer size) {
+                                             @RequestParam(required = false, defaultValue = "50") Integer size,
+                                             @RequestHeader HttpHeaders headers) {
         var pageRequest = PageRequest.of(page, size);
-        var catalogPage = catalogService.getPage(pageRequest);
+        var catalogLanguage = getRequestLocaleOrDefault(headers);
+        var catalogPage = catalogService.getPage(pageRequest, catalogLanguage);
         var response = pageAssembler.toModel(
                 catalogPage,
-                linkTo(methodOn(CatalogController.class).getCatalog(pageRequest.getPageNumber(), pageRequest.getPageSize())).withSelfRel()
+                linkTo(methodOn(CatalogController.class).getCatalog(pageRequest.getPageNumber(), pageRequest.getPageSize(), headers)).withSelfRel()
         );
 
         var responseBody = HalModelBuilder.halModelOf(requireNonNull(response.getMetadata()))
@@ -77,7 +79,14 @@ public class CatalogController {
                     .embed(editions, LinkRelation.of("editions"))
                     .embed(authors, LinkRelation.of("authors"));
         }
-        return ResponseEntity.status(PARTIAL_CONTENT).body(responseBody.build());
+        return ResponseEntity.status(PARTIAL_CONTENT).header(CONTENT_LANGUAGE, catalogLanguage.getLanguage()).body(responseBody.build());
+    }
+
+    private Locale getRequestLocaleOrDefault(HttpHeaders headers) {
+        var acceptLanguages = headers.getAcceptLanguageAsLocales();
+        return acceptLanguages.isEmpty()
+                ? Locale.FRENCH
+                : acceptLanguages.getFirst();
     }
 
     private Set<Author> booksAuthors(Page<Book> books) {
