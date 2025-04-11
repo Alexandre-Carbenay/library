@@ -1,14 +1,18 @@
 package org.adhuc.library.website.catalog;
 
 import org.adhuc.library.website.support.pagination.NavigablePage;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.util.List;
 import java.util.Optional;
+
+import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
 
 @Controller
 @SessionAttributes("booksPage")
@@ -32,9 +36,10 @@ public class CatalogController {
     }
 
     @GetMapping("/catalog")
-    public String catalog(Model model, @RequestParam(name = "link", required = false) String linkToFollow) {
+    public String catalog(Model model, @RequestParam(name = "link", required = false) String linkToFollow,
+                          @RequestHeader(name = ACCEPT_LANGUAGE, required = false, defaultValue = "") String acceptLanguages) {
         try {
-            return getBooksPage(linkToFollow)
+            return getBooksPage(linkToFollow, acceptLanguages)
                     .map(page -> browsePage(model, page))
                     .orElseGet(this::redirectToDefaultPage);
         } catch (IllegalArgumentException e) {
@@ -43,13 +48,13 @@ public class CatalogController {
         }
     }
 
-    private Optional<NavigablePage<Book>> getBooksPage(String linkToFollow) {
+    private Optional<NavigablePage<Book>> getBooksPage(String linkToFollow, String acceptLanguages) {
         if (linkToFollow != null) {
             // The navigation session may not find the current page if the server has been restarted
             return navigationSession.currentPage()
-                    .map(currentPage -> catalogClient.listBooks(currentPage, linkToFollow));
+                    .map(currentPage -> catalogClient.listBooks(currentPage, linkToFollow, acceptLanguages));
         }
-        return Optional.of(catalogClient.listBooks());
+        return Optional.of(catalogClient.listBooks(acceptLanguages));
     }
 
     private String browsePage(Model model, NavigablePage<Book> booksPage) {

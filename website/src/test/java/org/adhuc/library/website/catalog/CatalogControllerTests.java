@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +61,7 @@ class CatalogControllerTests {
     @DisplayName("provide the catalog default page")
     void catalogDefaultPage() throws Exception {
         var page = new NavigablePageImpl<>(PAGE_CONTENT, PageRequest.of(0, 10), 4, List.of());
-        when(catalogClient.listBooks()).thenReturn(page);
+        when(catalogClient.listBooks(any())).thenReturn(page);
 
         mvc.perform(get("/catalog"))
                 .andExpect(status().isOk())
@@ -73,7 +74,35 @@ class CatalogControllerTests {
                         LAST_PAGE_LINK_ATTRIBUTE
                 ));
 
-        verify(catalogClient).listBooks();
+        verify(catalogClient).listBooks(eq(""));
+        verifyNoMoreInteractions(catalogClient);
+        verify(navigationSession).switchPage(same(page));
+        verifyNoMoreInteractions(navigationSession);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "fr",
+            "en",
+            "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"
+    })
+    @DisplayName("provide the catalog default page with accept languages")
+    void catalogDefaultPageWithAcceptLanguages(String acceptLanguages) throws Exception {
+        var page = new NavigablePageImpl<>(PAGE_CONTENT, PageRequest.of(0, 10), 4, List.of());
+        when(catalogClient.listBooks(any())).thenReturn(page);
+
+        mvc.perform(get("/catalog").header("Accept-Language", acceptLanguages))
+                .andExpect(status().isOk())
+                .andExpect(view().name("catalog/root"))
+                .andExpect(model().attribute("books", PAGE_CONTENT))
+                .andExpect(model().attributeDoesNotExist(
+                        FIRST_PAGE_LINK_ATTRIBUTE,
+                        PREVIOUS_PAGE_LINK_ATTRIBUTE,
+                        NEXT_PAGE_LINK_ATTRIBUTE,
+                        LAST_PAGE_LINK_ATTRIBUTE
+                ));
+
+        verify(catalogClient).listBooks(eq(acceptLanguages));
         verifyNoMoreInteractions(catalogClient);
         verify(navigationSession).switchPage(same(page));
         verifyNoMoreInteractions(navigationSession);
@@ -84,9 +113,9 @@ class CatalogControllerTests {
     @DisplayName("provide the catalog default page including links")
     void catalogDefaultPageWithLinks(List<Link> links, Map<String, Matcher<String>> linksAttributesMatcher) throws Exception {
         var page = new NavigablePageImpl<>(PAGE_CONTENT, PageRequest.of(0, 10), 4, links);
-        when(catalogClient.listBooks()).thenReturn(page);
+        when(catalogClient.listBooks(any())).thenReturn(page);
 
-        var result = mvc.perform(get("/catalog"))
+        var result = mvc.perform(get("/catalog").header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("catalog/root"))
                 .andExpect(model().attribute("books", PAGE_CONTENT));
@@ -95,7 +124,7 @@ class CatalogControllerTests {
             result.andExpect(model().attribute(attribute, matcher));
         }
 
-        verify(catalogClient).listBooks();
+        verify(catalogClient).listBooks(eq("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
         verifyNoMoreInteractions(catalogClient);
         verify(navigationSession).switchPage(same(page));
         verifyNoMoreInteractions(navigationSession);
@@ -205,9 +234,10 @@ class CatalogControllerTests {
     @DisplayName("provide the catalog default page when navigating through a link, without previous navigation session")
     void catalogPageWithoutPreviousSession(String linkToFollow) throws Exception {
         var page = new NavigablePageImpl<>(PAGE_CONTENT, PageRequest.of(0, 10), 4, List.of());
-        when(catalogClient.listBooks()).thenReturn(page);
+        when(catalogClient.listBooks(any())).thenReturn(page);
 
-        mvc.perform(get("/catalog").param("link", linkToFollow))
+        mvc.perform(get("/catalog").param("link", linkToFollow)
+                        .header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
                 .andExpect(status().isFound())
                 .andExpect(view().name("redirect:/catalog"));
 
@@ -225,14 +255,45 @@ class CatalogControllerTests {
                 PageRequest.of(0, 10), 4, List.of());
         var page = new NavigablePageImpl<>(PAGE_CONTENT, PageRequest.of(0, 10), 4, List.of());
         when(navigationSession.currentPage()).thenReturn(Optional.of(previousPage));
-        when(catalogClient.listBooks(any(), any())).thenReturn(page);
+        when(catalogClient.listBooks(any(), any(), any())).thenReturn(page);
 
-        mvc.perform(get("/catalog").param("link", linkToFollow))
+        mvc.perform(get("/catalog").param("link", linkToFollow)
+                        .header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("catalog/root"))
                 .andExpect(model().attribute("books", PAGE_CONTENT));
 
-        verify(catalogClient).listBooks(any(), eq(linkToFollow));
+        verify(catalogClient).listBooks(any(), eq(linkToFollow), eq("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
+        verifyNoMoreInteractions(catalogClient);
+        verify(navigationSession).currentPage();
+        verify(navigationSession).switchPage(same(page));
+        verifyNoMoreInteractions(navigationSession);
+    }
+
+    @ParameterizedTest
+    @CsvSource(delimiter = '|', value = {
+            "first|fr",
+            "first|en",
+            "first|fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+            "prev|fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+            "next|fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+            "last|fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"
+    })
+    @DisplayName("provide the catalog page when navigating through a link, with previous navigation session, with accept languages")
+    void catalogPageWithPageInPreviousSessionAcceptLanguages(String linkToFollow, String acceptLanguages) throws Exception {
+        var previousPage = new NavigablePageImpl<>(List.of(A_DANCE_WITH_DRAGONS),
+                PageRequest.of(0, 10), 4, List.of());
+        var page = new NavigablePageImpl<>(PAGE_CONTENT, PageRequest.of(0, 10), 4, List.of());
+        when(navigationSession.currentPage()).thenReturn(Optional.of(previousPage));
+        when(catalogClient.listBooks(any(), any(), any())).thenReturn(page);
+
+        mvc.perform(get("/catalog").param("link", linkToFollow)
+                        .header("Accept-Language", acceptLanguages))
+                .andExpect(status().isOk())
+                .andExpect(view().name("catalog/root"))
+                .andExpect(model().attribute("books", PAGE_CONTENT));
+
+        verify(catalogClient).listBooks(any(), eq(linkToFollow), eq(acceptLanguages));
         verifyNoMoreInteractions(catalogClient);
         verify(navigationSession).currentPage();
         verify(navigationSession).switchPage(same(page));
@@ -257,14 +318,14 @@ class CatalogControllerTests {
                 body
         );
 
-        when(catalogClient.listBooks()).thenThrow(exception);
+        when(catalogClient.listBooks(any())).thenThrow(exception);
 
-        mvc.perform(get("/catalog"))
+        mvc.perform(get("/catalog").header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("error"))
                 .andExpect(model().attribute("message", "Some details on client error"));
 
-        verify(catalogClient).listBooks();
+        verify(catalogClient).listBooks(eq("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
         verifyNoMoreInteractions(catalogClient);
     }
 
@@ -286,14 +347,14 @@ class CatalogControllerTests {
                 body
         );
 
-        when(catalogClient.listBooks()).thenThrow(exception);
+        when(catalogClient.listBooks(any())).thenThrow(exception);
 
-        mvc.perform(get("/catalog"))
+        mvc.perform(get("/catalog").header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("error"))
                 .andExpect(model().attribute("message", "Some details on server error"));
 
-        verify(catalogClient).listBooks();
+        verify(catalogClient).listBooks(eq("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
         verifyNoMoreInteractions(catalogClient);
     }
 
