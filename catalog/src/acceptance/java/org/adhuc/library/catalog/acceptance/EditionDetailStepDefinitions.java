@@ -4,11 +4,11 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.ValidatableResponse;
 
-import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import static io.restassured.RestAssured.when;
-import static org.adhuc.library.catalog.acceptance.assertions.EmbeddedAuthorsAssertions.assertResponseEmbedsAuthors;
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 
 @SuppressWarnings("preview")
@@ -34,16 +34,16 @@ public class EditionDetailStepDefinitions {
                 .body("detail", equalTo(STR."No edition exists with ISBN '\{isbn}'"));
     }
 
-    @Then("the edition details have the expected {string}, {word}, {language}, {authorNames} and {string}")
-    public void existingEditionDetails(String title, String publicationDate, Locale language, List<String> authorNames, String summary) {
+    @Then("the edition details have the expected {string}, {word}, {language}, {string} and related {uuid}")
+    public void existingEditionDetails(String title, String publicationDate, Locale language, String summary, UUID bookId) {
         response.statusCode(200)
                 .contentType("application/json")
                 .body("isbn", equalTo(isbn))
                 .body("title", equalTo(title))
                 .body("publication_date", equalTo(publicationDate))
                 .body("language", equalTo(language.getLanguage()))
-                .body("summary", equalTo(summary));
-        assertResponseEmbedsAuthors(response, authorNames, name -> STR."Edition \{isbn} details must contain author named \{name}");
+                .body("summary", equalTo(summary))
+                .body("_links.book.href", endsWith("/books/" + bookId.toString()));
     }
 
 }
