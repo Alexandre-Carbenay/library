@@ -11,8 +11,9 @@ public interface EditionsRepository {
 
     Optional<Edition> findByIsbn(String isbn);
 
+    Collection<Edition> findByBookId(UUID bookId);
+
     Collection<Edition> findByBookIds(Collection<UUID> bookIds);
 
     Collection<Edition> findNotableByAuthor(UUID authorId);
-
 }

@@ -38,6 +38,12 @@ class EditionsServiceTests {
     }
 
     @Test
+    @DisplayName("refuse getting editions for a null book")
+    void errorGetEditionsNullBookId() {
+        assertThrows(IllegalArgumentException.class, () -> service.getBookEditions(null));
+    }
+
+    @Test
     @DisplayName("refuse getting editions for a null list of books")
     void errorGetEditionsNullBookIds() {
         assertThrows(IllegalArgumentException.class, () -> service.getBooksEditions(null));
@@ -106,13 +112,13 @@ class EditionsServiceTests {
 
         @ParameterizedTest
         @MethodSource("unknownBookEditionsProvider")
-        @DisplayName("not find any editions for unknown books")
-        void unknownBooksEditions(List<UUID> bookIds) {
-            assertThat(service.getBooksEditions(bookIds)).isEmpty();
+        @DisplayName("not find any editions for unknown book")
+        void unknownBookEditions(UUID bookId) {
+            assertThat(service.getBookEditions(bookId)).isEmpty();
         }
 
         private static Stream<Arguments> unknownBookEditionsProvider() {
-            return Books.ids().list().ofMinSize(0).ofMaxSize(10)
+            return Books.ids()
                     .map(Arguments::of)
                     .sampleStream()
                     .limit(3);
@@ -120,12 +126,50 @@ class EditionsServiceTests {
 
         @ParameterizedTest
         @MethodSource("knownBookEditionsProvider")
+        @DisplayName("find editions for known book")
+        void knownBookEditions(UUID bookId, List<Edition> expected) {
+            assertThat(service.getBookEditions(bookId)).containsExactlyInAnyOrderElementsOf(expected);
+        }
+
+        private static Stream<Arguments> knownBookEditionsProvider() {
+            return Stream.of(
+                    Arguments.of(
+                            BooksMother.Real.L_ETRANGER.id(),
+                            List.of(L_ETRANGER)
+                    ),
+                    Arguments.of(
+                            BooksMother.Real.ANNA_KARENINE.id(),
+                            List.of(ANNA_KARENINE)
+                    ),
+                    Arguments.of(
+                            BooksMother.Real.GUERRE_ET_PAIX.id(),
+                            List.of(LA_GUERRE_ET_LA_PAIX_1, LA_GUERRE_ET_LA_PAIX_2)
+                    )
+            );
+        }
+
+        @ParameterizedTest
+        @MethodSource("unknownBooksEditionsProvider")
+        @DisplayName("not find any editions for unknown books")
+        void unknownBooksEditions(List<UUID> bookIds) {
+            assertThat(service.getBooksEditions(bookIds)).isEmpty();
+        }
+
+        private static Stream<Arguments> unknownBooksEditionsProvider() {
+            return Books.ids().list().ofMinSize(0).ofMaxSize(10)
+                    .map(Arguments::of)
+                    .sampleStream()
+                    .limit(3);
+        }
+
+        @ParameterizedTest
+        @MethodSource("knownBooksEditionsProvider")
         @DisplayName("find editions for known books")
         void knownBooksEditions(List<UUID> bookIds, List<Edition> expected) {
             assertThat(service.getBooksEditions(bookIds)).containsExactlyInAnyOrderElementsOf(expected);
         }
 
-        private static Stream<Arguments> knownBookEditionsProvider() {
+        private static Stream<Arguments> knownBooksEditionsProvider() {
             return Stream.of(
                     Arguments.of(
                             List.of(BooksMother.Real.L_ETRANGER.id()),
@@ -156,7 +200,6 @@ class EditionsServiceTests {
                                     ANNA_KARENINE
                             )
                     )
-
             );
         }
 

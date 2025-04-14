@@ -13,6 +13,12 @@ public class EditionsAssertions {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
+
+    public static void assertResponseContainsAllEmbeddedEditions(ResultActions result,
+                                                                 Collection<Edition> expectedEditions) throws Exception {
+        assertResponseContainsAllEmbeddedEditions(result, "editions", expectedEditions);
+    }
+
     public static void assertResponseContainsAllEmbeddedEditions(ResultActions result,
                                                                  String collectionName,
                                                                  Collection<Edition> expectedEditions) throws Exception {

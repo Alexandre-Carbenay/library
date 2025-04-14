@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import static io.restassured.RestAssured.given;
 import static org.adhuc.library.catalog.acceptance.assertions.EmbeddedAuthorsAssertions.assertResponseEmbedsAuthors;
+import static org.adhuc.library.catalog.acceptance.assertions.EmbeddedEditionsAssertions.assertResponseEmbedsEditions;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -39,8 +40,8 @@ public class BookDetailStepDefinitions {
                 .body("detail", equalTo(STR."No book exists with id '\{bookId}'"));
     }
 
-    @Then("the book details have the expected {string}, {authorNames}, {string} and wikipedia {word} in the requested {language}")
-    public void existingBookDetails(String title, List<String> authorNames, String description, String wikipediaLink, Locale language) {
+    @Then("the book details have the expected {string}, {authorNames}, {string}, {isbns} and wikipedia {word} in the requested {language}")
+    public void existingBookDetails(String title, List<String> authorNames, String description, List<String> editionIsbns, String wikipediaLink, Locale language) {
         response.statusCode(200)
                 .contentType("application/json")
                 .header("Content-Language", language.getLanguage())
@@ -49,6 +50,7 @@ public class BookDetailStepDefinitions {
                 .body("description", equalTo(description))
                 .body("_links.wikipedia.href", equalTo(wikipediaLink));
         assertResponseEmbedsAuthors(response, authorNames, name -> STR."Book \{bookId} details must contain author named \{name}");
+        assertResponseEmbedsEditions(response, editionIsbns, isbn -> STR."Book \{bookId} details must contain edition with ISBN \{isbn}");
     }
 
     @Then("the book details have no wikipedia link")

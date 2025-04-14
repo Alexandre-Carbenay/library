@@ -23,6 +23,11 @@ public class EditionsService {
         return repository.findByIsbn(isbn);
     }
 
+    public Collection<Edition> getBookEditions(UUID bookId) {
+        Assert.notNull(bookId, "Cannot get editions from null book");
+        return repository.findByBookId(bookId);
+    }
+
     public Collection<Edition> getBooksEditions(Collection<UUID> bookIds) {
         Assert.notNull(bookIds, "Cannot get book editions from null books list");
         return repository.findByBookIds(bookIds);

@@ -28,6 +28,17 @@ public final class EditionsMother {
         ).as(Edition::new);
     }
 
+    public static Arbitrary<Edition> editionsOf(Book book) {
+        return Combinators.combine(
+                Editions.isbns(),
+                Editions.titles(),
+                Editions.publicationDates(),
+                Arbitraries.just(book),
+                Editions.languages(),
+                Editions.summaries()
+        ).as(Edition::new);
+    }
+
     public static Arbitrary<Edition> notableEditionsOf(UUID authorId) {
         return Combinators.combine(
                 Editions.isbns(),

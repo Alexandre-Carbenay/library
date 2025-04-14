@@ -1,8 +1,10 @@
 package org.adhuc.library.catalog.adapter.rest.books;
 
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
+import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksService;
+import org.adhuc.library.catalog.editions.EditionsService;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.HttpHeaders;
@@ -28,12 +30,20 @@ public class BooksController {
 
     private final BookDetailsModelAssembler bookModelAssembler;
     private final AuthorModelAssembler authorModelAssembler;
+    private final EditionModelAssembler editionModelAssembler;
     private final BooksService booksService;
+    private final EditionsService editionsService;
 
-    public BooksController(BookDetailsModelAssembler bookModelAssembler, AuthorModelAssembler authorModelAssembler, BooksService booksService) {
+    public BooksController(BookDetailsModelAssembler bookModelAssembler,
+                           AuthorModelAssembler authorModelAssembler,
+                           EditionModelAssembler editionModelAssembler,
+                           BooksService booksService,
+                           EditionsService editionsService) {
         this.bookModelAssembler = bookModelAssembler;
         this.authorModelAssembler = authorModelAssembler;
+        this.editionModelAssembler = editionModelAssembler;
         this.booksService = booksService;
+        this.editionsService = editionsService;
     }
 
     @GetMapping("/{id}")
@@ -49,13 +59,16 @@ public class BooksController {
 
         var bookDetails = bookModelAssembler.toModel(book, responseLanguage);
         var authors = authorModelAssembler.toCollectionModel(book.authors()).getContent();
+        var editions = editionModelAssembler.toCollectionModel(editionsService.getBookEditions(book.id())).getContent();
+        var responseBody = halModelOf(bookDetails)
+                .links(bookDetails.getLinks())
+                .embed(authors, LinkRelation.of("authors"));
+        if (!editions.isEmpty()) {
+            responseBody = responseBody.embed(editions, LinkRelation.of("editions"));
+        }
         return ResponseEntity.status(OK)
                 .header(CONTENT_LANGUAGE, responseLanguage)
-                .body(halModelOf(bookDetails)
-                        .links(bookDetails.getLinks())
-                        .embed(authors, LinkRelation.of("authors"))
-                        .build()
-                );
+                .body(responseBody.build());
     }
 
     private String determineResponseLanguage(Book book, List<Locale> languages) {
