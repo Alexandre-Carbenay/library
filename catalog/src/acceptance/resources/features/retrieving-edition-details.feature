@@ -9,7 +9,7 @@ Feature: Retrieve edition details
 			Then the edition details cannot be retrieved because it does not exists
 			Examples:
 				| isbn          |
-				| 9782290385050 |
+				| 9782081216440 |
 				| 9782253160991 |
 				| 9782290365182 |
 

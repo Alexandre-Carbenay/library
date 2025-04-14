@@ -25,6 +25,11 @@ public class InMemoryEditionsRepository implements EditionsRepository {
     }
 
     @Override
+    public Collection<Edition> findByBookId(UUID bookId) {
+        return findByBookIds(List.of(bookId));
+    }
+
+    @Override
     public Collection<Edition> findByBookIds(Collection<UUID> bookIds) {
         return editions.stream()
                 .filter(edition -> bookIds.contains(edition.book().id()))
