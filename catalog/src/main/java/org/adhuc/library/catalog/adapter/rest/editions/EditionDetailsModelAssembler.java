@@ -10,7 +10,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-class EditionDetailsModelAssembler extends RepresentationModelAssemblerSupport<Edition, EditionDetailsModel> {
+public class EditionDetailsModelAssembler extends RepresentationModelAssemblerSupport<Edition, EditionDetailsModel> {
     public EditionDetailsModelAssembler() {
         super(EditionsController.class, EditionDetailsModel.class);
     }

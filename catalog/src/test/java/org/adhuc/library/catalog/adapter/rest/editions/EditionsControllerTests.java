@@ -1,7 +1,6 @@
 package org.adhuc.library.catalog.adapter.rest.editions;
 
 import net.jqwik.api.Arbitrary;
-import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.editions.Edition;
 import org.adhuc.library.catalog.editions.EditionsMother;
@@ -25,7 +24,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.adhuc.library.catalog.adapter.rest.authors.AuthorsAssertions.assertResponseContainsAllEmbeddedAuthors;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,8 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(controllers = {
         EditionsController.class,
         EditionModelAssembler.class,
-        EditionDetailsModelAssembler.class,
-        AuthorModelAssembler.class
+        EditionDetailsModelAssembler.class
 })
 @Import(RequestValidationConfiguration.class)
 @DisplayName("Editions controller should")
@@ -91,7 +88,7 @@ class EditionsControllerTests {
     void knownEditionId(Edition edition) throws Exception {
         when(editionsService.getEdition(Mockito.any())).thenReturn(Optional.of(edition));
 
-        var result = mvc.perform(get("/api/v1/editions/{isbn}", edition.isbn()).accept("application/hal+json"))
+        mvc.perform(get("/api/v1/editions/{isbn}", edition.isbn()).accept("application/hal+json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("isbn", equalTo(edition.isbn())))
                 .andExpect(jsonPath("title", equalTo(edition.title())))
@@ -100,8 +97,6 @@ class EditionsControllerTests {
                 .andExpect(jsonPath("summary", equalTo(edition.summary())))
                 .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/editions/\{edition.isbn()}")))
                 .andExpect(jsonPath("_links.book.href", equalTo(STR."http://localhost/api/v1/books/\{edition.book().id()}")));
-
-        assertResponseContainsAllEmbeddedAuthors(result, edition.book().authors());
 
         verify(editionsService).getEdition(edition.isbn());
     }

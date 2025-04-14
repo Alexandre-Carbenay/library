@@ -1,11 +1,9 @@
 package org.adhuc.library.catalog.adapter.rest.editions;
 
 import org.adhuc.library.catalog.adapter.rest.ProblemError.ParameterError;
-import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.editions.Edition;
 import org.adhuc.library.catalog.editions.EditionsService;
 import org.apache.commons.validator.routines.ISBNValidator;
-import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,15 +27,12 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 public class EditionsController {
 
     private final EditionDetailsModelAssembler editionModelAssembler;
-    private final AuthorModelAssembler authorModelAssembler;
     private final EditionsService editionsService;
     private final ISBNValidator isbnValidator = new ISBNValidator();
 
     public EditionsController(EditionDetailsModelAssembler editionModelAssembler,
-                              AuthorModelAssembler authorModelAssembler,
                               EditionsService editionsService) {
         this.editionModelAssembler = editionModelAssembler;
-        this.authorModelAssembler = authorModelAssembler;
         this.editionsService = editionsService;
     }
 
@@ -54,11 +49,9 @@ public class EditionsController {
 
     private ResponseEntity<Object> prepareEditionResponse(Edition edition) {
         var editionDetails = editionModelAssembler.toModel(edition);
-        var authors = authorModelAssembler.toCollectionModel(edition.book().authors()).getContent();
         return ResponseEntity.status(OK)
                 .body(halModelOf(editionDetails)
                         .links(editionDetails.getLinks())
-                        .embed(authors, LinkRelation.of("authors"))
                         .build()
                 );
     }

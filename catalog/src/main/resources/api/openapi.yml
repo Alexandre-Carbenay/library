@@ -567,17 +567,6 @@ components:
               $ref: '#/components/schemas/EditionLink'
             book:
               $ref: '#/components/schemas/BookLink'
-        '_embedded':
-          type: object
-          readOnly: true
-          required:
-            - authors
-          properties:
-            authors:
-              description: The authors related to the book.
-              type: array
-              items:
-                $ref: '#/components/schemas/Author'
     ISBN:
       type: string
       format: isbn
