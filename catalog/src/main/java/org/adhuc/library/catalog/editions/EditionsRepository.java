@@ -13,7 +13,5 @@ public interface EditionsRepository {
 
     Collection<Edition> findByBookId(UUID bookId);
 
-    Collection<Edition> findByBookIds(Collection<UUID> bookIds);
-
     Collection<Edition> findNotableByAuthor(UUID authorId);
 }

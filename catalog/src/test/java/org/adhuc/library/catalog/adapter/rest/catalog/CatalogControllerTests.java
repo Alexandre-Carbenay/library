@@ -5,13 +5,10 @@ import net.jqwik.api.Combinators;
 import org.adhuc.library.catalog.adapter.rest.PaginationSerializationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
-import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.CatalogService;
-import org.adhuc.library.catalog.editions.Edition;
-import org.adhuc.library.catalog.editions.EditionsService;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,8 +43,6 @@ import static org.adhuc.library.catalog.adapter.rest.authors.AuthorsAssertions.a
 import static org.adhuc.library.catalog.books.BooksMother.Books.languages;
 import static org.adhuc.library.catalog.books.BooksMother.Books.otherLanguages;
 import static org.adhuc.library.catalog.books.BooksMother.books;
-import static org.adhuc.library.catalog.editions.EditionsMother.editions;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -56,7 +51,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SuppressWarnings("unused")
-@WebMvcTest(controllers = {CatalogController.class, BookModelAssembler.class, EditionModelAssembler.class, AuthorModelAssembler.class})
+@WebMvcTest(controllers = {CatalogController.class, BookModelAssembler.class, AuthorModelAssembler.class})
 @Import({RequestValidationConfiguration.class, PaginationSerializationConfiguration.class})
 @DisplayName("Catalog controller should")
 class CatalogControllerTests {
@@ -65,12 +60,8 @@ class CatalogControllerTests {
     private MockMvc mvc;
     @MockitoBean
     private CatalogService catalogService;
-    @MockitoBean
-    private EditionsService editionsService;
     @Captor
     private ArgumentCaptor<Pageable> pageableCaptor;
-    @Captor
-    private ArgumentCaptor<Collection<UUID>> booksCaptor;
 
     @Test
     @DisplayName("provide an empty page when no edition can be found in the catalog for the default language")
@@ -99,7 +90,6 @@ class CatalogControllerTests {
             s.assertThat(actual.getPageNumber()).isZero();
             s.assertThat(actual.getPageSize()).isEqualTo(50);
         });
-        verifyNoInteractions(editionsService);
     }
 
     @ParameterizedTest
@@ -133,16 +123,14 @@ class CatalogControllerTests {
             s.assertThat(actual.getPageNumber()).isZero();
             s.assertThat(actual.getPageSize()).isEqualTo(50);
         });
-        verifyNoInteractions(editionsService);
     }
 
     @ParameterizedTest
     @MethodSource({"uniqueDefaultPageProvider", "uniqueDefaultPageWithOtherLanguageProvider"})
     @DisplayName("provide a unique page when the number of books in the catalog is lower than or equal to the requested page size")
-    void uniqueDefaultPage(int numberOfElements, String language, List<Book> books, List<Edition> editions) throws Exception {
+    void uniqueDefaultPage(int numberOfElements, String language, List<Book> books) throws Exception {
         var request = PageRequest.of(0, 50);
         when(catalogService.getPage(any(), any())).thenReturn(new PageImpl<>(books, request, numberOfElements));
-        when(editionsService.getBooksEditions(any())).thenReturn(editions);
 
         var result = mvc.perform(get("/api/v1/catalog")
                         .accept("application/hal+json")
@@ -163,7 +151,6 @@ class CatalogControllerTests {
                 .andExpect(header().string("Content-Language", language));
 
         assertResponseContainsAllBooks(result, language, books);
-        assertResponseContainsAllEditions(result, editions);
         assertResponseContainsAllBooksAuthors(result, books);
 
         verify(catalogService).getPage(pageableCaptor.capture(), eq(Locale.of(language)));
@@ -172,9 +159,6 @@ class CatalogControllerTests {
             s.assertThat(actual.getPageNumber()).isZero();
             s.assertThat(actual.getPageSize()).isEqualTo(50);
         });
-        verify(editionsService).getBooksEditions(booksCaptor.capture());
-        var actualBookIds = booksCaptor.getValue();
-        assertThat(actualBookIds).containsExactlyInAnyOrderElementsOf(books.stream().map(Book::id).toList());
     }
 
     private static Stream<Arguments> uniqueDefaultPageProvider() {
@@ -183,10 +167,8 @@ class CatalogControllerTests {
                         languages()
                 )
                 .flatAs((numberOfElements, language) -> otherLanguages(language).set()
-                        .flatMap(otherLanguages -> Combinators.combine(
-                                        books(language, otherLanguages).list().ofSize(numberOfElements),
-                                        editions().list().ofMinSize(numberOfElements).ofMaxSize(numberOfElements * 2)
-                                ).as((books, editions) -> Arguments.of(numberOfElements, language, books, editions))
+                        .flatMap(otherLanguages -> books(language, otherLanguages).list().ofSize(numberOfElements)
+                                .map(books -> Arguments.of(numberOfElements, language, books))
                         )
                 )
                 .sampleStream().limit(5);
@@ -198,10 +180,8 @@ class CatalogControllerTests {
                         languages()
                 )
                 .flatAs((numberOfElements, language) -> otherLanguages(language).list().ofMinSize(1)
-                        .flatMap(otherLanguages -> Combinators.combine(
-                                        books(language, Set.copyOf(otherLanguages)).list().ofSize(numberOfElements),
-                                        editions().list().ofMinSize(numberOfElements).ofMaxSize(numberOfElements * 2)
-                                ).as((books, editions) -> Arguments.of(numberOfElements, otherLanguages.getFirst(), books, editions))
+                        .flatMap(otherLanguages -> books(language, Set.copyOf(otherLanguages)).list().ofSize(numberOfElements)
+                                .map(books -> Arguments.of(numberOfElements, otherLanguages.getFirst(), books))
                         )
                 )
                 .sampleStream().limit(5);
@@ -210,9 +190,8 @@ class CatalogControllerTests {
     @ParameterizedTest
     @MethodSource("defaultPageSizeProvider")
     @DisplayName("provide a page with default page size when not specified explicitly")
-    void defaultPageSize(String language, Page<Book> books, List<Edition> editions) throws Exception {
+    void defaultPageSize(String language, Page<Book> books) throws Exception {
         when(catalogService.getPage(any(), any())).thenReturn(books);
-        when(editionsService.getBooksEditions(any())).thenReturn(editions);
 
         var result = mvc.perform(get("/api/v1/catalog")
                         .accept("application/hal+json")
@@ -229,7 +208,6 @@ class CatalogControllerTests {
                 .andExpect(header().string("Content-Language", language));
 
         assertResponseContainsAllBooks(result, language, books.toList());
-        assertResponseContainsAllEditions(result, editions);
         assertResponseContainsAllBooksAuthors(result, books.toList());
 
         verify(catalogService).getPage(pageableCaptor.capture(), eq(Locale.of(language)));
@@ -238,9 +216,6 @@ class CatalogControllerTests {
             s.assertThat(actual.getPageNumber()).isEqualTo(books.getNumber());
             s.assertThat(actual.getPageSize()).isEqualTo(50);
         });
-        verify(editionsService).getBooksEditions(booksCaptor.capture());
-        var actualBookIds = booksCaptor.getValue();
-        assertThat(actualBookIds).containsExactlyInAnyOrderElementsOf(books.stream().map(Book::id).toList());
     }
 
     private static Stream<Arguments> defaultPageSizeProvider() {
@@ -249,9 +224,7 @@ class CatalogControllerTests {
                         languages()
                 )
                 .flatAs((pageIndex, language) -> otherLanguages(language).set()
-                        .flatMap(otherLanguages -> editions().list().ofMinSize(50).ofMaxSize(100)
-                                .map(editions -> Arguments.of(language, pageSample(pageIndex, 50, language, otherLanguages), editions))
-                        )
+                        .map(otherLanguages -> Arguments.of(language, pageSample(pageIndex, 50, language, otherLanguages)))
                 )
                 .sampleStream().limit(5);
     }
@@ -319,9 +292,8 @@ class CatalogControllerTests {
     @ParameterizedTest
     @MethodSource("pageProvider")
     @DisplayName("provide a page corresponding to requested page and size")
-    void getPage(int pageNumber, int pageSize, String language, Page<Book> books, List<Edition> editions) throws Exception {
+    void getPage(int pageNumber, int pageSize, String language, Page<Book> books) throws Exception {
         when(catalogService.getPage(any(), any())).thenReturn(books);
-        when(editionsService.getBooksEditions(any())).thenReturn(editions);
 
         var result = mvc.perform(get("/api/v1/catalog")
                         .accept("application/hal+json")
@@ -347,9 +319,6 @@ class CatalogControllerTests {
             s.assertThat(actual.getPageNumber()).isEqualTo(books.getNumber());
             s.assertThat(actual.getPageSize()).isEqualTo(books.getSize());
         });
-        verify(editionsService).getBooksEditions(booksCaptor.capture());
-        var actualBookIds = booksCaptor.getValue();
-        assertThat(actualBookIds).containsExactlyInAnyOrderElementsOf(books.stream().map(Book::id).toList());
     }
 
     private static Stream<Arguments> pageProvider() {
@@ -362,8 +331,7 @@ class CatalogControllerTests {
                                 pageNumber,
                                 pageSize,
                                 language,
-                                pageSample(pageNumber, pageSize, language, otherLanguages),
-                                editions().list().ofMinSize(pageSize).ofMaxSize(pageSize * 2).sample()
+                                pageSample(pageNumber, pageSize, language, otherLanguages)
                         ))
                 )
                 .sampleStream().limit(5);
@@ -372,9 +340,8 @@ class CatalogControllerTests {
     @ParameterizedTest
     @MethodSource("pageDefaultLanguageProvider")
     @DisplayName("provide a page corresponding to requested page and size in default language")
-    void getPageDefaultLanguage(int pageNumber, int pageSize, Page<Book> books, List<Edition> editions) throws Exception {
+    void getPageDefaultLanguage(int pageNumber, int pageSize, Page<Book> books) throws Exception {
         when(catalogService.getPage(any(), any())).thenReturn(books);
-        when(editionsService.getBooksEditions(any())).thenReturn(editions);
 
         var result = mvc.perform(get("/api/v1/catalog")
                         .accept("application/hal+json")
@@ -399,9 +366,6 @@ class CatalogControllerTests {
             s.assertThat(actual.getPageNumber()).isEqualTo(books.getNumber());
             s.assertThat(actual.getPageSize()).isEqualTo(books.getSize());
         });
-        verify(editionsService).getBooksEditions(booksCaptor.capture());
-        var actualBookIds = booksCaptor.getValue();
-        assertThat(actualBookIds).containsExactlyInAnyOrderElementsOf(books.stream().map(Book::id).toList());
     }
 
     private static Stream<Arguments> pageDefaultLanguageProvider() {
@@ -412,8 +376,7 @@ class CatalogControllerTests {
                         .map(otherLanguages -> Arguments.of(
                                 pageNumber,
                                 pageSize,
-                                pageSample(pageNumber, pageSize, "fr", otherLanguages),
-                                editions().list().ofMinSize(pageSize).ofMaxSize(pageSize * 2).sample()
+                                pageSample(pageNumber, pageSize, "fr", otherLanguages)
                         ))
                 )
                 .sampleStream().limit(5);
@@ -422,10 +385,9 @@ class CatalogControllerTests {
     @ParameterizedTest(name = "[{index}] Page = {0}, size = {1}, first = {3}, prev = {4}, next = {5}, last = {6}")
     @MethodSource({"uniquePagesProvider", "firstPagesProvider", "intermediatePagesProvider", "lastPagesProvider"})
     @DisplayName("provide a page with navigation links")
-    void getPageWithNavigation(int pageNumber, int pageSize, String language, Page<Book> books, List<Edition> editions, boolean hasFirst,
+    void getPageWithNavigation(int pageNumber, int pageSize, String language, Page<Book> books, boolean hasFirst,
                                boolean hasPrev, boolean hasNext, boolean hasLast) throws Exception {
         when(catalogService.getPage(any(), any())).thenReturn(books);
-        when(editionsService.getBooksEditions(any())).thenReturn(editions);
 
         var result = mvc.perform(get("/api/v1/catalog")
                         .accept("application/hal+json")
@@ -456,10 +418,8 @@ class CatalogControllerTests {
                         integers().between(2, 100),
                         languages()
                 ).flatAs((requestedPageSize, numberOfEditions, language) -> otherLanguages(language).set()
-                        .flatMap(otherLanguages -> Combinators.combine(
-                                        Arbitraries.just(lastPage(0, requestedPageSize, language, otherLanguages)),
-                                        editions().list().ofSize(numberOfEditions)
-                                ).as((books, editions) -> Arguments.of(0, books.getPageable().getPageSize(), language, books, editions, false, false, false, false))
+                        .flatMap(otherLanguages -> Arbitraries.just(lastPage(0, requestedPageSize, language, otherLanguages))
+                                .map(books -> Arguments.of(0, books.getPageable().getPageSize(), language, books, false, false, false, false))
                         )
                 )
                 .sampleStream().distinct().limit(3);
@@ -471,11 +431,8 @@ class CatalogControllerTests {
                         integers().between(2, 100),
                         languages()
                 ).flatAs((requestedPageSize, numberOfEditions, language) -> otherLanguages(language).set()
-                        .flatMap(otherLanguages ->
-                                Combinators.combine(
-                                        Arbitraries.just(fullPage(0, requestedPageSize, language, otherLanguages)),
-                                        editions().list().ofSize(numberOfEditions)
-                                ).as((books, editions) -> Arguments.of(0, books.getPageable().getPageSize(), language, books, editions, true, false, true, true))
+                        .flatMap(otherLanguages -> Arbitraries.just(fullPage(0, requestedPageSize, language, otherLanguages))
+                                .map(books -> Arguments.of(0, books.getPageable().getPageSize(), language, books, true, false, true, true))
                         )
                 )
                 .sampleStream().distinct().limit(3);
@@ -488,10 +445,8 @@ class CatalogControllerTests {
                         integers().between(2, 100),
                         languages()
                 ).flatAs((page, requestedPageSize, numberOfEditions, language) -> otherLanguages(language).set()
-                        .flatMap(otherLanguages -> Combinators.combine(
-                                        Arbitraries.just(fullPage(page, requestedPageSize, language, otherLanguages)),
-                                        editions().list().ofSize(numberOfEditions)
-                                ).as((books, editions) -> Arguments.of(books.getNumber(), books.getPageable().getPageSize(), language, books, editions, true, true, true, true))
+                        .flatMap(otherLanguages -> Arbitraries.just(fullPage(page, requestedPageSize, language, otherLanguages))
+                                .map(books -> Arguments.of(books.getNumber(), books.getPageable().getPageSize(), language, books, true, true, true, true))
                         )
                 )
                 .sampleStream().distinct().limit(3);
@@ -504,11 +459,8 @@ class CatalogControllerTests {
                         integers().between(2, 100),
                         languages()
                 ).flatAs((page, requestedPageSize, numberOfEditions, language) -> otherLanguages(language).set()
-                        .flatMap(otherLanguages -> Combinators.combine(
-                                                Arbitraries.just(lastPage(page, requestedPageSize, language, otherLanguages)),
-                                                editions().list().ofSize(numberOfEditions)
-                                        )
-                                        .as((books, editions) -> Arguments.of(books.getNumber(), books.getPageable().getPageSize(), language, books, editions, true, true, false, true))
+                        .flatMap(otherLanguages -> Arbitraries.just(lastPage(page, requestedPageSize, language, otherLanguages))
+                                .map(books -> Arguments.of(books.getNumber(), books.getPageable().getPageSize(), language, books, true, true, false, true))
                         )
                 )
                 .sampleStream().distinct().limit(3);
@@ -564,28 +516,6 @@ class CatalogControllerTests {
     private void assertResponseContainsAllBooksAuthors(ResultActions result, Collection<Book> expectedBooks) throws Exception {
         var expectedAuthors = expectedBooks.stream().map(Book::authors).flatMap(Collection::stream).collect(toSet());
         assertResponseContainsAllEmbeddedAuthors(result, expectedAuthors);
-    }
-
-    private void assertResponseContainsAllEditions(ResultActions result, List<Edition> expected) throws Exception {
-        result.andExpect(jsonPath("_embedded.editions").exists())
-                .andExpect(jsonPath("_embedded.editions").isArray())
-                .andExpect(jsonPath("_embedded.editions", hasSize(expected.size())))
-                .andExpect(jsonPath("_embedded.editions").exists())
-                .andExpect(jsonPath("_embedded.editions").isArray())
-                .andExpect(jsonPath("_embedded.editions", hasSize(expected.size())));
-        for (int i = 0; i < expected.size(); i++) {
-            assertResponseContainsEdition(result, "_embedded.editions[" + i + "].", expected.get(i));
-        }
-    }
-
-    private void assertResponseContainsEdition(ResultActions result, String jsonPrefix, Edition expected) throws Exception {
-        result.andExpect(jsonPath(jsonPrefix + "isbn", equalTo(expected.isbn())))
-                .andExpect(jsonPath(jsonPrefix + "title", equalTo(expected.title())))
-                .andExpect(jsonPath(jsonPrefix + "authors", containsInAnyOrder(
-                        expected.book().authors().stream().map(Author::id).map(UUID::toString).toArray())))
-                .andExpect(jsonPath(jsonPrefix + "language", equalTo(expected.language())))
-                .andExpect(jsonPath(jsonPrefix + "summary", equalTo(expected.summary())))
-                .andExpect(jsonPath(jsonPrefix + "_links.self.href", equalTo("http://localhost/api/v1/editions/" + expected.isbn())));
     }
 
 }
