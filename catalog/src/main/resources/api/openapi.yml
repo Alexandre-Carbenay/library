@@ -317,17 +317,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Book'
-            editions:
-              description: |
-                The book editions corresponding to the books in the collection,
-                containing basic information for each edition.
-
-                This field is deprecated and will be replaced by the books and
-                their editions.
-              type: array
-              items:
-                $ref: '#/components/schemas/Edition'
-              deprecated: true
             authors:
               description: The authors related to the editions in the collection.
               type: array
