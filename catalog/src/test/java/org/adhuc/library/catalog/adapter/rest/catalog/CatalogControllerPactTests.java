@@ -11,9 +11,7 @@ import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.CatalogService;
 import org.adhuc.library.catalog.books.ExternalLink;
 import org.adhuc.library.catalog.books.LocalizedDetails;
-import org.adhuc.library.catalog.editions.Edition;
 import org.adhuc.library.catalog.editions.EditionsService;
-import org.adhuc.library.catalog.editions.PublicationDate;
 import org.apache.hc.core5.http.HttpRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
@@ -80,16 +78,6 @@ class CatalogControllerPactTests {
 
         var request = PageRequest.of(0, 10);
         when(catalogService.getPage(request, FRENCH)).thenReturn(new PageImpl<>(List.of(book), request, 67));
-        when(editionsService.getBooksEditions(List.of(bookId))).thenReturn(List.of(
-                new Edition(
-                        "9782081275232",
-                        "Du contrat social",
-                        PublicationDate.of(LocalDate.parse("2012-01-04")),
-                        book,
-                        "fr",
-                        "Paru en 1762, le Contrat social, ..."
-                )
-        ));
     }
 
     @State("First page of 10 elements in english contains books")
@@ -123,16 +111,6 @@ class CatalogControllerPactTests {
 
         var request = PageRequest.of(0, 10);
         when(catalogService.getPage(request, ENGLISH)).thenReturn(new PageImpl<>(List.of(book), request, 67));
-        when(editionsService.getBooksEditions(List.of(bookId))).thenReturn(List.of(
-                new Edition(
-                        "9798680022764",
-                        "The Social Contract",
-                        PublicationDate.of(LocalDate.parse("2020-08-27")),
-                        book,
-                        "en",
-                        "The Social Contract, written by the influential philosopher Jean-Jacques Rousseau, ..."
-                )
-        ));
     }
 
     @State("Next page of 25 elements contains books")
@@ -159,16 +137,6 @@ class CatalogControllerPactTests {
 
         var request = PageRequest.of(1, 25);
         when(catalogService.getPage(request, FRENCH)).thenReturn(new PageImpl<>(List.of(book), request, 67));
-        when(editionsService.getBooksEditions(List.of(bookId))).thenReturn(List.of(
-                new Edition(
-                        "9782081275232",
-                        "Du contrat social",
-                        PublicationDate.of(LocalDate.parse("2012-01-04")),
-                        book,
-                        "fr",
-                        "Paru en 1762, le Contrat social, ..."
-                )
-        ));
     }
 
 }

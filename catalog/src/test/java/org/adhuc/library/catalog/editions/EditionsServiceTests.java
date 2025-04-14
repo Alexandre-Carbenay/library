@@ -44,12 +44,6 @@ class EditionsServiceTests {
     }
 
     @Test
-    @DisplayName("refuse getting editions for a null list of books")
-    void errorGetEditionsNullBookIds() {
-        assertThrows(IllegalArgumentException.class, () -> service.getBooksEditions(null));
-    }
-
-    @Test
     @DisplayName("refuse getting notable editions for a null author")
     void errorGetNotableEditionsNullAuthorId() {
         assertThrows(IllegalArgumentException.class, () -> service.getNotableEditions(null));
@@ -144,61 +138,6 @@ class EditionsServiceTests {
                     Arguments.of(
                             BooksMother.Real.GUERRE_ET_PAIX.id(),
                             List.of(LA_GUERRE_ET_LA_PAIX_1, LA_GUERRE_ET_LA_PAIX_2)
-                    )
-            );
-        }
-
-        @ParameterizedTest
-        @MethodSource("unknownBooksEditionsProvider")
-        @DisplayName("not find any editions for unknown books")
-        void unknownBooksEditions(List<UUID> bookIds) {
-            assertThat(service.getBooksEditions(bookIds)).isEmpty();
-        }
-
-        private static Stream<Arguments> unknownBooksEditionsProvider() {
-            return Books.ids().list().ofMinSize(0).ofMaxSize(10)
-                    .map(Arguments::of)
-                    .sampleStream()
-                    .limit(3);
-        }
-
-        @ParameterizedTest
-        @MethodSource("knownBooksEditionsProvider")
-        @DisplayName("find editions for known books")
-        void knownBooksEditions(List<UUID> bookIds, List<Edition> expected) {
-            assertThat(service.getBooksEditions(bookIds)).containsExactlyInAnyOrderElementsOf(expected);
-        }
-
-        private static Stream<Arguments> knownBooksEditionsProvider() {
-            return Stream.of(
-                    Arguments.of(
-                            List.of(BooksMother.Real.L_ETRANGER.id()),
-                            List.of(L_ETRANGER)
-                    ),
-                    Arguments.of(
-                            List.of(
-                                    BooksMother.Real.L_ETRANGER.id(),
-                                    BooksMother.Real.ANNA_KARENINE.id()
-                            ),
-                            List.of(
-                                    L_ETRANGER,
-                                    ANNA_KARENINE
-                            )
-                    ),
-                    Arguments.of(
-                            List.of(BooksMother.Real.GUERRE_ET_PAIX.id()),
-                            List.of(LA_GUERRE_ET_LA_PAIX_1, LA_GUERRE_ET_LA_PAIX_2)
-                    ),
-                    Arguments.of(
-                            List.of(
-                                    BooksMother.Real.GUERRE_ET_PAIX.id(),
-                                    BooksMother.Real.ANNA_KARENINE.id()
-                            ),
-                            List.of(
-                                    LA_GUERRE_ET_LA_PAIX_1,
-                                    LA_GUERRE_ET_LA_PAIX_2,
-                                    ANNA_KARENINE
-                            )
                     )
             );
         }

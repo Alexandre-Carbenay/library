@@ -28,11 +28,6 @@ public class EditionsService {
         return repository.findByBookId(bookId);
     }
 
-    public Collection<Edition> getBooksEditions(Collection<UUID> bookIds) {
-        Assert.notNull(bookIds, "Cannot get book editions from null books list");
-        return repository.findByBookIds(bookIds);
-    }
-
     public Collection<Edition> getNotableEditions(UUID authorId) {
         Assert.notNull(authorId, "Cannot get notable editions from null author ID");
         return repository.findNotableByAuthor(authorId);

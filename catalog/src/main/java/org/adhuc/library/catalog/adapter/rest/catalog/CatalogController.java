@@ -2,11 +2,9 @@ package org.adhuc.library.catalog.adapter.rest.catalog;
 
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
-import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.CatalogService;
-import org.adhuc.library.catalog.editions.EditionsService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -35,23 +33,17 @@ public class CatalogController {
 
     private final PagedResourcesAssembler<Book> pageAssembler;
     private final BookModelAssembler bookModelAssembler;
-    private final EditionModelAssembler editionModelAssembler;
     private final AuthorModelAssembler authorModelAssembler;
     private final CatalogService catalogService;
-    private final EditionsService editionsService;
 
     public CatalogController(PagedResourcesAssembler<Book> pageAssembler,
                              BookModelAssembler bookModelAssembler,
-                             EditionModelAssembler editionModelAssembler,
                              AuthorModelAssembler authorModelAssembler,
-                             CatalogService catalogService,
-                             EditionsService editionsService) {
+                             CatalogService catalogService) {
         this.pageAssembler = pageAssembler;
         this.bookModelAssembler = bookModelAssembler;
-        this.editionModelAssembler = editionModelAssembler;
         this.authorModelAssembler = authorModelAssembler;
         this.catalogService = catalogService;
-        this.editionsService = editionsService;
     }
 
     @GetMapping
@@ -70,13 +62,9 @@ public class CatalogController {
                 .links(response.getLinks());
         if (!catalogPage.isEmpty()) {
             var books = bookModelAssembler.toCollectionModel(catalogPage, catalogLanguage.getLanguage()).getContent();
-            var editionsInPage = editionsService.getBooksEditions(catalogPage.stream().map(Book::id).toList());
-            var editions = editionModelAssembler.toCollectionModel(editionsInPage).getContent();
             var authors = authorModelAssembler.toCollectionModel(booksAuthors(catalogPage)).getContent();
             responseBody = responseBody
-                    // Temporarily keep the editions relation to let API consumers move to the editions relation
                     .embed(books, LinkRelation.of("books"))
-                    .embed(editions, LinkRelation.of("editions"))
                     .embed(authors, LinkRelation.of("authors"));
         }
         return ResponseEntity.status(PARTIAL_CONTENT).header(CONTENT_LANGUAGE, catalogLanguage.getLanguage()).body(responseBody.build());
