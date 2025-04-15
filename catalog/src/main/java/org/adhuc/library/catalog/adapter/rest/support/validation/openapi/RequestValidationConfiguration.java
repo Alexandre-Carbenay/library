@@ -21,9 +21,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 
-import static com.atlassian.oai.validator.whitelist.rule.WhitelistRules.allOf;
-import static com.atlassian.oai.validator.whitelist.rule.WhitelistRules.isRequest;
+import static com.atlassian.oai.validator.report.ValidationReport.Level.ERROR;
+import static com.atlassian.oai.validator.whitelist.rule.WhitelistRules.anyOf;
 
 @Configuration
 public class RequestValidationConfiguration {
@@ -56,19 +57,27 @@ public class RequestValidationConfiguration {
         }
 
         private ValidationErrorsWhitelist validationErrorsWhitelist(String managementBasePath) {
-            LOGGER.info("Activate OpenAPI whitelist for Spring Boot management API");
+            LOGGER.info("Activate OpenAPI whitelist for OpenAPI specification documentation");
+            var openApiDocPaths = List.of("/swagger-ui/", "/openapi.yml", "/api/doc/");
             return ValidationErrorsWhitelist.create()
                     .withRule(
-                            "Ignore Spring Boot management API",
-                            allOf(
-                                    isRequest(),
-                                    requestPathStartsWith(managementBasePath)
+                            "Ignore OpenAPI specification documentation",
+                            anyOf(
+                                    requestPathStartsWith(openApiDocPaths),
+                                    responseInErrorWithMessageAboutPath(openApiDocPaths)
                             )
                     );
         }
 
-        private WhitelistRule requestPathStartsWith(final String pathPrefix) {
-            return (message, operation, request, response) -> operation == null && request.getPath().startsWith(pathPrefix);
+        private WhitelistRule requestPathStartsWith(final List<String> pathPrefixes) {
+            return (message, operation, request, response) ->
+                    request != null && pathPrefixes.stream().anyMatch(prefix -> request.getPath().startsWith(prefix));
+        }
+
+        private WhitelistRule responseInErrorWithMessageAboutPath(List<String> pathPrefixes) {
+            return (message, operation, request, response) ->
+                    response != null && message.getLevel().equals(ERROR) && message.getMessage().contains("No API path found that matches request")
+                            && pathPrefixes.stream().anyMatch(prefix -> message.getMessage().contains(prefix));
         }
 
         @Override

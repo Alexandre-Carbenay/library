@@ -28,12 +28,12 @@ Then start the library system running the following commands:
 
 ```shell
 make clean && make
-make start-website
+make start
 ```
 
 You can now browse to the [Library Website](https://localhost:9000/) in your local environment.
 
-To stop the library system, run the `make stop-website` command.
+To stop the library system, run the `make stop` command.
 
 ## Project structure
 
@@ -94,6 +94,13 @@ PACT_BROKER_PORT=9292
 CATALOG_API_PORT=8080
 WEBSITE_PORT=9000
 ```
+
+### OpenAPI documentation exposition
+
+By default, each application exposing an API provides a Swagger UI to browse the OpenAPI specification. By default, when
+running the applications with `make start`, you will have access to those API documentation pages:
+
+- [Catalog API](https://localhost:8080/swagger-ui/index.html)
 
 ### HTTP2 activation
 
