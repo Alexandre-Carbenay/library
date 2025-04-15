@@ -12,5 +12,9 @@ acceptance: acceptance-catalog ## Run acceptance tests on all the applications
 
 clean: clean-catalog clean-website ## Clean the projects folders
 
+start: start-website ## Start all the applications
+
+stop: stop-website ## Stop all the applications
+
 structurizr: ## Generate Structurizr C4 diagrams
 	./doc/util/structurizr/export-diagrams.sh doc/util/structurizr

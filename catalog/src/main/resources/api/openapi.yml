@@ -6,7 +6,10 @@ info:
     email: acarbenay@adhuc.fr
   version: 1.0.0
 servers:
+  - url: https://localhost:8080/api
+    description: Local environment
   - url: https://catalog.library.adhuc.org/api
+    description: Production environment (coming soon)
 tags:
   - name: Books
     description: Access the books and their editions in the catalog of the library.
@@ -131,7 +134,7 @@ components:
       schema:
         type: string
         format: uuid
-        example: 99287cef-2c8c-4a4d-a82e-f1a8452dcfe2
+        example: 83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725
     Page:
       name: page
       description: |
@@ -144,7 +147,7 @@ components:
         type: number
         minimum: 0
         default: 0
-        example: 2
+        example: 1
     PageSize:
       name: size
       description: |
@@ -336,7 +339,7 @@ components:
               properties:
                 href:
                   type: string
-                  example: 'https://catalog.library.adhuc.org/api/v1/catalog?page=2&size=50'
+                  example: 'https://catalog.library.adhuc.org/api/v1/catalog?page=1&size=50'
             template:
               description: Link to the template of catalog page.
               type: object
@@ -359,7 +362,7 @@ components:
               properties:
                 href:
                   type: string
-                  example: 'https://catalog.library.adhuc.org/api/v1/catalog?page=1&size=50'
+                  example: 'https://catalog.library.adhuc.org/api/v1/catalog?page=0&size=50'
             next:
               description: Link to the next catalog page.
               type: object
@@ -661,7 +664,7 @@ components:
     AuthorId:
       type: string
       format: uuid
-      example: 99287cef-2c8c-4a4d-a82e-f1a8452dcfe2
+      example: 83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725
     AuthorLink:
       type: object
       description: Link to the author. Can be used to see the detail of the author.
@@ -670,7 +673,7 @@ components:
       properties:
         href:
           type: string
-          example: 'https://catalog.library.adhuc.org/api/v1/authors/99287cef-2c8c-4a4d-a82e-f1a8452dcfe2'
+          example: 'https://catalog.library.adhuc.org/api/v1/authors/83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725'
     AuthorName:
       type: string
       example: Jean-Jacques Rousseau
@@ -712,7 +715,7 @@ components:
         number:
           description: The current page, starting at 0.
           type: number
-          example: 2
+          example: 1
           minimum: 0
     Problem:
       type: object

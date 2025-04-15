@@ -20,6 +20,13 @@ management:
     livenessstate.enabled: true
     readinessstate.enabled: true
 
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api/doc
+  swagger-ui:
+    url: /openapi.yml
+
 library.catalog:
   data.auto-load:
     enabled: false
@@ -30,6 +37,7 @@ library.catalog:
 logging:
   level:
     org.adhuc.library.catalog: INFO
+    com.atlassian.oai.validator.springmvc: WARN
     org.springframework:
       boot:
         autoconfigure.logging: ERROR
