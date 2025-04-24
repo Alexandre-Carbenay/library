@@ -16,8 +16,7 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toMap;
 import static net.jqwik.api.Arbitraries.strings;
 import static org.adhuc.library.catalog.authors.AuthorsMother.Real.*;
-import static org.adhuc.library.catalog.books.BooksMother.Books.externalLinksSets;
-import static org.adhuc.library.catalog.books.BooksMother.Books.wikipediaLinks;
+import static org.adhuc.library.catalog.books.BooksMother.Books.*;
 
 public class BooksMother {
 
@@ -27,6 +26,14 @@ public class BooksMother {
 
     public static Arbitrary<Book> notableBooksOf(UUID authorId) {
         return books(Books.authoredWith(authorId));
+    }
+
+    public static Arbitrary<Book> notableBooksOf(UUID authorId, String originalLanguage, Set<String> languages) {
+        return Combinators.combine(
+                Books.ids(),
+                authoredWith(authorId),
+                Books.detailsSets(originalLanguage, languages)
+        ).as((id, authors, details) -> new Book(id, authors, originalLanguage, details));
     }
 
     public static Arbitrary<Book> books(String originalLanguage, Set<String> languages) {
@@ -121,7 +128,7 @@ public class BooksMother {
         }
 
         public static Arbitrary<String> descriptions() {
-            return strings().alpha().numeric().withChars(" ,;.?!:-()[]{}&\"'àéèïöù").ofMinLength(30)
+            return strings().alpha().numeric().withChars(" ,;.?!:-()[]{}&'àéèïöù").ofMinLength(30)
                     .filter(s -> !s.isBlank());
         }
 
@@ -248,6 +255,18 @@ public class BooksMother {
                                 "L'Étranger",
                                 "L'Étranger est le premier roman publié d'Albert Camus, paru en 1942. Les premières esquisses datent de 1938, mais le roman ne prend vraiment forme que dans les premiers mois de 1940 et sera travaillé par Camus jusqu’en 1941. Il prend place dans la tétralogie que Camus nommera « cycle de l'absurde » qui décrit les fondements de la philosophie camusienne : l'absurde. Cette tétralogie comprend également l'essai Le Mythe de Sisyphe ainsi que les pièces de théâtre Caligula et Le Malentendu.",
                                 Set.of(new ExternalLink("wikipedia", "https://fr.wikipedia.org/wiki/L'Étranger"))
+                        ),
+                        new LocalizedDetails(
+                                "en",
+                                "The Stranger",
+                                "The Stranger, also published in English as The Outsider, is a 1942 novella written by French author Albert Camus. The first of Camus's novels to be published, the story follows Meursault, an indifferent settler in French Algeria, who, weeks after his mother's funeral, kills an unnamed Arab man in Algiers. The story is divided into two parts, presenting Meursault's first-person narrative before and after the killing.",
+                                Set.of(new ExternalLink("wikipedia", "https://en.wikipedia.org/wiki/The_Stranger_(Camus_novel)"))
+                        ),
+                        new LocalizedDetails(
+                                "de",
+                                "Der Fremde",
+                                "Der Fremde ist ein Roman des französischen Schriftstellers und Philosophen Albert Camus. Er erschien 1942 im Pariser Verlagshaus Gallimard und wurde einer der meistgedruckten französischen Romane des 20. Jahrhunderts. Er gilt als eines der Hauptwerke der Philosophie des Existentialismus und Absurdismus.",
+                                Set.of(new ExternalLink("wikipedia", "https://de.wikipedia.org/wiki/Der_Fremde"))
                         )
                 )
         );
@@ -261,6 +280,12 @@ public class BooksMother {
                                 "La Peste",
                                 "La Peste est un roman d'Albert Camus, prix Nobel de littérature en 1957.\n\nInspiré du thème de l'absurde et publié en 1947, le roman a reçu le prix des Critiques la même année. Il appartient au « cycle de la révolte » regroupant deux autres œuvres de Camus : L'Homme révolté et Les Justes.",
                                 Set.of(new ExternalLink("wikipedia", "https://fr.wikipedia.org/wiki/La_Peste"))
+                        ),
+                        new LocalizedDetails(
+                                "en",
+                                "The Plague",
+                                "The Plague is a 1947 absurdist novel by Albert Camus. The plot centers around the French Algerian city of Oran as it combats a plague outbreak and is put under a city-wide quarantine. The novel presents a snapshot into life in Oran as seen through Camus's absurdist lens.",
+                                Set.of(new ExternalLink("wikipedia", "https://en.wikipedia.org/wiki/The_Plague_(novel)"))
                         )
                 )
         );
@@ -274,6 +299,12 @@ public class BooksMother {
                                 "La Chute",
                                 "La Chute est un court roman d'Albert Camus publié à Paris chez Gallimard en 1956, découpé en six parties non numérotées. Camus y écrit la confession d'un homme à un autre, rencontré dans un bar d'Amsterdam. Le roman devait primitivement être intégré au recueil L'Exil et le Royaume qui sera publié en 1957 et qui constitue la dernière œuvre « littéraire » publiée par Camus.",
                                 Set.of(new ExternalLink("wikipedia", "https://fr.wikipedia.org/wiki/La_Chute_(roman)"))
+                        ),
+                        new LocalizedDetails(
+                                "de",
+                                "Der Fall",
+                                "Der Fall ist ein Roman von Albert Camus. Er sollte eigentlich in Camus’ Novellen des Exils (Das Exil und das Reich) veröffentlicht werden, wurde dann aber zu umfangreich, und erschien bereits im Jahr 1956 als vorgeschobenes Einzelwerk. Er ist Camus’ letztes vollendetes Prosawerk.",
+                                Set.of(new ExternalLink("wikipedia", "https://de.wikipedia.org/wiki/Der_Fall_(Roman)"))
                         )
                 )
         );

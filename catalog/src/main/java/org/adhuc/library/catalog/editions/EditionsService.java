@@ -27,9 +27,4 @@ public class EditionsService {
         Assert.notNull(bookId, "Cannot get editions from null book");
         return repository.findByBookId(bookId);
     }
-
-    public Collection<Edition> getNotableEditions(UUID authorId) {
-        Assert.notNull(authorId, "Cannot get notable editions from null author ID");
-        return repository.findNotableByAuthor(authorId);
-    }
 }

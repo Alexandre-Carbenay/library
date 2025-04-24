@@ -48,10 +48,10 @@ class CatalogServiceTests {
 
     @ParameterizedTest
     @CsvSource({
-            "0, 10, en",
-            "0, 10, de",
+            "0, 10, it",
+            "0, 10, es",
             "1, 10, en",
-            "0, 100, en",
+            "0, 100, it",
             "10, 100, en"
     })
     @DisplayName("return an empty page when the catalog is empty for language")

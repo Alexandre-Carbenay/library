@@ -6,10 +6,10 @@ import io.restassured.response.ValidatableResponse;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
-import static io.restassured.RestAssured.when;
-import static io.restassured.RestAssured.withArgs;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
 @SuppressWarnings("preview")
@@ -25,6 +25,22 @@ public class AuthorDetailStepDefinition {
                 .then();
     }
 
+    @When("he retrieves the details of an author with ID {uuid} in {language}")
+    public void retrieveAuthorDetails(UUID authorId, Locale language) {
+        this.authorId = authorId;
+        response = given().header("Accept-Language", language.getLanguage())
+                .when().get("/v1/authors/{id}", authorId)
+                .then();
+    }
+
+    @When("he retrieves the details of an author with ID {uuid} in {string}")
+    public void retrieveAuthorDetails(UUID authorId, String acceptLanguages) {
+        this.authorId = authorId;
+        response = given().header("Accept-Language", acceptLanguages)
+                .when().get("/v1/authors/{id}", authorId)
+                .then();
+    }
+
     @Then("the author details cannot be retrieved because it does not exists")
     public void nonExistingAuthor() {
         response.statusCode(404)
@@ -35,8 +51,8 @@ public class AuthorDetailStepDefinition {
                 .body("detail", equalTo(STR."No author exists with id '\{authorId}'"));
     }
 
-    @Then("the author details have the expected {string}, {date}, {date} and authored notable {isbns}")
-    public void existingAuthorDetails(String name, LocalDate dateOfBirth, LocalDate dateOfDeath, List<String> editionIsbns) {
+    @Then("the author details have the expected {string}, {date}, {date} and authored notable {titles}")
+    public void existingAuthorDetails(String name, LocalDate dateOfBirth, LocalDate dateOfDeath, List<String> bookTitles) {
         response.statusCode(200)
                 .contentType("application/json")
                 .body("id", equalTo(authorId.toString()))
@@ -47,9 +63,9 @@ public class AuthorDetailStepDefinition {
         } else {
             response.body("date_of_death", nullValue());
         }
-        editionIsbns.forEach(isbn ->
-                response.body("_embedded.notable_books.find { it.isbn == '%s' }", withArgs(isbn),
-                        describedAs(STR."Author \{authorId} details must contain edition with ISBN \{isbn}", notNullValue()))
+        bookTitles.forEach(bookId ->
+                response.body("_embedded.notable_books.find { it.title == \"%s\" }", withArgs(bookId),
+                        describedAs(STR."Author \{authorId} details must contain book with title \{bookId}", notNullValue()))
         );
     }
 

@@ -39,17 +39,6 @@ public final class EditionsMother {
         ).as(Edition::new);
     }
 
-    public static Arbitrary<Edition> notableEditionsOf(UUID authorId) {
-        return Combinators.combine(
-                Editions.isbns(),
-                Editions.titles(),
-                Editions.publicationDates(),
-                Editions.booksAuthoredWith(authorId),
-                Editions.languages(),
-                Editions.summaries()
-        ).as(Edition::new);
-    }
-
     public static EditionBuilder builder() {
         return new EditionBuilder();
     }
