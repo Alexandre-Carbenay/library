@@ -12,6 +12,4 @@ public interface EditionsRepository {
     Optional<Edition> findByIsbn(String isbn);
 
     Collection<Edition> findByBookId(UUID bookId);
-
-    Collection<Edition> findNotableByAuthor(UUID authorId);
 }

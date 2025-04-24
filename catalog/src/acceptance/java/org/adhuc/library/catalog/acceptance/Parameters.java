@@ -20,6 +20,11 @@ public class Parameters {
     }
 
     @ParameterType(".*")
+    public List<String> titles(String source) {
+        return List.of(source.split(", "));
+    }
+
+    @ParameterType(".*")
     public List<String> isbns(String source) {
         return List.of(source.split(", "));
     }

@@ -18,7 +18,7 @@ public class AuthorModelAssembler extends RepresentationModelAssemblerSupport<Au
     @Override
     public AuthorModel toModel(@NonNull Author author) {
         var model = instantiateModel(author);
-        model.add(linkTo(methodOn(AuthorsController.class).getAuthor(author.id())).withSelfRel());
+        model.add(linkTo(methodOn(AuthorsController.class).getAuthor(author.id(), null)).withSelfRel());
         return model;
     }
 

@@ -39,6 +39,13 @@ public class InMemoryBooksRepository implements BooksRepository {
                 .findFirst();
     }
 
+    @Override
+    public Collection<Book> findNotableByAuthor(UUID authorId) {
+        return books.stream()
+                .filter(book -> book.authors().stream().anyMatch(author -> author.id().equals(authorId)))
+                .toList();
+    }
+
     public void saveAll(Collection<Book> books) {
         this.books.clear();
         this.books.addAll(books);

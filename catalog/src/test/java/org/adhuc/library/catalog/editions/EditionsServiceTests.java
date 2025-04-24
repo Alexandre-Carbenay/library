@@ -43,12 +43,6 @@ class EditionsServiceTests {
         assertThrows(IllegalArgumentException.class, () -> service.getBookEditions(null));
     }
 
-    @Test
-    @DisplayName("refuse getting notable editions for a null author")
-    void errorGetNotableEditionsNullAuthorId() {
-        assertThrows(IllegalArgumentException.class, () -> service.getNotableEditions(null));
-    }
-
     @Nested
     @DisplayName("when some editions are in the catalog")
     class EditionsInCatalogTests {
@@ -139,33 +133,6 @@ class EditionsServiceTests {
                             BooksMother.Real.GUERRE_ET_PAIX.id(),
                             List.of(LA_GUERRE_ET_LA_PAIX_1, LA_GUERRE_ET_LA_PAIX_2)
                     )
-            );
-        }
-
-        @ParameterizedTest
-        @CsvSource({
-                "917fb110-7991-464e-a623-47c285b6cc3d",
-                "a3f3928f-929b-4b08-859c-f2567c295f21",
-                "7f91c0f6-dc86-4772-bbff-3b3b6eeedcd6"
-        })
-        @DisplayName("not find any notable edition for unknown authors")
-        void unknownAuthorNotableEditions(UUID authorId) {
-            assertThat(service.getNotableEditions(authorId)).isEmpty();
-        }
-
-        @ParameterizedTest
-        @MethodSource("knownAuthorNotableEditionsProvider")
-        @DisplayName("find notable editions for known authors")
-        void knownAuthorNotableEditions(UUID authorId, List<Edition> expected) {
-            assertThat(service.getNotableEditions(authorId)).containsExactlyInAnyOrderElementsOf(expected);
-        }
-
-        private static Stream<Arguments> knownAuthorNotableEditionsProvider() {
-            return Stream.of(
-                    Arguments.of(ALBERT_CAMUS.id(), List.of(L_ETRANGER, LA_PESTE, LA_CHUTE)),
-                    Arguments.of(LEON_TOLSTOI.id(), List.of(ANNA_KARENINE, LA_GUERRE_ET_LA_PAIX_1, LA_GUERRE_ET_LA_PAIX_2, LES_COSAQUES)),
-                    Arguments.of(RENE_GOSCINNY.id(), List.of(ASTERIX_LE_GAULOIS, LA_SERPE_D_OR, ASTERIX_ET_CLEOPATRE, LE_PETIT_NICOLAS)),
-                    Arguments.of(ALBERT_UDERZO.id(), List.of(ASTERIX_LE_GAULOIS, LA_SERPE_D_OR, ASTERIX_ET_CLEOPATRE))
             );
         }
 

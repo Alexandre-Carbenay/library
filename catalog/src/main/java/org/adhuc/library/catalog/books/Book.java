@@ -14,6 +14,10 @@ public record Book(UUID id,
                 .anyMatch(detail -> detail.language().equals(language.getLanguage()));
     }
 
+    public boolean acceptsLanguage(String language) {
+        return acceptsLanguage(Locale.of(language));
+    }
+
     public String titleIn(String language) {
         return detailsIn(language).title();
     }

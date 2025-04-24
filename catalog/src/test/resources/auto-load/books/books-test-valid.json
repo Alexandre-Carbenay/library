@@ -16,6 +16,28 @@
             "value": "https://fr.wikipedia.org/wiki/L'Étranger"
           }
         ]
+      },
+      {
+        "language": "en",
+        "title": "The Stranger",
+        "description": "The Stranger, also published in English as The Outsider, is a 1942 novella written by French author Albert Camus. The first of Camus's novels to be published, the story follows Meursault, an indifferent settler in French Algeria, who, weeks after his mother's funeral, kills an unnamed Arab man in Algiers. The story is divided into two parts, presenting Meursault's first-person narrative before and after the killing.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://en.wikipedia.org/wiki/The_Stranger_(Camus_novel)"
+          }
+        ]
+      },
+      {
+        "language": "de",
+        "title": "Der Fremde",
+        "description": "Der Fremde ist ein Roman des französischen Schriftstellers und Philosophen Albert Camus. Er erschien 1942 im Pariser Verlagshaus Gallimard und wurde einer der meistgedruckten französischen Romane des 20. Jahrhunderts. Er gilt als eines der Hauptwerke der Philosophie des Existentialismus und Absurdismus.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://de.wikipedia.org/wiki/Der_Fremde"
+          }
+        ]
       }
     ]
   },
@@ -36,6 +58,17 @@
             "value": "https://fr.wikipedia.org/wiki/La_Peste"
           }
         ]
+      },
+      {
+        "language": "en",
+        "title": "The Plague",
+        "description": "The Plague is a 1947 absurdist novel by Albert Camus. The plot centers around the French Algerian city of Oran as it combats a plague outbreak and is put under a city-wide quarantine. The novel presents a snapshot into life in Oran as seen through Camus's absurdist lens.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://en.wikipedia.org/wiki/The_Plague_(novel)"
+          }
+        ]
       }
     ]
   },
@@ -54,6 +87,17 @@
           {
             "source": "wikipedia",
             "value": "https://fr.wikipedia.org/wiki/La_Chute_(roman)"
+          }
+        ]
+      },
+      {
+        "language": "de",
+        "title": "Der Fall",
+        "description": "Der Fall ist ein Roman von Albert Camus. Er sollte eigentlich in Camus’ Novellen des Exils (Das Exil und das Reich) veröffentlicht werden, wurde dann aber zu umfangreich, und erschien bereits im Jahr 1956 als vorgeschobenes Einzelwerk. Er ist Camus’ letztes vollendetes Prosawerk.",
+        "links": [
+          {
+            "source": "wikipedia",
+            "value": "https://de.wikipedia.org/wiki/Der_Fall_(Roman)"
           }
         ]
       }

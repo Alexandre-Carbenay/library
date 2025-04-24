@@ -21,11 +21,19 @@ paths:
       tags:
         - Books
       summary: Gets a paginated list of books based on filters.
-      description: The catalog can be sorted and filtered in many different ways.
+      description: |
+        The catalog can be sorted and filtered in many different ways.
+
+        Books returned in the catalog are filtered on language defined in the
+        `Accept-Language` header (default = `fr`). It means only books with
+        details defined in the expected language are listed. Others are ignored.
+        In case of multiple languages defined in the `Accept-Language` header,
+        only the one with highest quality value will be selected.
       operationId: getCatalog
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PageSize'
+        - $ref: '#/components/parameters/AcceptLanguage'
       responses:
         '206':
           $ref: '#/components/responses/Catalog'
@@ -94,9 +102,16 @@ paths:
       description: |
         The details of an author contain all its information and the relation to
         its written books.
+
+        The books information are provided in the language defined in the
+        `Accept-Language` header that has the highest quality value and corresponds
+        to at least one notable book. By default, or if none of the accept languages
+        corresponds to notable books, all notable books are provided, each in
+        its original language.
       operationId: getAuthor
       parameters:
         - $ref: '#/components/parameters/AuthorId'
+        - $ref: '#/components/parameters/AcceptLanguage'
       responses:
         '200':
           $ref: '#/components/responses/AuthorDetails'
@@ -657,10 +672,10 @@ components:
             - notable_books
           properties:
             notable_books:
-              description: The author's editions, containing basic information for each book.
+              description: The author's books, containing basic information for each book.
               type: array
               items:
-                $ref: '#/components/schemas/Edition'
+                $ref: '#/components/schemas/Book'
     AuthorId:
       type: string
       format: uuid

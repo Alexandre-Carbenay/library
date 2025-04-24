@@ -8,6 +8,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -46,7 +47,9 @@ public class BookModelAssembler extends RepresentationModelAssemblerSupport<Book
     public CollectionModel<BookModel> toCollectionModel(Iterable<Book> books, String language) {
         var resources = new ArrayList<BookModel>();
         for (var book : books) {
-            resources.add(toModel(book, language));
+            if (book.acceptsLanguage(language)) {
+                resources.add(toModel(book, language));
+            }
         }
         return CollectionModel.of(resources);
     }
