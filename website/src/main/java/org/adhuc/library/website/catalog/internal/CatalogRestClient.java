@@ -60,4 +60,16 @@ class CatalogRestClient implements CatalogClient {
                 .body(BooksPage.class));
     }
 
+    @Override
+    public Book getBook(String id, String acceptLanguages) {
+        return circuitBreaker.run(() -> restClient.get()
+                        .uri("/api/v1/books/{id}", id)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header(ACCEPT_LANGUAGE, acceptLanguages)
+                        .retrieve()
+                        .body(BookDetailDto.class)
+                )
+                .asBook();
+    }
+
 }

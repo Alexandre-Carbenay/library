@@ -2,6 +2,6 @@ package org.adhuc.library.website.catalog;
 
 import java.util.List;
 
-public record Book(String title, List<Author> authors, String description) {
+public record Book(String id, String title, List<Author> authors, String description) {
 
 }

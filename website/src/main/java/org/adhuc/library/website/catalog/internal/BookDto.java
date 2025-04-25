@@ -7,10 +7,11 @@ import java.util.List;
 import java.util.UUID;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record BookDto(String title, List<UUID> authors, String description) {
+public record BookDto(String id, String title, List<UUID> authors, String description) {
 
     public Book withAuthorsFrom(List<AuthorDto> authors) {
         return new Book(
+                id,
                 title,
                 this.authors.stream()
                         .flatMap(id -> authors.stream()

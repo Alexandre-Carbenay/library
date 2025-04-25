@@ -26,6 +26,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.adhuc.library.website.catalog.BooksMother.*;
@@ -47,7 +48,7 @@ class CatalogControllerTests {
     private static final String LAST_PAGE_LINK_ATTRIBUTE = "lastPageLinkName";
 
     private static final List<Book> PAGE_CONTENT = List.of(
-            DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS, BULLSHIT_JOBS
+            DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS_FR, BULLSHIT_JOBS
     );
 
     @Autowired
@@ -251,7 +252,7 @@ class CatalogControllerTests {
     @ValueSource(strings = {"first", "prev", "next", "last"})
     @DisplayName("provide the catalog page when navigating through a link, with previous navigation session")
     void catalogPageWithPageInPreviousSession(String linkToFollow) throws Exception {
-        var previousPage = new NavigablePageImpl<>(List.of(A_DANCE_WITH_DRAGONS),
+        var previousPage = new NavigablePageImpl<>(List.of(A_DANCE_WITH_DRAGONS_FR),
                 PageRequest.of(0, 10), 4, List.of());
         var page = new NavigablePageImpl<>(PAGE_CONTENT, PageRequest.of(0, 10), 4, List.of());
         when(navigationSession.currentPage()).thenReturn(Optional.of(previousPage));
@@ -281,7 +282,7 @@ class CatalogControllerTests {
     })
     @DisplayName("provide the catalog page when navigating through a link, with previous navigation session, with accept languages")
     void catalogPageWithPageInPreviousSessionAcceptLanguages(String linkToFollow, String acceptLanguages) throws Exception {
-        var previousPage = new NavigablePageImpl<>(List.of(A_DANCE_WITH_DRAGONS),
+        var previousPage = new NavigablePageImpl<>(List.of(A_DANCE_WITH_DRAGONS_FR),
                 PageRequest.of(0, 10), 4, List.of());
         var page = new NavigablePageImpl<>(PAGE_CONTENT, PageRequest.of(0, 10), 4, List.of());
         when(navigationSession.currentPage()).thenReturn(Optional.of(previousPage));
@@ -355,6 +356,101 @@ class CatalogControllerTests {
                 .andExpect(model().attribute("message", "Some details on server error"));
 
         verify(catalogClient).listBooks(eq("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
+        verifyNoMoreInteractions(catalogClient);
+    }
+
+    @Test
+    @DisplayName("provide the book detail in default language")
+    void bookDetails() throws Exception {
+        when(catalogClient.getBook(any(), any())).thenReturn(DU_CONTRAT_SOCIAL);
+
+        var bookId = UUID.randomUUID().toString();
+        mvc.perform(get("/catalog/books/{id}", bookId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("catalog/book-detail"))
+                .andExpect(model().attribute("book", DU_CONTRAT_SOCIAL));
+
+        verify(catalogClient).getBook(eq(bookId), eq(""));
+        verifyNoMoreInteractions(catalogClient);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "fr",
+            "en",
+            "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"
+    })
+    @DisplayName("provide the book detail with accept languages")
+    void bookDetailsWithAcceptLanguages(String acceptLanguages) throws Exception {
+        when(catalogClient.getBook(any(), any())).thenReturn(DU_CONTRAT_SOCIAL);
+
+        var bookId = UUID.randomUUID().toString();
+        mvc.perform(get("/catalog/books/{id}", bookId).header("Accept-Language", acceptLanguages))
+                .andExpect(status().isOk())
+                .andExpect(view().name("catalog/book-detail"))
+                .andExpect(model().attribute("book", DU_CONTRAT_SOCIAL));
+
+        verify(catalogClient).getBook(eq(bookId), eq(acceptLanguages));
+        verifyNoMoreInteractions(catalogClient);
+    }
+
+    @Test
+    @DisplayName("provide the error page with error details when catalog client raises client error while retrieving book detail")
+    void bookDetailsClientError() throws Exception {
+        var body = """
+                {
+                    "type": "/problems/bad-request",
+                    "status": "400",
+                    "title": "Test error",
+                    "detail": "Some details on client error"
+                }
+                """;
+        var exception = prepareException(
+                HttpClientErrorException.create(BAD_REQUEST, "Bad request",
+                        jsonProblemResponseHeaders(), body.getBytes(), Charset.defaultCharset()
+                ),
+                body
+        );
+
+        when(catalogClient.getBook(any(), any())).thenThrow(exception);
+
+        var bookId = UUID.randomUUID().toString();
+        mvc.perform(get("/catalog/books/{id}", bookId).header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"))
+                .andExpect(model().attribute("message", "Some details on client error"));
+
+        verify(catalogClient).getBook(eq(bookId), eq("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
+        verifyNoMoreInteractions(catalogClient);
+    }
+
+    @Test
+    @DisplayName("provide the error page with error details when catalog client raises server error while retrieving book detail")
+    void bookDetailsServerError() throws Exception {
+        var body = """
+                {
+                    "type": "/problems/internal-server-error",
+                    "status": "500",
+                    "title": "Test error",
+                    "detail": "Some details on server error"
+                }
+                """;
+        var exception = prepareException(
+                HttpServerErrorException.create(BAD_REQUEST, "Bad request",
+                        jsonProblemResponseHeaders(), body.getBytes(), Charset.defaultCharset()
+                ),
+                body
+        );
+
+        when(catalogClient.getBook(any(), any())).thenThrow(exception);
+
+        var bookId = UUID.randomUUID().toString();
+        mvc.perform(get("/catalog/books/{id}", bookId).header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"))
+                .andExpect(model().attribute("message", "Some details on server error"));
+
+        verify(catalogClient).getBook(eq(bookId), eq("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
         verifyNoMoreInteractions(catalogClient);
     }
 

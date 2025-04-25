@@ -4,6 +4,83 @@
   },
   "interactions": [
     {
+      "description": "Website book detail",
+      "providerStates": [
+        {
+          "name": "Book detail is reachable"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4"
+      },
+      "response": {
+        "body": {
+          "_embedded": {
+            "authors": [
+              {
+                "id": "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2",
+                "name": "Jean-Jacques Rousseau"
+              }
+            ]
+          },
+          "description": "Paru en 1762, le Contrat social, ...",
+          "id": "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
+          "title": "Du contrat social"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$._embedded.authors": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$._embedded.authors[*].id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$.description": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.title": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
       "description": "Default website page request in french",
       "providerStates": [
         {
@@ -40,6 +117,7 @@
                   "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"
                 ],
                 "description": "Paru en 1762, le Contrat social, ...",
+                "id": "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
                 "title": "Du contrat social"
               }
             ]
@@ -120,6 +198,15 @@
               ]
             },
             "$._embedded.books[*].authors[*]": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$._embedded.books[*].id": {
               "combine": "AND",
               "matchers": [
                 {
@@ -223,6 +310,7 @@
                   "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"
                 ],
                 "description": "Paru en 1762, le Contrat social, ...",
+                "id": "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
                 "title": "Du contrat social"
               }
             ]
@@ -303,6 +391,15 @@
               ]
             },
             "$._embedded.books[*].authors[*]": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$._embedded.books[*].id": {
               "combine": "AND",
               "matchers": [
                 {
@@ -409,6 +506,7 @@
                   "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"
                 ],
                 "description": "The Social Contract, originally published as On the Social Contract; or, Principles of Political Right...",
+                "id": "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
                 "title": "The Social Contract"
               }
             ]
@@ -489,6 +587,15 @@
               ]
             },
             "$._embedded.books[*].authors[*]": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$._embedded.books[*].id": {
               "combine": "AND",
               "matchers": [
                 {
@@ -592,6 +699,7 @@
                   "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"
                 ],
                 "description": "Paru en 1762, le Contrat social, ...",
+                "id": "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
                 "title": "Du contrat social"
               }
             ]
@@ -679,6 +787,15 @@
               ]
             },
             "$._embedded.books[*].authors[*]": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$._embedded.books[*].id": {
               "combine": "AND",
               "matchers": [
                 {

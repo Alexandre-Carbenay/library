@@ -4,10 +4,7 @@ import org.adhuc.library.website.support.pagination.NavigablePage;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +12,7 @@ import java.util.Optional;
 import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
 
 @Controller
+@RequestMapping("/catalog")
 @SessionAttributes("booksPage")
 public class CatalogController {
 
@@ -35,7 +33,7 @@ public class CatalogController {
         this.navigationSession = navigationSession;
     }
 
-    @GetMapping("/catalog")
+    @GetMapping
     public String catalog(Model model, @RequestParam(name = "link", required = false) String linkToFollow,
                           @RequestHeader(name = ACCEPT_LANGUAGE, required = false, defaultValue = "") String acceptLanguages) {
         try {
@@ -46,6 +44,13 @@ public class CatalogController {
             model.addAttribute("message", e.getMessage());
             return "error";
         }
+    }
+
+    @GetMapping("/books/{id}")
+    public String bookDetail(Model model, @PathVariable String id,
+                             @RequestHeader(name = ACCEPT_LANGUAGE, required = false, defaultValue = "") String acceptLanguages) {
+        model.addAttribute("book", catalogClient.getBook(id, acceptLanguages));
+        return "catalog/book-detail";
     }
 
     private Optional<NavigablePage<Book>> getBooksPage(String linkToFollow, String acceptLanguages) {

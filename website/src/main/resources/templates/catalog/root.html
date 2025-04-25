@@ -15,14 +15,14 @@
 <table id="catalog" class="table table-striped">
     <thead>
     <tr>
-        <th th:text="#{catalog.books.title}"></th>
+        <th th:text="#{catalog.books.title}">Title</th>
         <th th:text="#{catalog.books.authors}">Authors</th>
         <th th:text="#{catalog.books.description}">Description</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="book : ${books}">
-        <td th:text="${book.title}"></td>
+        <td><a th:href="@{/catalog/books/__${book.id}__}"><span th:text="${book.title}"></span></a></td>
         <td>
             <span th:each="author : ${book.authors}" th:text="${author.name + ' '}"/>
         </td>
