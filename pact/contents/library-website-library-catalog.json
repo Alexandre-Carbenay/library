@@ -22,6 +22,13 @@
                 "id": "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2",
                 "name": "Jean-Jacques Rousseau"
               }
+            ],
+            "editions": [
+              {
+                "isbn": "9782290385050",
+                "language": "fr",
+                "title": "Du contrat social ou Principes du droit politique"
+              }
             ]
           },
           "description": "Paru en 1762, le Contrat social, ...",
@@ -48,6 +55,24 @@
                 {
                   "match": "regex",
                   "regex": "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$"
+                }
+              ]
+            },
+            "$._embedded.editions": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$._embedded.editions[*].isbn": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^97[89][0-9]{10}$"
                 }
               ]
             },
