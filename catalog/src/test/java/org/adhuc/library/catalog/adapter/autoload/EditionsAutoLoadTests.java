@@ -14,6 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -56,30 +57,57 @@ class EditionsAutoLoadTests {
     }
 
     @Test
-    @DisplayName("fail if the provided JSON resource does not exist")
-    void failNonExistingResource() {
-        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, "classpath:unknown.json");
+    @DisplayName("fail if the provided JSON edition resource does not exist")
+    void failNonExistingEditionsResource() {
+        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository,
+                "classpath:unknown.json",
+                "classpath:auto-load/publishers/publishers-test-valid.json");
+        var exception = assertThrows(EditionsAutoLoadException.class, editionsLoader::load);
+        assertThat(exception).hasCauseInstanceOf(FileNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("fail if the provided JSON edition resource does not exist")
+    void failNonExistingPublishersResource() {
+        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository,
+                "classpath:auto-load/editions/editions-test-valid.json",
+                "classpath:unknown.json");
         var exception = assertThrows(EditionsAutoLoadException.class, editionsLoader::load);
         assertThat(exception).hasCauseInstanceOf(FileNotFoundException.class);
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {
-            "classpath:auto-load/editions/editions-test-not-json.json",
-            "classpath:auto-load/editions/editions-test-not-json.yml",
-            "classpath:auto-load/editions/editions-test-malformed-json.json"
+    @CsvSource({
+            "classpath:auto-load/editions/editions-test-not-json.json,classpath:auto-load/publishers/publishers-test-valid.json",
+            "classpath:auto-load/editions/editions-test-not-json.yml,classpath:auto-load/publishers/publishers-test-valid.json",
+            "classpath:auto-load/editions/editions-test-malformed-json.json,classpath:auto-load/publishers/publishers-test-valid.json",
+            "classpath:auto-load/editions/editions-test-valid.json,classpath:auto-load/publishers/publishers-test-not-json.json",
+            "classpath:auto-load/editions/editions-test-valid.json,classpath:auto-load/publishers/publishers-test-not-json.yml",
+            "classpath:auto-load/editions/editions-test-valid.json,classpath:auto-load/publishers/publishers-test-malformed-json.json"
     })
     @DisplayName("fail if the content does not correspond to valid JSON")
-    void failNotJson(String resourcePath) {
-        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, resourcePath);
+    void failNotJson(String editionsResourcePath, String publishersResourcePath) {
+        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, editionsResourcePath, publishersResourcePath);
         var exception = assertThrows(EditionsAutoLoadException.class, editionsLoader::load);
         assertThat(exception).hasCauseInstanceOf(JsonParseException.class);
     }
 
     @Test
-    @DisplayName("fail if the JSON root element is not an array")
-    void failNotArray() {
-        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, "classpath:auto-load/editions/editions-test-root-not-array.json");
+    @DisplayName("fail if the JSON editions root element is not an array")
+    void failEditionsNotArray() {
+        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository,
+                "classpath:auto-load/editions/editions-test-root-not-array.json",
+                "classpath:auto-load/publishers/publishers-test-valid.json");
+        var exception = assertThrows(EditionsAutoLoadException.class, editionsLoader::load);
+        assertThat(exception).hasCauseInstanceOf(MismatchedInputException.class);
+    }
+
+    @Test
+    @DisplayName("fail if the JSON publishers root element is not an array")
+    void failPublishersNotArray() {
+        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository,
+                "classpath:auto-load/editions/editions-test-valid.json",
+                "classpath:auto-load/publishers/publishers-test-root-not-array.json");
         var exception = assertThrows(EditionsAutoLoadException.class, editionsLoader::load);
         assertThat(exception).hasCauseInstanceOf(MismatchedInputException.class);
     }
@@ -100,7 +128,8 @@ class EditionsAutoLoadTests {
     })
     @DisplayName("fail if the editions data is invalid because a field does not have expected value")
     void failInvalidUnexpectedValue(String resourcePath) {
-        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, resourcePath);
+        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, resourcePath,
+                "classpath:auto-load/publishers/publishers-test-valid.json");
         var exception = assertThrows(EditionsAutoLoadException.class, editionsLoader::load);
         assertThat(exception.getCause()).isNotNull().has(new Condition<>(
                 cause -> IllegalArgumentException.class.isAssignableFrom(cause.getClass())
@@ -112,8 +141,8 @@ class EditionsAutoLoadTests {
     @ParameterizedTest
     @MethodSource("editionsLoadingProvider")
     @DisplayName("contain expected editions as defined in the configured resource")
-    void containExpectedEditions(String resourcePath, List<Edition> expected) {
-        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, resourcePath);
+    void containExpectedEditions(String editionsResourcePath, String publishersResourcePath, List<Edition> expected) {
+        var editionsLoader = new InMemoryEditionsLoader(repository, booksRepository, editionsResourcePath, publishersResourcePath);
         editionsLoader.load();
 
         var actual = repository.findAll();
@@ -122,8 +151,9 @@ class EditionsAutoLoadTests {
 
     static Stream<Arguments> editionsLoadingProvider() {
         return Stream.of(
-                Arguments.of("classpath:auto-load/editions/editions-test-empty.json", List.of()),
-                Arguments.of("classpath:auto-load/editions/editions-test-valid.json", List.of(
+                Arguments.of("classpath:auto-load/editions/editions-test-empty.json", "classpath:auto-load/publishers/publishers-test-empty.json", List.of()),
+                Arguments.of("classpath:auto-load/editions/editions-test-empty.json", "classpath:auto-load/publishers/publishers-test-valid.json", List.of()),
+                Arguments.of("classpath:auto-load/editions/editions-test-valid.json", "classpath:auto-load/publishers/publishers-test-valid.json", List.of(
                         L_ETRANGER,
                         LA_PESTE,
                         LA_CHUTE,
