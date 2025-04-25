@@ -29,9 +29,10 @@ import java.util.stream.IntStream;
 import static io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.SlidingWindowType.COUNT_BASED;
 import static io.github.resilience4j.timelimiter.TimeLimiterConfig.custom;
 import static java.time.Duration.ofMillis;
+import static org.adhuc.library.website.catalog.BooksMother.DU_CONTRAT_SOCIAL;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.PARTIAL_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
@@ -106,13 +107,63 @@ class CatalogRestClientIntegrationTests {
 
     @Test
     @DirtiesContext(methodMode = BEFORE_METHOD)
-    @DisplayName("open the circuit breaker when server fails multiple times")
+    @DisplayName("open the circuit breaker when server fails multiple times while listing books page")
     void getPageMultipleErrorsOpenCircuitBreaker() {
         IntStream.rangeClosed(1, 5)
                 .forEach(i -> mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/catalog?page=0&size=10"))
                         .andRespond(withStatus(INTERNAL_SERVER_ERROR)));
         IntStream.rangeClosed(1, 10)
                 .forEach(i -> assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3")));
+        mockServer.verify();
+    }
+
+    @Test
+    @DisplayName("get book details without timeout")
+    void getBook() {
+        var response = new DefaultResourceLoader().getResource("classpath:client/catalog/book-contrat-social.json");
+        mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/books/{id}", DU_CONTRAT_SOCIAL.id()))
+                .andExpect(header("Accept-Language", "fr"))
+                .andRespond(withStatus(OK).body(response).contentType(APPLICATION_JSON));
+
+        var actual = catalogRestClient.getBook(DU_CONTRAT_SOCIAL.id(), "fr");
+        assertThat(actual).isEqualTo(DU_CONTRAT_SOCIAL);
+    }
+
+    @Test
+    @DisplayName("fail retrieving book details when timeout is reached")
+    void getBookTimeout() {
+        var response = new DefaultResourceLoader().getResource("classpath:client/catalog/book-contrat-social.json");
+        mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/books/{id}", DU_CONTRAT_SOCIAL.id()))
+                .andRespond(request -> {
+                    try {
+                        Thread.sleep(TIMEOUT_DURATION_MS);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                    }
+                    return withStatus(OK).body(response).contentType(APPLICATION_JSON).createResponse(request);
+                });
+
+        assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.getBook(DU_CONTRAT_SOCIAL.id(), "fr"));
+    }
+
+    @Test
+    @DisplayName("fail retrieving book details when server return an error")
+    void getBookServerError() {
+        mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/books/{id}", DU_CONTRAT_SOCIAL.id()))
+                .andRespond(withStatus(INTERNAL_SERVER_ERROR));
+
+        assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.getBook(DU_CONTRAT_SOCIAL.id(), "fr"));
+    }
+
+    @Test
+    @DirtiesContext(methodMode = BEFORE_METHOD)
+    @DisplayName("open the circuit breaker when server fails multiple times while retrieving book details")
+    void getBookMultipleErrorsOpenCircuitBreaker() {
+        IntStream.rangeClosed(1, 5)
+                .forEach(i -> mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/books/{id}", DU_CONTRAT_SOCIAL.id()))
+                        .andRespond(withStatus(INTERNAL_SERVER_ERROR)));
+        IntStream.rangeClosed(1, 10)
+                .forEach(i -> assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.getBook(DU_CONTRAT_SOCIAL.id(), "fr")));
         mockServer.verify();
     }
 

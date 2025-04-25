@@ -28,6 +28,7 @@ import java.util.function.Supplier;
 
 import static au.com.dius.pact.consumer.dsl.LambdaDsl.newJsonBody;
 import static au.com.dius.pact.consumer.dsl.PactDslJsonRootValue.stringMatcher;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith({PactConsumerTestExt.class, MockitoExtension.class})
@@ -63,6 +64,7 @@ public class CatalogRestClientPactTests {
                     });
                     root.object("_embedded", embedded -> {
                         embedded.maxArrayLike("books", 10, book -> {
+                            book.stringMatcher("id", UUID_REGEX, "b6608a30-1e9b-4ae0-a89d-624c3ca85da4");
                             book.stringValue("title", "Du contrat social");
                             book.minArrayLike("authors", 1, stringMatcher(UUID_REGEX, "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), 1);
                             book.stringValue("description", "Paru en 1762, le Contrat social, ...");
@@ -105,6 +107,7 @@ public class CatalogRestClientPactTests {
 
             s.assertThat(catalog.getContent()).hasSize(1)
                     .contains(new Book(
+                            "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
                             "Du contrat social",
                             List.of(new Author(UUID.fromString("99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), "Jean-Jacques Rousseau")),
                             "Paru en 1762, le Contrat social, ..."
@@ -138,6 +141,7 @@ public class CatalogRestClientPactTests {
                     });
                     root.object("_embedded", embedded -> {
                         embedded.maxArrayLike("books", 10, book -> {
+                            book.stringMatcher("id", UUID_REGEX, "b6608a30-1e9b-4ae0-a89d-624c3ca85da4");
                             book.stringValue("title", "Du contrat social");
                             book.minArrayLike("authors", 1, stringMatcher(UUID_REGEX, "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), 1);
                             book.stringValue("description", "Paru en 1762, le Contrat social, ...");
@@ -180,6 +184,7 @@ public class CatalogRestClientPactTests {
 
             s.assertThat(catalog.getContent()).hasSize(1)
                     .contains(new Book(
+                            "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
                             "Du contrat social",
                             List.of(new Author(UUID.fromString("99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), "Jean-Jacques Rousseau")),
                             "Paru en 1762, le Contrat social, ..."
@@ -213,6 +218,7 @@ public class CatalogRestClientPactTests {
                     });
                     root.object("_embedded", embedded -> {
                         embedded.maxArrayLike("books", 10, book -> {
+                            book.stringMatcher("id", UUID_REGEX, "b6608a30-1e9b-4ae0-a89d-624c3ca85da4");
                             book.stringValue("title", "The Social Contract");
                             book.minArrayLike("authors", 1, stringMatcher(UUID_REGEX, "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), 1);
                             book.stringValue("description", "The Social Contract, originally published as On the Social Contract; or, Principles of Political Right...");
@@ -255,6 +261,7 @@ public class CatalogRestClientPactTests {
 
             s.assertThat(catalog.getContent()).hasSize(1)
                     .contains(new Book(
+                            "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
                             "The Social Contract",
                             List.of(new Author(UUID.fromString("99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), "Jean-Jacques Rousseau")),
                             "The Social Contract, originally published as On the Social Contract; or, Principles of Political Right..."
@@ -288,6 +295,7 @@ public class CatalogRestClientPactTests {
                     });
                     root.object("_embedded", embedded -> {
                         embedded.maxArrayLike("books", 10, book -> {
+                            book.stringMatcher("id", UUID_REGEX, "b6608a30-1e9b-4ae0-a89d-624c3ca85da4");
                             book.stringValue("title", "Du contrat social");
                             book.minArrayLike("authors", 1, stringMatcher(UUID_REGEX, "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), 1);
                             book.stringValue("description", "Paru en 1762, le Contrat social, ...");
@@ -330,11 +338,60 @@ public class CatalogRestClientPactTests {
 
             s.assertThat(catalog.getContent()).hasSize(1)
                     .contains(new Book(
+                            "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
                             "Du contrat social",
                             List.of(new Author(UUID.fromString("99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), "Jean-Jacques Rousseau")),
                             "Paru en 1762, le Contrat social, ..."
                     ));
         });
+    }
+
+    @Pact(consumer = "library-website", provider = "library-catalog")
+    public RequestResponsePact bookDetailNoProvidedLanguage(PactDslWithProvider builder) {
+        return builder
+                .given("Book detail is reachable")
+                .uponReceiving("Website book detail")
+                .method("GET")
+                .path("/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4")
+                .willRespondWith()
+                .status(200)
+                .headers(Map.of("Content-Type", "application/json"))
+                .body(newJsonBody(root -> {
+                    root.stringType("id", "b6608a30-1e9b-4ae0-a89d-624c3ca85da4");
+                    root.stringType("title", "Du contrat social");
+                    root.stringType("description", "Paru en 1762, le Contrat social, ...");
+                    root.object("_embedded", embedded -> {
+                        embedded.minArrayLike("authors", 1, author -> {
+                            author.stringMatcher("id", UUID_REGEX, "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2");
+                            author.stringValue("name", "Jean-Jacques Rousseau");
+                        });
+                    });
+                }).build())
+                .toPact();
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "bookDetailNoProvidedLanguage", pactVersion = PactSpecVersion.V3)
+    void getBookDetail(MockServer mockServer) {
+        when(circuitBreakerFactory.create("catalog")).thenReturn(new CircuitBreaker() {
+            @Override
+            public <T> T run(Supplier<T> toRun, Function<Throwable, T> fallback) {
+                return toRun.get();
+            }
+        });
+
+        var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
+        var restTemplate = new RestTemplate();
+        var restClientBuilder = RestClient.builder(restTemplate);
+        var catalogRestClient = new CatalogRestClient(restClientBuilder, null, circuitBreakerFactory, properties);
+
+        var book = catalogRestClient.getBook("b6608a30-1e9b-4ae0-a89d-624c3ca85da4", "");
+        assertThat(book).isEqualTo(new Book(
+                "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
+                "Du contrat social",
+                List.of(new Author(UUID.fromString("99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), "Jean-Jacques Rousseau")),
+                "Paru en 1762, le Contrat social, ..."
+        ));
     }
 
 }

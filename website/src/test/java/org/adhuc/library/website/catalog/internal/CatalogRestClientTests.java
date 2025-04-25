@@ -22,6 +22,7 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestTemplate;
 
@@ -34,7 +35,7 @@ import static org.adhuc.library.website.catalog.BooksMother.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.HttpStatus.PARTIAL_CONTENT;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
@@ -157,16 +158,16 @@ class CatalogRestClientTests {
                     Arguments.of(0, 10, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
-                            List.of(A_DANCE_WITH_DRAGONS)
+                            List.of(A_DANCE_WITH_DRAGONS_FR)
                     ),
                     Arguments.of(1, 10, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             resourceLoader.getResource("classpath:client/catalog/page-1-size-10.json"),
-                            List.of(A_DANCE_WITH_DRAGONS),
+                            List.of(A_DANCE_WITH_DRAGONS_FR),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU)
                     ),
                     Arguments.of(0, 50, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-50.json"),
-                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS, BULLSHIT_JOBS),
+                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS_FR, BULLSHIT_JOBS),
                             List.of(LA_FERME_DES_ANIMAUX)
                     )
             );
@@ -197,7 +198,7 @@ class CatalogRestClientTests {
                     )
             );
             var page1Size10 = new NavigablePageImpl<>(
-                    List.of(A_DANCE_WITH_DRAGONS),
+                    List.of(A_DANCE_WITH_DRAGONS_FR),
                     PageRequest.of(1, 10), 67,
                     List.of(
                             new Link("first", "http://localhost:12345/test/api/v1/catalog?page=0&size=10"),
@@ -222,34 +223,34 @@ class CatalogRestClientTests {
                             "http://localhost:12345/test/api/v1/catalog?page=0&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
-                            List.of(A_DANCE_WITH_DRAGONS)
+                            List.of(A_DANCE_WITH_DRAGONS_FR)
                     ),
                     Arguments.of(page1Size10, "first",
                             "en",
                             "http://localhost:12345/test/api/v1/catalog?page=0&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
-                            List.of(A_DANCE_WITH_DRAGONS)
+                            List.of(A_DANCE_WITH_DRAGONS_FR)
                     ),
                     Arguments.of(page1Size10, "first",
                             "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             "http://localhost:12345/test/api/v1/catalog?page=0&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
-                            List.of(A_DANCE_WITH_DRAGONS)
+                            List.of(A_DANCE_WITH_DRAGONS_FR)
                     ),
                     Arguments.of(page1Size10, "prev",
                             "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             "http://localhost:12345/test/api/v1/catalog?page=0&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU),
-                            List.of(A_DANCE_WITH_DRAGONS)
+                            List.of(A_DANCE_WITH_DRAGONS_FR)
                     ),
                     Arguments.of(page0Size10, "next",
                             "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             "http://localhost:12345/test/api/v1/catalog?page=1&size=10",
                             resourceLoader.getResource("classpath:client/catalog/page-1-size-10.json"),
-                            List.of(A_DANCE_WITH_DRAGONS),
+                            List.of(A_DANCE_WITH_DRAGONS_FR),
                             List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU)
                     ),
                     Arguments.of(page0Size10, "last",
@@ -263,7 +264,7 @@ class CatalogRestClientTests {
                             "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             "http://localhost:12345/test/api/v1/catalog?page=0&size=50",
                             resourceLoader.getResource("classpath:client/catalog/page-0-size-50.json"),
-                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS, BULLSHIT_JOBS),
+                            List.of(DU_CONTRAT_SOCIAL, LA_COMMUNAUTE_DE_L_ANNEAU, A_DANCE_WITH_DRAGONS_FR, BULLSHIT_JOBS),
                             List.of(LA_FERME_DES_ANIMAUX)
                     )
             );
@@ -301,6 +302,66 @@ class CatalogRestClientTests {
                     Arguments.of(page6Size10, "next")
             );
         }
+
+        @Test
+        @DisplayName("fail retrieving unknown book")
+        void getUnknownBook() {
+            var id = "b94329cb-8767-4438-b802-d85a268fb3e3";
+            mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/books/{id}", id))
+                    .andExpect(header("Accept-Language", "fr"))
+                    .andRespond(withStatus(NOT_FOUND).body("""
+                            {
+                              "type": "/problems/unknown-entity",
+                              "status": 404,
+                              "title": "Unknown book",
+                              "detail": "No book exists with id 'b94329cb-8767-4438-b802-d85a268fb3e3'"
+                            }
+                            """).contentType(APPLICATION_JSON));
+
+            assertThrows(HttpClientErrorException.class, () -> catalogRestClient.getBook(id, "fr"));
+        }
+
+        @ParameterizedTest
+        @MethodSource("knownBookProvider")
+        @DisplayName("get book details for a book ID")
+        void getBook(String id, String acceptLanguages, Resource response, Book expected) {
+            mockServer.expect(requestToUriTemplate("http://localhost:12345/test/api/v1/books/{id}", id))
+                    .andExpect(header("Accept-Language", acceptLanguages))
+                    .andRespond(withStatus(OK).body(response).contentType(APPLICATION_JSON));
+
+            var actual = catalogRestClient.getBook(id, acceptLanguages);
+            assertThat(actual).isEqualTo(expected);
+        }
+
+        static Stream<Arguments> knownBookProvider() {
+            var resourceLoader = new DefaultResourceLoader();
+            return Stream.of(
+                    Arguments.of(
+                            DU_CONTRAT_SOCIAL.id(),
+                            "fr",
+                            resourceLoader.getResource("classpath:client/catalog/book-contrat-social.json"),
+                            DU_CONTRAT_SOCIAL
+                    ),
+                    Arguments.of(
+                            A_DANCE_WITH_DRAGONS_FR.id(),
+                            "fr",
+                            resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-fr.json"),
+                            A_DANCE_WITH_DRAGONS_FR
+                    ),
+                    Arguments.of(
+                            A_DANCE_WITH_DRAGONS_FR.id(),
+                            "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                            resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-fr.json"),
+                            A_DANCE_WITH_DRAGONS_FR
+                    ),
+                    Arguments.of(
+                            A_DANCE_WITH_DRAGONS_EN.id(),
+                            "en",
+                            resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-en.json"),
+                            A_DANCE_WITH_DRAGONS_EN
+                    )
+            );
+        }
     }
 
     @Nested
@@ -322,6 +383,13 @@ class CatalogRestClientTests {
         @DisplayName("fail listing books for a page")
         void getPage() {
             var error = assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.listBooks(PageRequest.of(0, 10), "fr"));
+            assertThat(error).hasMessage("No fallback available");
+        }
+
+        @Test
+        @DisplayName("fail retrieving book")
+        void getBook() {
+            var error = assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.getBook("b6608a30-1e9b-4ae0-a89d-624c3ca85da4", "fr"));
             assertThat(error).hasMessage("No fallback available");
         }
     }

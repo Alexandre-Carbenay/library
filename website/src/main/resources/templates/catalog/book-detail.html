@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{fragments/layout :: layout (~{::body},'catalog')}">
+<body>
+
+<h2 th:text="${book.title}"></h2>
+<h3>
+    <span th:each="author, iStat : ${book.authors}">
+        <span th:text="${author.name}"></span>
+        <span th:text="${iStat.last} ? '' : ' - '"></span>
+    </span>
+</h3>
+<div>
+    <p th:text="${book.description}"></p>
+</div>
+</body>
+</html>
