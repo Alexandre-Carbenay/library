@@ -11,10 +11,16 @@ public record BookDetailDto(String id, String title, String description,
                             @JsonProperty("_embedded") EmbeddedValues embedded) {
 
     public Book asBook() {
-        return new Book(id, title, embedded.authors.stream().map(AuthorDto::toAuthor).toList(), description);
+        return new Book(
+                id,
+                title,
+                embedded.authors.stream().map(AuthorDto::toAuthor).toList(),
+                description,
+                embedded.editions.stream().map(EditionDto::toEdition).toList()
+                );
     }
 
-    public record EmbeddedValues(List<AuthorDto> authors) {
+    public record EmbeddedValues(List<AuthorDto> authors, List<EditionDto> editions) {
 
     }
 

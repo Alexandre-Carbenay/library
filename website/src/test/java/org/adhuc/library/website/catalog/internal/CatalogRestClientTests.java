@@ -340,25 +340,25 @@ class CatalogRestClientTests {
                             DU_CONTRAT_SOCIAL.id(),
                             "fr",
                             resourceLoader.getResource("classpath:client/catalog/book-contrat-social.json"),
-                            DU_CONTRAT_SOCIAL
+                            DU_CONTRAT_SOCIAL_WITH_EDITIONS
                     ),
                     Arguments.of(
                             A_DANCE_WITH_DRAGONS_FR.id(),
                             "fr",
                             resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-fr.json"),
-                            A_DANCE_WITH_DRAGONS_FR
+                            A_DANCE_WITH_DRAGONS_FR_WITH_EDITIONS
                     ),
                     Arguments.of(
                             A_DANCE_WITH_DRAGONS_FR.id(),
                             "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-fr.json"),
-                            A_DANCE_WITH_DRAGONS_FR
+                            A_DANCE_WITH_DRAGONS_FR_WITH_EDITIONS
                     ),
                     Arguments.of(
                             A_DANCE_WITH_DRAGONS_EN.id(),
                             "en",
                             resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-en.json"),
-                            A_DANCE_WITH_DRAGONS_EN
+                            A_DANCE_WITH_DRAGONS_EN_WITH_EDITIONS
                     )
             );
         }
