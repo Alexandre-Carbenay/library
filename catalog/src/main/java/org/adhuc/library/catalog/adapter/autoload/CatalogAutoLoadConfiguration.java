@@ -37,7 +37,7 @@ class CatalogAutoLoadConfiguration {
     InMemoryEditionsLoader editionsLoader(InMemoryEditionsRepository editionsRepository,
                                           InMemoryBooksRepository booksRepository,
                                           CatalogAutoLoadProperties properties) {
-        var loader = new InMemoryEditionsLoader(editionsRepository, booksRepository, properties.editions().resource());
+        var loader = new InMemoryEditionsLoader(editionsRepository, booksRepository, properties.editions().resource(), properties.publishers().resource());
         loader.load();
         return loader;
     }

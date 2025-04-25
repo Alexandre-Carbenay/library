@@ -11,6 +11,7 @@ import org.adhuc.library.catalog.books.*;
 import org.adhuc.library.catalog.editions.Edition;
 import org.adhuc.library.catalog.editions.EditionsService;
 import org.adhuc.library.catalog.editions.PublicationDate;
+import org.adhuc.library.catalog.editions.Publisher;
 import org.apache.hc.core5.http.HttpRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestTemplate;
@@ -167,6 +168,7 @@ class CatalogPactTests {
                 "Du contrat social ou Principes du droit politique",
                 PublicationDate.of(LocalDate.parse("2023-02-08")),
                 book,
+                new Publisher(UUID.fromString("c0c990bd-c455-40c4-92e7-0b62befb200d"), "Flammarion"),
                 "fr",
                 "Comment se forment les sociétés ? Qu'est-ce qui détermine une organisation sociale juste ? Comment concilier les intérêts de chacun et l'intérêt général ?"
         );

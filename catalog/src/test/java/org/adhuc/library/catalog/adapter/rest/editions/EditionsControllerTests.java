@@ -22,6 +22,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.hamcrest.Matchers.*;
@@ -93,6 +94,7 @@ class EditionsControllerTests {
                 .andExpect(jsonPath("isbn", equalTo(edition.isbn())))
                 .andExpect(jsonPath("title", equalTo(edition.title())))
                 .andExpect(jsonPath("publication_date", equalTo(edition.publicationDate().toString())))
+                .andExpect(jsonPath("publisher", equalTo(edition.publisher().get().name())))
                 .andExpect(jsonPath("language", equalTo(edition.language())))
                 .andExpect(jsonPath("summary", equalTo(edition.summary())))
                 .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/editions/\{edition.isbn()}")))
@@ -118,6 +120,32 @@ class EditionsControllerTests {
                 .map(publicationDate -> EditionsMother.builder().publicationDate(publicationDate).build())
                 .map(Arguments::of)
                 .sampleStream().limit(3);
+    }
+
+    @ParameterizedTest
+    @MethodSource("editionsWithoutPublisherProvider")
+    @DisplayName("provide the edition details corresponding to the ID, without embedded publisher")
+    void knownEditionIdWithoutPublisher(Edition edition) throws Exception {
+        when(editionsService.getEdition(Mockito.any())).thenReturn(Optional.of(edition));
+
+        mvc.perform(get("/api/v1/editions/{isbn}", edition.isbn()).accept("application/hal+json"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("isbn", equalTo(edition.isbn())))
+                .andExpect(jsonPath("title", equalTo(edition.title())))
+                .andExpect(jsonPath("publication_date", equalTo(edition.publicationDate().toString())))
+                .andExpect(jsonPath("publisher").doesNotExist())
+                .andExpect(jsonPath("language", equalTo(edition.language())))
+                .andExpect(jsonPath("summary", equalTo(edition.summary())))
+                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/editions/\{edition.isbn()}")))
+                .andExpect(jsonPath("_links.book.href", equalTo(STR."http://localhost/api/v1/books/\{edition.book().id()}")));
+
+        verify(editionsService).getEdition(edition.isbn());
+    }
+
+    static Stream<Arguments> editionsWithoutPublisherProvider() {
+        return IntStream.range(0, 3)
+                .mapToObj(_ -> EditionsMother.builder().publisher(null).build())
+                .map(Arguments::of);
     }
 
 }

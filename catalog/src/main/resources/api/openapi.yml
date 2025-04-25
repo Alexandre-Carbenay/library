@@ -570,6 +570,9 @@ components:
           $ref: '#/components/schemas/Title'
         publication_date:
           $ref: '#/components/schemas/PublicationDate'
+        publisher:
+          type: string
+          example: Flammarion
         language:
           $ref: '#/components/schemas/Language'
         summary:

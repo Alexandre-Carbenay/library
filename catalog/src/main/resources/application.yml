@@ -33,6 +33,7 @@ library.catalog:
     authors.resource: 'classpath:data/catalog-authors.json'
     books.resource: 'classpath:data/catalog-books.json'
     editions.resource: 'classpath:data/catalog-editions.json'
+    publishers.resource: 'classpath:data/catalog-publishers.json'
 
 logging:
   level:
