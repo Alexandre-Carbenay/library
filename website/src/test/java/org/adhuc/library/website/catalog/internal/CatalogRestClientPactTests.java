@@ -9,6 +9,7 @@ import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import org.adhuc.library.website.catalog.Author;
 import org.adhuc.library.website.catalog.Book;
+import org.adhuc.library.website.catalog.Edition;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +36,7 @@ import static org.mockito.Mockito.when;
 public class CatalogRestClientPactTests {
 
     private static final String UUID_REGEX = "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$";
+    private static final String ISBN_REGEX = "^97[89][0-9]{10}$";
 
     @Mock
     private CircuitBreakerFactory<?, ?> circuitBreakerFactory;
@@ -365,6 +367,11 @@ public class CatalogRestClientPactTests {
                             author.stringMatcher("id", UUID_REGEX, "99287cef-2c8c-4a4d-a82e-f1a8452dcfe2");
                             author.stringValue("name", "Jean-Jacques Rousseau");
                         });
+                        embedded.minArrayLike("editions", 1, edition -> {
+                            edition.stringMatcher("isbn", ISBN_REGEX, "9782290385050");
+                            edition.stringValue("title", "Du contrat social ou Principes du droit politique");
+                            edition.stringValue("language", "fr");
+                        });
                     });
                 }).build())
                 .toPact();
@@ -390,7 +397,8 @@ public class CatalogRestClientPactTests {
                 "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
                 "Du contrat social",
                 List.of(new Author(UUID.fromString("99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), "Jean-Jacques Rousseau")),
-                "Paru en 1762, le Contrat social, ..."
+                "Paru en 1762, le Contrat social, ...",
+                List.of(new Edition("9782290385050", "Du contrat social ou Principes du droit politique", "fr"))
         ));
     }
 

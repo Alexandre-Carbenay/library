@@ -13,5 +13,24 @@
 <div>
     <p th:text="${book.description}"></p>
 </div>
+
+<hr />
+<h3 th:text="#{book.editions}"></h3>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th th:text="#{edition.isbn}">ISBN</th>
+        <th th:text="#{edition.title}">Title</th>
+        <th th:text="#{edition.language}">Language</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="edition : ${book.editions}">
+        <td th:text="${edition.isbn}"></td>
+        <td th:text="${edition.title}"></td>
+        <td th:text="#{edition.languages.__${edition.language}__}"></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>
