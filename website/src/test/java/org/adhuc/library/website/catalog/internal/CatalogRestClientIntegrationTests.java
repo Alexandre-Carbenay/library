@@ -30,6 +30,7 @@ import static io.github.resilience4j.circuitbreaker.CircuitBreakerConfig.Sliding
 import static io.github.resilience4j.timelimiter.TimeLimiterConfig.custom;
 import static java.time.Duration.ofMillis;
 import static org.adhuc.library.website.catalog.BooksMother.DU_CONTRAT_SOCIAL;
+import static org.adhuc.library.website.catalog.BooksMother.DU_CONTRAT_SOCIAL_WITH_EDITIONS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.http.HttpStatus.*;
@@ -126,7 +127,7 @@ class CatalogRestClientIntegrationTests {
                 .andRespond(withStatus(OK).body(response).contentType(APPLICATION_JSON));
 
         var actual = catalogRestClient.getBook(DU_CONTRAT_SOCIAL.id(), "fr");
-        assertThat(actual).isEqualTo(DU_CONTRAT_SOCIAL);
+        assertThat(actual).isEqualTo(DU_CONTRAT_SOCIAL_WITH_EDITIONS);
     }
 
     @Test
