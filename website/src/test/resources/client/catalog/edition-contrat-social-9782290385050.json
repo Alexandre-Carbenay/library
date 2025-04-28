@@ -1,0 +1,16 @@
+{
+  "isbn": "9782290385050",
+  "title": "Du contrat social ou Principes du droit politique",
+  "publication_date": "2023-02-08",
+  "publisher": "J'ai lu",
+  "language": "fr",
+  "summary": "Comment se forment les sociétés ? Qu'est-ce qui détermine une organisation sociale juste ? Comment concilier les intérêts de chacun et l'intérêt général ? Rousseau recourt à l'hypothèse d'un état de nature pour tenter de répondre à ces interrogations fondamentales : une société naît toujours d'un pacte social, contracté par tous avec tous, par lequel chacun renonce à sa liberté naturelle pour gagner une liberté civile.\nCe contrat social a pour principe fondateur la souveraineté du peuple. Paru en 1762, Du contrat social est un texte essentiel de la philosophie politique ; les questions qu'il soulève résonnent encore aujourd'hui.",
+  "_links": {
+    "self": {
+      "href": "http://localhost:12345/api/v1/editions/9782290385050"
+    },
+    "book": {
+      "href": "http://localhost:12345/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4"
+    }
+  }
+}

@@ -1,5 +1,6 @@
 package org.adhuc.library.website.catalog;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,8 +18,8 @@ public final class BooksMother {
             List.of(new Author(UUID.fromString("83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"), "Jean-Jacques Rousseau")),
             "Du contrat social est un traité de philosophie politique présentant comment l’homme, passant de l’état de nature à l’état de société, peut instituer un ordre social au service de l'intérêt commun. Le pacte social que propose Rousseau établit que chacun doit renoncer à tous ses droits particuliers ou du plus fort pour obtenir l'égalité des droits que procure la société. Cette aliénation de chaque sujet de l’État est ce pacte qui offre à chacun l’égalité : « Les clauses [du pacte social] se réduisent toutes à une seule : l’aliénation totale de chaque associé avec tous ses droits à toute la communauté : car premièrement, chacun se donnant tout entier, la condition est égale pour tous ; et la condition étant égale pour tous, nul n’a intérêt de la rendre onéreuse aux autres. » (Livre I, Chapitre 6) La légitimité du pacte social repose sur le fait que l’homme n’aliène pas au sens propre (il ne l'échange pas ni ne le donne) son droit naturel mais il comprend que le pacte social est au contraire la condition de l’existence de ses droits naturels.",
             List.of(
-                    new Edition("9782081275232", "Du contrat social", "fr"),
-                    new Edition("9782290385050", "Du contrat social ou Principes du droit politique", "fr")
+                    new Edition("9782290385050", "Du contrat social ou Principes du droit politique", "J'ai lu", LocalDate.parse("2023-02-08"), "fr"),
+                    new Edition("9782081275232", "Du contrat social", "Flammarion", LocalDate.parse("2012-01-04"), "fr")
             )
     );
     public static final Book LA_COMMUNAUTE_DE_L_ANNEAU = new Book(
@@ -39,8 +40,8 @@ public final class BooksMother {
             List.of(new Author(UUID.fromString("c5f1361f-61b4-42c4-9cf1-d82e9a45317a"), "George Raymond Richard Martin")),
             "A Dance with Dragons (littéralement « une danse avec les dragons ») est le cinquième livre de la saga Le Trône de fer écrite par George R. R. Martin. Le livre a été publié en version originale le 12 juillet 2011, alors que la publication de sa traduction française s'est étalée entre mars 2012 et janvier 2013. Il se concentre principalement sur les évènements se déroulant au nord du continent de Westeros et sur le continent oriental, les événements de la première moitié du roman se déroulant en même temps que ceux de A Feast for Crows alors que ceux de la deuxième moitié du roman se passent plus tard, certains cliffhangers d’A Feast for Crows trouvant leur résolution dans ce volume.",
             List.of(
-                    new Edition("9782290221709", "Le trône de fer l'intégrale 5", "fr"),
-                    new Edition("9780553801477", "A Dance with Dragons", "en")
+                    new Edition("9782290221709", "Le trône de fer l'intégrale 5", "J'ai lu", LocalDate.parse("2019-11-06"), "fr"),
+                    new Edition("9780553801477", "A Dance with Dragons", "Random House Worlds", LocalDate.parse("2011-07-12"), "en")
             )
     );
     public static final Book A_DANCE_WITH_DRAGONS_EN = new Book(
@@ -55,8 +56,8 @@ public final class BooksMother {
             List.of(new Author(UUID.fromString("c5f1361f-61b4-42c4-9cf1-d82e9a45317a"), "George Raymond Richard Martin")),
             "A Dance with Dragons is the fifth novel of seven planned in the epic fantasy series A Song of Ice and Fire by American author George R. R. Martin. In some areas, the paperback edition was published in two parts: Dreams and Dust and After the Feast. It was the only novel in the series to be published during the eight-season run of the HBO adaptation of the series, Game of Thrones. It is 1,056 pages long and has a word count of almost 415,000.",
             List.of(
-                    new Edition("9782290221709", "Le trône de fer l'intégrale 5", "fr"),
-                    new Edition("9780553801477", "A Dance with Dragons", "en")
+                    new Edition("9782290221709", "Le trône de fer l'intégrale 5", "J'ai lu", LocalDate.parse("2019-11-06"), "fr"),
+                    new Edition("9780553801477", "A Dance with Dragons", "Random House Worlds", LocalDate.parse("2011-07-12"), "en")
             )
     );
     public static final Book BULLSHIT_JOBS = new Book(
