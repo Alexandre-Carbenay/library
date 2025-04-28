@@ -4,7 +4,7 @@
   "description": "Du contrat social est un traité de philosophie politique présentant comment l’homme, passant de l’état de nature à l’état de société, peut instituer un ordre social au service de l'intérêt commun. Le pacte social que propose Rousseau établit que chacun doit renoncer à tous ses droits particuliers ou du plus fort pour obtenir l'égalité des droits que procure la société. Cette aliénation de chaque sujet de l’État est ce pacte qui offre à chacun l’égalité : « Les clauses [du pacte social] se réduisent toutes à une seule : l’aliénation totale de chaque associé avec tous ses droits à toute la communauté : car premièrement, chacun se donnant tout entier, la condition est égale pour tous ; et la condition étant égale pour tous, nul n’a intérêt de la rendre onéreuse aux autres. » (Livre I, Chapitre 6) La légitimité du pacte social repose sur le fait que l’homme n’aliène pas au sens propre (il ne l'échange pas ni ne le donne) son droit naturel mais il comprend que le pacte social est au contraire la condition de l’existence de ses droits naturels.",
   "_links": {
     "self": {
-      "href": "https://localhost:8080/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4"
+      "href": "http://localhost:12345/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4"
     },
     "wikipedia": {
       "href": "https://fr.wikipedia.org/wiki/Du_contrat_social"
@@ -17,7 +17,7 @@
         "name": "Jean-Jacques Rousseau",
         "_links": {
           "self": {
-            "href": "https://localhost:8080/api/v1/authors/83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
+            "href": "http://localhost:12345/api/v1/authors/83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725"
           }
         }
       }
@@ -33,10 +33,10 @@
         "summary": "Paru en 1762, le Contrat social, en affirmant le principe de souveraineté du peuple, a constitué un tournant décisif pour la modernité et s'est imposé comme un des textes majeurs de la philosophie politique. Il a aussi acquis le statut de monument, plus célèbre que connu, plus révéré - ou honni - qu'interrogé. Retrouver, dans les formules fameuses et les pages d'anthologie, le mouvement de la réflexion et les questions vives qui nourrissent une œuvre beaucoup plus problématique qu'affirmative, c'est découvrir une pensée qui se tient au plus près des préoccupations d'aujourd'hui : comment intégrer les intérêts de tous dans la détermination de l'intérêt commun ? Comment lutter contre la pente de tout gouvernement à déposséder les citoyens de la souveraineté ? Comment former en chacun ce sentiment d'obligation sans lequel le lien social se défait ?\n",
         "_links": {
           "self": {
-            "href": "https://localhost:8080/api/v1/editions/9782081275232"
+            "href": "http://localhost:12345/api/v1/editions/9782081275232"
           },
           "book": {
-            "href": "https://localhost:8080/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4"
+            "href": "http://localhost:12345/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4"
           }
         }
       },
@@ -50,10 +50,10 @@
         "summary": "Comment se forment les sociétés ? Qu'est-ce qui détermine une organisation sociale juste ? Comment concilier les intérêts de chacun et l'intérêt général ? Rousseau recourt à l'hypothèse d'un état de nature pour tenter de répondre à ces interrogations fondamentales : une société naît toujours d'un pacte social, contracté par tous avec tous, par lequel chacun renonce à sa liberté naturelle pour gagner une liberté civile.\nCe contrat social a pour principe fondateur la souveraineté du peuple. Paru en 1762, Du contrat social est un texte essentiel de la philosophie politique ; les questions qu'il soulève résonnent encore aujourd'hui.",
         "_links": {
           "self": {
-            "href": "https://localhost:8080/api/v1/editions/9782290385050"
+            "href": "http://localhost:12345/api/v1/editions/9782290385050"
           },
           "book": {
-            "href": "https://localhost:8080/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4"
+            "href": "http://localhost:12345/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4"
           }
         }
       }

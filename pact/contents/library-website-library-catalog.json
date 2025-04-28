@@ -25,9 +25,12 @@
             ],
             "editions": [
               {
-                "isbn": "9782290385050",
-                "language": "fr",
-                "title": "Du contrat social ou Principes du droit politique"
+                "_links": {
+                  "self": {
+                    "href": "http://localhost:12345/api/v1/editions/9782290385050"
+                  }
+                },
+                "isbn": "9782290385050"
               }
             ]
           },
@@ -97,6 +100,44 @@
               "matchers": [
                 {
                   "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "Website edition detail",
+      "providerStates": [
+        {
+          "name": "Edition detail is reachable"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/editions/9782290385050"
+      },
+      "response": {
+        "body": {
+          "isbn": "9782290385050",
+          "language": "fr",
+          "publication_date": "2023-02-08",
+          "publisher": "J'ai lu",
+          "title": "Du contrat social ou Principes du droit politique"
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "body": {
+            "$.isbn": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "^97[89][0-9]{10}$"
                 }
               ]
             }

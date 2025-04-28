@@ -21,6 +21,8 @@
     <tr>
         <th th:text="#{edition.isbn}">ISBN</th>
         <th th:text="#{edition.title}">Title</th>
+        <th th:text="#{edition.publisher}">Publisher</th>
+        <th th:text="#{edition.publicationDate}">Publication date</th>
         <th th:text="#{edition.language}">Language</th>
     </tr>
     </thead>
@@ -28,6 +30,8 @@
     <tr th:each="edition : ${book.editions}">
         <td th:text="${edition.isbn}"></td>
         <td th:text="${edition.title}"></td>
+        <td th:text="${edition.publisher}"></td>
+        <td th:text="${#temporals.format(edition.publicationDate, 'd MMMM yyyy')}"></td>
         <td th:text="#{edition.languages.__${edition.language}__}"></td>
     </tr>
     </tbody>

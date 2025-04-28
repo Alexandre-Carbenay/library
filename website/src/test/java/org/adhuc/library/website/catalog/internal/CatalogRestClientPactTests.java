@@ -9,37 +9,26 @@ import au.com.dius.pact.core.model.RequestResponsePact;
 import au.com.dius.pact.core.model.annotations.Pact;
 import org.adhuc.library.website.catalog.Author;
 import org.adhuc.library.website.catalog.Book;
-import org.adhuc.library.website.catalog.Edition;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
-import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import static au.com.dius.pact.consumer.dsl.LambdaDsl.newJsonBody;
 import static au.com.dius.pact.consumer.dsl.PactDslJsonRootValue.stringMatcher;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @ExtendWith({PactConsumerTestExt.class, MockitoExtension.class})
 public class CatalogRestClientPactTests {
 
     private static final String UUID_REGEX = "^[0-9a-f]{8}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{4}\\b-[0-9a-f]{12}$";
     private static final String ISBN_REGEX = "^97[89][0-9]{10}$";
-
-    @Mock
-    private CircuitBreakerFactory<?, ?> circuitBreakerFactory;
 
     @Pact(consumer = "library-website", provider = "library-catalog")
     public RequestResponsePact defaultPageNoProvidedLanguage(PactDslWithProvider builder) {
@@ -83,19 +72,10 @@ public class CatalogRestClientPactTests {
     @Test
     @PactTestFor(pactMethod = "defaultPageNoProvidedLanguage", pactVersion = PactSpecVersion.V3)
     void getCatalogDefaultPage(MockServer mockServer) {
-        when(circuitBreakerFactory.create("catalog")).thenReturn(new CircuitBreaker() {
-            @Override
-            public <T> T run(Supplier<T> toRun, Function<Throwable, T> fallback) {
-                return toRun.get();
-            }
-        });
-
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
-        var restTemplate = new RestTemplate();
-        var restClientBuilder = RestClient.builder(restTemplate);
-        var catalogRestClient = new CatalogRestClient(restClientBuilder, null, circuitBreakerFactory, properties);
+        var client = new CatalogSpringReactiveClient(WebClient.builder(), null, properties);
 
-        var catalog = catalogRestClient.listBooks("fr");
+        var catalog = client.listBooks("fr", "/api/v1/catalog?page={page}&size={size}", 0, 10).block();
 
         SoftAssertions.assertSoftly(s -> {
             s.assertThat(catalog.getSize()).isEqualTo(10);
@@ -160,19 +140,10 @@ public class CatalogRestClientPactTests {
     @Test
     @PactTestFor(pactMethod = "defaultPageFrench", pactVersion = PactSpecVersion.V3)
     void getCatalogDefaultPageFrench(MockServer mockServer) {
-        when(circuitBreakerFactory.create("catalog")).thenReturn(new CircuitBreaker() {
-            @Override
-            public <T> T run(Supplier<T> toRun, Function<Throwable, T> fallback) {
-                return toRun.get();
-            }
-        });
-
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
-        var restTemplate = new RestTemplate();
-        var restClientBuilder = RestClient.builder(restTemplate);
-        var catalogRestClient = new CatalogRestClient(restClientBuilder, null, circuitBreakerFactory, properties);
+        var client = new CatalogSpringReactiveClient(WebClient.builder(), null, properties);
 
-        var catalog = catalogRestClient.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3");
+        var catalog = client.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3", "/api/v1/catalog?page={page}&size={size}", 0, 10).block();
 
         SoftAssertions.assertSoftly(s -> {
             s.assertThat(catalog.getSize()).isEqualTo(10);
@@ -237,19 +208,10 @@ public class CatalogRestClientPactTests {
     @Test
     @PactTestFor(pactMethod = "defaultPageEnglish", pactVersion = PactSpecVersion.V3)
     void getCatalogDefaultPageEnglish(MockServer mockServer) {
-        when(circuitBreakerFactory.create("catalog")).thenReturn(new CircuitBreaker() {
-            @Override
-            public <T> T run(Supplier<T> toRun, Function<Throwable, T> fallback) {
-                return toRun.get();
-            }
-        });
-
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
-        var restTemplate = new RestTemplate();
-        var restClientBuilder = RestClient.builder(restTemplate);
-        var catalogRestClient = new CatalogRestClient(restClientBuilder, null, circuitBreakerFactory, properties);
+        var client = new CatalogSpringReactiveClient(WebClient.builder(), null, properties);
 
-        var catalog = catalogRestClient.listBooks("en,en-US;q=0.8,fr-FR;q=0.5,fr;q=0.3");
+        var catalog = client.listBooks("en,en-US;q=0.8,fr-FR;q=0.5,fr;q=0.3", "/api/v1/catalog?page={page}&size={size}", 0, 10).block();
 
         SoftAssertions.assertSoftly(s -> {
             s.assertThat(catalog.getSize()).isEqualTo(10);
@@ -314,19 +276,10 @@ public class CatalogRestClientPactTests {
     @Test
     @PactTestFor(pactMethod = "otherPage", pactVersion = PactSpecVersion.V3)
     void getCatalogPage(MockServer mockServer) {
-        when(circuitBreakerFactory.create("catalog")).thenReturn(new CircuitBreaker() {
-            @Override
-            public <T> T run(Supplier<T> toRun, Function<Throwable, T> fallback) {
-                return toRun.get();
-            }
-        });
-
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
-        var restTemplate = new RestTemplate();
-        var restClientBuilder = RestClient.builder(restTemplate);
-        var catalogRestClient = new CatalogRestClient(restClientBuilder, null, circuitBreakerFactory, properties);
+        var client = new CatalogSpringReactiveClient(WebClient.builder(), null, properties);
 
-        var catalog = catalogRestClient.listBooks(PageRequest.of(1, 25), "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3");
+        var catalog = client.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3", "/api/v1/catalog?page={page}&size={size}", 1, 25).block();
 
         SoftAssertions.assertSoftly(s -> {
             s.assertThat(catalog.getSize()).isEqualTo(25);
@@ -369,8 +322,9 @@ public class CatalogRestClientPactTests {
                         });
                         embedded.minArrayLike("editions", 1, edition -> {
                             edition.stringMatcher("isbn", ISBN_REGEX, "9782290385050");
-                            edition.stringValue("title", "Du contrat social ou Principes du droit politique");
-                            edition.stringValue("language", "fr");
+                            edition.object("_links", links ->
+                                    links.object("self", selfLink ->
+                                            selfLink.stringValue("href", "http://localhost:12345/api/v1/editions/9782290385050")));
                         });
                     });
                 }).build())
@@ -380,25 +334,64 @@ public class CatalogRestClientPactTests {
     @Test
     @PactTestFor(pactMethod = "bookDetailNoProvidedLanguage", pactVersion = PactSpecVersion.V3)
     void getBookDetail(MockServer mockServer) {
-        when(circuitBreakerFactory.create("catalog")).thenReturn(new CircuitBreaker() {
-            @Override
-            public <T> T run(Supplier<T> toRun, Function<Throwable, T> fallback) {
-                return toRun.get();
-            }
-        });
-
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
-        var restTemplate = new RestTemplate();
-        var restClientBuilder = RestClient.builder(restTemplate);
-        var catalogRestClient = new CatalogRestClient(restClientBuilder, null, circuitBreakerFactory, properties);
+        var client = new CatalogSpringReactiveClient(WebClient.builder(), null, properties);
 
-        var book = catalogRestClient.getBook("b6608a30-1e9b-4ae0-a89d-624c3ca85da4", "");
-        assertThat(book).isEqualTo(new Book(
+        var book = client.retrieveBookDetails("b6608a30-1e9b-4ae0-a89d-624c3ca85da4", "").block();
+        assertThat(book).isEqualTo(new BookDetailDto(
                 "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
                 "Du contrat social",
-                List.of(new Author(UUID.fromString("99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), "Jean-Jacques Rousseau")),
                 "Paru en 1762, le Contrat social, ...",
-                List.of(new Edition("9782290385050", "Du contrat social ou Principes du droit politique", "fr"))
+                new BookDetailDto.EmbeddedValues(
+                        List.of(new AuthorDto(UUID.fromString("99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), "Jean-Jacques Rousseau")),
+                        List.of(new EditionDto("9782290385050", new EditionDto.Links(new EditionDto.LinkValue("http://localhost:12345/api/v1/editions/9782290385050"))))
+                )
+        ));
+    }
+
+    @Pact(consumer = "library-website", provider = "library-catalog")
+    public RequestResponsePact editionDetail(PactDslWithProvider builder) {
+        return builder
+                .given("Edition detail is reachable")
+                .uponReceiving("Website edition detail")
+                .method("GET")
+                .path("/api/v1/editions/9782290385050")
+                .willRespondWith()
+                .status(200)
+                .headers(Map.of("Content-Type", "application/json"))
+                .body(newJsonBody(root -> {
+                    root.stringMatcher("isbn", ISBN_REGEX, "9782290385050");
+                    root.stringValue("title", "Du contrat social ou Principes du droit politique");
+                    root.stringValue("publication_date", "2023-02-08");
+                    root.stringValue("publisher", "J'ai lu");
+                    root.stringValue("language", "fr");
+                }).build())
+                .toPact();
+    }
+
+    @Test
+    @PactTestFor(pactMethod = "editionDetail", pactVersion = PactSpecVersion.V3)
+    void getEditionDetail(MockServer mockServer) {
+        var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
+        var client = new CatalogSpringReactiveClient(WebClient.builder(), null, properties);
+
+        var edition = client.retrieveBookEditions(new BookDetailDto(
+                "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
+                "Du contrat social",
+                "Paru en 1762, le Contrat social, ...",
+                new BookDetailDto.EmbeddedValues(
+                        List.of(new AuthorDto(UUID.fromString("99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), "Jean-Jacques Rousseau")),
+                        List.of(new EditionDto("9782290385050", new EditionDto.Links(new EditionDto.LinkValue(mockServer.getUrl() + "/api/v1/editions/9782290385050"))))
+                )
+        )).block();
+        assertThat(edition).isEqualTo(List.of(
+                new EditionDetailDto(
+                        "9782290385050",
+                        "Du contrat social ou Principes du droit politique",
+                        "J'ai lu",
+                        LocalDate.parse("2023-02-08"),
+                        "fr"
+                )
         ));
     }
 

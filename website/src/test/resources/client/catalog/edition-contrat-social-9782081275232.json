@@ -1,0 +1,16 @@
+{
+  "isbn": "9782081275232",
+  "title": "Du contrat social",
+  "publication_date": "2012-01-04",
+  "publisher": "Flammarion",
+  "language": "fr",
+  "summary": "Paru en 1762, le Contrat social, en affirmant le principe de souveraineté du peuple, a constitué un tournant décisif pour la modernité et s'est imposé comme un des textes majeurs de la philosophie politique. Il a aussi acquis le statut de monument, plus célèbre que connu, plus révéré - ou honni - qu'interrogé. Retrouver, dans les formules fameuses et les pages d'anthologie, le mouvement de la réflexion et les questions vives qui nourrissent une œuvre beaucoup plus problématique qu'affirmative, c'est découvrir une pensée qui se tient au plus près des préoccupations d'aujourd'hui : comment intégrer les intérêts de tous dans la détermination de l'intérêt commun ? Comment lutter contre la pente de tout gouvernement à déposséder les citoyens de la souveraineté ? Comment former en chacun ce sentiment d'obligation sans lequel le lien social se défait ?\n",
+  "_links": {
+    "self": {
+      "href": "http://localhost:12345/api/v1/editions/9782081275232"
+    },
+    "book": {
+      "href": "http://localhost:12345/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4"
+    }
+  }
+}
