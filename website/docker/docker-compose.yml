@@ -1,6 +1,8 @@
 networks:
   website:
     name: website
+  observability:
+    name: observability
 
 services:
   website:
@@ -17,6 +19,9 @@ services:
       SPRING_SSL_BUNDLE_JKS_CATALOG_TRUSTSTORE_LOCATION: classpath:ssl/catalog/catalog.p12
       SPRING_SSL_BUNDLE_JKS_CATALOG_TRUSTSTORE_PASSWORD: password
       SPRING_SSL_BUNDLE_JKS_CATALOG_TRUSTSTORE_TYPE: PKCS12
+      MANAGEMENT_TRACING_ENABLED: 'true'
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: '1.0'
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
       LIBRARY_WEBSITE_REST_CLIENT_CATALOG_BASE_URL: https://catalog:8080
       LIBRARY_WEBSITE_REST_CLIENT_CATALOG_SSL_ENABLED: 'true'
     healthcheck:
@@ -27,3 +32,4 @@ services:
     networks:
       - website
       - catalog
+      - observability

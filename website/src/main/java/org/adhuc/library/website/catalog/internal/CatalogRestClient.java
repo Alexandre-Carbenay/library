@@ -3,6 +3,8 @@ package org.adhuc.library.website.catalog.internal;
 import org.adhuc.library.website.catalog.Book;
 import org.adhuc.library.website.catalog.CatalogClient;
 import org.adhuc.library.website.support.pagination.NavigablePage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableConfigurationProperties(CatalogRestClientProperties.class)
 class CatalogRestClient implements CatalogClient {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(CatalogRestClient.class);
 
     private final CatalogSpringReactiveClient client;
     private final CircuitBreaker circuitBreaker;
@@ -29,6 +33,7 @@ class CatalogRestClient implements CatalogClient {
     }
 
     NavigablePage<Book> listBooks(Pageable pageable, String acceptLanguages) {
+        LOGGER.info("List books for page {} in accept languages {}", pageable, acceptLanguages);
         return circuitBreaker.run(() -> client.
                 listBooks(acceptLanguages, "/api/v1/catalog?page={page}&size={size}", pageable.getPageNumber(), pageable.getPageSize())
                 .block()
@@ -40,6 +45,7 @@ class CatalogRestClient implements CatalogClient {
         if (!current.hasLink(linkName)) {
             throw new IllegalArgumentException("Cannot browse to page through link " + linkName + " from current");
         }
+        LOGGER.info("List books for link {} in accept languages {}", linkName, acceptLanguages);
         return circuitBreaker.run(() -> client.
                 listBooks(acceptLanguages, current.getLink(linkName).orElseThrow())
                 .block()
@@ -48,6 +54,7 @@ class CatalogRestClient implements CatalogClient {
 
     @Override
     public Book getBook(String id, String acceptLanguages) {
+        LOGGER.info("Get book {} in accept languages {}", id, acceptLanguages);
         return circuitBreaker.run(() -> client.retrieveBookDetails(id, acceptLanguages)
                 .map(book -> {
                     var editions = client.retrieveBookEditions(book).block().stream()

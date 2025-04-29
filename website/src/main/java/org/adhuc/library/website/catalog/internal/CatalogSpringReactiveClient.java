@@ -1,5 +1,7 @@
 package org.adhuc.library.website.catalog.internal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientSsl;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -18,6 +20,8 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 @EnableConfigurationProperties(CatalogRestClientProperties.class)
 class CatalogSpringReactiveClient {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CatalogSpringReactiveClient.class);
+
     private final WebClient webClient;
 
     CatalogSpringReactiveClient(WebClient.Builder webClientBuilder,
@@ -31,6 +35,7 @@ class CatalogSpringReactiveClient {
     }
 
     Mono<BooksPage> listBooks(String acceptLanguages, String uri, Object... uriVariables) {
+        LOGGER.debug("List books through URI {} with variables {} in accept languages {}", uri, uriVariables, acceptLanguages);
         return webClient.get()
                 .uri(uri, uriVariables)
                 .accept(APPLICATION_JSON)
@@ -40,6 +45,7 @@ class CatalogSpringReactiveClient {
     }
 
     Mono<BookDetailDto> retrieveBookDetails(String id, String acceptLanguages) {
+        LOGGER.debug("Retrieve book {} details in accept languages {}", id, acceptLanguages);
         return webClient.get()
                 .uri("/api/v1/books/{id}", id)
                 .accept(APPLICATION_JSON)
@@ -50,11 +56,14 @@ class CatalogSpringReactiveClient {
 
     Mono<List<EditionDetailDto>> retrieveBookEditions(BookDetailDto book) {
         return Flux.fromStream(book.editions().stream())
-                .flatMap(edition -> webClient.get()
-                        .uri(edition.selfLink())
-                        .accept(APPLICATION_JSON)
-                        .retrieve()
-                        .bodyToMono(EditionDetailDto.class))
+                .flatMap(edition -> {
+                    LOGGER.debug("Retrieve book {} edition {}", book.id(), edition.isbn());
+                    return webClient.get()
+                            .uri(edition.selfLink())
+                            .accept(APPLICATION_JSON)
+                            .retrieve()
+                            .bodyToMono(EditionDetailDto.class);
+                })
                 .collectList().map(editions -> {
                             var sortedEditions = new ArrayList<>(editions);
                             sortedEditions.sort(comparing(edition -> book.indexOfEdition(edition.isbn())));
