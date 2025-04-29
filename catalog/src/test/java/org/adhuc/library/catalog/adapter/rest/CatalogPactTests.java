@@ -168,13 +168,46 @@ class CatalogPactTests {
                 "Du contrat social ou Principes du droit politique",
                 PublicationDate.of(LocalDate.parse("2023-02-08")),
                 book,
-                new Publisher(UUID.fromString("c0c990bd-c455-40c4-92e7-0b62befb200d"), "Flammarion"),
+                new Publisher(UUID.fromString("145b6de0-24ae-4c05-863f-f21b0418f93f"), "J'ai lu"),
                 "fr",
                 "Comment se forment les sociétés ? Qu'est-ce qui détermine une organisation sociale juste ? Comment concilier les intérêts de chacun et l'intérêt général ?"
         );
 
         when(booksService.getBook(bookId)).thenReturn(Optional.of(book));
         when(editionsService.getBookEditions(bookId)).thenReturn(List.of(edition));
+    }
+
+    @State("Edition detail is reachable")
+    void editionDetail() {
+        var book = new Book(
+                UUID.fromString("b6608a30-1e9b-4ae0-a89d-624c3ca85da4"),
+                Set.of(new Author(
+                        UUID.fromString("99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"),
+                        "Jean-Jacques Rousseau",
+                        LocalDate.parse("1712-06-28"),
+                        LocalDate.parse("1778-07-02")
+                )),
+                "fr",
+                Set.of(new LocalizedDetails(
+                        "fr",
+                        "Du contrat social",
+                        "Du contrat social est un traité de philosophie politique présentant ...",
+                        Set.of(
+                                new ExternalLink("wikipedia", "https://fr.wikipedia.org/wiki/Du_contrat_social")
+                        )
+                ))
+        );
+        var edition = new Edition(
+                "9782290385050",
+                "Du contrat social ou Principes du droit politique",
+                PublicationDate.of(LocalDate.parse("2023-02-08")),
+                book,
+                new Publisher(UUID.fromString("145b6de0-24ae-4c05-863f-f21b0418f93f"), "J'ai lu"),
+                "fr",
+                "Comment se forment les sociétés ? Qu'est-ce qui détermine une organisation sociale juste ? Comment concilier les intérêts de chacun et l'intérêt général ?"
+        );
+
+        when(editionsService.getEdition("9782290385050")).thenReturn(Optional.of(edition));
     }
 
 }
