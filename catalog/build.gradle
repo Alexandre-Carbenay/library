@@ -49,7 +49,7 @@ dependencies {
 		exclude group: 'commons-collections', module: 'commons-collections'
 	}
 
-	runtimeOnly 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.6'
+	runtimeOnly 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
