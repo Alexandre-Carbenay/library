@@ -37,6 +37,8 @@ start-website: ## Start the website application
 		-f $(WEBSITE_LOCATION)/docker/docker-compose.port.yml \
 		-f $(WEBSITE_LOCATION)/docker/docker-compose.dependencies.yml \
 		-f $(WEBSITE_LOCATION)/docker/docker-compose.dependencies.port.yml \
+		-f $(ENV_LOCATION)/docker/docker-compose.observability.yml \
+		-f $(ENV_LOCATION)/docker/docker-compose.observability.port.yml \
 		up -d
 
 stop-website: ## Stop the website application
@@ -45,6 +47,8 @@ stop-website: ## Stop the website application
 		-f $(WEBSITE_LOCATION)/docker/docker-compose.port.yml \
 		-f $(WEBSITE_LOCATION)/docker/docker-compose.dependencies.yml \
 		-f $(WEBSITE_LOCATION)/docker/docker-compose.dependencies.port.yml \
+		-f $(ENV_LOCATION)/docker/docker-compose.observability.yml \
+		-f $(ENV_LOCATION)/docker/docker-compose.observability.port.yml \
 		down
 
 clean-website: ## Clean the website project folder

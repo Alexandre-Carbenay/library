@@ -1,0 +1,14 @@
+networks:
+  observability:
+    name: observability
+
+services:
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin-slim
+    ports:
+      - 9411
+    environment:
+      - STORAGE_TYPE=mem
+    networks:
+      - observability

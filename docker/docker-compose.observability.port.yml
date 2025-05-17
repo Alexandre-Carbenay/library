@@ -1,0 +1,4 @@
+services:
+  zipkin:
+    ports:
+      - ${ZIPKIN_PORT:-9411}:9411

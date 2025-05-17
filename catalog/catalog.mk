@@ -32,12 +32,16 @@ start-catalog: ## Start the catalog application
 	docker compose $(INCLUDE_ENV) \
 		-f $(CATALOG_LOCATION)/docker/docker-compose.yml \
 		-f $(CATALOG_LOCATION)/docker/docker-compose.port.yml \
+		-f $(ENV_LOCATION)/docker/docker-compose.observability.yml \
+		-f $(ENV_LOCATION)/docker/docker-compose.observability.port.yml \
 		up -d
 
 stop-catalog: ## Stop the catalog application
 	docker compose $(INCLUDE_ENV) \
 		-f $(CATALOG_LOCATION)/docker/docker-compose.yml \
 		-f $(CATALOG_LOCATION)/docker/docker-compose.port.yml \
+		-f $(ENV_LOCATION)/docker/docker-compose.observability.yml \
+		-f $(ENV_LOCATION)/docker/docker-compose.observability.port.yml \
 		down
 
 acceptance-catalog: ## Run acceptance tests on the catalog application
