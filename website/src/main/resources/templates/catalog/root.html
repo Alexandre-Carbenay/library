@@ -30,6 +30,11 @@
     </tr>
     </tbody>
 </table>
-
+<script th:inline="javascript">
+    let pageUrl = "[(${pageUrl})]";
+    window.addEventListener("load", (event) => {
+        history.replaceState(null, "", pageUrl);
+    });
+</script>
 </body>
 </html>

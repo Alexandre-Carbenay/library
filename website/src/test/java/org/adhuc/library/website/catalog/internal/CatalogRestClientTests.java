@@ -108,6 +108,53 @@ class CatalogRestClientTests {
         }
 
         @ParameterizedTest
+        @MethodSource("pageNumberProvider")
+        @DisplayName("list books for a page with given number")
+        void getPageNumber(int page, String acceptLanguages, Resource responseBody, int expectedTotalPages, int expectedSize, boolean hasPrev, boolean hasNext) throws Exception {
+            var response = new MockResponse()
+                    .setResponseCode(206)
+                    .setHeader("Content-Type", APPLICATION_JSON_VALUE)
+                    .setBody(responseBody.getContentAsString(Charset.defaultCharset()));
+            mockServer.enqueue(response);
+
+            var actual = catalogRestClient.listBooks(page, acceptLanguages);
+            SoftAssertions.assertSoftly(s -> {
+                s.assertThat(actual.getSize()).isEqualTo(10);
+                s.assertThat(actual.getTotalElements()).isEqualTo(67);
+                s.assertThat(actual.getTotalPages()).isEqualTo(expectedTotalPages);
+                s.assertThat(actual.getNumber()).isEqualTo(page);
+                s.assertThat(actual.getContent().size()).isEqualTo(expectedSize);
+                s.assertThat(actual.hasLink("first")).isTrue();
+                s.assertThat(actual.hasLink("prev")).isEqualTo(hasPrev);
+                s.assertThat(actual.hasLink("next")).isEqualTo(hasNext);
+                s.assertThat(actual.hasLink("last")).isTrue();
+            });
+
+            assertThat(mockServer.getRequestCount()).isEqualTo(1);
+            var request = mockServer.takeRequest();
+            SoftAssertions.assertSoftly(s -> {
+                s.assertThat(request.getPath()).isEqualTo("/api/v1/catalog?page=%d&size=%d", page, 10);
+                s.assertThat(request.getHeader("Accept-Language")).isEqualTo(acceptLanguages);
+            });
+        }
+
+        static Stream<Arguments> pageNumberProvider() {
+            var resourceLoader = new DefaultResourceLoader();
+            return Stream.of(
+                    Arguments.of(0, "fr",
+                            resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"), 7, 10, false, true),
+                    Arguments.of(0, "en",
+                            resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"), 7, 10, false, true),
+                    Arguments.of(0, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                            resourceLoader.getResource("classpath:client/catalog/page-0-size-10.json"), 7, 10, false, true),
+                    Arguments.of(1, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                            resourceLoader.getResource("classpath:client/catalog/page-1-size-10.json"), 7, 10, true, true),
+                    Arguments.of(6, "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+                            resourceLoader.getResource("classpath:client/catalog/page-6-size-10.json"), 7, 7, true, false)
+            );
+        }
+
+        @ParameterizedTest
         @MethodSource("pageProvider")
         @DisplayName("list books for a page")
         void getPage(int page, int size, String acceptLanguages, Resource responseBody, int expectedTotalPages, int expectedSize, boolean hasPrev, boolean hasNext) throws Exception {

@@ -1,7 +1,6 @@
 package org.adhuc.library.website.catalog;
 
 import org.adhuc.library.website.support.pagination.NavigablePage;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +45,18 @@ public class CatalogController {
         }
     }
 
+    @GetMapping("/{page}")
+    public String catalog(Model model, @PathVariable(name = "page") int pageNumber,
+                          @RequestHeader(name = ACCEPT_LANGUAGE, required = false, defaultValue = "") String acceptLanguages) {
+        try {
+            var page = catalogClient.listBooks(pageNumber, acceptLanguages);
+            return browsePage(model, page);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("message", e.getMessage());
+            return "error";
+        }
+    }
+
     @GetMapping("/books/{id}")
     public String bookDetail(Model model, @PathVariable String id,
                              @RequestHeader(name = ACCEPT_LANGUAGE, required = false, defaultValue = "") String acceptLanguages) {
@@ -70,6 +81,7 @@ public class CatalogController {
 
     private void fillModel(Model model, NavigablePage<Book> booksPage) {
         model.addAttribute("books", booksPage.getContent());
+        model.addAttribute("pageUrl", "/catalog/" + booksPage.getNumber());
         pageAttributes.forEach(pageAttribute -> pageAttribute.addToModel(booksPage, model));
     }
 
