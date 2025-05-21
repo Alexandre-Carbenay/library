@@ -68,6 +68,7 @@ class CatalogControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(view().name("catalog/root"))
                 .andExpect(model().attribute("books", PAGE_CONTENT))
+                .andExpect(model().attribute("pageUrl", "/catalog/0"))
                 .andExpect(model().attributeDoesNotExist(
                         FIRST_PAGE_LINK_ATTRIBUTE,
                         PREVIOUS_PAGE_LINK_ATTRIBUTE,
@@ -96,6 +97,7 @@ class CatalogControllerTests {
                 .andExpect(status().isOk())
                 .andExpect(view().name("catalog/root"))
                 .andExpect(model().attribute("books", PAGE_CONTENT))
+                .andExpect(model().attribute("pageUrl", "/catalog/0"))
                 .andExpect(model().attributeDoesNotExist(
                         FIRST_PAGE_LINK_ATTRIBUTE,
                         PREVIOUS_PAGE_LINK_ATTRIBUTE,
@@ -119,7 +121,8 @@ class CatalogControllerTests {
         var result = mvc.perform(get("/catalog").header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("catalog/root"))
-                .andExpect(model().attribute("books", PAGE_CONTENT));
+                .andExpect(model().attribute("books", PAGE_CONTENT))
+                .andExpect(model().attribute("pageUrl", "/catalog/0"));
         for (var attribute : linksAttributesMatcher.keySet()) {
             var matcher = linksAttributesMatcher.get(attribute);
             result.andExpect(model().attribute(attribute, matcher));
@@ -262,7 +265,8 @@ class CatalogControllerTests {
                         .header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("catalog/root"))
-                .andExpect(model().attribute("books", PAGE_CONTENT));
+                .andExpect(model().attribute("books", PAGE_CONTENT))
+                .andExpect(model().attribute("pageUrl", "/catalog/0"));
 
         verify(catalogClient).listBooks(any(), eq(linkToFollow), eq("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
         verifyNoMoreInteractions(catalogClient);
@@ -292,7 +296,8 @@ class CatalogControllerTests {
                         .header("Accept-Language", acceptLanguages))
                 .andExpect(status().isOk())
                 .andExpect(view().name("catalog/root"))
-                .andExpect(model().attribute("books", PAGE_CONTENT));
+                .andExpect(model().attribute("books", PAGE_CONTENT))
+                .andExpect(model().attribute("pageUrl", "/catalog/0"));
 
         verify(catalogClient).listBooks(any(), eq(linkToFollow), eq(acceptLanguages));
         verifyNoMoreInteractions(catalogClient);
@@ -356,6 +361,94 @@ class CatalogControllerTests {
                 .andExpect(model().attribute("message", "Some details on server error"));
 
         verify(catalogClient).listBooks(eq("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
+        verifyNoMoreInteractions(catalogClient);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "0,fr",
+            "0,en",
+            "0,fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+            "1,fr",
+            "1,en",
+            "1,fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
+            "10,fr",
+            "10,en",
+            "10,fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"
+    })
+    @DisplayName("provide the catalog expected page")
+    void catalogPage(int pageNumber, String acceptLanguages) throws Exception {
+        var page = new NavigablePageImpl<>(PAGE_CONTENT, PageRequest.of(pageNumber, 10), 4, List.of());
+        when(catalogClient.listBooks(anyInt(), any())).thenReturn(page);
+
+        mvc.perform(get("/catalog/{page}", pageNumber)
+                        .header("Accept-Language", acceptLanguages))
+                .andExpect(status().isOk())
+                .andExpect(view().name("catalog/root"))
+                .andExpect(model().attribute("pageUrl", "/catalog/" + pageNumber))
+                .andExpect(model().attribute("books", PAGE_CONTENT));
+
+        verify(catalogClient).listBooks(eq(pageNumber), eq(acceptLanguages));
+        verifyNoMoreInteractions(catalogClient);
+        verify(navigationSession).switchPage(same(page));
+        verifyNoMoreInteractions(navigationSession);
+    }
+
+    @Test
+    @DisplayName("provide the error page with error details when catalog client raises client error while getting page")
+    void catalogPageClientError() throws Exception {
+        var body = """
+                {
+                    "type": "/problems/bad-request",
+                    "status": "400",
+                    "title": "Test error",
+                    "detail": "Some details on client error"
+                }
+                """;
+        var exception = prepareException(
+                HttpClientErrorException.create(BAD_REQUEST, "Bad request",
+                        jsonProblemResponseHeaders(), body.getBytes(), Charset.defaultCharset()
+                ),
+                body
+        );
+
+        when(catalogClient.listBooks(anyInt(), any())).thenThrow(exception);
+
+        mvc.perform(get("/catalog/1").header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"))
+                .andExpect(model().attribute("message", "Some details on client error"));
+
+        verify(catalogClient).listBooks(eq(1), eq("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
+        verifyNoMoreInteractions(catalogClient);
+    }
+
+    @Test
+    @DisplayName("provide the error page with error details when catalog client raises server error while getting page")
+    void catalogPageServerError() throws Exception {
+        var body = """
+                {
+                    "type": "/problems/internal-server-error",
+                    "status": "500",
+                    "title": "Test error",
+                    "detail": "Some details on server error"
+                }
+                """;
+        var exception = prepareException(
+                HttpServerErrorException.create(BAD_REQUEST, "Bad request",
+                        jsonProblemResponseHeaders(), body.getBytes(), Charset.defaultCharset()
+                ),
+                body
+        );
+
+        when(catalogClient.listBooks(anyInt(), any())).thenThrow(exception);
+
+        mvc.perform(get("/catalog/1").header("Accept-Language", "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error"))
+                .andExpect(model().attribute("message", "Some details on server error"));
+
+        verify(catalogClient).listBooks(eq(1), eq("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
         verifyNoMoreInteractions(catalogClient);
     }
 

@@ -6,6 +6,8 @@ public interface CatalogClient {
 
     NavigablePage<Book> listBooks(String acceptLanguages);
 
+    NavigablePage<Book> listBooks(int pageNumber, String acceptLanguages);
+
     NavigablePage<Book> listBooks(NavigablePage<Book> current, String linkName, String acceptLanguages);
 
     Book getBook(String id, String acceptLanguages);

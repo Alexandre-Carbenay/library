@@ -29,7 +29,12 @@ class CatalogRestClient implements CatalogClient {
 
     @Override
     public NavigablePage<Book> listBooks(String acceptLanguages) {
-        return listBooks(PageRequest.of(0, 10), acceptLanguages);
+        return listBooks(0, acceptLanguages);
+    }
+
+    @Override
+    public NavigablePage<Book> listBooks(int pageNumber, String acceptLanguages) {
+        return listBooks(PageRequest.of(pageNumber, 10), acceptLanguages);
     }
 
     NavigablePage<Book> listBooks(Pageable pageable, String acceptLanguages) {
