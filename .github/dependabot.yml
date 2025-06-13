@@ -4,7 +4,15 @@ updates:
     directory: /catalog
     schedule:
       interval: daily
+  - package-ecosystem: docker
+    directory: /catalog
+    schedule:
+      interval: daily
   - package-ecosystem: gradle
+    directory: /website
+    schedule:
+      interval: daily
+  - package-ecosystem: docker
     directory: /website
     schedule:
       interval: daily
