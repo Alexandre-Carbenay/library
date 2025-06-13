@@ -1,10 +1,10 @@
-FROM eclipse-temurin:21.0.6_7-jre-alpine-3.21 AS builder
+FROM eclipse-temurin:24-jre-alpine-3.21 AS builder
 WORKDIR /builder
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=tools -jar application.jar extract --layers --destination extracted
 
-FROM eclipse-temurin:21.0.6_7-jre-alpine-3.21
+FROM eclipse-temurin:24-jre-alpine-3.21
 ARG CREATED
 ARG VERSION
 ARG REVISION
