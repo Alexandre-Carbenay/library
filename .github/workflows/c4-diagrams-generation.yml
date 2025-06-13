@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout project sources
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Extract branch name
         id: extract_branch
@@ -36,7 +38,7 @@ jobs:
       - run: git status
 
       - name: Commit & Push changes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: 'doc: Update C4 diagrams'
           branch: ${{ steps.extract_branch.outputs.branch }}
