@@ -5,8 +5,8 @@ import io.github.resilience4j.spring6.circuitbreaker.configure.CircuitBreakerCon
 import io.github.resilience4j.spring6.timelimiter.configure.TimeLimiterConfiguration;
 import io.github.resilience4j.springboot3.circuitbreaker.autoconfigure.CircuitBreakerProperties;
 import io.github.resilience4j.springboot3.timelimiter.autoconfigure.TimeLimiterProperties;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
+import mockwebserver3.MockResponse;
+import mockwebserver3.MockWebServer;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,17 +68,18 @@ class CatalogRestClientIntegrationTests {
 
     @AfterEach
     void tearDown() throws Exception {
-        mockServer.shutdown();
+        mockServer.close();
     }
 
     @Test
     @DisplayName("list books page without timeout")
     void getPage() throws Exception {
         var responseBody = new DefaultResourceLoader().getResource("classpath:client/catalog/page-0-size-10.json");
-        var response = new MockResponse()
-                .setResponseCode(206)
+        var response = new MockResponse.Builder()
+                .code(206)
                 .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                .setBody(responseBody.getContentAsString(Charset.defaultCharset()));
+                .body(responseBody.getContentAsString(Charset.defaultCharset()))
+                .build();
         mockServer.enqueue(response);
 
         var actual = catalogRestClient.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3");
@@ -97,8 +98,8 @@ class CatalogRestClientIntegrationTests {
         assertThat(mockServer.getRequestCount()).isEqualTo(1);
         var request = mockServer.takeRequest();
         SoftAssertions.assertSoftly(s -> {
-            s.assertThat(request.getPath()).isEqualTo("/api/v1/catalog?page=0&size=10");
-            s.assertThat(request.getHeader("Accept-Language")).isEqualTo("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3");
+            s.assertThat(request.getTarget()).isEqualTo("/api/v1/catalog?page=0&size=10");
+            s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3");
         });
     }
 
@@ -106,11 +107,12 @@ class CatalogRestClientIntegrationTests {
     @DisplayName("fail listing books page when timeout is reached")
     void getPageTimeout() throws Exception {
         var responseBody = new DefaultResourceLoader().getResource("classpath:client/catalog/page-0-size-10.json");
-        var response = new MockResponse()
-                .setResponseCode(206)
+        var response = new MockResponse.Builder()
+                .code(206)
                 .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                .setBody(responseBody.getContentAsString(Charset.defaultCharset()))
-                .setBodyDelay(TIMEOUT_DURATION_MS, MILLISECONDS);
+                .body(responseBody.getContentAsString(Charset.defaultCharset()))
+                .bodyDelay(TIMEOUT_DURATION_MS, MILLISECONDS)
+                .build();
         mockServer.enqueue(response);
 
         assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
@@ -119,7 +121,7 @@ class CatalogRestClientIntegrationTests {
     @Test
     @DisplayName("fail listing books page when server return an error")
     void getPageServerError() {
-        var response = new MockResponse().setResponseCode(500);
+        var response = new MockResponse.Builder().code(500).build();
         mockServer.enqueue(response);
 
         assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3"));
@@ -129,7 +131,7 @@ class CatalogRestClientIntegrationTests {
     @DirtiesContext(methodMode = BEFORE_METHOD)
     @DisplayName("open the circuit breaker when server fails multiple times while listing books page")
     void getPageMultipleErrorsOpenCircuitBreaker() {
-        var response = new MockResponse().setResponseCode(500);
+        var response = new MockResponse.Builder().code(500).build();
         IntStream.rangeClosed(1, 5).forEach(i -> mockServer.enqueue(response));
 
         IntStream.rangeClosed(1, 10)
@@ -142,21 +144,24 @@ class CatalogRestClientIntegrationTests {
     @DisplayName("get book details without timeout")
     void getBook() throws Exception {
         var resourceLoader = new DefaultResourceLoader();
-        mockServer.enqueue(new MockResponse()
-                .setResponseCode(200)
+        mockServer.enqueue(new MockResponse.Builder()
+                .code(200)
                 .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                .setBody(resourceLoader.getResource("classpath:client/catalog/book-contrat-social.json")
-                        .getContentAsString(Charset.defaultCharset())));
-        mockServer.enqueue(new MockResponse()
-                .setResponseCode(200)
+                .body(resourceLoader.getResource("classpath:client/catalog/book-contrat-social.json")
+                        .getContentAsString(Charset.defaultCharset()))
+                .build());
+        mockServer.enqueue(new MockResponse.Builder()
+                .code(200)
                 .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                .setBody(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782081275232.json")
-                        .getContentAsString(Charset.defaultCharset())));
-        mockServer.enqueue(new MockResponse()
-                .setResponseCode(200)
+                .body(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782081275232.json")
+                        .getContentAsString(Charset.defaultCharset()))
+                .build());
+        mockServer.enqueue(new MockResponse.Builder()
+                .code(200)
                 .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                .setBody(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782290385050.json")
-                        .getContentAsString(Charset.defaultCharset())));
+                .body(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782290385050.json")
+                        .getContentAsString(Charset.defaultCharset()))
+                .build());
 
         var actual = catalogRestClient.getBook(DU_CONTRAT_SOCIAL.id(), "fr");
         assertThat(actual).isEqualTo(DU_CONTRAT_SOCIAL_WITH_EDITIONS);
@@ -164,8 +169,8 @@ class CatalogRestClientIntegrationTests {
         assertThat(mockServer.getRequestCount()).isEqualTo(3);
         var request = mockServer.takeRequest();
         SoftAssertions.assertSoftly(s -> {
-            s.assertThat(request.getPath()).isEqualTo("/api/v1/books/%s", DU_CONTRAT_SOCIAL.id());
-            s.assertThat(request.getHeader("Accept-Language")).isEqualTo("fr");
+            s.assertThat(request.getUrl().encodedPath()).isEqualTo("/api/v1/books/%s", DU_CONTRAT_SOCIAL.id());
+            s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo("fr");
         });
     }
 
@@ -173,23 +178,26 @@ class CatalogRestClientIntegrationTests {
     @DisplayName("get book details with latency below the timeout for each edition")
     void getBookLatencyOnEditionsBelowTimeout() throws Exception {
         var resourceLoader = new DefaultResourceLoader();
-        mockServer.enqueue(new MockResponse()
-                .setResponseCode(200)
+        mockServer.enqueue(new MockResponse.Builder()
+                .code(200)
                 .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                .setBody(new DefaultResourceLoader().getResource("classpath:client/catalog/book-contrat-social.json")
-                        .getContentAsString(Charset.defaultCharset())));
-        mockServer.enqueue(new MockResponse()
-                .setResponseCode(200)
-                .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                .setBody(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782081275232.json")
+                .body(new DefaultResourceLoader().getResource("classpath:client/catalog/book-contrat-social.json")
                         .getContentAsString(Charset.defaultCharset()))
-                .setBodyDelay(DURATION_BELOW_LATENCY_MS, MILLISECONDS));
-        mockServer.enqueue(new MockResponse()
-                .setResponseCode(200)
+                .build());
+        mockServer.enqueue(new MockResponse.Builder()
+                .code(200)
                 .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                .setBody(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782290385050.json")
+                .body(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782081275232.json")
                         .getContentAsString(Charset.defaultCharset()))
-                .setBodyDelay(DURATION_BELOW_LATENCY_MS, MILLISECONDS));
+                .bodyDelay(DURATION_BELOW_LATENCY_MS, MILLISECONDS)
+                .build());
+        mockServer.enqueue(new MockResponse.Builder()
+                .code(200)
+                .setHeader("Content-Type", APPLICATION_JSON_VALUE)
+                .body(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782290385050.json")
+                        .getContentAsString(Charset.defaultCharset()))
+                .bodyDelay(DURATION_BELOW_LATENCY_MS, MILLISECONDS)
+                .build());
 
         assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.getBook(DU_CONTRAT_SOCIAL.id(), "fr"));
     }
@@ -197,12 +205,13 @@ class CatalogRestClientIntegrationTests {
     @Test
     @DisplayName("fail retrieving book details when timeout is reached on book endpoint call")
     void getBookTimeout() throws Exception {
-        mockServer.enqueue(new MockResponse()
-                .setResponseCode(200)
+        mockServer.enqueue(new MockResponse.Builder()
+                .code(200)
                 .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                .setBody(new DefaultResourceLoader().getResource("classpath:client/catalog/book-contrat-social.json")
+                .body(new DefaultResourceLoader().getResource("classpath:client/catalog/book-contrat-social.json")
                         .getContentAsString(Charset.defaultCharset()))
-                .setBodyDelay(TIMEOUT_DURATION_MS, MILLISECONDS));
+                .bodyDelay(TIMEOUT_DURATION_MS, MILLISECONDS)
+                .build());
 
         assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.getBook(DU_CONTRAT_SOCIAL.id(), "fr"));
     }
@@ -211,23 +220,26 @@ class CatalogRestClientIntegrationTests {
     @DisplayName("fail retrieving book details when timeout is reached on the sum of all calls")
     void getBookGlobalTimeout() throws Exception {
         var resourceLoader = new DefaultResourceLoader();
-        mockServer.enqueue(new MockResponse()
-                .setResponseCode(200)
+        mockServer.enqueue(new MockResponse.Builder()
+                .code(200)
                 .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                .setBody(new DefaultResourceLoader().getResource("classpath:client/catalog/book-contrat-social.json")
+                .body(new DefaultResourceLoader().getResource("classpath:client/catalog/book-contrat-social.json")
                         .getContentAsString(Charset.defaultCharset()))
-                .setBodyDelay(TIMEOUT_DURATION_MS / 2, MILLISECONDS));
-        mockServer.enqueue(new MockResponse()
-                .setResponseCode(200)
+                .bodyDelay(TIMEOUT_DURATION_MS / 2, MILLISECONDS)
+                .build());
+        mockServer.enqueue(new MockResponse.Builder()
+                .code(200)
                 .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                .setBody(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782081275232.json")
-                        .getContentAsString(Charset.defaultCharset())));
-        mockServer.enqueue(new MockResponse()
-                .setResponseCode(200)
-                .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                .setBody(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782290385050.json")
+                .body(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782081275232.json")
                         .getContentAsString(Charset.defaultCharset()))
-                .setBodyDelay(TIMEOUT_DURATION_MS / 2, MILLISECONDS));
+                .build());
+        mockServer.enqueue(new MockResponse.Builder()
+                .code(200)
+                .setHeader("Content-Type", APPLICATION_JSON_VALUE)
+                .body(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782290385050.json")
+                        .getContentAsString(Charset.defaultCharset()))
+                .bodyDelay(TIMEOUT_DURATION_MS / 2, MILLISECONDS)
+                .build());
 
         assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.getBook(DU_CONTRAT_SOCIAL.id(), "fr"));
     }
@@ -235,7 +247,7 @@ class CatalogRestClientIntegrationTests {
     @Test
     @DisplayName("fail retrieving book details when server return an error")
     void getBookServerError() {
-        var response = new MockResponse().setResponseCode(500);
+        var response = new MockResponse.Builder().code(500).build();
         mockServer.enqueue(response);
 
         assertThrows(NoFallbackAvailableException.class, () -> catalogRestClient.getBook(DU_CONTRAT_SOCIAL.id(), "fr"));
@@ -245,7 +257,7 @@ class CatalogRestClientIntegrationTests {
     @DirtiesContext(methodMode = BEFORE_METHOD)
     @DisplayName("open the circuit breaker when server fails multiple times while retrieving book details")
     void getBookMultipleErrorsOpenCircuitBreaker() {
-        var response = new MockResponse().setResponseCode(500);
+        var response = new MockResponse.Builder().code(500).build();
         IntStream.rangeClosed(1, 5).forEach(i -> mockServer.enqueue(response));
 
         IntStream.rangeClosed(1, 10)

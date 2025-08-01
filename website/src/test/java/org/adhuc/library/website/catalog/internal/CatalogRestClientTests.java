@@ -1,7 +1,7 @@
 package org.adhuc.library.website.catalog.internal;
 
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
+import mockwebserver3.MockResponse;
+import mockwebserver3.MockWebServer;
 import org.adhuc.library.website.catalog.Book;
 import org.adhuc.library.website.support.pagination.NavigablePage;
 import org.adhuc.library.website.support.pagination.NavigablePageImpl;
@@ -57,7 +57,7 @@ class CatalogRestClientTests {
 
     @AfterEach
     void tearDown() throws Exception {
-        mockServer.shutdown();
+        mockServer.close();
     }
 
     @Nested
@@ -80,10 +80,11 @@ class CatalogRestClientTests {
         @DisplayName("list books for the default page")
         void getDefaultPage() throws Exception {
             var responseBody = new DefaultResourceLoader().getResource("classpath:client/catalog/page-0-size-10.json");
-            var response = new MockResponse()
-                    .setResponseCode(206)
+            var response = new MockResponse.Builder()
+                    .code(206)
                     .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                    .setBody(responseBody.getContentAsString(Charset.defaultCharset()));
+                    .body(responseBody.getContentAsString(Charset.defaultCharset()))
+                    .build();
             mockServer.enqueue(response);
 
             var actual = catalogRestClient.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3");
@@ -102,8 +103,8 @@ class CatalogRestClientTests {
             assertThat(mockServer.getRequestCount()).isEqualTo(1);
             var request = mockServer.takeRequest();
             SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getPath()).isEqualTo("/api/v1/catalog?page=0&size=10");
-                s.assertThat(request.getHeader("Accept-Language")).isEqualTo("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3");
+                s.assertThat(request.getTarget()).isEqualTo("/api/v1/catalog?page=0&size=10");
+                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3");
             });
         }
 
@@ -111,10 +112,11 @@ class CatalogRestClientTests {
         @MethodSource("pageNumberProvider")
         @DisplayName("list books for a page with given number")
         void getPageNumber(int page, String acceptLanguages, Resource responseBody, int expectedTotalPages, int expectedSize, boolean hasPrev, boolean hasNext) throws Exception {
-            var response = new MockResponse()
-                    .setResponseCode(206)
+            var response = new MockResponse.Builder()
+                    .code(206)
                     .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                    .setBody(responseBody.getContentAsString(Charset.defaultCharset()));
+                    .body(responseBody.getContentAsString(Charset.defaultCharset()))
+                    .build();
             mockServer.enqueue(response);
 
             var actual = catalogRestClient.listBooks(page, acceptLanguages);
@@ -133,8 +135,8 @@ class CatalogRestClientTests {
             assertThat(mockServer.getRequestCount()).isEqualTo(1);
             var request = mockServer.takeRequest();
             SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getPath()).isEqualTo("/api/v1/catalog?page=%d&size=%d", page, 10);
-                s.assertThat(request.getHeader("Accept-Language")).isEqualTo(acceptLanguages);
+                s.assertThat(request.getTarget()).isEqualTo("/api/v1/catalog?page=%d&size=%d", page, 10);
+                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo(acceptLanguages);
             });
         }
 
@@ -158,10 +160,11 @@ class CatalogRestClientTests {
         @MethodSource("pageProvider")
         @DisplayName("list books for a page")
         void getPage(int page, int size, String acceptLanguages, Resource responseBody, int expectedTotalPages, int expectedSize, boolean hasPrev, boolean hasNext) throws Exception {
-            var response = new MockResponse()
-                    .setResponseCode(206)
+            var response = new MockResponse.Builder()
+                    .code(206)
                     .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                    .setBody(responseBody.getContentAsString(Charset.defaultCharset()));
+                    .body(responseBody.getContentAsString(Charset.defaultCharset()))
+                    .build();
             mockServer.enqueue(response);
 
             var actual = catalogRestClient.listBooks(PageRequest.of(page, size), acceptLanguages);
@@ -180,8 +183,8 @@ class CatalogRestClientTests {
             assertThat(mockServer.getRequestCount()).isEqualTo(1);
             var request = mockServer.takeRequest();
             SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getPath()).isEqualTo("/api/v1/catalog?page=%d&size=%d", page, size);
-                s.assertThat(request.getHeader("Accept-Language")).isEqualTo(acceptLanguages);
+                s.assertThat(request.getTarget()).isEqualTo("/api/v1/catalog?page=%d&size=%d", page, size);
+                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo(acceptLanguages);
             });
         }
 
@@ -209,10 +212,11 @@ class CatalogRestClientTests {
         @MethodSource("pageBooksProvider")
         @DisplayName("list books for a page with expected books contained and non expected books not contained")
         void getPageContainingBooks(int page, int size, String acceptLanguages, Resource responseBody, List<Book> expectedBooks, List<Book> nonExpectedBooks) throws Exception {
-            var response = new MockResponse()
-                    .setResponseCode(206)
+            var response = new MockResponse.Builder()
+                    .code(206)
                     .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                    .setBody(responseBody.getContentAsString(Charset.defaultCharset()));
+                    .body(responseBody.getContentAsString(Charset.defaultCharset()))
+                    .build();
             mockServer.enqueue(response);
 
             var actual = catalogRestClient.listBooks(PageRequest.of(page, size), acceptLanguages);
@@ -221,8 +225,8 @@ class CatalogRestClientTests {
             assertThat(mockServer.getRequestCount()).isEqualTo(1);
             var request = mockServer.takeRequest();
             SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getPath()).isEqualTo("/api/v1/catalog?page=%d&size=%d", page, size);
-                s.assertThat(request.getHeader("Accept-Language")).isEqualTo(acceptLanguages);
+                s.assertThat(request.getTarget()).isEqualTo("/api/v1/catalog?page=%d&size=%d", page, size);
+                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo(acceptLanguages);
             });
         }
 
@@ -252,10 +256,11 @@ class CatalogRestClientTests {
         @DisplayName("list books for a link from the previously browsed page with expected books contained and non expected books not contained")
         void getPageFromLink(NavigablePage<Book> currentPage, String linkName, String acceptLanguages,
                              String url, Resource responseBody, List<Book> expectedBooks, List<Book> nonExpectedBooks) throws Exception {
-            var response = new MockResponse()
-                    .setResponseCode(206)
+            var response = new MockResponse.Builder()
+                    .code(206)
                     .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                    .setBody(responseBody.getContentAsString(Charset.defaultCharset()));
+                    .body(responseBody.getContentAsString(Charset.defaultCharset()))
+                    .build();
             mockServer.enqueue(response);
 
             var actual = catalogRestClient.listBooks(currentPage, linkName, acceptLanguages);
@@ -264,8 +269,8 @@ class CatalogRestClientTests {
             assertThat(mockServer.getRequestCount()).isEqualTo(1);
             var request = mockServer.takeRequest();
             SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getPath()).isEqualTo(url);
-                s.assertThat(request.getHeader("Accept-Language")).isEqualTo(acceptLanguages);
+                s.assertThat(request.getTarget()).isEqualTo(url);
+                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo(acceptLanguages);
             });
         }
 
@@ -390,17 +395,18 @@ class CatalogRestClientTests {
         @Test
         @DisplayName("fail retrieving unknown book")
         void getUnknownBook() throws Exception {
-            var response = new MockResponse()
-                    .setResponseCode(404)
+            var response = new MockResponse.Builder()
+                    .code(404)
                     .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                    .setBody("""
+                    .body("""
                             {
                               "type": "/problems/unknown-entity",
                               "status": 404,
                               "title": "Unknown book",
                               "detail": "No book exists with id 'b94329cb-8767-4438-b802-d85a268fb3e3'"
                             }
-                            """);
+                            """)
+                    .build();
             mockServer.enqueue(response);
 
             var id = "b94329cb-8767-4438-b802-d85a268fb3e3";
@@ -409,8 +415,8 @@ class CatalogRestClientTests {
             assertThat(mockServer.getRequestCount()).isEqualTo(1);
             var request = mockServer.takeRequest();
             SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getPath()).isEqualTo("/api/v1/books/%s", id);
-                s.assertThat(request.getHeader("Accept-Language")).isEqualTo("fr");
+                s.assertThat(request.getUrl().encodedPath()).isEqualTo("/api/v1/books/%s", id);
+                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo("fr");
             });
         }
 
@@ -426,8 +432,8 @@ class CatalogRestClientTests {
             assertThat(mockServer.getRequestCount()).isEqualTo(3);
             var request = mockServer.takeRequest();
             SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getPath()).isEqualTo("/api/v1/books/%s", id);
-                s.assertThat(request.getHeader("Accept-Language")).isEqualTo(acceptLanguages);
+                s.assertThat(request.getUrl().encodedPath()).isEqualTo("/api/v1/books/%s", id);
+                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo(acceptLanguages);
             });
         }
 
@@ -438,21 +444,24 @@ class CatalogRestClientTests {
                             DU_CONTRAT_SOCIAL.id(),
                             "fr",
                             List.of(
-                                    new MockResponse()
-                                            .setResponseCode(200)
+                                    new MockResponse.Builder()
+                                            .code(200)
                                             .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .setBody(resourceLoader.getResource("classpath:client/catalog/book-contrat-social.json")
-                                                    .getContentAsString(Charset.defaultCharset())),
-                                    new MockResponse()
-                                            .setResponseCode(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .setBody(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782081275232.json")
-                                                    .getContentAsString(Charset.defaultCharset())),
-                                    new MockResponse()
-                                            .setResponseCode(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .setBody(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782290385050.json")
+                                            .body(resourceLoader.getResource("classpath:client/catalog/book-contrat-social.json")
                                                     .getContentAsString(Charset.defaultCharset()))
+                                            .build(),
+                                    new MockResponse.Builder()
+                                            .code(200)
+                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782081275232.json")
+                                                    .getContentAsString(Charset.defaultCharset()))
+                                            .build(),
+                                    new MockResponse.Builder()
+                                            .code(200)
+                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782290385050.json")
+                                                    .getContentAsString(Charset.defaultCharset()))
+                                            .build()
                             ),
                             DU_CONTRAT_SOCIAL_WITH_EDITIONS
                     ),
@@ -460,21 +469,24 @@ class CatalogRestClientTests {
                             A_DANCE_WITH_DRAGONS_FR.id(),
                             "fr",
                             List.of(
-                                    new MockResponse()
-                                            .setResponseCode(200)
+                                    new MockResponse.Builder()
+                                            .code(200)
                                             .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .setBody(resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-fr.json")
-                                                    .getContentAsString(Charset.defaultCharset())),
-                                    new MockResponse()
-                                            .setResponseCode(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .setBody(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9780553801477.json")
-                                                    .getContentAsString(Charset.defaultCharset())),
-                                    new MockResponse()
-                                            .setResponseCode(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .setBody(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9782290221709.json")
+                                            .body(resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-fr.json")
                                                     .getContentAsString(Charset.defaultCharset()))
+                                            .build(),
+                                    new MockResponse.Builder()
+                                            .code(200)
+                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9780553801477.json")
+                                                    .getContentAsString(Charset.defaultCharset()))
+                                            .build(),
+                                    new MockResponse.Builder()
+                                            .code(200)
+                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9782290221709.json")
+                                                    .getContentAsString(Charset.defaultCharset()))
+                                            .build()
                             ),
                             A_DANCE_WITH_DRAGONS_FR_WITH_EDITIONS
                     ),
@@ -482,21 +494,24 @@ class CatalogRestClientTests {
                             A_DANCE_WITH_DRAGONS_FR.id(),
                             "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             List.of(
-                                    new MockResponse()
-                                            .setResponseCode(200)
+                                    new MockResponse.Builder()
+                                            .code(200)
                                             .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .setBody(resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-fr.json")
-                                                    .getContentAsString(Charset.defaultCharset())),
-                                    new MockResponse()
-                                            .setResponseCode(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .setBody(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9780553801477.json")
-                                                    .getContentAsString(Charset.defaultCharset())),
-                                    new MockResponse()
-                                            .setResponseCode(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .setBody(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9782290221709.json")
+                                            .body(resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-fr.json")
                                                     .getContentAsString(Charset.defaultCharset()))
+                                            .build(),
+                                    new MockResponse.Builder()
+                                            .code(200)
+                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9780553801477.json")
+                                                    .getContentAsString(Charset.defaultCharset()))
+                                            .build(),
+                                    new MockResponse.Builder()
+                                            .code(200)
+                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9782290221709.json")
+                                                    .getContentAsString(Charset.defaultCharset()))
+                                            .build()
                             ),
                             A_DANCE_WITH_DRAGONS_FR_WITH_EDITIONS
                     ),
@@ -504,21 +519,24 @@ class CatalogRestClientTests {
                             A_DANCE_WITH_DRAGONS_EN.id(),
                             "en",
                             List.of(
-                                    new MockResponse()
-                                            .setResponseCode(200)
+                                    new MockResponse.Builder()
+                                            .code(200)
                                             .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .setBody(resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-en.json")
-                                                    .getContentAsString(Charset.defaultCharset())),
-                                    new MockResponse()
-                                            .setResponseCode(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .setBody(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9780553801477.json")
-                                                    .getContentAsString(Charset.defaultCharset())),
-                                    new MockResponse()
-                                            .setResponseCode(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .setBody(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9782290221709.json")
+                                            .body(resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-en.json")
                                                     .getContentAsString(Charset.defaultCharset()))
+                                            .build(),
+                                    new MockResponse.Builder()
+                                            .code(200)
+                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9780553801477.json")
+                                                    .getContentAsString(Charset.defaultCharset()))
+                                            .build(),
+                                    new MockResponse.Builder()
+                                            .code(200)
+                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
+                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9782290221709.json")
+                                                    .getContentAsString(Charset.defaultCharset()))
+                                            .build()
                             ),
                             A_DANCE_WITH_DRAGONS_EN_WITH_EDITIONS
                     )
