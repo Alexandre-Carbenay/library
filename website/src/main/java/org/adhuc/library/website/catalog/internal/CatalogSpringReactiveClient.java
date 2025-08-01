@@ -1,5 +1,6 @@
 package org.adhuc.library.website.catalog.internal;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.web.reactive.function.client.WebClientSsl;
@@ -25,10 +26,13 @@ class CatalogSpringReactiveClient {
     private final WebClient webClient;
 
     CatalogSpringReactiveClient(WebClient.Builder webClientBuilder,
-                                WebClientSsl ssl,
+                                @Nullable WebClientSsl ssl,
                                 CatalogRestClientProperties properties) {
         var builder = webClientBuilder.baseUrl(properties.baseUrl());
         if (properties.sslEnabled()) {
+            if (ssl == null) {
+                throw new IllegalStateException("Unable to initialize secured web client without SSL configuration");
+            }
             builder = builder.apply(ssl.fromBundle("catalog"));
         }
         this.webClient = builder.build();

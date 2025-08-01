@@ -29,12 +29,6 @@ class AuthorsServiceTests {
         service = new AuthorsService(authorsRepository);
     }
 
-    @Test
-    @DisplayName("refuse getting author with null id")
-    void errorGetAuthorNullId() {
-        assertThrows(IllegalArgumentException.class, () -> service.getAuthor(null));
-    }
-
     @ParameterizedTest
     @CsvSource({
             "917fb110-7991-464e-a623-47c285b6cc3d",

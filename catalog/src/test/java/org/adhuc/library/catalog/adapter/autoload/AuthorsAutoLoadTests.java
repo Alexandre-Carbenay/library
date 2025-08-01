@@ -76,8 +76,9 @@ class AuthorsAutoLoadTests {
         var authorsLoader = new InMemoryAuthorsLoader(repository, resourcePath);
         var exception = assertThrows(AuthorsAutoLoadException.class, authorsLoader::load);
         assertThat(exception).has(new Condition<>(
-                e -> IllegalArgumentException.class.isAssignableFrom(e.getCause().getClass())
-                        || InvalidFormatException.class.isAssignableFrom(e.getCause().getClass()),
+                e -> e.getCause() != null
+                        && (IllegalArgumentException.class.isAssignableFrom(e.getCause().getClass())
+                        || InvalidFormatException.class.isAssignableFrom(e.getCause().getClass())),
                 "Cause is invalid data from JSON file"));
     }
 

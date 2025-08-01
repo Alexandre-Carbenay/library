@@ -14,10 +14,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
-import static org.adhuc.library.catalog.authors.AuthorsMother.Real.*;
 import static org.adhuc.library.catalog.editions.EditionsMother.Real.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Editions service should")
 class EditionsServiceTests {
@@ -29,18 +27,6 @@ class EditionsServiceTests {
     void setUp() {
         editionsRepository = new InMemoryEditionsRepository();
         service = new EditionsService(editionsRepository);
-    }
-
-    @Test
-    @DisplayName("refuse getting edition with null ISBN")
-    void errorGetEditionNullIsbn() {
-        assertThrows(IllegalArgumentException.class, () -> service.getEdition(null));
-    }
-
-    @Test
-    @DisplayName("refuse getting editions for a null book")
-    void errorGetEditionsNullBookId() {
-        assertThrows(IllegalArgumentException.class, () -> service.getBookEditions(null));
     }
 
     @Nested

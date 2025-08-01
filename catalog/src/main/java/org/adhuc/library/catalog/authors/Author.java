@@ -1,10 +1,12 @@
 package org.adhuc.library.catalog.authors;
 
+import org.jspecify.annotations.Nullable;
+
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
 
-public record Author(UUID id, String name, LocalDate dateOfBirth, LocalDate dateOfDeath) {
+public record Author(UUID id, String name, LocalDate dateOfBirth, @Nullable LocalDate dateOfDeath) {
 
     @Override
     public boolean equals(Object o) {

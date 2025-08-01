@@ -6,6 +6,7 @@ import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.authors.AuthorsService;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksService;
+import org.jspecify.annotations.Nullable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.mediatype.problem.Problem;
@@ -44,8 +45,8 @@ public class AuthorsController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getAuthor(@PathVariable UUID id, @RequestHeader HttpHeaders headers) {
-        var languages = headers.getAcceptLanguageAsLocales();
+    public ResponseEntity<?> getAuthor(@PathVariable UUID id, @RequestHeader @Nullable HttpHeaders headers) {
+        var languages = headers != null ? headers.getAcceptLanguageAsLocales() : List.<Locale>of();
         var author = authorsService.getAuthor(id);
         return author.isPresent()
                 ? prepareAuthorResponse(author.get(), languages)

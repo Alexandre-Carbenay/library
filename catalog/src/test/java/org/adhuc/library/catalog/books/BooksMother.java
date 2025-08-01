@@ -201,7 +201,7 @@ public class BooksMother {
             language = Books.languages().sample();
             title = Books.titles().sample();
             description = Books.descriptions().sample();
-            links(externalLinksSets().sample());
+            links = prepareLinks(externalLinksSets().sample());
         }
 
         public LocalizedDetailsBuilder language(String language) {
@@ -220,8 +220,12 @@ public class BooksMother {
         }
 
         public LocalizedDetailsBuilder links(Set<ExternalLink> links) {
-            this.links = links.stream().collect(toMap(ExternalLink::source, Function.identity()));
+            this.links = prepareLinks(links);
             return this;
+        }
+
+        private Map<String, ExternalLink> prepareLinks(Set<ExternalLink> links) {
+            return links.stream().collect(toMap(ExternalLink::source, Function.identity()));
         }
 
         public LocalizedDetailsBuilder withWikipediaLink() {

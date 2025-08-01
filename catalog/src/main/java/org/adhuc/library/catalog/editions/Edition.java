@@ -1,6 +1,7 @@
 package org.adhuc.library.catalog.editions;
 
 import org.adhuc.library.catalog.books.Book;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -11,11 +12,11 @@ public class Edition {
     private final String title;
     private final PublicationDate publicationDate;
     private final Book book;
-    private final Publisher publisher;
+    private final @Nullable Publisher publisher;
     private final String language;
     private final String summary;
 
-    public Edition(String isbn, String title, PublicationDate publicationDate, Book book, Publisher publisher, String language, String summary) {
+    public Edition(String isbn, String title, PublicationDate publicationDate, Book book, @Nullable Publisher publisher, String language, String summary) {
         this.isbn = isbn;
         this.title = title;
         this.publicationDate = publicationDate;

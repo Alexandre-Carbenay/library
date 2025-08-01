@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.authors.internal.InMemoryAuthorsRepository;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.DefaultResourceLoader;
@@ -49,7 +50,7 @@ public class InMemoryAuthorsLoader {
         }
     }
 
-    private record AuthorDto(UUID id, String name, String dateOfBirth, String dateOfDeath) {
+    private record AuthorDto(UUID id, String name, String dateOfBirth, @Nullable String dateOfDeath) {
         Author convert() {
             Assert.notNull(id, "Author ID cannot be null");
             Assert.hasText(name, () -> STR."Author \{id} name cannot be null or empty");

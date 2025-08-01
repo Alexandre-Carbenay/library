@@ -58,7 +58,7 @@ public class EditionsController {
 
     private ResponseEntity<Problem> prepareInvalidIsbnResponse(String isbn) {
         var problem = invalidRequest(List.of(
-                new ParameterError(STR."Input string \"\{isbn}\" is not a valid ISBN", "isbn")
+                new ParameterError("Input string '" + isbn + "' is not a valid ISBN", "isbn")
         ));
         return ResponseEntity.badRequest().contentType(APPLICATION_PROBLEM_JSON).body(problem);
     }

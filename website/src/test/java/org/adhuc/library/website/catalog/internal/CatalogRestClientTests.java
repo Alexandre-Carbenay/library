@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
@@ -32,6 +31,7 @@ import java.util.stream.Stream;
 import static org.adhuc.library.website.catalog.BooksMother.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -42,9 +42,6 @@ class CatalogRestClientTests {
     private CatalogRestClientProperties properties;
     private MockWebServer mockServer;
     private WebClient.Builder webClientBuilder;
-    @Mock
-    private CircuitBreakerFactory<?, ?> circuitBreakerFactory;
-    private CatalogRestClient catalogRestClient;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -63,8 +60,11 @@ class CatalogRestClientTests {
     @Nested
     @DisplayName("with server responding within the expected timeout")
     class WithServerResponding {
+        private CatalogRestClient catalogRestClient;
+
         @BeforeEach
         void setUp() {
+            var circuitBreakerFactory = mock(CircuitBreakerFactory.class);
             when(circuitBreakerFactory.create("catalog")).thenReturn(new CircuitBreaker() {
                 @Override
                 public <T> T run(Supplier<T> toRun, Function<Throwable, T> fallback) {
@@ -547,8 +547,11 @@ class CatalogRestClientTests {
     @Nested
     @DisplayName("with server reaching the timeout")
     class WithServerTimeout {
+        private CatalogRestClient catalogRestClient;
+
         @BeforeEach
         void setUp() {
+            var circuitBreakerFactory = mock(CircuitBreakerFactory.class);
             when(circuitBreakerFactory.create("catalog")).thenReturn(new CircuitBreaker() {
                 @Override
                 public <T> T run(Supplier<T> toRun, Function<Throwable, T> fallback) {

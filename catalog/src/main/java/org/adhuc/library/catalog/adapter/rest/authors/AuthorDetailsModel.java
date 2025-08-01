@@ -3,6 +3,7 @@ package org.adhuc.library.catalog.adapter.rest.authors;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.adhuc.library.catalog.authors.Author;
+import org.jspecify.annotations.Nullable;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDate;
@@ -18,7 +19,7 @@ public class AuthorDetailsModel extends RepresentationModel<AuthorModel> {
     private final UUID id;
     private final String name;
     private final LocalDate dateOfBirth;
-    private final LocalDate dateOfDeath;
+    private final @Nullable LocalDate dateOfDeath;
 
     public AuthorDetailsModel(Author author) {
         this.id = author.id();

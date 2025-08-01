@@ -59,7 +59,7 @@ class EditionsControllerTests {
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
                 .andExpect(jsonPath("errors[0].detail",
-                        equalTo(STR."Input string \"\{invalidIsbn}\" is not a valid ISBN")))
+                        equalTo(STR."Input string '\{invalidIsbn}' is not a valid ISBN")))
                 .andExpect(jsonPath("errors[0].parameter", equalTo("isbn")));
     }
 
