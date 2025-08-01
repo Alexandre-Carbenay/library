@@ -3,6 +3,7 @@ package org.adhuc.library.catalog.authors;
 import net.jqwik.api.Arbitraries;
 import net.jqwik.api.Arbitrary;
 import net.jqwik.api.Combinators;
+import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -82,7 +83,7 @@ public final class AuthorsMother {
             return this;
         }
 
-        public AuthorBuilder dateOfDeath(LocalDate dateOfDeath) {
+        public AuthorBuilder dateOfDeath(@Nullable LocalDate dateOfDeath) {
             author = new Author(author.id(), author.name(), author.dateOfBirth(), dateOfDeath);
             return this;
         }

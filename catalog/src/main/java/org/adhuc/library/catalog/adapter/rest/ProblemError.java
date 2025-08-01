@@ -1,5 +1,7 @@
 package org.adhuc.library.catalog.adapter.rest;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * A problem error, used to indicate the origin of the error in a validation problem. This can be used in combination
  * with the {@link org.springframework.hateoas.mediatype.problem.Problem} class, as:
@@ -20,7 +22,7 @@ public sealed interface ProblemError permits ProblemError.ParameterError, Proble
      *     <li><b>{@code parameter}</b> indicates which request parameter is the source of the error</li>
      * </ul>
      */
-    record ParameterError(String detail, String parameter) implements ProblemError {
+    record ParameterError(String detail, @Nullable String parameter) implements ProblemError {
 
     }
 

@@ -5,7 +5,6 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.data.domain.PageRequest;
@@ -15,11 +14,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-import static java.util.Locale.FRENCH;
 import static org.adhuc.library.catalog.books.BooksMother.Real.*;
 import static org.adhuc.library.catalog.books.BooksMother.books;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Catalog service should")
 class CatalogServiceTests {
@@ -32,18 +29,6 @@ class CatalogServiceTests {
         booksRepository = new InMemoryBooksRepository();
         booksRepository.saveAll(List.of(L_ETRANGER, LA_PESTE, LA_CHUTE));
         service = new CatalogService(booksRepository);
-    }
-
-    @Test
-    @DisplayName("refuse getting page from null request")
-    void errorGetPageNullRequest() {
-        assertThrows(IllegalArgumentException.class, () -> service.getPage(null, FRENCH));
-    }
-
-    @Test
-    @DisplayName("refuse getting page for null language")
-    void errorGetPageNullLanguage() {
-        assertThrows(IllegalArgumentException.class, () -> service.getPage(PageRequest.of(0, 10), null));
     }
 
     @ParameterizedTest

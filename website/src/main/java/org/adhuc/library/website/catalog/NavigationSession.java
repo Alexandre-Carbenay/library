@@ -1,6 +1,7 @@
 package org.adhuc.library.website.catalog;
 
 import org.adhuc.library.website.support.pagination.NavigablePage;
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import static org.springframework.web.context.WebApplicationContext.SCOPE_SESSIO
 )
 public class NavigationSession {
 
+    @Nullable
     private NavigablePage<Book> currentPage;
 
     public Optional<NavigablePage<Book>> currentPage() {
@@ -23,9 +25,6 @@ public class NavigationSession {
     }
 
     public void switchPage(NavigablePage<Book> page) {
-        if (page == null) {
-            throw new IllegalArgumentException("Cannot switch to null page");
-        }
         this.currentPage = page;
     }
 

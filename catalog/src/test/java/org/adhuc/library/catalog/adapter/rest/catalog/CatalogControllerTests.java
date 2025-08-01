@@ -10,6 +10,7 @@ import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.CatalogService;
 import org.assertj.core.api.SoftAssertions;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,7 +19,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -37,6 +37,7 @@ import java.util.stream.Stream;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Locale.FRENCH;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toSet;
 import static net.jqwik.api.Arbitraries.integers;
 import static org.adhuc.library.catalog.adapter.rest.authors.AuthorsAssertions.assertResponseContainsAllEmbeddedAuthors;
@@ -60,8 +61,7 @@ class CatalogControllerTests {
     private MockMvc mvc;
     @MockitoBean
     private CatalogService catalogService;
-    @Captor
-    private ArgumentCaptor<Pageable> pageableCaptor;
+    private final ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.captor();
 
     @Test
     @DisplayName("provide an empty page when no edition can be found in the catalog for the default language")
@@ -404,9 +404,9 @@ class CatalogControllerTests {
         verifyNavigationLink(result, hasLast, "last", STR."http://localhost/api/v1/catalog?page=\{books.getTotalPages() - 1}&size=\{pageSize}");
     }
 
-    static void verifyNavigationLink(ResultActions result, boolean hasLink, String linkName, String valueIfExists) throws Exception {
+    static void verifyNavigationLink(ResultActions result, boolean hasLink, String linkName, @Nullable String valueIfExists) throws Exception {
         if (hasLink) {
-            result.andExpect(jsonPath(STR."_links.\{linkName}.href", equalTo(valueIfExists)));
+            result.andExpect(jsonPath(STR."_links.\{linkName}.href", equalTo(requireNonNull(valueIfExists))));
         } else {
             result.andExpect(jsonPath(STR."_links.\{linkName}").doesNotExist());
         }

@@ -5,6 +5,7 @@ import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksService;
 import org.adhuc.library.catalog.editions.EditionsService;
+import org.jspecify.annotations.Nullable;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.HttpHeaders;
@@ -47,10 +48,11 @@ public class BooksController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBook(@PathVariable UUID id, @RequestHeader HttpHeaders headers) {
+    public ResponseEntity<?> getBook(@PathVariable UUID id, @RequestHeader @Nullable HttpHeaders headers) {
         var book = booksService.getBook(id);
+        var languages = headers != null ? headers.getAcceptLanguageAsLocales() : List.<Locale>of();
         return book.isPresent()
-                ? prepareBookResponse(book.get(), headers.getAcceptLanguageAsLocales())
+                ? prepareBookResponse(book.get(), languages)
                 : prepareNotFoundResponse(id);
     }
 

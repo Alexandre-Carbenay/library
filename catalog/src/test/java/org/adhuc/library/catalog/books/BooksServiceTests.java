@@ -15,7 +15,6 @@ import java.util.stream.Stream;
 import static org.adhuc.library.catalog.authors.AuthorsMother.Real.*;
 import static org.adhuc.library.catalog.books.BooksMother.Real.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Books service should")
 class BooksServiceTests {
@@ -27,18 +26,6 @@ class BooksServiceTests {
     void setUp() {
         booksRepository = new InMemoryBooksRepository();
         service = new BooksService(booksRepository);
-    }
-
-    @Test
-    @DisplayName("refuse getting book with null ID")
-    void errorGetBookNullId() {
-        assertThrows(IllegalArgumentException.class, () -> service.getBook(null));
-    }
-
-    @Test
-    @DisplayName("refuse getting notable books for a null author")
-    void errorGetNotableBooksNullAuthorId() {
-        assertThrows(IllegalArgumentException.class, () -> service.getNotableBooks(null));
     }
 
     @Nested

@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'net.ltgt.errorprone' version '4.2.0'
 	id 'org.springframework.boot' version '3.5.4'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'com.avast.gradle.docker-compose' version '0.17.12'
@@ -37,6 +38,7 @@ dependencyManagement {
 }
 
 dependencies {
+	implementation 'org.jspecify:jspecify:1.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.data:spring-data-rest-webmvc'
@@ -69,11 +71,20 @@ dependencies {
 	acceptanceImplementation 'org.assertj:assertj-core'
 	acceptanceImplementation 'com.fasterxml.jackson.core:jackson-annotations'
 	acceptanceImplementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	errorprone 'com.google.errorprone:error_prone_core:2.41.0'
+	errorprone 'com.uber.nullaway:nullaway:0.12.7'
 }
 
 tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs.add('--enable-preview')
 	options.compilerArgs.add('-parameters')
+
+	options.errorprone {
+		disableAllChecks = true
+		option("NullAway:OnlyNullMarked", "true")
+		error("NullAway")
+	}
 }
 
 tasks.withType(Test).configureEach {

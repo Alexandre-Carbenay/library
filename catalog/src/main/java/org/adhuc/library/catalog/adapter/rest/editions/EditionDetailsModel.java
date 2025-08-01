@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.adhuc.library.catalog.editions.Edition;
 import org.adhuc.library.catalog.editions.Publisher;
+import org.jspecify.annotations.Nullable;
 import org.springframework.hateoas.RepresentationModel;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
@@ -16,7 +17,7 @@ public class EditionDetailsModel extends RepresentationModel<EditionDetailsModel
     private final String isbn;
     private final String title;
     private final String publicationDate;
-    private final String publisher;
+    private final @Nullable String publisher;
     private final String language;
     private final String summary;
 

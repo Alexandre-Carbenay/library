@@ -5,6 +5,7 @@ import net.jqwik.api.Arbitrary;
 import net.jqwik.api.Combinators;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksMother;
+import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -125,7 +126,7 @@ public final class EditionsMother {
             return this;
         }
 
-        public EditionBuilder publisher(Publisher publisher) {
+        public EditionBuilder publisher(@Nullable Publisher publisher) {
             edition = new Edition(edition.isbn(), edition.title(), edition.publicationDate(), edition.book(),
                     publisher, edition.language(), edition.summary());
             return this;
