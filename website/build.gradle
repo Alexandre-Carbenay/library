@@ -33,6 +33,7 @@ configurations {
 ext {
 	set('springCloudVersion', "2025.0.0")
 	bootstrapVersion = '5.3.7'
+	okhttp3Version = '5.1.0'
 }
 
 dependencyManagement {
@@ -57,7 +58,8 @@ dependencies {
 	runtimeOnly 'io.opentelemetry:opentelemetry-exporter-zipkin'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'com.squareup.okhttp3:mockwebserver:4.12.0'
+	testImplementation "com.squareup.okhttp3:okhttp:${okhttp3Version}"
+	testImplementation "com.squareup.okhttp3:mockwebserver3-junit5:${okhttp3Version}"
 	testImplementation 'au.com.dius.pact.consumer:junit5:4.6.17'
 	testImplementation 'org.aspectj:aspectjweaver:1.9.24'
 
