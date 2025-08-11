@@ -46,7 +46,7 @@ dependencies {
 	implementation 'org.springframework.modulith:spring-modulith-starter-insight'
 	implementation 'org.jmolecules:jmolecules-ddd'
 	implementation 'org.jmolecules:jmolecules-onion-architecture'
-	implementation 'com.atlassian.oai:swagger-request-validator-spring-webmvc:2.44.9'
+	implementation 'com.atlassian.oai:swagger-request-validator-spring-webmvc:2.45.1'
 	implementation('commons-validator:commons-validator:1.10.0') {
 		exclude group: 'commons-collections', module: 'commons-collections'
 	}
