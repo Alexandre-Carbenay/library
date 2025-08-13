@@ -6,6 +6,8 @@ example of library system.
 Those tools and practices include:
 
 - the [C4 model](https://c4model.com/) and tooling to generate schemas from the model.
+- architecture decision records to follow the decisions about key architecture choices during the project lifecycle,
+  using the [MADR](https://github.com/adr/madr) template to structure those ADRs.
 - the [Event Storming](https://www.eventstorming.com/) workshop,
   especially [Big Picture Event Storming](https://github.com/ddd-crew/eventstorming-glossary-cheat-sheet?tab=readme-ov-file#big-picture-eventstorming)
   to discover the business flows and use it to identify
