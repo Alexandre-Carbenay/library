@@ -45,7 +45,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: "📥 Checkout project sources"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           ref: ${{ github.head_ref }}
 
@@ -206,7 +206,7 @@ jobs:
       pull-requests: write
     steps:
       - name: "📥 Checkout project sources"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: "☕ 🛠️ Set up JDK 21"
         uses: actions/setup-java@v4
@@ -269,7 +269,7 @@ jobs:
       contents: write
     steps:
       - name: "📥 Checkout project sources"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: "0"
 
