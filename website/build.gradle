@@ -33,7 +33,7 @@ configurations {
 
 ext {
 	set('springCloudVersion', "2025.0.0")
-	bootstrapVersion = '5.3.7'
+	bootstrapVersion = '5.3.8'
 	okhttp3Version = '5.1.0'
 }
 
@@ -68,7 +68,7 @@ dependencies {
 	errorprone 'com.google.errorprone:error_prone_core:2.41.0'
 	errorprone 'com.uber.nullaway:nullaway:0.12.9'
 
-	scss 'org.webjars.npm:bootstrap:5.3.7'
+	scss 'org.webjars.npm:bootstrap:5.3.8'
 }
 
 task extractBootstrap(type: Copy) {
