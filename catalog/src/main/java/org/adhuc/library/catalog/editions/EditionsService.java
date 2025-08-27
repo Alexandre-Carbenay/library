@@ -2,7 +2,6 @@ package org.adhuc.library.catalog.editions;
 
 import org.jmolecules.architecture.onion.classical.ApplicationServiceRing;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -19,12 +18,10 @@ public class EditionsService {
     }
 
     public Optional<Edition> getEdition(String isbn) {
-        Assert.notNull(isbn, "Cannot get edition from null ISBN");
         return repository.findByIsbn(isbn);
     }
 
     public Collection<Edition> getBookEditions(UUID bookId) {
-        Assert.notNull(bookId, "Cannot get editions from null book");
         return repository.findByBookId(bookId);
     }
 }
