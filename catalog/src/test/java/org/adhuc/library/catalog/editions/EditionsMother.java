@@ -5,15 +5,18 @@ import net.jqwik.api.Arbitrary;
 import net.jqwik.api.Combinators;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksMother;
+import org.adhuc.library.catalog.books.LocalizedDetails;
 import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 import static java.time.LocalDate.now;
 import static net.jqwik.api.Arbitraries.integers;
 import static net.jqwik.api.Arbitraries.strings;
 import static net.jqwik.time.api.Dates.dates;
+import static org.adhuc.library.catalog.authors.AuthorsMother.Real.NICOLAS_FRAMONT;
 import static org.adhuc.library.catalog.editions.IsbnGenerator.isbn13s;
 import static org.adhuc.library.catalog.editions.PublishersMother.Real.*;
 
@@ -294,6 +297,15 @@ public final class EditionsMother {
                 GALLIMARD_JEUNESSE,
                 "fr",
                 "La maîtresse est inquiète, le photographe s'éponge le front, le Bouillon devient tout rouge, les mamans ont mauvaise mine, les papas font les guignols, le directeur part à la retraite, quant à l'inspecteur, il est reparti aussi vite qu'il était venu. Pourtant, à l'école ou en famille, Geoffroy, Agnan, Eudes, Rufus, Clotaire, Maixent, Alceste, Joachim... et le Petit Nicolas sont - presque - toujours sages."
+        );
+        public static final Edition VOUS_NE_DETESTEZ_PAS_LE_LUNDI = new Edition(
+                "9791020923561",
+                "Vous ne détestez pas le lundi",
+                PublicationDate.of(LocalDate.parse("2024-10-02")),
+                BooksMother.Real.VOUS_NE_DETESTEZ_PAS_LE_LUNDI,
+                LES_LIENS_QUI_LIBERENT,
+                "fr",
+                "En France, comme ailleurs, le mal-être au travail s’amplifie. Les travailleurs expriment leur mécontentement face à l’organisation, à l’utilité perçue et à la reconnaissance hiérarchique de leur entreprise. Tous les secteurs, y compris l’associatif et le service public, sont désormais contaminés par des formes de management absurdes et violentes qui font redouter le lundi matin."
         );
 
     }

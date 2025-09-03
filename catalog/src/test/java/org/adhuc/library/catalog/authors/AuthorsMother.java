@@ -137,6 +137,12 @@ public final class AuthorsMother {
                 LocalDate.parse("1932-08-17"),
                 LocalDate.parse("2022-08-11")
         );
+        public static final Author NICOLAS_FRAMONT = new Author(
+                UUID.fromString("4db5405a-1d4d-4178-81e6-3c23005fb054"),
+                "Nicolas Framont",
+                LocalDate.parse("1988-01-01"),
+                null
+        );
 
     }
 

@@ -85,8 +85,12 @@ public class BooksMother {
             return Arbitraries.of("fr", "en", "de", "it");
         }
 
-        public static Arbitrary<String> otherLanguages(String originalLanguage) {
-            return languages().filter(language -> !language.equals(originalLanguage));
+        public static Arbitrary<String> otherLanguages(String language) {
+            return languages().filter(other -> !other.equals(language));
+        }
+
+        public static Arbitrary<String> otherLanguages(Set<String> languages) {
+            return languages().filter(other -> !languages.contains(other));
         }
 
         public static Arbitrary<Set<LocalizedDetails>> detailsSets(String originalLanguage) {
@@ -177,7 +181,7 @@ public class BooksMother {
         }
 
         public BookBuilder originalLanguage(String originalLanguage) {
-            book = new Book(book.id(), book.authors(), originalLanguage, book.details());
+            book = new Book(book.id(), book.authors(), originalLanguage, Books.detailsSets(originalLanguage).sample());
             return this;
         }
 
@@ -465,6 +469,19 @@ public class BooksMother {
                                 "Le Petit Nicolas",
                                 "Le Petit Nicolas est une œuvre de littérature d'enfance et de jeunesse écrite de 1956 à 1965 par René Goscinny, et illustrée par Jean-Jacques Sempé. Écrites sous forme de courts récits dans lesquels se mêlent l'humour et la tendresse de l'enfance, les aventures du Petit Nicolas mettent en scène un petit garçon dans un environnement urbain pendant les années 1960. Le personnage y livre ses pensées intimes grâce à un langage enfantin créé par Goscinny et les thèmes sont avant tout ceux de l'enfance (la camaraderie, les disputes, les rapports avec la maîtresse d'école, les premières amourettes...) mais Goscinny y décrypte également le monde complexe des adultes : l'éducation, les disputes familiales, les rapports entre voisins, la relation du père avec son patron, etc.",
                                 Set.of(new ExternalLink("wikipedia", "https://fr.wikipedia.org/wiki/Le_Petit_Nicolas"))
+                        )
+                )
+        );
+        public static final Book VOUS_NE_DETESTEZ_PAS_LE_LUNDI = new Book(
+                UUID.fromString("6442c845-15a8-4251-ae63-dd2ee25e2cf3"),
+                Set.of(NICOLAS_FRAMONT),
+                "fr",
+                Set.of(
+                        new LocalizedDetails(
+                                "fr",
+                                "Vous ne détestez pas le lundi",
+                                "En France, comme ailleurs, le mal-être au travail s’amplifie. Les travailleurs expriment leur mécontentement face à l’organisation, à l’utilité perçue et à la reconnaissance hiérarchique de leur entreprise.",
+                                Set.of()
                         )
                 )
         );
