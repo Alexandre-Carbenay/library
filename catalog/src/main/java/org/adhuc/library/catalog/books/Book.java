@@ -1,6 +1,7 @@
 package org.adhuc.library.catalog.books;
 
 import org.adhuc.library.catalog.authors.Author;
+import org.springframework.util.Assert;
 
 import java.util.*;
 
@@ -8,6 +9,11 @@ public record Book(UUID id,
                    Set<Author> authors,
                    String originalLanguage,
                    Set<LocalizedDetails> details) {
+
+    public Book {
+        Assert.isTrue(details.stream().anyMatch(detail -> detail.language().equals(originalLanguage)),
+                () -> STR."Book \{id} details must have detail in original language \{originalLanguage}");
+    }
 
     public boolean acceptsLanguage(Locale language) {
         return details.stream()

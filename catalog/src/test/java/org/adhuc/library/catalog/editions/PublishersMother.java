@@ -69,6 +69,11 @@ public final class PublishersMother {
                 "Gallimard Jeunesse"
         );
 
+        public static final Publisher LES_LIENS_QUI_LIBERENT = new Publisher(
+                UUID.fromString("41d587d4-34b9-472e-a48a-80d6b63d1bcd"),
+                "Les Liens qui Libèrent"
+        );
+
     }
 
 }
