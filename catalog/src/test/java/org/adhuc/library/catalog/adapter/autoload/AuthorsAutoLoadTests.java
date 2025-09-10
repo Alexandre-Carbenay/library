@@ -9,6 +9,7 @@ import org.adhuc.library.catalog.authors.internal.InMemoryAuthorsRepository;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,6 +24,8 @@ import static org.adhuc.library.catalog.authors.AuthorsMother.Real.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Tag("integration")
+@Tag("dataLoading")
 @DisplayName("Authors auto-load from JSON file should")
 class AuthorsAutoLoadTests {
 

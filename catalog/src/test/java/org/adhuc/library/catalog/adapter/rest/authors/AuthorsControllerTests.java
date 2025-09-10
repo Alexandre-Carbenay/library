@@ -8,6 +8,7 @@ import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksMother.Books;
 import org.adhuc.library.catalog.books.BooksService;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -42,6 +43,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SuppressWarnings({"preview", "NotNullFieldNotInitialized"})
+@Tag("integration")
+@Tag("restApi")
 @WebMvcTest(controllers = {
         AuthorsController.class,
         AuthorDetailsModelAssembler.class,

@@ -2,10 +2,7 @@ package org.adhuc.library.catalog.books;
 
 import org.adhuc.library.catalog.books.internal.InMemoryBooksRepository;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +16,8 @@ import static org.adhuc.library.catalog.books.BooksMother.Real.*;
 import static org.adhuc.library.catalog.books.BooksMother.books;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
+@Tag("useCase")
 @DisplayName("Catalog service should")
 class CatalogServiceTests {
 

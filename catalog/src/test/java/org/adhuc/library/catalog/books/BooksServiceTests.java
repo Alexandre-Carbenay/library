@@ -16,6 +16,8 @@ import static org.adhuc.library.catalog.authors.AuthorsMother.Real.*;
 import static org.adhuc.library.catalog.books.BooksMother.Real.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
+@Tag("useCase")
 @DisplayName("Books service should")
 class BooksServiceTests {
 

@@ -12,6 +12,7 @@ import org.adhuc.library.catalog.books.CatalogService;
 import org.assertj.core.api.SoftAssertions;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -50,6 +51,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SuppressWarnings({"preview", "NotNullFieldNotInitialized"})
+@Tag("integration")
+@Tag("restApi")
 @WebMvcTest(controllers = {CatalogController.class, BookModelAssembler.class, AuthorModelAssembler.class})
 @Import({RequestValidationConfiguration.class, PaginationSerializationConfiguration.class})
 @DisplayName("Catalog controller should")

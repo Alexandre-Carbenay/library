@@ -6,6 +6,7 @@ import org.adhuc.library.catalog.books.internal.InMemoryBooksRepository;
 import org.adhuc.library.catalog.editions.internal.InMemoryEditionsRepository;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +17,8 @@ import java.util.UUID;
 import static org.adhuc.library.catalog.authors.AuthorsMother.Real.LEON_TOLSTOI;
 import static org.adhuc.library.catalog.editions.EditionsMother.Real.L_ETRANGER;
 
+@Tag("integration")
+@Tag("dataLoading")
 @SpringBootTest
 @TestPropertySource(properties = {
         "library.catalog.data.auto-load.enabled=true",

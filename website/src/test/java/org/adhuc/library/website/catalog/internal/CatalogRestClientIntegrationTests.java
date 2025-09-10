@@ -8,10 +8,7 @@ import io.github.resilience4j.springboot3.timelimiter.autoconfigure.TimeLimiterP
 import mockwebserver3.MockResponse;
 import mockwebserver3.MockWebServer;
 import org.assertj.core.api.SoftAssertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -41,6 +38,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.annotation.DirtiesContext.MethodMode.BEFORE_METHOD;
 
+@Tag("integration")
+@Tag("apiClient")
 @RestClientTest
 @ContextConfiguration(classes = {
         Resilience4JAutoConfiguration.class,
