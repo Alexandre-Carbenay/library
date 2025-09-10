@@ -1,13 +1,13 @@
 package org.adhuc.library.catalog.adapter.rest.catalog;
 
-import net.jqwik.api.Arbitraries;
-import net.jqwik.api.Combinators;
+import net.datafaker.Faker;
 import org.adhuc.library.catalog.adapter.rest.PaginationSerializationConfiguration;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.books.Book;
+import org.adhuc.library.catalog.books.BooksMother.Books;
 import org.adhuc.library.catalog.books.CatalogService;
 import org.assertj.core.api.SoftAssertions;
 import org.jspecify.annotations.Nullable;
@@ -31,18 +31,16 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
 import java.util.stream.Stream;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static java.util.Locale.FRENCH;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toSet;
-import static net.jqwik.api.Arbitraries.integers;
 import static org.adhuc.library.catalog.adapter.rest.authors.AuthorsAssertions.assertResponseContainsAllEmbeddedAuthors;
-import static org.adhuc.library.catalog.books.BooksMother.Books.languages;
-import static org.adhuc.library.catalog.books.BooksMother.Books.otherLanguages;
 import static org.adhuc.library.catalog.books.BooksMother.books;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -51,11 +49,13 @@ import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"preview", "NotNullFieldNotInitialized"})
 @WebMvcTest(controllers = {CatalogController.class, BookModelAssembler.class, AuthorModelAssembler.class})
 @Import({RequestValidationConfiguration.class, PaginationSerializationConfiguration.class})
 @DisplayName("Catalog controller should")
 class CatalogControllerTests {
+
+    private static final Faker FAKER = new Faker();
 
     @Autowired
     private MockMvc mvc;
@@ -162,40 +162,33 @@ class CatalogControllerTests {
     }
 
     private static Stream<Arguments> uniqueDefaultPageProvider() {
-        return Combinators.combine(
-                        integers().between(1, 50),
-                        languages()
-                )
-                .flatAs((numberOfElements, language) -> otherLanguages(language).set()
-                        .flatMap(otherLanguages -> books(language, otherLanguages).list().ofSize(numberOfElements)
-                                .map(books -> Arguments.of(numberOfElements, language, books))
-                        )
-                )
-                .sampleStream().limit(5);
+        var numberOfElements = FAKER.random().nextInt(1, 50);
+        var originalLanguage = Books.language();
+        var otherLanguages = Books.otherLanguages(originalLanguage);
+        var books = books(numberOfElements, originalLanguage, otherLanguages);
+        return Stream.of(Arguments.of(numberOfElements, originalLanguage, books));
     }
 
     private static Stream<Arguments> uniqueDefaultPageWithOtherLanguageProvider() {
-        return Combinators.combine(
-                        integers().between(1, 50),
-                        languages()
-                )
-                .flatAs((numberOfElements, language) -> otherLanguages(language).list().ofMinSize(1)
-                        .flatMap(otherLanguages -> books(language, Set.copyOf(otherLanguages)).list().ofSize(numberOfElements)
-                                .map(books -> Arguments.of(numberOfElements, otherLanguages.getFirst(), books))
-                        )
-                )
-                .sampleStream().limit(5);
+        var numberOfElements = FAKER.random().nextInt(1, 50);
+        var originalLanguage = Books.language();
+        var otherLanguages = Books.otherLanguages(originalLanguage);
+        var books = books(numberOfElements, originalLanguage, otherLanguages);
+        return Stream.of(Arguments.of(numberOfElements, otherLanguages.getFirst(), books));
     }
 
-    @ParameterizedTest
-    @MethodSource("defaultPageSizeProvider")
+    @Test
     @DisplayName("provide a page with default page size when not specified explicitly")
-    void defaultPageSize(String language, Page<Book> books) throws Exception {
+    void defaultPageSize() throws Exception {
+        var pageIndex = FAKER.random().nextInt(1, 100);
+        var originalLanguage = Books.language();
+        var books = pageSample(pageIndex, 50, originalLanguage, Books.otherLanguages(originalLanguage));
+
         when(catalogService.getPage(any(), any())).thenReturn(books);
 
         var result = mvc.perform(get("/api/v1/catalog")
                         .accept("application/hal+json")
-                        .header(ACCEPT_LANGUAGE, language)
+                        .header(ACCEPT_LANGUAGE, originalLanguage)
                         .queryParam("page", String.valueOf(books.getNumber())))
                 .andExpect(status().isPartialContent())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
@@ -205,28 +198,17 @@ class CatalogControllerTests {
                 .andExpect(jsonPath("page.number", equalTo(books.getNumber())))
                 .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{books.getNumber()}&size=50")))
                 .andExpect(jsonPath("_embedded").exists())
-                .andExpect(header().string("Content-Language", language));
+                .andExpect(header().string("Content-Language", originalLanguage));
 
-        assertResponseContainsAllBooks(result, language, books.toList());
+        assertResponseContainsAllBooks(result, originalLanguage, books.toList());
         assertResponseContainsAllBooksAuthors(result, books.toList());
 
-        verify(catalogService).getPage(pageableCaptor.capture(), eq(Locale.of(language)));
+        verify(catalogService).getPage(pageableCaptor.capture(), eq(Locale.of(originalLanguage)));
         var actual = pageableCaptor.getValue();
         SoftAssertions.assertSoftly(s -> {
             s.assertThat(actual.getPageNumber()).isEqualTo(books.getNumber());
             s.assertThat(actual.getPageSize()).isEqualTo(50);
         });
-    }
-
-    private static Stream<Arguments> defaultPageSizeProvider() {
-        return Combinators.combine(
-                        integers().between(0, 100),
-                        languages()
-                )
-                .flatAs((pageIndex, language) -> otherLanguages(language).set()
-                        .map(otherLanguages -> Arguments.of(language, pageSample(pageIndex, 50, language, otherLanguages)))
-                )
-                .sampleStream().limit(5);
     }
 
     @ParameterizedTest
@@ -289,31 +271,35 @@ class CatalogControllerTests {
                 .andExpect(jsonPath("errors[1].parameter", equalTo("size")));
     }
 
-    @ParameterizedTest
-    @MethodSource("pageProvider")
+    @Test
     @DisplayName("provide a page corresponding to requested page and size")
-    void getPage(int pageNumber, int pageSize, String language, Page<Book> books) throws Exception {
+    void getPage() throws Exception {
+        var pageIndex = FAKER.random().nextInt(0, 100);
+        var pageSize = FAKER.random().nextInt(2, 100);
+        var originalLanguage = Books.language();
+        var books = pageSample(pageIndex, pageSize, originalLanguage, Books.otherLanguages(originalLanguage));
+
         when(catalogService.getPage(any(), any())).thenReturn(books);
 
         var result = mvc.perform(get("/api/v1/catalog")
                         .accept("application/hal+json")
-                        .header(ACCEPT_LANGUAGE, language)
-                        .queryParam("page", Integer.toString(pageNumber))
+                        .header(ACCEPT_LANGUAGE, originalLanguage)
+                        .queryParam("page", Integer.toString(pageIndex))
                         .queryParam("size", Integer.toString(pageSize))
                 ).andExpect(status().isPartialContent())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("page.size", equalTo(books.getSize())))
                 .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(books.getTotalElements()).intValue())))
                 .andExpect(jsonPath("page.total_pages", equalTo(books.getTotalPages())))
-                .andExpect(jsonPath("page.number", equalTo(pageNumber)))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{pageNumber}&size=\{pageSize}")))
+                .andExpect(jsonPath("page.number", equalTo(pageIndex)))
+                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{pageIndex}&size=\{pageSize}")))
                 .andExpect(jsonPath("_embedded").exists())
-                .andExpect(header().string("Content-Language", language));
+                .andExpect(header().string("Content-Language", originalLanguage));
 
-        assertResponseContainsAllBooks(result, language, books.toList());
+        assertResponseContainsAllBooks(result, originalLanguage, books.toList());
         assertResponseContainsAllBooksAuthors(result, books.toList());
 
-        verify(catalogService).getPage(pageableCaptor.capture(), eq(Locale.of(language)));
+        verify(catalogService).getPage(pageableCaptor.capture(), eq(Locale.of(originalLanguage)));
         var actual = pageableCaptor.getValue();
         SoftAssertions.assertSoftly(s -> {
             s.assertThat(actual.getPageNumber()).isEqualTo(books.getNumber());
@@ -321,39 +307,26 @@ class CatalogControllerTests {
         });
     }
 
-    private static Stream<Arguments> pageProvider() {
-        return Combinators.combine(
-                        integers().between(0, 100),
-                        integers().between(2, 100),
-                        languages())
-                .flatAs((pageNumber, pageSize, language) -> otherLanguages(language).set()
-                        .map(otherLanguages -> Arguments.of(
-                                pageNumber,
-                                pageSize,
-                                language,
-                                pageSample(pageNumber, pageSize, language, otherLanguages)
-                        ))
-                )
-                .sampleStream().limit(5);
-    }
-
-    @ParameterizedTest
-    @MethodSource("pageDefaultLanguageProvider")
+    @Test
     @DisplayName("provide a page corresponding to requested page and size in default language")
-    void getPageDefaultLanguage(int pageNumber, int pageSize, Page<Book> books) throws Exception {
+    void getPageDefaultLanguage() throws Exception {
+        var pageIndex = FAKER.random().nextInt(0, 100);
+        var pageSize = FAKER.random().nextInt(2, 100);
+        var books = pageSample(pageIndex, pageSize, "fr", Books.otherLanguages("fr"));
+
         when(catalogService.getPage(any(), any())).thenReturn(books);
 
         var result = mvc.perform(get("/api/v1/catalog")
                         .accept("application/hal+json")
-                        .queryParam("page", Integer.toString(pageNumber))
+                        .queryParam("page", Integer.toString(pageIndex))
                         .queryParam("size", Integer.toString(pageSize))
                 ).andExpect(status().isPartialContent())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("page.size", equalTo(books.getSize())))
                 .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(books.getTotalElements()).intValue())))
                 .andExpect(jsonPath("page.total_pages", equalTo(books.getTotalPages())))
-                .andExpect(jsonPath("page.number", equalTo(pageNumber)))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{pageNumber}&size=\{pageSize}")))
+                .andExpect(jsonPath("page.number", equalTo(pageIndex)))
+                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{pageIndex}&size=\{pageSize}")))
                 .andExpect(jsonPath("_embedded").exists())
                 .andExpect(header().string("Content-Language", "fr"));
 
@@ -368,39 +341,25 @@ class CatalogControllerTests {
         });
     }
 
-    private static Stream<Arguments> pageDefaultLanguageProvider() {
-        return Combinators.combine(
-                        integers().between(0, 100),
-                        integers().between(2, 100))
-                .flatAs((pageNumber, pageSize) -> otherLanguages("fr").set()
-                        .map(otherLanguages -> Arguments.of(
-                                pageNumber,
-                                pageSize,
-                                pageSample(pageNumber, pageSize, "fr", otherLanguages)
-                        ))
-                )
-                .sampleStream().limit(5);
-    }
-
     @ParameterizedTest(name = "[{index}] Page = {0}, size = {1}, first = {3}, prev = {4}, next = {5}, last = {6}")
     @MethodSource({"uniquePagesProvider", "firstPagesProvider", "intermediatePagesProvider", "lastPagesProvider"})
     @DisplayName("provide a page with navigation links")
-    void getPageWithNavigation(int pageNumber, int pageSize, String language, Page<Book> books, boolean hasFirst,
+    void getPageWithNavigation(int pageIndex, int pageSize, String language, Page<Book> books, boolean hasFirst,
                                boolean hasPrev, boolean hasNext, boolean hasLast) throws Exception {
         when(catalogService.getPage(any(), any())).thenReturn(books);
 
         var result = mvc.perform(get("/api/v1/catalog")
                         .accept("application/hal+json")
                         .header(ACCEPT_LANGUAGE, language)
-                        .queryParam("page", Integer.toString(pageNumber))
+                        .queryParam("page", Integer.toString(pageIndex))
                         .queryParam("size", Integer.toString(pageSize))
                 ).andExpect(status().isPartialContent())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{pageNumber}&size=\{pageSize}")));
+                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{pageIndex}&size=\{pageSize}")));
 
         verifyNavigationLink(result, hasFirst, "first", STR."http://localhost/api/v1/catalog?page=0&size=\{pageSize}");
-        verifyNavigationLink(result, hasPrev, "prev", STR."http://localhost/api/v1/catalog?page=\{pageNumber - 1}&size=\{pageSize}");
-        verifyNavigationLink(result, hasNext, "next", STR."http://localhost/api/v1/catalog?page=\{pageNumber + 1}&size=\{pageSize}");
+        verifyNavigationLink(result, hasPrev, "prev", STR."http://localhost/api/v1/catalog?page=\{pageIndex - 1}&size=\{pageSize}");
+        verifyNavigationLink(result, hasNext, "next", STR."http://localhost/api/v1/catalog?page=\{pageIndex + 1}&size=\{pageSize}");
         verifyNavigationLink(result, hasLast, "last", STR."http://localhost/api/v1/catalog?page=\{books.getTotalPages() - 1}&size=\{pageSize}");
     }
 
@@ -413,82 +372,62 @@ class CatalogControllerTests {
     }
 
     static Stream<Arguments> uniquePagesProvider() {
-        return Combinators.combine(
-                        integers().between(2, 100),
-                        integers().between(2, 100),
-                        languages()
-                ).flatAs((requestedPageSize, numberOfEditions, language) -> otherLanguages(language).set()
-                        .flatMap(otherLanguages -> Arbitraries.just(lastPage(0, requestedPageSize, language, otherLanguages))
-                                .map(books -> Arguments.of(0, books.getPageable().getPageSize(), language, books, false, false, false, false))
-                        )
-                )
-                .sampleStream().distinct().limit(3);
+        var requestedPageSize = FAKER.random().nextInt(2, 100);
+        var originalLanguage = Books.language();
+        var otherLanguages = Books.otherLanguages(originalLanguage);
+        var page = lastPage(0, requestedPageSize, originalLanguage, otherLanguages);
+        return Stream.of(Arguments.of(0, page.getPageable().getPageSize(), originalLanguage, page, false, false, false, false));
     }
 
     static Stream<Arguments> firstPagesProvider() {
-        return Combinators.combine(
-                        integers().between(2, 100),
-                        integers().between(2, 100),
-                        languages()
-                ).flatAs((requestedPageSize, numberOfEditions, language) -> otherLanguages(language).set()
-                        .flatMap(otherLanguages -> Arbitraries.just(fullPage(0, requestedPageSize, language, otherLanguages))
-                                .map(books -> Arguments.of(0, books.getPageable().getPageSize(), language, books, true, false, true, true))
-                        )
-                )
-                .sampleStream().distinct().limit(3);
+        var requestedPageSize = FAKER.random().nextInt(2, 100);
+        var originalLanguage = Books.language();
+        var otherLanguages = Books.otherLanguages(originalLanguage);
+        var page = fullPage(0, requestedPageSize, originalLanguage, otherLanguages);
+        return Stream.of(Arguments.of(0, page.getPageable().getPageSize(), originalLanguage, page, true, false, true, true));
     }
 
     static Stream<Arguments> intermediatePagesProvider() {
-        return Combinators.combine(
-                        integers().between(1, 100),
-                        integers().between(2, 100),
-                        integers().between(2, 100),
-                        languages()
-                ).flatAs((page, requestedPageSize, numberOfEditions, language) -> otherLanguages(language).set()
-                        .flatMap(otherLanguages -> Arbitraries.just(fullPage(page, requestedPageSize, language, otherLanguages))
-                                .map(books -> Arguments.of(books.getNumber(), books.getPageable().getPageSize(), language, books, true, true, true, true))
-                        )
-                )
-                .sampleStream().distinct().limit(3);
+        var pageIndex = FAKER.random().nextInt(1, 100);
+        var requestedPageSize = FAKER.random().nextInt(2, 100);
+        var originalLanguage = Books.language();
+        var otherLanguages = Books.otherLanguages(originalLanguage);
+        var page = fullPage(pageIndex, requestedPageSize, originalLanguage, otherLanguages);
+        return Stream.of(Arguments.of(page.getNumber(), page.getPageable().getPageSize(), originalLanguage, page, true, true, true, true));
     }
 
     static Stream<Arguments> lastPagesProvider() {
-        return Combinators.combine(
-                        integers().between(1, 100),
-                        integers().between(2, 100),
-                        integers().between(2, 100),
-                        languages()
-                ).flatAs((page, requestedPageSize, numberOfEditions, language) -> otherLanguages(language).set()
-                        .flatMap(otherLanguages -> Arbitraries.just(lastPage(page, requestedPageSize, language, otherLanguages))
-                                .map(books -> Arguments.of(books.getNumber(), books.getPageable().getPageSize(), language, books, true, true, false, true))
-                        )
-                )
-                .sampleStream().distinct().limit(3);
+        var pageIndex = FAKER.random().nextInt(1, 100);
+        var requestedPageSize = FAKER.random().nextInt(2, 100);
+        var originalLanguage = Books.language();
+        var otherLanguages = Books.otherLanguages(originalLanguage);
+        var page = lastPage(pageIndex, requestedPageSize, originalLanguage, otherLanguages);
+        return Stream.of(Arguments.of(page.getNumber(), page.getPageable().getPageSize(), originalLanguage, page, true, true, false, true));
     }
 
-    private static Page<Book> pageSample(int pageIndex, int requestedPageSize, String language, Set<String> otherLanguages) {
-        var isLastPage = Arbitraries.of(TRUE, FALSE).sample();
+    private static Page<Book> pageSample(int pageIndex, int requestedPageSize, String language, Collection<String> otherLanguages) {
+        var isLastPage = FAKER.bool().bool();
         if (isLastPage) {
             return lastPage(pageIndex, requestedPageSize, language, otherLanguages);
         }
         return fullPage(pageIndex, requestedPageSize, language, otherLanguages);
     }
 
-    private static PageImpl<Book> lastPage(int page, int requestedPageSize, String language, Set<String> otherLanguages) {
-        int pageSize = integers().between(1, requestedPageSize).sample();
+    private static PageImpl<Book> lastPage(int page, int requestedPageSize, String language, Collection<String> otherLanguages) {
+        int pageSize = FAKER.random().nextInt(1, requestedPageSize);
         int totalRows = pageSize;
         if (page > 0) {
             totalRows += requestedPageSize * page;
         }
-        var elements = books(language, otherLanguages).list().ofSize(pageSize).sample();
+        var elements = books(pageSize, language, otherLanguages);
         return new PageImpl<>(elements, PageRequest.of(page, requestedPageSize), totalRows);
     }
 
-    private static PageImpl<Book> fullPage(int page, int requestedPageSize, String language, Set<String> otherLanguages) {
-        var totalPages = integers().between(page + 1, 150).sample();
-        var lastPageSize = integers().between(1, requestedPageSize - 1).sample();
+    private static PageImpl<Book> fullPage(int page, int requestedPageSize, String language, Collection<String> otherLanguages) {
+        var totalPages = FAKER.random().nextInt(page + 1, 150);
+        var lastPageSize = FAKER.random().nextInt(1, requestedPageSize - 1);
         var totalRows = totalPages * requestedPageSize + lastPageSize;
-        var elements = books(language, otherLanguages).list().ofSize(requestedPageSize).sample();
+        var elements = books(requestedPageSize, language, otherLanguages);
         return new PageImpl<>(elements, PageRequest.of(page, requestedPageSize), totalRows);
     }
 

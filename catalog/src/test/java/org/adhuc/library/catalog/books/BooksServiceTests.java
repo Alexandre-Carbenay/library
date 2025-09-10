@@ -1,11 +1,11 @@
 package org.adhuc.library.catalog.books;
 
-import net.jqwik.api.Arbitraries;
+import org.adhuc.library.catalog.authors.AuthorsMother.Authors;
+import org.adhuc.library.catalog.books.BooksMother.Books;
 import org.adhuc.library.catalog.books.internal.InMemoryBooksRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
@@ -32,44 +32,34 @@ class BooksServiceTests {
     @DisplayName("when some books are in the catalog")
     class BooksInCatalogTests {
 
-        private static List<Book> BOOKS;
-
-        @BeforeAll
-        static void initCatalog() {
-            BOOKS = List.of(
-                    L_ETRANGER,
-                    LA_PESTE,
-                    LA_CHUTE,
-                    MADAME_BOVARY,
-                    SALAMMBO,
-                    ANNA_KARENINE,
-                    GUERRE_ET_PAIX,
-                    LES_COSAQUES,
-                    CHER_CONNARD,
-                    BAISE_MOI,
-                    APOCALYPSE_BEBE,
-                    ASTERIX_LE_GAULOIS,
-                    LA_SERPE_D_OR,
-                    ASTERIX_ET_CLEOPATRE,
-                    LE_PETIT_NICOLAS
-            );
-        }
+        private static final List<Book> BOOKS = List.of(
+                L_ETRANGER,
+                LA_PESTE,
+                LA_CHUTE,
+                MADAME_BOVARY,
+                SALAMMBO,
+                ANNA_KARENINE,
+                GUERRE_ET_PAIX,
+                LES_COSAQUES,
+                CHER_CONNARD,
+                BAISE_MOI,
+                APOCALYPSE_BEBE,
+                ASTERIX_LE_GAULOIS,
+                LA_SERPE_D_OR,
+                ASTERIX_ET_CLEOPATRE,
+                LE_PETIT_NICOLAS
+        );
 
         @BeforeEach
         void setUp() {
             booksRepository.saveAll(BOOKS);
         }
 
-        @ParameterizedTest
-        @MethodSource("unknownIdProvider")
+        @Test
         @DisplayName("not find any book with unknown ID")
-        void unknownIsbn(UUID id) {
+        void unknownId() {
+            var id = Books.id();
             assertThat(service.getBook(id)).isEmpty();
-        }
-
-        private static Stream<Arguments> unknownIdProvider() {
-            return Arbitraries.create(UUID::randomUUID).map(Arguments::of)
-                    .sampleStream().limit(3);
         }
 
         @ParameterizedTest
@@ -80,17 +70,13 @@ class BooksServiceTests {
         }
 
         private static Stream<Arguments> knownIdProvider() {
-            return Arbitraries.of(BOOKS).map(Arguments::of).sampleStream().limit(3);
+            return BOOKS.stream().map(Arguments::of);
         }
 
-        @ParameterizedTest
-        @CsvSource({
-                "917fb110-7991-464e-a623-47c285b6cc3d",
-                "a3f3928f-929b-4b08-859c-f2567c295f21",
-                "7f91c0f6-dc86-4772-bbff-3b3b6eeedcd6"
-        })
-        @DisplayName("not find any notable book for unknown authors")
-        void unknownAuthorNotableBooks(UUID authorId) {
+        @Test
+        @DisplayName("not find any notable book for unknown author")
+        void unknownAuthorNotableBooks() {
+            var authorId = Authors.id();
             assertThat(service.getNotableBooks(authorId)).isEmpty();
         }
 

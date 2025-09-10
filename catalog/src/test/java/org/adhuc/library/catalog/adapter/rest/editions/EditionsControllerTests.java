@@ -1,9 +1,6 @@
 package org.adhuc.library.catalog.adapter.rest.editions;
 
-import net.jqwik.api.Arbitrary;
 import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
-import org.adhuc.library.catalog.editions.Edition;
-import org.adhuc.library.catalog.editions.EditionsMother;
 import org.adhuc.library.catalog.editions.EditionsMother.Editions;
 import org.adhuc.library.catalog.editions.EditionsService;
 import org.adhuc.library.catalog.editions.PublicationDate;
@@ -22,15 +19,16 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static org.adhuc.library.catalog.editions.EditionsMother.builder;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SuppressWarnings({"preview", "NotNullFieldNotInitialized"})
 @WebMvcTest(controllers = {
         EditionsController.class,
         EditionModelAssembler.class,
@@ -81,12 +79,14 @@ class EditionsControllerTests {
 
     @ParameterizedTest
     @MethodSource({
-            "editionsWithExactPublicationDateProvider",
-            "editionsWithYearADPublicationDateProvider",
-            "editionsWithYearBCPublicationDateProvider"
+            "exactPublicationDate",
+            "yearADPublicationDate",
+            "yearBCPublicationDate"
     })
     @DisplayName("provide the edition details corresponding to the ID")
-    void knownEditionId(Edition edition) throws Exception {
+    void knownEditionId(PublicationDate publicationDate) throws Exception {
+        var edition = builder().publicationDate(publicationDate).build();
+
         when(editionsService.getEdition(Mockito.any())).thenReturn(Optional.of(edition));
 
         mvc.perform(get("/api/v1/editions/{isbn}", edition.isbn()).accept("application/hal+json"))
@@ -94,7 +94,7 @@ class EditionsControllerTests {
                 .andExpect(jsonPath("isbn", equalTo(edition.isbn())))
                 .andExpect(jsonPath("title", equalTo(edition.title())))
                 .andExpect(jsonPath("publication_date", equalTo(edition.publicationDate().toString())))
-                .andExpect(jsonPath("publisher", equalTo(edition.publisher().get().name())))
+                .andExpect(jsonPath("publisher", equalTo(edition.publisher().orElseThrow().name())))
                 .andExpect(jsonPath("language", equalTo(edition.language())))
                 .andExpect(jsonPath("summary", equalTo(edition.summary())))
                 .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/editions/\{edition.isbn()}")))
@@ -103,29 +103,22 @@ class EditionsControllerTests {
         verify(editionsService).getEdition(edition.isbn());
     }
 
-    static Stream<Arguments> editionsWithExactPublicationDateProvider() {
-        return editionsWithPublicationDateProvider(Editions.exactPublicationDates());
+    static Stream<Arguments> exactPublicationDate() {
+        return Stream.of(Arguments.of(Editions.exactPublicationDate()));
     }
 
-    static Stream<Arguments> editionsWithYearADPublicationDateProvider() {
-        return editionsWithPublicationDateProvider(Editions.yearADPublicationDates());
+    static Stream<Arguments> yearADPublicationDate() {
+        return Stream.of(Arguments.of(Editions.yearADPublicationDate()));
     }
 
-    static Stream<Arguments> editionsWithYearBCPublicationDateProvider() {
-        return editionsWithPublicationDateProvider(Editions.yearBCPublicationDates());
+    static Stream<Arguments> yearBCPublicationDate() {
+        return Stream.of(Arguments.of(Editions.yearBCPublicationDate()));
     }
 
-    static Stream<Arguments> editionsWithPublicationDateProvider(Arbitrary<PublicationDate> publicationDateArbitrary) {
-        return publicationDateArbitrary
-                .map(publicationDate -> EditionsMother.builder().publicationDate(publicationDate).build())
-                .map(Arguments::of)
-                .sampleStream().limit(3);
-    }
-
-    @ParameterizedTest
-    @MethodSource("editionsWithoutPublisherProvider")
+    @Test
     @DisplayName("provide the edition details corresponding to the ID, without embedded publisher")
-    void knownEditionIdWithoutPublisher(Edition edition) throws Exception {
+    void knownEditionIdWithoutPublisher() throws Exception {
+        var edition = builder().publisher(null).build();
         when(editionsService.getEdition(Mockito.any())).thenReturn(Optional.of(edition));
 
         mvc.perform(get("/api/v1/editions/{isbn}", edition.isbn()).accept("application/hal+json"))
@@ -140,12 +133,6 @@ class EditionsControllerTests {
                 .andExpect(jsonPath("_links.book.href", equalTo(STR."http://localhost/api/v1/books/\{edition.book().id()}")));
 
         verify(editionsService).getEdition(edition.isbn());
-    }
-
-    static Stream<Arguments> editionsWithoutPublisherProvider() {
-        return IntStream.range(0, 3)
-                .mapToObj(_ -> EditionsMother.builder().publisher(null).build())
-                .map(Arguments::of);
     }
 
 }

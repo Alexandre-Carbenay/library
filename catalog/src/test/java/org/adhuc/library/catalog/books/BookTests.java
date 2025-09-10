@@ -25,8 +25,8 @@ class BookTests {
     @DisplayName("not be creatable with empty details")
     void bookWithEmptyDetail() {
         assertThrows(IllegalArgumentException.class, () -> new Book(
-                ids().sample(),
-                authors().sample(),
+                id(),
+                authors(),
                 "fr",
                 Set.of()
         ));
@@ -36,10 +36,10 @@ class BookTests {
     @DisplayName("not be creatable without detail in original language")
     void bookWithoutDetailInOriginalLanguage() {
         assertThrows(IllegalArgumentException.class, () -> new Book(
-                ids().sample(),
-                authors().sample(),
+                id(),
+                authors(),
                 "fr",
-                detailsSets("en", Set.of("de", "it")).sample()
+                detailsSets("en", Set.of("de", "it"))
         ));
     }
 
@@ -48,7 +48,7 @@ class BookTests {
     @DisplayName("accept its original language")
     void acceptingOriginalLanguage(String language) {
         var book = builder().originalLanguage(language)
-                .details(detailsSets(language, Set.of()).sample())
+                .details(detailsSets(language, Set.of()))
                 .build();
         assertThat(book.acceptsLanguage(language)).isTrue();
     }
@@ -62,7 +62,7 @@ class BookTests {
     @DisplayName("accept a language that is not the original one but is defined in its details")
     void acceptingOtherLanguageInDetail(String originalLanguage, String language) {
         var book = builder().originalLanguage(originalLanguage)
-                .details(detailsSets(originalLanguage, Set.of(language)).sample())
+                .details(detailsSets(originalLanguage, Set.of(language)))
                 .build();
         assertThat(book.acceptsLanguage(language)).isTrue();
     }
@@ -72,7 +72,7 @@ class BookTests {
     @DisplayName("not accept a language that is not the original one and is not defined in its details")
     void notAcceptingOtherLanguageNotInDetail(String originalLanguage, Set<String> otherLanguages, String notAcceptedLanguage) {
         var book = builder().originalLanguage(originalLanguage)
-                .details(detailsSets(originalLanguage, otherLanguages).sample())
+                .details(detailsSets(originalLanguage, otherLanguages))
                 .build();
         assertThat(book.acceptsLanguage(notAcceptedLanguage)).isFalse();
     }
@@ -89,7 +89,7 @@ class BookTests {
     @DisplayName("accept its original language")
     void acceptingOriginalLanguageFromLocale(String language, Locale locale) {
         var book = builder().originalLanguage(language)
-                .details(detailsSets(language, Set.of()).sample())
+                .details(detailsSets(language, Set.of()))
                 .build();
         assertThat(book.acceptsLanguage(locale)).isTrue();
     }
@@ -109,7 +109,7 @@ class BookTests {
     @DisplayName("accept a language that is not the original one but is defined in its details")
     void acceptingOtherLanguageInDetailFromLocale(String originalLanguage, String language, Locale locale) {
         var book = builder().originalLanguage(originalLanguage)
-                .details(detailsSets(originalLanguage, Set.of(language)).sample())
+                .details(detailsSets(originalLanguage, Set.of(language)))
                 .build();
         assertThat(book.acceptsLanguage(locale)).isTrue();
     }
@@ -128,7 +128,7 @@ class BookTests {
     @DisplayName("not accept a language that is not the original one and is not defined in its details")
     void notAcceptingOtherLanguageNotInDetailFromLocale(String originalLanguage, Set<String> otherLanguages, Locale notAcceptedLocale) {
         var book = builder().originalLanguage(originalLanguage)
-                .details(detailsSets(originalLanguage, otherLanguages).sample())
+                .details(detailsSets(originalLanguage, otherLanguages))
                 .build();
         assertThat(book.acceptsLanguage(notAcceptedLocale)).isFalse();
     }

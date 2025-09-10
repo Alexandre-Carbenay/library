@@ -1,49 +1,45 @@
 package org.adhuc.library.catalog.editions;
 
-import net.jqwik.api.Arbitraries;
-import net.jqwik.api.Arbitrary;
-import net.jqwik.api.Combinators;
+import net.datafaker.Faker;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksMother;
-import org.adhuc.library.catalog.books.LocalizedDetails;
 import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDate;
-import java.util.Set;
-import java.util.UUID;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.IntStream;
 
 import static java.time.LocalDate.now;
-import static net.jqwik.api.Arbitraries.integers;
-import static net.jqwik.api.Arbitraries.strings;
-import static net.jqwik.time.api.Dates.dates;
-import static org.adhuc.library.catalog.authors.AuthorsMother.Real.NICOLAS_FRAMONT;
-import static org.adhuc.library.catalog.editions.IsbnGenerator.isbn13s;
 import static org.adhuc.library.catalog.editions.PublishersMother.Real.*;
 
 public final class EditionsMother {
 
-    public static Arbitrary<Edition> editions() {
-        return Combinators.combine(
-                Editions.isbns(),
-                Editions.titles(),
-                Editions.publicationDates(),
-                Editions.books(),
-                Editions.publishers(),
-                Editions.languages(),
-                Editions.summaries()
-        ).as(Edition::new);
+    public static List<Edition> editionsOf(Book book) {
+        var numberOfEditions = Editions.FAKER.random().nextInt(1, 10);
+        return IntStream.range(0, numberOfEditions)
+                .mapToObj(_ -> editionOf(book))
+                .toList();
     }
 
-    public static Arbitrary<Edition> editionsOf(Book book) {
-        return Combinators.combine(
-                Editions.isbns(),
-                Editions.titles(),
-                Editions.publicationDates(),
-                Arbitraries.just(book),
-                Editions.publishers(),
-                Editions.languages(),
-                Editions.summaries()
-        ).as(Edition::new);
+    public static Edition edition() {
+        var book = Editions.book();
+        return editionOf(book);
+    }
+
+    public static Edition editionOf(Book book) {
+        var language = Editions.language();
+        return new Edition(
+                Editions.isbn(),
+                Editions.titleIn(language),
+                Editions.publicationDate(),
+                book,
+                Editions.publisher(),
+                language,
+                Editions.summaryIn(language)
+        );
     }
 
     public static EditionBuilder builder() {
@@ -51,59 +47,80 @@ public final class EditionsMother {
     }
 
     public static final class Editions {
-        public static Arbitrary<String> isbns() {
-            return isbn13s();
+        private static final Faker FAKER = new Faker();
+        private static final Map<String, Faker> FAKERS = new HashMap<>();
+
+        private static Faker faker(String language) {
+            if (!FAKERS.containsKey(language)) {
+                var locale = switch (language) {
+                    case "French" -> Locale.FRENCH;
+                    case "English" -> Locale.ENGLISH;
+                    default -> throw new IllegalStateException("Language " + language + " not supported");
+                };
+                FAKERS.put(language, new Faker(locale));
+            }
+            return FAKERS.get(language);
         }
 
-        public static Arbitrary<String> titles() {
-            return strings().alpha().withChars(' ').ofMinLength(3).ofMaxLength(100)
-                    .filter(s -> !s.isBlank());
+        public static String isbn() {
+            return FAKER.code().isbn13();
         }
 
-        public static Arbitrary<PublicationDate> publicationDates() {
-            return Arbitraries.oneOf(
-                    exactPublicationDates(),
-                    yearADPublicationDates(),
-                    yearBCPublicationDates()
-            );
+        public static String title() {
+            return titleIn("English");
         }
 
-        public static Arbitrary<PublicationDate> exactPublicationDates() {
-            return dates().atTheEarliest(LocalDate.parse("1800-01-01")).atTheLatest(now()).map(PublicationDate::of);
+        public static String titleIn(String language) {
+            return faker(language).book().title();
         }
 
-        public static Arbitrary<PublicationDate> yearADPublicationDates() {
-            return integers().between(0, now().getYear()).map(PublicationDate::of);
+        public static PublicationDate publicationDate() {
+            return switch (FAKER.random().nextInt(3)) {
+                case 0 -> exactPublicationDate();
+                case 1 -> yearADPublicationDate();
+                default -> yearBCPublicationDate();
+            };
         }
 
-        public static Arbitrary<PublicationDate> yearBCPublicationDates() {
-            return integers().between(-1000, -1).map(PublicationDate::of);
+        public static PublicationDate exactPublicationDate() {
+            return PublicationDate.of(FAKER.timeAndDate().birthday(0, 300));
         }
 
-        public static Arbitrary<Book> books() {
-            return BooksMother.books();
+        public static PublicationDate yearADPublicationDate() {
+            return PublicationDate.of(FAKER.number().numberBetween(0, now().getYear()));
         }
 
-        public static Arbitrary<Publisher> publishers() {
-            return PublishersMother.publishers();
+        public static PublicationDate yearBCPublicationDate() {
+            return PublicationDate.of(FAKER.number().numberBetween(-1000, -1));
         }
 
-        public static Arbitrary<Book> booksAuthoredWith(UUID authorId) {
-            return BooksMother.notableBooksOf(authorId);
+        public static Book book() {
+            return BooksMother.book();
         }
 
-        public static Arbitrary<String> languages() {
-            return Arbitraries.of("French", "English");
+        public static Publisher publisher() {
+            return PublishersMother.publisher();
         }
 
-        public static Arbitrary<String> summaries() {
-            return strings().alpha().numeric().withChars(" ,;.?!:-()[]{}&\"'àéèïöù").ofMinLength(30)
-                    .filter(s -> !s.isBlank());
+        public static String language() {
+            return switch (FAKER.random().nextInt(2)) {
+                case 0 -> "French";
+                case 1 -> "English";
+                default -> throw new IllegalStateException("Unable to generate language");
+            };
+        }
+
+        public static String summary() {
+            return summaryIn("English");
+        }
+
+        public static String summaryIn(String language) {
+            return faker(language).text().text(30, 500);
         }
     }
 
     public static class EditionBuilder {
-        private Edition edition = editions().sample();
+        private Edition edition = edition();
 
         public EditionBuilder isbn(String isbn) {
             edition = new Edition(isbn, edition.title(), edition.publicationDate(), edition.book(),

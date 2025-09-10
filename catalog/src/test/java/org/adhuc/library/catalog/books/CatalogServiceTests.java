@@ -2,6 +2,7 @@ package org.adhuc.library.catalog.books;
 
 import org.adhuc.library.catalog.books.internal.InMemoryBooksRepository;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -49,15 +50,21 @@ class CatalogServiceTests {
     @DisplayName("when 106 books are in the catalog")
     class BooksInCatalogTests {
 
+        private static final List<Book> BOOKS = new ArrayList<>();
+
+        @BeforeAll
+        static void initBooks() {
+            var booksInFrenchAndEnglish = books(80, "fr", Set.of("en"));
+            var booksOnlyInFrench = books(26, "fr", Set.of());
+            var booksOnlyInEnglish = books(5, "en", Set.of());
+            BOOKS.addAll(booksInFrenchAndEnglish);
+            BOOKS.addAll(booksOnlyInFrench);
+            BOOKS.addAll(booksOnlyInEnglish);
+        }
+
         @BeforeEach
         void setUp() {
-            var booksInFrenchAndEnglish = books("fr", Set.of("en")).list().ofSize(80).sample();
-            var booksOnlyInFrench = books("fr", Set.of()).list().ofSize(26).sample();
-            var booksOnlyInEnglish = books("en", Set.of()).list().ofSize(5).sample();
-            var allBooks = new ArrayList<>(booksInFrenchAndEnglish);
-            allBooks.addAll(booksOnlyInFrench);
-            allBooks.addAll(booksOnlyInEnglish);
-            booksRepository.saveAll(allBooks);
+            booksRepository.saveAll(BOOKS);
         }
 
         @ParameterizedTest
