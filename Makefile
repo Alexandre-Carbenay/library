@@ -1,16 +1,17 @@
 ENV_LOCATION=.
 PACT_LOCATION=./pact
 CATALOG_LOCATION=./catalog
+REFERENCING_LOCATION=./referencing
 WEBSITE_LOCATION=./website
 
 # Defined before inclusions to ensure it is the first target
-build: build-catalog build-website ## Build all the applications
+build: build-catalog build-referencing build-website ## Build all the applications
 
-include $(CATALOG_LOCATION)/catalog.mk $(WEBSITE_LOCATION)/website.mk common.mk
+include $(CATALOG_LOCATION)/catalog.mk $(REFERENCING_LOCATION)/referencing.mk $(WEBSITE_LOCATION)/website.mk common.mk
 
 acceptance: acceptance-catalog ## Run acceptance tests on all the applications
 
-clean: clean-catalog clean-website ## Clean the projects folders
+clean: clean-catalog clean-referencing clean-website ## Clean the projects folders
 
 start: start-website ## Start all the applications
 

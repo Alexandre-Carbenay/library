@@ -1,0 +1,34 @@
+name: Continuous Delivery pipeline for Referencing
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'referencing/**'
+      - '.github/workflows/cd-referencing.yml'
+      - '.github/workflows/cd-generic.yml'
+      - '!**/README.md'
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+    branches:
+      - 'main'
+    paths:
+      - 'referencing/**'
+      - '.github/workflows/cd-referencing.yml'
+      - '.github/workflows/cd-generic.yml'
+      - '!**/README.md'
+  workflow_dispatch:
+
+jobs:
+  pipeline:
+    uses: ./.github/workflows/cd-generic.yml
+    with:
+      app-name: 'referencing'
+      working-directory: './referencing'
+      github-package: 'library%2Freferencing'
+      docker-image: 'referencing'
+      run-acceptance: false
+    secrets: inherit

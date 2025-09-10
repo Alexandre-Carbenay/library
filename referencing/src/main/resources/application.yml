@@ -1,0 +1,37 @@
+server.http2.enabled: true
+
+spring:
+  application:
+    name: catalog
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+management:
+  endpoints:
+    web:
+      base-path: /management
+      exposure.include: '*'
+  endpoint:
+    health:
+      show-details: always
+  health:
+    probes.enabled: true
+    diskspace.enabled: false
+    livenessstate.enabled: true
+    readinessstate.enabled: true
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api/doc
+  swagger-ui:
+    url: /openapi.yml
+
+logging:
+  level:
+    org.adhuc.library.referencing: INFO
+    com.atlassian.oai.validator.springmvc: WARN
+    org.springframework:
+      boot:
+        autoconfigure.logging: ERROR
+        actuate: ERROR

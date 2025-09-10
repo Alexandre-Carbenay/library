@@ -1,0 +1,29 @@
+networks:
+  referencing:
+    name: referencing
+  observability:
+    name: observability
+
+services:
+  referencing:
+    container_name: referencing
+    image: referencing:latest
+    ports:
+      - 8080
+    environment:
+      SERVER_SSL_KEY_STORE_TYPE: PKCS12
+      SERVER_SSL_KEY_STORE: classpath:ssl/localhost.p12
+      SERVER_SSL_KEY_STORE_PASSWORD: password
+      SERVER_SSL_KEY_ALIAS: localhost
+      SERVER_SSL_KEY_STORE_ENABLED_PROTOCOLS: TLSv1.3
+      MANAGEMENT_TRACING_ENABLED: 'true'
+      MANAGEMENT_TRACING_SAMPLING_PROBABILITY: '1.0'
+      MANAGEMENT_ZIPKIN_TRACING_ENDPOINT: http://zipkin:9411/api/v2/spans
+    healthcheck:
+      test: wget --no-verbose --no-check-certificate --tries=1 --spider https://localhost:8080/management/health/liveness || exit 1
+      interval: 5s
+      timeout: 1s
+      retries: 3
+    networks:
+      - referencing
+      - observability
