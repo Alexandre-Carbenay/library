@@ -1,6 +1,7 @@
 package org.adhuc.library.catalog.books;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,6 +19,8 @@ import static org.adhuc.library.catalog.books.BooksMother.builder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@Tag("unit")
+@Tag("domain")
 @DisplayName("Book should")
 class BookTests {
 

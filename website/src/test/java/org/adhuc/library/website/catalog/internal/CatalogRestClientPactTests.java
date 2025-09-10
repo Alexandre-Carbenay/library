@@ -10,6 +10,7 @@ import au.com.dius.pact.core.model.annotations.Pact;
 import org.adhuc.library.website.catalog.Author;
 import org.adhuc.library.website.catalog.Book;
 import org.assertj.core.api.SoftAssertions;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -24,6 +25,8 @@ import static au.com.dius.pact.consumer.dsl.LambdaDsl.newJsonBody;
 import static au.com.dius.pact.consumer.dsl.PactDslJsonRootValue.stringMatcher;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("integration")
+@Tag("apiClient")
 @ExtendWith({PactConsumerTestExt.class, MockitoExtension.class})
 public class CatalogRestClientPactTests {
 

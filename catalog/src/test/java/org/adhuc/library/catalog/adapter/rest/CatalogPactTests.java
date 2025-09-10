@@ -14,6 +14,7 @@ import org.adhuc.library.catalog.editions.PublicationDate;
 import org.adhuc.library.catalog.editions.Publisher;
 import org.apache.hc.core5.http.HttpRequest;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -32,6 +33,8 @@ import static java.util.Locale.ENGLISH;
 import static java.util.Locale.FRENCH;
 import static org.mockito.Mockito.when;
 
+@Tag("integration")
+@Tag("restApi")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Provider("library-catalog")
 @PactBroker(url = "http://localhost:9292")

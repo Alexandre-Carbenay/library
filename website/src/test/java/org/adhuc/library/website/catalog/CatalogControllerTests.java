@@ -6,6 +6,7 @@ import org.adhuc.library.website.support.pagination.NavigablePageImpl;
 import org.adhuc.library.website.support.pagination.NavigablePageImpl.Link;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -38,6 +39,8 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Tag("integration")
+@Tag("mvc")
 @WebMvcTest(controllers = CatalogController.class)
 @DisplayName("Catalog controller should")
 class CatalogControllerTests {

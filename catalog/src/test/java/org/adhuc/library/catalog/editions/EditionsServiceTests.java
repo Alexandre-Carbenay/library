@@ -16,6 +16,8 @@ import java.util.stream.Stream;
 import static org.adhuc.library.catalog.editions.EditionsMother.Real.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
+@Tag("useCase")
 @DisplayName("Editions service should")
 class EditionsServiceTests {
 

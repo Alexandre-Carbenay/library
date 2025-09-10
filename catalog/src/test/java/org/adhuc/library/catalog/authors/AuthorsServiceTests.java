@@ -13,6 +13,8 @@ import java.util.stream.Stream;
 import static org.adhuc.library.catalog.authors.AuthorsMother.authors;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
+@Tag("useCase")
 @DisplayName("Authors service should")
 class AuthorsServiceTests {
 
