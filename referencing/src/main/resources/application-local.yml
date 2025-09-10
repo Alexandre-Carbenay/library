@@ -1,0 +1,16 @@
+server:
+  ssl:
+    key-store-type: PKCS12
+    key-store: classpath:ssl/localhost.p12
+    key-store-password: password
+    key-alias: localhost
+    enabled-protocols: TLSv1.3
+
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans

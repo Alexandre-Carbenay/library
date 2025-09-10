@@ -1,0 +1,4 @@
+services:
+  referencing:
+    ports:
+      - ${REFERENCING_API_PORT:-8081}:8080

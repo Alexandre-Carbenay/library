@@ -1,0 +1,21 @@
+name: Closed PR pipeline for Referencing
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - 'main'
+    paths:
+      - 'referencing/**'
+      - '.github/workflows/cd-referencing.yml'
+      - '.github/workflows/cd-generic.yml'
+      - '!**/README.md'
+  workflow_dispatch:
+
+jobs:
+  pr-closed:
+    uses: ./.github/workflows/pr-closed-generic.yml
+    with:
+      app-name: 'referencing'
+      github-package: 'library%2Freferencing'
+    secrets: inherit

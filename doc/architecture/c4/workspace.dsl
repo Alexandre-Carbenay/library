@@ -14,13 +14,18 @@ workspace Library {
             catalog = container "Catalog" "Exposes the library catalog" {
                 tags "Service" "Library"
             }
+            referencing = container "Referencing" "Provides services for books & editions referencing" {
+                tags "Service" "Library"
+            }
             tags "Library"
         }
 
-        librarian -> bo "Manages the library catalog"
-        librarian -> bo "Manages the books borrowings"
-        member -> ui "Borrows books from the library"
-        ui -> catalog "Retrieves books from the catalog"
+        librarian -> bo "Manages the library catalog" "HTTP" "sync"
+        librarian -> bo "Manages the books borrowings" "HTTP" "sync"
+        member -> ui "Borrows books from the library" "HTTP" "sync"
+        ui -> catalog "Retrieves books from the catalog" "HTTP" "sync"
+        bo -> referencing "Uses for books & editions referencing" "HTTP" "sync"
+        referencing -> catalog "Publishes information about books & editions" "PubSub" "async"
     }
 
     views {
@@ -47,6 +52,12 @@ workspace Library {
             }
             element "Service" {
                 shape Hexagon
+            }
+            relationship "sync" {
+                style solid
+            }
+            relationship "async" {
+                style dotted
             }
         }
     }
