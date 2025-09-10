@@ -1,57 +1,56 @@
 package org.adhuc.library.catalog.books;
 
-import net.jqwik.api.Arbitraries;
-import net.jqwik.api.Arbitrary;
-import net.jqwik.api.Combinators;
+import net.datafaker.Faker;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.authors.AuthorsMother;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toMap;
-import static net.jqwik.api.Arbitraries.strings;
+import static java.util.stream.Collectors.toSet;
 import static org.adhuc.library.catalog.authors.AuthorsMother.Real.*;
 import static org.adhuc.library.catalog.books.BooksMother.Books.*;
 
 public class BooksMother {
 
-    public static Arbitrary<Book> books() {
-        return books(Books.authors());
+    public static Book book() {
+        var originalLanguage = language();
+        return new Book(id(), authors(), originalLanguage, detailsSets(originalLanguage));
     }
 
-    public static Arbitrary<Book> notableBooksOf(UUID authorId) {
-        return books(Books.authoredWith(authorId));
+    public static List<Book> notableBooksOf(UUID authorId) {
+        var originalLanguage = Books.language();
+        var otherLanguages = Books.otherLanguages(originalLanguage);
+
+        return notableBooksOf(authorId, originalLanguage, otherLanguages);
     }
 
-    public static Arbitrary<Book> notableBooksOf(UUID authorId, String originalLanguage, Set<String> languages) {
-        return Combinators.combine(
-                Books.ids(),
-                authoredWith(authorId),
-                Books.detailsSets(originalLanguage, languages)
-        ).as((id, authors, details) -> new Book(id, authors, originalLanguage, details));
+    public static List<Book> notableBooksOf(UUID authorId, String originalLanguage, Collection<String> otherLanguages) {
+        var numberOfBooks = Books.FAKER.random().nextInt(1, 10);
+        return IntStream.range(0, numberOfBooks)
+                .mapToObj(_ -> notableBookOf(authorId, originalLanguage, otherLanguages))
+                .toList();
     }
 
-    public static Arbitrary<Book> books(String originalLanguage, Set<String> languages) {
-        return Combinators.combine(
-                Books.ids(),
-                Books.authors(),
-                Books.detailsSets(originalLanguage, languages)
-        ).as((id, authors, details) -> new Book(id, authors, originalLanguage, details));
+    public static Book notableBookOf(UUID authorId, String originalLanguage, Collection<String> otherLanguages) {
+        return new Book(
+                Books.id(),
+                Books.authoredWith(authorId),
+                originalLanguage,
+                Books.detailsSets(originalLanguage, Set.copyOf(otherLanguages))
+        );
     }
 
-    private static Arbitrary<Book> books(Arbitrary<Set<Author>> authorsArbitrary) {
-        return Books.languages()
-                .flatMap(originalLanguage -> Combinators.combine(
-                                Books.ids(),
-                                authorsArbitrary,
-                                Books.detailsSets(originalLanguage)
-                        ).as((id, authors, details) -> new Book(id, authors, originalLanguage, details))
-                );
+    public static List<Book> books(int numberOfBooks, String originalLanguage, Collection<String> languages) {
+        return IntStream.range(0, numberOfBooks)
+                .mapToObj(_ -> builder()
+                        .originalLanguage(originalLanguage)
+                        .details(detailsSets(originalLanguage, Set.copyOf(languages)))
+                        .build()
+                )
+                .toList();
     }
 
     public static BookBuilder builder() {
@@ -63,112 +62,92 @@ public class BooksMother {
     }
 
     public static final class Books {
-        public static Arbitrary<UUID> ids() {
-            return Arbitraries.create(UUID::randomUUID);
+        private static final Faker FAKER = new Faker();
+        private static final List<String> LANGUAGES = List.of("fr", "en", "de", "it");
+
+        public static UUID id() {
+            return UUID.randomUUID();
         }
 
-        public static Arbitrary<Set<Author>> authors() {
-            return AuthorsMother.authors().set().ofMinSize(1).ofMaxSize(4);
+        public static Set<Author> authors() {
+            var numberOfAuthors = FAKER.random().nextInt(1, 3);
+            return IntStream.range(0, numberOfAuthors)
+                    .mapToObj(_ -> AuthorsMother.author())
+                    .collect(toSet());
         }
 
-        public static Arbitrary<Set<Author>> authoredWith(UUID authorId) {
-            return Combinators.combine(
-                    Arbitraries.create(() -> AuthorsMother.builder().id(authorId).build()),
-                    AuthorsMother.authors().set().ofMinSize(0).ofMaxSize(3)
-            ).as((author, others) -> {
-                others.add(author);
-                return others;
-            });
+        public static Set<Author> authoredWith(UUID authorId) {
+            var author = AuthorsMother.builder().id(authorId).build();
+            var numberOfOtherAuthors = FAKER.random().nextInt(3);
+            var others = AuthorsMother.authors(numberOfOtherAuthors);
+            var authors = new HashSet<>(others);
+            authors.add(author);
+            return authors;
         }
 
-        public static Arbitrary<String> languages() {
-            return Arbitraries.of("fr", "en", "de", "it");
+        public static String language() {
+            return LANGUAGES.get(FAKER.random().nextInt(4));
         }
 
-        public static Arbitrary<String> otherLanguages(String language) {
-            return languages().filter(other -> !other.equals(language));
+        public static List<String> otherLanguages(String language) {
+            var otherLanguages = LANGUAGES.stream().filter(other -> !other.equals(language));
+            var maximumOtherLanguages = LANGUAGES.size() - 1;
+            var numberOfLanguages = FAKER.random().nextInt(1, maximumOtherLanguages);
+            return otherLanguages.limit(numberOfLanguages).toList();
         }
 
-        public static Arbitrary<String> otherLanguages(Set<String> languages) {
-            return languages().filter(other -> !languages.contains(other));
+        public static Set<LocalizedDetails> detailsSets(String originalLanguage) {
+            return detailsSets(originalLanguage, Set.copyOf(otherLanguages(originalLanguage)));
         }
 
-        public static Arbitrary<Set<LocalizedDetails>> detailsSets(String originalLanguage) {
-            var originalDetails = details(originalLanguage).sample();
-            var otherDetails = otherLanguages(originalLanguage)
-                    .set().ofMinSize(0).ofMaxSize(2).uniqueElements()
-                    .sample()
-                    .stream()
-                    .map(language -> details(language).sample())
+        public static Set<LocalizedDetails> detailsSets(String originalLanguage, Set<String> otherLanguages) {
+            var originalDetails = details(originalLanguage);
+            var otherDetails = otherLanguages.stream()
+                    .map(Books::details)
                     .toList();
             var details = new HashSet<>(otherDetails);
             details.add(originalDetails);
-            return Arbitraries.just(details);
+            return details;
         }
 
-        public static Arbitrary<Set<LocalizedDetails>> detailsSets(String originalLanguage, Set<String> languages) {
-            var originalDetails = details(originalLanguage).sample();
-            var otherDetails = Arbitraries.of(languages).filter(language -> !language.equals(originalLanguage))
-                    .allValues()
-                    .orElse(Stream.of())
-                    .map(language -> details(language).sample())
-                    .toList();
-            var details = new HashSet<>(otherDetails);
-            details.add(originalDetails);
-            return Arbitraries.just(details);
+        public static LocalizedDetails details(String language) {
+            return new LocalizedDetails(language, title(), description(), externalLinks());
         }
 
-        public static Arbitrary<LocalizedDetails> details(String language) {
-            return Combinators.combine(
-                    titles(),
-                    descriptions(),
-                    externalLinksSets()
-            ).as((title, description, externalLinks) -> new LocalizedDetails(language, title, description, externalLinks));
+        public static String title() {
+            return FAKER.book().title();
         }
 
-        public static Arbitrary<String> titles() {
-            return strings().alpha().withChars(' ').ofMinLength(3).ofMaxLength(100)
-                    .filter(s -> !s.isBlank());
+        public static String description() {
+            return FAKER.text().text(30, 1000);
         }
 
-        public static Arbitrary<String> descriptions() {
-            return strings().alpha().numeric().withChars(" ,;.?!:-()[]{}&'àéèïöù").ofMinLength(30)
-                    .filter(s -> !s.isBlank());
+        public static Set<ExternalLink> externalLinks() {
+            var links = new HashSet<ExternalLink>();
+            if (FAKER.bool().bool()) {
+                links.add(wikipediaLink());
+            }
+            if (FAKER.bool().bool()) {
+                links.add(otherLink());
+            }
+            return links;
         }
 
-        public static Arbitrary<Set<ExternalLink>> externalLinksSets() {
-            return Combinators.combine(
-                    wikipediaLinks().set().ofMinSize(0).ofMaxSize(1),
-                    otherLinks().set().ofMinSize(0).ofMaxSize(1)
-            ).as((wikipediaLink, otherLink) -> {
-                var links = new HashSet<>(wikipediaLink);
-                links.addAll(otherLink);
-                return links;
-            });
+        public static ExternalLink wikipediaLink() {
+            return links("wikipedia");
         }
 
-        public static Arbitrary<ExternalLink> externalLinks() {
-            return Arbitraries.oneOf(wikipediaLinks(), otherLinks());
+        public static ExternalLink otherLink() {
+            return links("other");
         }
 
-        public static Arbitrary<ExternalLink> wikipediaLinks() {
-            return links("wikipedia", "https://wikipedia.org/");
-        }
-
-        public static Arbitrary<ExternalLink> otherLinks() {
-            return links("other", "https://example.com/");
-        }
-
-        private static Arbitrary<ExternalLink> links(String source, String baseUrl) {
-            return strings().alpha().withChars("-_/").ofMinLength(1).ofMaxLength(30)
-                    .flatMap(linkValue -> Arbitraries.of(
-                            new ExternalLink(source, baseUrl + linkValue)
-                    ));
+        private static ExternalLink links(String source) {
+            return new ExternalLink(source, FAKER.internet().url());
         }
     }
 
     public static class BookBuilder {
-        private Book book = books().sample();
+        private Book book = book();
 
         public BookBuilder id(UUID id) {
             book = new Book(id, book.authors(), book.originalLanguage(), book.details());
@@ -181,7 +160,12 @@ public class BooksMother {
         }
 
         public BookBuilder originalLanguage(String originalLanguage) {
-            book = new Book(book.id(), book.authors(), originalLanguage, Books.detailsSets(originalLanguage).sample());
+            book = new Book(book.id(), book.authors(), originalLanguage, Books.detailsSets(originalLanguage));
+            return this;
+        }
+
+        public BookBuilder details(LocalizedDetails localizedDetail) {
+            book = new Book(book.id(), book.authors(), book.originalLanguage(), Set.of(localizedDetail));
             return this;
         }
 
@@ -202,10 +186,10 @@ public class BooksMother {
         private Map<String, ExternalLink> links;
 
         private LocalizedDetailsBuilder() {
-            language = Books.languages().sample();
-            title = Books.titles().sample();
-            description = Books.descriptions().sample();
-            links = prepareLinks(externalLinksSets().sample());
+            language = Books.language();
+            title = Books.title();
+            description = Books.description();
+            links = prepareLinks(externalLinks());
         }
 
         public LocalizedDetailsBuilder language(String language) {
@@ -233,7 +217,7 @@ public class BooksMother {
         }
 
         public LocalizedDetailsBuilder withWikipediaLink() {
-            return additionalLink(wikipediaLinks().sample());
+            return additionalLink(wikipediaLink());
         }
 
         public LocalizedDetailsBuilder withoutWikipediaLink() {

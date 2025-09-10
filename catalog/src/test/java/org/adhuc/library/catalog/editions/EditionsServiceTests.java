@@ -1,13 +1,12 @@
 package org.adhuc.library.catalog.editions;
 
-import net.jqwik.api.Arbitraries;
 import org.adhuc.library.catalog.books.BooksMother;
 import org.adhuc.library.catalog.books.BooksMother.Books;
+import org.adhuc.library.catalog.editions.EditionsMother.Editions;
 import org.adhuc.library.catalog.editions.internal.InMemoryEditionsRepository;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
@@ -29,47 +28,44 @@ class EditionsServiceTests {
         service = new EditionsService(editionsRepository);
     }
 
+    @Test
+    @DisplayName("not find any edition with unknown ISBN")
+    void unknownIsbn() {
+        assertThat(service.getEdition(L_ETRANGER.isbn())).isEmpty();
+    }
+
     @Nested
     @DisplayName("when some editions are in the catalog")
     class EditionsInCatalogTests {
 
-        private static List<Edition> EDITIONS;
-
-        @BeforeAll
-        static void initCatalog() {
-            EDITIONS = List.of(
-                    L_ETRANGER,
-                    LA_PESTE,
-                    LA_CHUTE,
-                    MADAME_BOVARY,
-                    SALAMMBO,
-                    ANNA_KARENINE,
-                    LA_GUERRE_ET_LA_PAIX_1,
-                    LA_GUERRE_ET_LA_PAIX_2,
-                    LES_COSAQUES,
-                    CHER_CONNARD,
-                    BAISE_MOI,
-                    APOCALYPSE_BEBE,
-                    ASTERIX_LE_GAULOIS,
-                    LA_SERPE_D_OR,
-                    ASTERIX_ET_CLEOPATRE,
-                    LE_PETIT_NICOLAS
-            );
-        }
+        private static final List<Edition> EDITIONS = List.of(
+                L_ETRANGER,
+                LA_PESTE,
+                LA_CHUTE,
+                MADAME_BOVARY,
+                SALAMMBO,
+                ANNA_KARENINE,
+                LA_GUERRE_ET_LA_PAIX_1,
+                LA_GUERRE_ET_LA_PAIX_2,
+                LES_COSAQUES,
+                CHER_CONNARD,
+                BAISE_MOI,
+                APOCALYPSE_BEBE,
+                ASTERIX_LE_GAULOIS,
+                LA_SERPE_D_OR,
+                ASTERIX_ET_CLEOPATRE,
+                LE_PETIT_NICOLAS
+        );
 
         @BeforeEach
         void setUp() {
             editionsRepository.saveAll(EDITIONS);
         }
 
-        @ParameterizedTest
-        @CsvSource({
-                "9782081275232",
-                "9782267046892",
-                "9782072730672"
-        })
+        @Test
         @DisplayName("not find any edition with unknown ISBN")
-        void unknownIsbn(String isbn) {
+        void unknownIsbn() {
+            var isbn = Editions.isbn();
             assertThat(service.getEdition(isbn)).isEmpty();
         }
 
@@ -81,21 +77,14 @@ class EditionsServiceTests {
         }
 
         private static Stream<Arguments> knownIsbnsProvider() {
-            return Arbitraries.of(EDITIONS).map(Arguments::of).sampleStream().limit(3);
+            return EDITIONS.stream().map(Arguments::of);
         }
 
-        @ParameterizedTest
-        @MethodSource("unknownBookEditionsProvider")
+        @Test
         @DisplayName("not find any editions for unknown book")
-        void unknownBookEditions(UUID bookId) {
+        void unknownBookEditions() {
+            var bookId = Books.id();
             assertThat(service.getBookEditions(bookId)).isEmpty();
-        }
-
-        private static Stream<Arguments> unknownBookEditionsProvider() {
-            return Books.ids()
-                    .map(Arguments::of)
-                    .sampleStream()
-                    .limit(3);
         }
 
         @ParameterizedTest

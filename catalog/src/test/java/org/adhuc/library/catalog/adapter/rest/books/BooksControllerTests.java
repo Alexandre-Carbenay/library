@@ -31,8 +31,8 @@ import static org.adhuc.library.catalog.adapter.rest.editions.EditionsAssertions
 import static org.adhuc.library.catalog.books.BooksMother.builder;
 import static org.adhuc.library.catalog.books.BooksMother.detailsBuilder;
 import static org.adhuc.library.catalog.editions.EditionsMother.editionsOf;
-import static org.hamcrest.Matchers.startsWith;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.startsWith;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
@@ -40,7 +40,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_LANGUAGE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SuppressWarnings("preview")
+@SuppressWarnings({"preview", "NotNullFieldNotInitialized"})
 @WebMvcTest(controllers = {
         BooksController.class,
         BookDetailsModelAssembler.class,
@@ -94,10 +94,14 @@ class BooksControllerTests {
         verifyNoInteractions(editionsService);
     }
 
-    @ParameterizedTest(name = "[{index}] {0}")
-    @MethodSource("knownBookWithoutEditionProvider")
+    @Test
     @DisplayName("provide the book details corresponding to the ID, without any edition")
-    void knownBookIdWithoutAcceptLanguage(String displayName, Book book) throws Exception {
+    void knownBookIdWithoutAcceptLanguage() throws Exception {
+        var book = builder()
+                .originalLanguage("fr")
+                .details(detailsBuilder().language("fr").withWikipediaLink().build())
+                .build();
+
         when(booksService.getBook(any())).thenReturn(Optional.of(book));
         when(editionsService.getBookEditions(any())).thenReturn(List.of());
 
@@ -115,20 +119,6 @@ class BooksControllerTests {
 
         verify(booksService).getBook(book.id());
         verify(editionsService).getBookEditions(book.id());
-    }
-
-    private static Stream<Arguments> knownBookWithoutEditionProvider() {
-        return Stream.of(
-                Arguments.of(
-                        "Known book without edition",
-                        builder()
-                                .originalLanguage("fr")
-                                .details(Set.of(
-                                        detailsBuilder().language("fr").withWikipediaLink().build()
-                                ))
-                                .build()
-                )
-        );
     }
 
     @ParameterizedTest(name = "[{index}] {0}")
@@ -161,18 +151,10 @@ class BooksControllerTests {
     private static Stream<Arguments> knownBookSingleLanguageProvider() {
         var book = builder()
                 .originalLanguage("fr")
-                .details(Set.of(
-                        detailsBuilder().language("fr").withWikipediaLink().build()
-                ))
+                .details(detailsBuilder().language("fr").withWikipediaLink().build())
                 .build();
-        return Stream.of(
-                Arguments.of(
-                        "Known book with only one language",
-                        book,
-                        editionsOf(book).list().ofMinSize(1).ofMaxSize(10).sample(),
-                        "fr"
-                )
-        );
+        var editions = editionsOf(book);
+        return Stream.of(Arguments.of("Known book with only one language", book, editions, "fr"));
     }
 
     private static Stream<Arguments> knownBookMultipleLanguagesProvider() {
@@ -183,14 +165,8 @@ class BooksControllerTests {
                         detailsBuilder().language("it").withWikipediaLink().build()
                 ))
                 .build();
-        return Stream.of(
-                Arguments.of(
-                        "Known book with multiple languages",
-                        book,
-                        editionsOf(book).list().ofMinSize(1).ofMaxSize(10).sample(),
-                        "it"
-                )
-        );
+        var editions = editionsOf(book);
+        return Stream.of(Arguments.of("Known book with multiple languages", book, editions, "it"));
     }
 
     @ParameterizedTest(name = "[{index}] {0}")
@@ -227,19 +203,10 @@ class BooksControllerTests {
     private static Stream<Arguments> knownBookSingleOriginalLanguageProvider() {
         var book = builder()
                 .originalLanguage("fr")
-                .details(Set.of(
-                        detailsBuilder().language("fr").withWikipediaLink().build()
-                ))
+                .details(detailsBuilder().language("fr").withWikipediaLink().build())
                 .build();
-        return Stream.of(
-                Arguments.of(
-                        "Known book with only one language, accepting the original language",
-                        book,
-                        editionsOf(book).list().ofMinSize(1).ofMaxSize(10).sample(),
-                        "fr",
-                        "fr"
-                )
-        );
+        var editions = editionsOf(book);
+        return Stream.of(Arguments.of("Known book with only one language, accepting the original language", book, editions, "fr", "fr"));
     }
 
     private static Stream<Arguments> knownBookMultipleOriginalLanguageProvider() {
@@ -250,15 +217,8 @@ class BooksControllerTests {
                         detailsBuilder().language("it").withWikipediaLink().build()
                 ))
                 .build();
-        return Stream.of(
-                Arguments.of(
-                        "Known book with multiple languages, accepting the original language",
-                        book,
-                        editionsOf(book).list().ofMinSize(1).ofMaxSize(10).sample(),
-                        "fr",
-                        "fr"
-                )
-        );
+        var editions = editionsOf(book);
+        return Stream.of(Arguments.of("Known book with multiple languages, accepting the original language", book, editions, "fr", "fr"));
     }
 
     private static Stream<Arguments> knownBookMultipleOtherLanguageProvider() {
@@ -269,15 +229,8 @@ class BooksControllerTests {
                         detailsBuilder().language("it").withWikipediaLink().build()
                 ))
                 .build();
-        return Stream.of(
-                Arguments.of(
-                        "Known book with multiple languages, accepting a language different from the original one",
-                        book,
-                        editionsOf(book).list().ofMinSize(1).ofMaxSize(10).sample(),
-                        "fr",
-                        "fr"
-                )
-        );
+        var editions = editionsOf(book);
+        return Stream.of(Arguments.of("Known book with multiple languages, accepting a language different from the original one", book, editions, "fr", "fr"));
     }
 
     private static Stream<Arguments> knownBookUnknownLanguageProvider() {
@@ -288,15 +241,8 @@ class BooksControllerTests {
                         detailsBuilder().language("it").withWikipediaLink().build()
                 ))
                 .build();
-        return Stream.of(
-                Arguments.of(
-                        "Known book with multiple languages, accepting an unknown language",
-                        book,
-                        editionsOf(book).list().ofMinSize(1).ofMaxSize(10).sample(),
-                        "de",
-                        "it"
-                )
-        );
+        var editions = editionsOf(book);
+        return Stream.of(Arguments.of("Known book with multiple languages, accepting an unknown language", book, editions, "de", "it"));
     }
 
     private static Stream<Arguments> knownBookMultipleLanguagesWithWeightProvider() {
@@ -307,6 +253,7 @@ class BooksControllerTests {
                         detailsBuilder().language("it").withWikipediaLink().build()
                 ))
                 .build();
+        var editions1 = editionsOf(book1);
         var book2 = builder()
                 .originalLanguage("fr")
                 .details(Set.of(
@@ -314,21 +261,10 @@ class BooksControllerTests {
                         detailsBuilder().language("it").withWikipediaLink().build()
                 ))
                 .build();
+        var editions2 = editionsOf(book2);
         return Stream.of(
-                Arguments.of(
-                        "Known book with multiple languages, accepting multiple languages with different weights",
-                        book1,
-                        editionsOf(book1).list().ofMinSize(1).ofMaxSize(10).sample(),
-                        "fr, it;q=0.5",
-                        "fr"
-                ),
-                Arguments.of(
-                        "Known book with multiple languages, accepting multiple languages with different weights",
-                        book2,
-                        editionsOf(book2).list().ofMinSize(1).ofMaxSize(10).sample(),
-                        "de, fr;q=0.4, it;q=0.6",
-                        "it"
-                )
+                Arguments.of("Known book with multiple languages, accepting multiple languages with different weights", book1, editions1, "fr, it;q=0.5", "fr"),
+                Arguments.of("Known book with multiple languages, accepting multiple languages with different weights", book2, editions2, "de, fr;q=0.4, it;q=0.6", "it")
         );
     }
 
@@ -343,7 +279,7 @@ class BooksControllerTests {
                         .header(ACCEPT_LANGUAGE, acceptLanguage)
                 )
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("_links.wikipedia.href", equalTo(book.wikipediaLinkIn(expectedLanguage).get().value())));
+                .andExpect(jsonPath("_links.wikipedia.href", equalTo(book.wikipediaLinkIn(expectedLanguage).orElseThrow().value())));
 
         verify(booksService).getBook(book.id());
     }
@@ -392,7 +328,7 @@ class BooksControllerTests {
     @ParameterizedTest(name = "[{index}] {0}")
     @MethodSource("knownBookWithoutWikipediaLinkProvider")
     @DisplayName("provide the book details corresponding to the ID without wikipedia link when not available")
-    void knownBookWithoutWikipediaLink(String displayName, Book book, String acceptLanguage, String expectedLanguage) throws Exception {
+    void knownBookWithoutWikipediaLink(String displayName, Book book, String acceptLanguage) throws Exception {
         when(booksService.getBook(any())).thenReturn(Optional.of(book));
 
         mvc.perform(get("/api/v1/books/{id}", book.id())

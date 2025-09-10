@@ -1,17 +1,16 @@
 package org.adhuc.library.catalog.editions;
 
-import net.jqwik.api.Arbitraries;
-import net.jqwik.api.Arbitrary;
-import net.jqwik.api.Combinators;
+import net.datafaker.Faker;
 
 import java.util.UUID;
 
-import static net.jqwik.api.Arbitraries.strings;
-
 public final class PublishersMother {
 
-    public static Arbitrary<Publisher> publishers() {
-        return Combinators.combine(Publishers.ids(), Publishers.names()).as(Publisher::new);
+    public static Publisher publisher() {
+        return new Publisher(
+                Publishers.id(),
+                Publishers.name()
+        );
     }
 
     public static PublisherBuilder builder() {
@@ -19,18 +18,19 @@ public final class PublishersMother {
     }
 
     public static final class Publishers {
-        public static Arbitrary<UUID> ids() {
-            return Arbitraries.create(UUID::randomUUID);
+        private static final Faker FAKER = new Faker();
+
+        public static UUID id() {
+            return UUID.randomUUID();
         }
 
-        public static Arbitrary<String> names() {
-            return strings().alpha().withChars(' ').ofMinLength(3).ofMaxLength(100)
-                    .filter(s -> !s.isBlank());
+        public static String name() {
+            return FAKER.book().publisher();
         }
     }
 
     public static class PublisherBuilder {
-        private Publisher publisher = publishers().sample();
+        private Publisher publisher = publisher();
 
         public PublisherBuilder id(UUID id) {
             publisher = new Publisher(id, publisher.name());

@@ -1,11 +1,11 @@
 package org.adhuc.library.catalog.adapter.rest.authors;
 
-import net.jqwik.api.Combinators;
 import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.authors.AuthorsService;
 import org.adhuc.library.catalog.books.Book;
+import org.adhuc.library.catalog.books.BooksMother.Books;
 import org.adhuc.library.catalog.books.BooksService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +22,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -30,10 +31,8 @@ import static org.adhuc.library.catalog.adapter.rest.books.BooksAssertions.asser
 import static org.adhuc.library.catalog.authors.AuthorsMother.Authors.*;
 import static org.adhuc.library.catalog.authors.AuthorsMother.Real.ALBERT_CAMUS;
 import static org.adhuc.library.catalog.authors.AuthorsMother.Real.GUSTAVE_FLAUBERT;
-import static org.adhuc.library.catalog.authors.AuthorsMother.authors;
+import static org.adhuc.library.catalog.authors.AuthorsMother.author;
 import static org.adhuc.library.catalog.authors.AuthorsMother.builder;
-import static org.adhuc.library.catalog.books.BooksMother.Books.languages;
-import static org.adhuc.library.catalog.books.BooksMother.Books.otherLanguages;
 import static org.adhuc.library.catalog.books.BooksMother.Real.*;
 import static org.adhuc.library.catalog.books.BooksMother.notableBooksOf;
 import static org.hamcrest.Matchers.*;
@@ -42,6 +41,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@SuppressWarnings({"preview", "NotNullFieldNotInitialized"})
 @WebMvcTest(controllers = {
         AuthorsController.class,
         AuthorDetailsModelAssembler.class,
@@ -92,49 +92,49 @@ class AuthorsControllerTests {
                 ));
     }
 
-    @ParameterizedTest
-    @MethodSource({
-            "aliveAuthorProvider",
-            "deadAuthorProvider"
-    })
-    @DisplayName("provide the author details corresponding to the ID")
-    void knownAuthorId(Author author) throws Exception {
+    @Test
+    @DisplayName("provide the alive author details corresponding to the ID")
+    void knownAliveAuthorId() throws Exception {
+        var author = builder().dateOfBirth(aliveDateOfBirth()).dateOfDeath(null).build();
+
         when(authorsService.getAuthor(Mockito.any())).thenReturn(Optional.of(author));
 
-        var result = mvc.perform(get("/api/v1/authors/{id}", author.id()).accept("application/hal+json"))
+        mvc.perform(get("/api/v1/authors/{id}", author.id()).accept("application/hal+json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id", equalTo(author.id().toString())))
                 .andExpect(jsonPath("name", equalTo(author.name())))
                 .andExpect(jsonPath("date_of_birth", equalTo(author.dateOfBirth().toString())))
-                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors/" + author.id())));
-        if (author.dateOfDeath() != null) {
-            result.andExpect(jsonPath("date_of_death", equalTo(author.dateOfDeath().toString())));
-        } else {
-            result.andExpect(jsonPath("date_of_death").doesNotExist());
-        }
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors/" + author.id())))
+                .andExpect(jsonPath("date_of_death").doesNotExist());
 
         verify(authorsService).getAuthor(author.id());
     }
 
-    static Stream<Arguments> aliveAuthorProvider() {
-        return aliveDatesOfBirth()
-                .map(dateOfBirth -> builder().dateOfBirth(dateOfBirth).dateOfDeath(null).build())
-                .map(author -> Arguments.of(author, List.of()))
-                .sampleStream().limit(3);
+    @Test
+    @DisplayName("provide the dead author details corresponding to the ID")
+    void knownDeadAuthorId() throws Exception {
+        var dateOfBirth = dateOfBirth();
+        var author = builder().dateOfBirth(dateOfBirth()).dateOfDeath(deadDateOfDeath(dateOfBirth)).build();
+
+        when(authorsService.getAuthor(Mockito.any())).thenReturn(Optional.of(author));
+
+        mvc.perform(get("/api/v1/authors/{id}", author.id()).accept("application/hal+json"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id", equalTo(author.id().toString())))
+                .andExpect(jsonPath("name", equalTo(author.name())))
+                .andExpect(jsonPath("date_of_birth", equalTo(author.dateOfBirth().toString())))
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors/" + author.id())))
+                .andExpect(jsonPath("date_of_death", equalTo(Objects.requireNonNull(author.dateOfDeath()).toString())));
+
+        verify(authorsService).getAuthor(author.id());
     }
 
-    static Stream<Arguments> deadAuthorProvider() {
-        return deadDatesOfBirth()
-                .flatMap(dateOfBirth -> deadDatesOfDeath(dateOfBirth)
-                        .map(dateOfDeath -> builder().dateOfBirth(dateOfBirth).dateOfDeath(dateOfDeath).build()))
-                .map(author -> Arguments.of(author, List.of()))
-                .sampleStream().limit(3);
-    }
-
-    @ParameterizedTest
-    @MethodSource("authorWithNotableBooksProvider")
+    @Test
     @DisplayName("provide the author details with expected notable books")
-    void knownAuthorsNotableBooksDefaultLanguage(Author author, List<Book> notableBooks) throws Exception {
+    void knownAuthorNotableBooksDefaultLanguage() throws Exception {
+        var author = author();
+        var notableBooks = notableBooksOf(author.id());
+
         when(authorsService.getAuthor(Mockito.any())).thenReturn(Optional.of(author));
         when(booksService.getNotableBooks(author.id())).thenReturn(notableBooks);
 
@@ -147,42 +147,28 @@ class AuthorsControllerTests {
         verify(booksService).getNotableBooks(author.id());
     }
 
-    static Stream<Arguments> authorWithNotableBooksProvider() {
-        return authors().flatMap(author -> notableBooksOf(author.id()).list().ofMinSize(1).ofMaxSize(10)
-                        .map(notableBooks -> Arguments.of(author, notableBooks))
-                )
-                .sampleStream().limit(3);
-    }
-
-    @ParameterizedTest
-    @MethodSource("authorWithNotableBooksInLanguageProvider")
+    @Test
     @DisplayName("provide the author details with expected notable books")
-    void knownAuthorsNotableBooksInLanguage(Author author, List<Book> notableBooks, String language) throws Exception {
+    void knownAuthorNotableBooksInLanguage() throws Exception {
+        var author = author();
+        var originalLanguage = Books.language();
+        var otherLanguages = Books.otherLanguages(originalLanguage);
+        var notableBooks = notableBooksOf(author.id(), originalLanguage, otherLanguages);
+
         when(authorsService.getAuthor(Mockito.any())).thenReturn(Optional.of(author));
         when(booksService.getNotableBooks(author.id())).thenReturn(notableBooks);
 
         var result = mvc.perform(get("/api/v1/authors/{id}", author.id())
                         .accept("application/hal+json")
-                        .header("Accept-Language", language)
+                        .header("Accept-Language", originalLanguage)
                 )
                 .andExpect(status().isOk())
-                .andExpect(header().string("Content-Language", language));
+                .andExpect(header().string("Content-Language", originalLanguage));
 
-        assertResponseContainsAllEmbeddedBooks(result, "notable_books", notableBooks, language);
+        assertResponseContainsAllEmbeddedBooks(result, "notable_books", notableBooks, originalLanguage);
 
         verify(authorsService).getAuthor(author.id());
         verify(booksService).getNotableBooks(author.id());
-    }
-
-    static Stream<Arguments> authorWithNotableBooksInLanguageProvider() {
-        return Combinators.combine(authors(), languages())
-                .flatAs((author, language) -> otherLanguages(language).set()
-                        .flatMap(otherLanguages -> notableBooksOf(author.id(), language, otherLanguages)
-                                .list().ofMinSize(1).ofMaxSize(10)
-                                .map(notableBooks -> Arguments.of(author, notableBooks, language))
-                        )
-                )
-                .sampleStream().limit(3);
     }
 
     @ParameterizedTest
