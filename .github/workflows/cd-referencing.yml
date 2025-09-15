@@ -30,5 +30,4 @@ jobs:
       working-directory: './referencing'
       github-package: 'library%2Freferencing'
       docker-image: 'referencing'
-      run-acceptance: false
     secrets: inherit
