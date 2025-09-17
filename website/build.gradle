@@ -66,7 +66,7 @@ dependencies {
 	testImplementation 'org.aspectj:aspectjweaver:1.9.24'
 
 	errorprone 'com.google.errorprone:error_prone_core:2.41.0'
-	errorprone 'com.uber.nullaway:nullaway:0.12.9'
+	errorprone 'com.uber.nullaway:nullaway:0.12.10'
 
 	scss 'org.webjars.npm:bootstrap:5.3.8'
 }
