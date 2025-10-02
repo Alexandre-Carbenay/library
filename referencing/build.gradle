@@ -63,6 +63,7 @@ dependencies {
 	testImplementation 'net.datafaker:datafaker:2.5.1'
 	testImplementation 'au.com.dius.pact.provider:junit5:4.6.17'
 
+	acceptanceImplementation 'org.jspecify:jspecify:1.0.0'
 	acceptanceImplementation platform('io.cucumber:cucumber-bom:7.23.0')
 	acceptanceImplementation 'io.cucumber:cucumber-java'
 	acceptanceImplementation 'io.cucumber:cucumber-junit-platform-engine'

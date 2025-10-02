@@ -110,6 +110,7 @@ declare properties that will be used during execution. By default, those values 
 ```properties
 PACT_BROKER_PORT=9292
 CATALOG_API_PORT=8080
+REFERENCING_API_PORT=8081
 WEBSITE_PORT=9000
 ZIPKIN_PORT=9411
 ```
@@ -120,6 +121,7 @@ By default, each application exposing an API provides a Swagger UI to browse the
 running the applications with `make start`, you will have access to those API documentation pages:
 
 - [Catalog API](https://localhost:8080/swagger-ui/index.html)
+- [Referencing API](https://localhost:8081/swagger-ui/index.html)
 
 ### HTTP2 activation
 
