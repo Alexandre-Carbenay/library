@@ -3,7 +3,7 @@ plugins {
 	id 'net.ltgt.errorprone' version '4.3.0'
 	id 'org.springframework.boot' version '3.5.6'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'com.avast.gradle.docker-compose' version '0.17.16'
+	id 'com.avast.gradle.docker-compose' version '0.17.18'
 }
 
 group = 'org.adhuc.library'
