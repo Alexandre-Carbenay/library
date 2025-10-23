@@ -4,7 +4,7 @@ services:
     healthcheck:
       test: psql postgres --command "select 1" -U postgres
     volumes:
-      - postgres-volume:/var/lib/postgresql/data:rw
+      - postgres-volume:/var/lib/postgresql:rw
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
