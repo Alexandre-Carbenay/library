@@ -34,7 +34,7 @@ configurations {
 ext {
 	set('springCloudVersion', "2025.0.0")
 	bootstrapVersion = '5.3.8'
-	okhttp3Version = '5.2.1'
+	okhttp3Version = '5.3.0'
 }
 
 dependencyManagement {
