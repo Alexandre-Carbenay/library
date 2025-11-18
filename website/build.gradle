@@ -12,7 +12,7 @@ plugins {
 	id 'net.ltgt.errorprone' version '4.3.0'
 	id 'org.springframework.boot' version '3.5.7'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'au.com.dius.pact' version '4.6.17'
+	id 'au.com.dius.pact' version '4.6.18'
 	id 'io.miret.etienne.sass' version '1.6.0'
 }
 
