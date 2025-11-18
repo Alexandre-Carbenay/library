@@ -65,7 +65,7 @@ dependencies {
 	testImplementation 'au.com.dius.pact.consumer:junit5:4.6.17'
 	testImplementation 'org.aspectj:aspectjweaver:1.9.24'
 
-	errorprone 'com.google.errorprone:error_prone_core:2.43.0'
+	errorprone 'com.google.errorprone:error_prone_core:2.44.0'
 	errorprone 'com.uber.nullaway:nullaway:0.12.12'
 
 	scss 'org.webjars.npm:bootstrap:5.3.8'
