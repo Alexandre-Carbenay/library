@@ -942,7 +942,7 @@
   ],
   "metadata": {
     "pact-jvm": {
-      "version": "4.6.17"
+      "version": "4.6.18"
     },
     "pactSpecification": {
       "version": "3.0.0"
