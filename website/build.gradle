@@ -3,7 +3,7 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'au.com.dius.pact.provider:gradle:4.6.17'
+		classpath 'au.com.dius.pact.provider:gradle:4.6.18'
 	}
 }
 
@@ -12,7 +12,7 @@ plugins {
 	id 'net.ltgt.errorprone' version '4.3.0'
 	id 'org.springframework.boot' version '3.5.7'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'au.com.dius.pact' version '4.6.17'
+	id 'au.com.dius.pact' version '4.6.18'
 	id 'io.miret.etienne.sass' version '1.6.0'
 }
 
@@ -34,7 +34,7 @@ configurations {
 ext {
 	set('springCloudVersion', "2025.0.0")
 	bootstrapVersion = '5.3.8'
-	okhttp3Version = '5.3.0'
+	okhttp3Version = '5.3.2'
 }
 
 dependencyManagement {
@@ -63,9 +63,9 @@ dependencies {
 	testImplementation "com.squareup.okhttp3:okhttp:${okhttp3Version}"
 	testImplementation "com.squareup.okhttp3:mockwebserver3-junit5:${okhttp3Version}"
 	testImplementation 'au.com.dius.pact.consumer:junit5:4.6.18'
-	testImplementation 'org.aspectj:aspectjweaver:1.9.24'
+	testImplementation 'org.aspectj:aspectjweaver:1.9.25'
 
-	errorprone 'com.google.errorprone:error_prone_core:2.43.0'
+	errorprone 'com.google.errorprone:error_prone_core:2.44.0'
 	errorprone 'com.uber.nullaway:nullaway:0.12.12'
 
 	scss 'org.webjars.npm:bootstrap:5.3.8'
