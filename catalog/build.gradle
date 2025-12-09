@@ -32,7 +32,7 @@ configurations {
 
 dependencyManagement {
 	imports {
-		mavenBom 'org.springframework.modulith:spring-modulith-bom:1.4.4'
+		mavenBom 'org.springframework.modulith:spring-modulith-bom:2.0.0'
 		mavenBom 'org.jmolecules:jmolecules-bom:2025.0.1'
 	}
 }
