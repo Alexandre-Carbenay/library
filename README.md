@@ -65,6 +65,8 @@ And the container diagram representing the Library system:
 Some other folders provide general purpose content:
 
 - the [doc](./doc) folder hosts the documentation and tooling to generate it, in an architecture-as-code approach.
+- the [docker](./docker) folder contains the global configuration to run the system in a docker environment.
+- the [libs](./libs) folder contains some shared libraries used by the different applications.
 - the [pact](./pact) folder hosts the [Pact](https://docs.pact.io/) artifacts shared between the different applications
   to implement the Consumer-driven Contract testing pattern, and the tooling to start a
   [pact broker](https://github.com/pact-foundation/pact_broker) used in the continuous delivery pipeline.
