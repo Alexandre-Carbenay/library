@@ -129,8 +129,8 @@ jobs:
           rm -rf target_dir
 
           echo "current_tag=$(svu current --tag.prefix="rest-api-support-v" --tag.pattern="rest-api-support-v[0-9]*.[0-9]*.[0-9]*-build-*")" >> $GITHUB_OUTPUT
-          echo "next_tag=$(svu next --tag.prefix="rest-api-support-v" --tag.pattern="rest-api-support-v[0-9]*.[0-9]*.[0-9]*" --log.directory="rest-api-support")" >> $GITHUB_OUTPUT
-          echo "next_build_tag=$(svu next --tag.prefix="rest-api-support-v" --tag.pattern="rest-api-support-v[0-9]*.[0-9]*.[0-9]*" --log.directory="rest-api-support")-build-${{ github.run_number }}" >> $GITHUB_OUTPUT
+          echo "next_tag=$(svu next --tag.prefix="rest-api-support-v" --tag.pattern="rest-api-support-v[0-9]*.[0-9]*.[0-9]*" --log.directory="libs/rest-api-support")" >> $GITHUB_OUTPUT
+          echo "next_build_tag=$(svu next --tag.prefix="rest-api-support-v" --tag.pattern="rest-api-support-v[0-9]*.[0-9]*.[0-9]*" --log.directory="libs/rest-api-support")-build-${{ github.run_number }}" >> $GITHUB_OUTPUT
 
       - name: "🏷 🌵 Tag Git branch"
         run: |
