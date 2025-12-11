@@ -1,0 +1,82 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'org.springframework.boot' version '3.5.7'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'org.adhuc.library'
+
+java {
+    sourceCompatibility = '21'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
+    api 'org.springframework.hateoas:spring-hateoas'
+    api 'org.springframework.data:spring-data-rest-webmvc'
+    api 'org.springframework.boot:spring-boot-autoconfigure'
+    api 'com.atlassian.oai:swagger-request-validator-spring-webmvc:2.46.0'
+
+    implementation 'org.jspecify:jspecify:1.0.0'
+    implementation 'jakarta.servlet:jakarta.servlet-api'
+    implementation 'jakarta.annotation:jakarta.annotation-api'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-el'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation 'net.datafaker:datafaker:2.5.1'
+}
+
+tasks.named('compileJava') {
+    inputs.files(tasks.named('processResources'))
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs.add('--enable-preview')
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+    jvmArgs += '--enable-preview'
+    testLogging {
+        events "failed", "skipped", "standardError"
+        showExceptions true
+        showStackTraces true
+        exceptionFormat "full"
+        showCauses true
+        showStandardStreams false
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/Alexandre-Carbenay/library"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
+
+        publications {
+            libraries(MavenPublication) {
+                versionMapping {
+                    usage('java-api') {
+                        fromResolutionOf('runtimeClasspath')
+                    }
+                    usage('java-runtime') {
+                        fromResolutionResult()
+                    }
+                }
+                from components.java
+            }
+        }
+    }
+}
