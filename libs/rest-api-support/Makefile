@@ -10,7 +10,7 @@ build-test-publish: ## Publish tests report for the library
 	# For now, we don't publish anything
 
 build-jar: ## Build JAR for the library
-	./gradlew jar
+	./gradlew build
 
 clean: ## Clean the library project folder
 	$(gradleCatalog) clean
