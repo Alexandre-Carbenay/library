@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
  * Defines the {@link OpenApiValidationMessageParser} beans used in the {@link OpenApiRequestValidationExceptionHandler}.
  */
 @Configuration
-class OpenApiValidationMessageParsersConfiguration {
+public class OpenApiValidationMessageParsersConfiguration {
 
     @Bean
     NonNullableBodyElementParser nonNullableBodyElementParser() {
