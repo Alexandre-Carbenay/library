@@ -2,12 +2,15 @@ package org.adhuc.library.referencing.adapter.rest.authors;
 
 import net.datafaker.Faker;
 import org.adhuc.library.referencing.adapter.rest.PaginationSerializationConfiguration;
-import org.adhuc.library.referencing.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.referencing.authors.Author;
 import org.adhuc.library.referencing.authors.AuthorsConsultationService;
 import org.adhuc.library.referencing.authors.AuthorsMother.Authors;
 import org.adhuc.library.referencing.authors.AuthorsReferencingService;
 import org.adhuc.library.referencing.authors.ReferenceAuthor;
+import org.adhuc.library.support.rest.validation.RequestValidationAutoConfiguration;
+import org.adhuc.library.support.rest.validation.openapi.OpenApiRequestValidationExceptionHandler;
+import org.adhuc.library.support.rest.validation.openapi.OpenApiValidationConfigurer;
+import org.adhuc.library.support.rest.validation.openapi.OpenApiValidationMessageParsersConfiguration;
 import org.assertj.core.api.SoftAssertions;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +23,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
@@ -51,7 +55,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Tag("integration")
 @Tag("restApi")
 @WebMvcTest(controllers = {AuthorsController.class, AuthorModelAssembler.class})
-@Import({RequestValidationConfiguration.class, PaginationSerializationConfiguration.class})
+@ImportAutoConfiguration(RequestValidationAutoConfiguration.class)
+@Import({
+        OpenApiValidationConfigurer.class,
+        OpenApiRequestValidationExceptionHandler.class,
+        OpenApiValidationMessageParsersConfiguration.class,
+        PaginationSerializationConfiguration.class
+})
 @DisplayName("Authors controller should")
 class AuthorsControllerTests {
 
@@ -372,7 +382,7 @@ class AuthorsControllerTests {
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
                 .andExpect(jsonPath("errors[0].detail", equalTo("Missing required property")))
-                .andExpect(jsonPath("errors[0].pointer", equalTo("name")));
+                .andExpect(jsonPath("errors[0].pointer", equalTo("/name")));
     }
 
     @Test
@@ -391,7 +401,7 @@ class AuthorsControllerTests {
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
                 .andExpect(jsonPath("errors[0].detail", equalTo("Missing required property")))
-                .andExpect(jsonPath("errors[0].pointer", equalTo("date_of_birth")));
+                .andExpect(jsonPath("errors[0].pointer", equalTo("/date_of_birth")));
     }
 
     @Test
