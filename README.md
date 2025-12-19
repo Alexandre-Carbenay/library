@@ -60,6 +60,15 @@ And the container diagram representing the Library system:
 
 ![Library containers](doc/architecture/c4/Library-Containers.png)
 
+### Shared libraries
+
+Some of the applications share code as libraries, located in the [libs](./libs) folder, to avoid duplicating code
+between the different applications.
+
+Shared libraries are:
+
+* `rest-api-support`: provide configuration to handle OpenAPI validation and conversion of errors.
+
 ### Tooling and documentation
 
 Some other folders provide general purpose content:
