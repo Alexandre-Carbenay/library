@@ -9,7 +9,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 @AutoConfiguration
-@Import({OpenApiValidationConfigurer.class})
 @EnableConfigurationProperties(RequestValidationProperties.class)
 public class RequestValidationAutoConfiguration {
 

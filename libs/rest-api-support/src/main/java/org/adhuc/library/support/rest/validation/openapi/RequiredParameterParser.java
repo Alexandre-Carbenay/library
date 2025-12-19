@@ -8,6 +8,7 @@ import org.springframework.core.annotation.Order;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * An {@link OpenApiValidationMessageParser} implementation that handles missing required parameter, either query
@@ -30,7 +31,7 @@ class RequiredParameterParser implements OpenApiValidationMessageParser {
         }
         var parameterType = convertToParameterType(parameter.get());
         return List.of(new ProblemError.ParameterError(
-                STR."Missing required \{parameterType.detailName}",
+                message.getMessage(),
                 parameter.get().getName()
         ));
     }
@@ -48,7 +49,8 @@ class RequiredParameterParser implements OpenApiValidationMessageParser {
 
     enum ParameterType {
         QUERY("query", "query parameter"),
-        HEADER("header", "header");
+        HEADER("header", "header"),
+        PATH("path", "path parameter");
 
         private final String in;
         private final String detailName;

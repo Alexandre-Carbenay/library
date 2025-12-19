@@ -25,6 +25,18 @@ paths:
           $ref: '#/components/responses/TestRequestCreated'
         400:
           $ref: '#/components/responses/BadRequestError'
+  /test/params/{uuid}/{int}:
+    get:
+      operationId: testParamsGet
+      parameters:
+        - $ref: '#/components/parameters/PathUuidParameter'
+        - $ref: '#/components/parameters/PathIntegerParameter'
+        - $ref: '#/components/parameters/OptionalIntegerParameter'
+      responses:
+        204:
+          description: No content
+        400:
+          $ref: '#/components/responses/BadRequestError'
   /test/nullable:
     post:
       operationId: testNullablePost
@@ -61,6 +73,29 @@ components:
       required: false
       schema:
         type: string
+    PathUuidParameter:
+      name: uuid
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    PathIntegerParameter:
+      name: int
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 10
+    OptionalIntegerParameter:
+      name: optional_int
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 2
+        maximum: 5
   requestBodies:
     TestRequest:
       required: true
