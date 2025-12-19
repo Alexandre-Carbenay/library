@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpStatusCodeException;
 
 import java.net.URI;
+import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
 @ControllerAdvice
@@ -22,7 +23,7 @@ public class GeneralAdvice {
 
     @ExceptionHandler(HttpStatusCodeException.class)
     public String handleHttpStatusCodeException(Model model, HttpStatusCodeException exception) {
-        var responseBody = exception.getResponseBodyAs(Problem.class);
+        var responseBody = Objects.requireNonNull(exception.getResponseBodyAs(Problem.class));
         model.addAttribute("message", responseBody.detail);
         return "error";
     }
@@ -38,7 +39,7 @@ public class GeneralAdvice {
         private Problem(@JsonProperty("type") URI type, @JsonProperty("title") String title, @JsonProperty("status") int status, @JsonProperty("detail") String detail, @JsonProperty("instance") URI instance) {
             this.type = type;
             this.title = title;
-            this.status = HttpStatus.resolve(status);
+            this.status = Objects.requireNonNull(HttpStatus.resolve(status));
             this.detail = detail;
             this.instance = instance;
         }

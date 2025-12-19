@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -76,9 +76,9 @@ public class CatalogRestClientPactTests {
     @PactTestFor(pactMethod = "defaultPageNoProvidedLanguage", pactVersion = PactSpecVersion.V3)
     void getCatalogDefaultPage(MockServer mockServer) {
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
-        var client = new CatalogSpringReactiveClient(WebClient.builder(), null, properties);
+        var client = new CatalogSpringClient(RestClient.builder(), null, properties);
 
-        var catalog = client.listBooks("fr", "/api/v1/catalog?page={page}&size={size}", 0, 10).block();
+        var catalog = client.listBooks("fr", "/api/v1/catalog?page={page}&size={size}", 0, 10);
 
         SoftAssertions.assertSoftly(s -> {
             s.assertThat(catalog.getSize()).isEqualTo(10);
@@ -144,9 +144,9 @@ public class CatalogRestClientPactTests {
     @PactTestFor(pactMethod = "defaultPageFrench", pactVersion = PactSpecVersion.V3)
     void getCatalogDefaultPageFrench(MockServer mockServer) {
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
-        var client = new CatalogSpringReactiveClient(WebClient.builder(), null, properties);
+        var client = new CatalogSpringClient(RestClient.builder(), null, properties);
 
-        var catalog = client.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3", "/api/v1/catalog?page={page}&size={size}", 0, 10).block();
+        var catalog = client.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3", "/api/v1/catalog?page={page}&size={size}", 0, 10);
 
         SoftAssertions.assertSoftly(s -> {
             s.assertThat(catalog.getSize()).isEqualTo(10);
@@ -212,9 +212,9 @@ public class CatalogRestClientPactTests {
     @PactTestFor(pactMethod = "defaultPageEnglish", pactVersion = PactSpecVersion.V3)
     void getCatalogDefaultPageEnglish(MockServer mockServer) {
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
-        var client = new CatalogSpringReactiveClient(WebClient.builder(), null, properties);
+        var client = new CatalogSpringClient(RestClient.builder(), null, properties);
 
-        var catalog = client.listBooks("en,en-US;q=0.8,fr-FR;q=0.5,fr;q=0.3", "/api/v1/catalog?page={page}&size={size}", 0, 10).block();
+        var catalog = client.listBooks("en,en-US;q=0.8,fr-FR;q=0.5,fr;q=0.3", "/api/v1/catalog?page={page}&size={size}", 0, 10);
 
         SoftAssertions.assertSoftly(s -> {
             s.assertThat(catalog.getSize()).isEqualTo(10);
@@ -280,9 +280,9 @@ public class CatalogRestClientPactTests {
     @PactTestFor(pactMethod = "otherPage", pactVersion = PactSpecVersion.V3)
     void getCatalogPage(MockServer mockServer) {
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
-        var client = new CatalogSpringReactiveClient(WebClient.builder(), null, properties);
+        var client = new CatalogSpringClient(RestClient.builder(), null, properties);
 
-        var catalog = client.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3", "/api/v1/catalog?page={page}&size={size}", 1, 25).block();
+        var catalog = client.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3", "/api/v1/catalog?page={page}&size={size}", 1, 25);
 
         SoftAssertions.assertSoftly(s -> {
             s.assertThat(catalog.getSize()).isEqualTo(25);
@@ -338,9 +338,9 @@ public class CatalogRestClientPactTests {
     @PactTestFor(pactMethod = "bookDetailNoProvidedLanguage", pactVersion = PactSpecVersion.V3)
     void getBookDetail(MockServer mockServer) {
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
-        var client = new CatalogSpringReactiveClient(WebClient.builder(), null, properties);
+        var client = new CatalogSpringClient(RestClient.builder(), null, properties);
 
-        var book = client.retrieveBookDetails("b6608a30-1e9b-4ae0-a89d-624c3ca85da4", "").block();
+        var book = client.retrieveBookDetails("b6608a30-1e9b-4ae0-a89d-624c3ca85da4", "");
         assertThat(book).isEqualTo(new BookDetailDto(
                 "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
                 "Du contrat social",
@@ -376,7 +376,7 @@ public class CatalogRestClientPactTests {
     @PactTestFor(pactMethod = "editionDetail", pactVersion = PactSpecVersion.V3)
     void getEditionDetail(MockServer mockServer) {
         var properties = new CatalogRestClientProperties(mockServer.getUrl(), false);
-        var client = new CatalogSpringReactiveClient(WebClient.builder(), null, properties);
+        var client = new CatalogSpringClient(RestClient.builder(), null, properties);
 
         var edition = client.retrieveBookEditions(new BookDetailDto(
                 "b6608a30-1e9b-4ae0-a89d-624c3ca85da4",
@@ -386,7 +386,7 @@ public class CatalogRestClientPactTests {
                         List.of(new AuthorDto(UUID.fromString("99287cef-2c8c-4a4d-a82e-f1a8452dcfe2"), "Jean-Jacques Rousseau")),
                         List.of(new EditionDto("9782290385050", new EditionDto.Links(new EditionDto.LinkValue(mockServer.getUrl() + "/api/v1/editions/9782290385050"))))
                 )
-        )).block();
+        ));
         assertThat(edition).isEqualTo(List.of(
                 new EditionDetailDto(
                         "9782290385050",
