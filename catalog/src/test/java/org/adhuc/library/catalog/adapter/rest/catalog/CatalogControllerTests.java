@@ -20,7 +20,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -367,9 +367,11 @@ class CatalogControllerTests {
 
     static void verifyNavigationLink(ResultActions result, boolean hasLink, String linkName, @Nullable String valueIfExists) throws Exception {
         if (hasLink) {
-            result.andExpect(jsonPath(STR."_links.\{linkName}.href", equalTo(requireNonNull(valueIfExists))));
+            var path = STR."_links.\{linkName}.href";
+            result.andExpect(jsonPath(path, equalTo(requireNonNull(valueIfExists))));
         } else {
-            result.andExpect(jsonPath(STR."_links.\{linkName}").doesNotExist());
+            var path = STR."_links.\{linkName}";
+            result.andExpect(jsonPath(path).doesNotExist());
         }
     }
 
