@@ -30,7 +30,7 @@ class RequiredParameterParser implements OpenApiValidationMessageParser {
         }
         var parameterType = convertToParameterType(parameter.get());
         return List.of(new ProblemError.ParameterError(
-                STR."Missing required \{parameterType.detailName}",
+                STR."Missing required or invalid \{parameterType.detailName}",
                 parameter.get().getName()
         ));
     }
@@ -48,7 +48,8 @@ class RequiredParameterParser implements OpenApiValidationMessageParser {
 
     enum ParameterType {
         QUERY("query", "query parameter"),
-        HEADER("header", "header");
+        HEADER("header", "header"),
+        PATH("path", "path parameter");
 
         private final String in;
         private final String detailName;

@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static org.adhuc.library.support.rest.validation.TestRequest.TestChild.testChild;
@@ -31,8 +32,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SuppressWarnings({"unused", "NotNullFieldNotInitialized", "preview"})
 @Tag("integration")
@@ -86,7 +86,8 @@ class RequestValidationTests {
     @MethodSource("missingRequiredParameter")
     @DisplayName("respond with error detail on get request with missing required parameter")
     void respond400MissingRequiredParameter(String name, RequestBuilder requestBuilder) throws Exception {
-        var result = mvc.perform(requestBuilder).andExpect(status().isBadRequest());
+        var result = mvc.perform(requestBuilder).andExpect(status().isBadRequest())
+                .andExpect(content().contentType("application/problem+json"));
 
         result
                 .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
@@ -94,7 +95,7 @@ class RequestValidationTests {
                 .andExpect(jsonPath("title", equalTo("Request validation error")))
                 .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
                 .andExpect(jsonPath("errors", hasSize(1)))
-                .andExpect(jsonPath("errors[0].detail", equalTo("Missing required query parameter")))
+                .andExpect(jsonPath("errors[0].detail", equalTo("Missing required or invalid query parameter")))
                 .andExpect(jsonPath("errors[0].parameter", equalTo("required_parameter")))
                 .andExpect(jsonPath("errors[0].pointer").doesNotExist());
     }
@@ -121,7 +122,8 @@ class RequestValidationTests {
     @MethodSource("missingRequiredHeader")
     @DisplayName("respond with error detail on get request with missing required header")
     void respond400MissingRequiredHeader(String name, RequestBuilder requestBuilder) throws Exception {
-        var result = mvc.perform(requestBuilder).andExpect(status().isBadRequest());
+        var result = mvc.perform(requestBuilder).andExpect(status().isBadRequest())
+                .andExpect(content().contentType("application/problem+json"));
 
         result
                 .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
@@ -129,7 +131,7 @@ class RequestValidationTests {
                 .andExpect(jsonPath("title", equalTo("Request validation error")))
                 .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
                 .andExpect(jsonPath("errors", hasSize(1)))
-                .andExpect(jsonPath("errors[0].detail", equalTo("Missing required header")))
+                .andExpect(jsonPath("errors[0].detail", equalTo("Missing required or invalid header")))
                 .andExpect(jsonPath("errors[0].parameter", equalTo("Required-Header")))
                 .andExpect(jsonPath("errors[0].pointer").doesNotExist());
     }
@@ -175,10 +177,11 @@ class RequestValidationTests {
     @DisplayName("respond with error detail on request body validation error")
     void respond400OnRequestValidationError(String name, TestRequest request, String expectedDetail, String expectedPointer) throws Exception {
         var result = mvc.perform(
-                post("/test/request")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
-        ).andExpect(status().isBadRequest());
+                        post("/test/request")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(request))
+                ).andExpect(status().isBadRequest())
+                .andExpect(content().contentType("application/problem+json"));
 
         result
                 .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
@@ -405,10 +408,11 @@ class RequestValidationTests {
                 .requiredChild(testChild().wrongTypeRequiredChildString());
 
         var result = mvc.perform(
-                post("/test/request")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
-        ).andExpect(status().isBadRequest());
+                        post("/test/request")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(request))
+                ).andExpect(status().isBadRequest())
+                .andExpect(content().contentType("application/problem+json"));
 
         result
                 .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
@@ -445,10 +449,11 @@ class RequestValidationTests {
     @DisplayName("respond with error detail on request body validation error")
     void respond400OnNullableRequestValidationError(String name, WithNullableElementRequest request, String expectedPointer) throws Exception {
         var result = mvc.perform(
-                post("/test/nullable")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
-        ).andExpect(status().isBadRequest());
+                        post("/test/nullable")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(request))
+                ).andExpect(status().isBadRequest())
+                .andExpect(content().contentType("application/problem+json"));
 
         result
                 .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
@@ -482,6 +487,74 @@ class RequestValidationTests {
         );
     }
 
+    @Test
+    @DisplayName("response successfully when expected parameters are provided")
+    void respond204AllExpectedParameters() throws Exception {
+        mvc.perform(
+                get("/test/params/{uuid}/{int}", UUID.randomUUID(), 1)
+                        .queryParam("optional_int", "2")
+        ).andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("response successfully when expected parameters are provided, without optional ones")
+    void respond204AllExpectedRequiredParameters() throws Exception {
+        mvc.perform(
+                get("/test/params/{uuid}/{int}", UUID.randomUUID(), 1)
+        ).andExpect(status().isNoContent());
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidParameterErrorProvider")
+    @DisplayName("respond with error detail on request parameters validation error")
+    void respond400ParametersValidationError(String name, Object uuidParam, Object intParam, String optionalIntParam,
+                                             String expectedDetail, String expectedParam) throws Exception {
+        var result = mvc.perform(
+                        get("/test/params/{uuid}/{int}", uuidParam, intParam)
+                                .queryParam("optional_int", optionalIntParam)
+                ).andExpect(status().isBadRequest())
+                .andExpect(content().contentType("application/problem+json"));
+
+        result
+                .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
+                .andExpect(jsonPath("status", equalTo(400)))
+                .andExpect(jsonPath("title", equalTo("Request validation error")))
+                .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors[0].detail", equalTo(expectedDetail)))
+                .andExpect(jsonPath("errors[0].parameter", equalTo(expectedParam)))
+                .andExpect(jsonPath("errors[0].pointer").doesNotExist());
+    }
+
+    static Stream<Arguments> invalidParameterErrorProvider() {
+        return Stream.of(
+                Arguments.of(
+                        "Invalid UUID path parameter",
+                        "invalid",
+                        1,
+                        "2",
+                        "Missing required or invalid path parameter",
+                        "uuid"
+                ),
+                Arguments.of(
+                        "Invalid int path parameter",
+                        UUID.randomUUID(),
+                        "not an int",
+                        "2",
+                        "Missing required or invalid path parameter",
+                        "int"
+                ),
+                Arguments.of(
+                        "Invalid int query parameter",
+                        UUID.randomUUID(),
+                        1,
+                        "not an int",
+                        "Missing required or invalid query parameter",
+                        "optional_int"
+                )
+        );
+    }
+
     @SpringBootApplication
     static class RequestValidationTestApplication {
 
@@ -508,6 +581,13 @@ class RequestValidationTests {
             @PostMapping("/test/nullable")
             @ResponseStatus(HttpStatus.NO_CONTENT)
             void testNullablePost(@RequestBody WithNullableElementRequest request) {
+                // no-op
+            }
+
+            @GetMapping("/test/params/{uuid}/{int}")
+            @ResponseStatus(HttpStatus.NO_CONTENT)
+            void testWithParams(@PathVariable("uuid") UUID uuid, @PathVariable("int") Integer integer,
+                                @RequestParam(name = "optional_int", required = false) Integer optionalInt) {
                 // no-op
             }
 
