@@ -1,7 +1,7 @@
 package org.adhuc.library.catalog.adapter.rest.authors;
 
+import org.adhuc.library.catalog.adapter.rest.RestAdapterTestConfiguration;
 import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
-import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.authors.AuthorsService;
 import org.adhuc.library.catalog.books.Book;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SuppressWarnings({"preview", "NotNullFieldNotInitialized"})
+@SuppressWarnings({"NotNullFieldNotInitialized"})
 @Tag("integration")
 @Tag("restApi")
 @WebMvcTest(controllers = {
@@ -50,7 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         AuthorDetailsModelAssembler.class,
         BookModelAssembler.class
 })
-@Import(RequestValidationConfiguration.class)
+@Import(RestAdapterTestConfiguration.class)
 @DisplayName("Authors controller should")
 class AuthorsControllerTests {
 
@@ -62,9 +62,9 @@ class AuthorsControllerTests {
     private BooksService booksService;
 
     @ParameterizedTest
-    @ValueSource(strings = {"123", "invalid"})
+    @MethodSource("invalidAuthorIdProvider")
     @DisplayName("refuse providing an author with invalid ID")
-    void invalidAuthorId(String invalidId) throws Exception {
+    void invalidAuthorId(String invalidId, String errorDetail) throws Exception {
         mvc.perform(get("/api/v1/authors/{id}", invalidId).accept("application/hal+json"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
@@ -74,9 +74,15 @@ class AuthorsControllerTests {
                 .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
-                .andExpect(jsonPath("errors[0].detail",
-                        equalTo(STR."Input string \"\{invalidId}\" is not a valid UUID")))
+                .andExpect(jsonPath("errors[0].detail", equalTo(errorDetail)))
                 .andExpect(jsonPath("errors[0].parameter", equalTo("id")));
+    }
+
+    static Stream<Arguments> invalidAuthorIdProvider() {
+        return Stream.of(
+                Arguments.of("123", "Input string \"123\" is not a valid UUID"),
+                Arguments.of("invalid", "Input string \"invalid\" is not a valid UUID")
+        );
     }
 
     @Test
