@@ -1,4 +1,1 @@
 org.adhuc.library.support.rest.validation.RequestValidationAutoConfiguration
-org.adhuc.library.support.rest.validation.openapi.OpenApiRequestValidationExceptionHandler
-org.adhuc.library.support.rest.validation.openapi.OpenApiValidationConfigurer
-org.adhuc.library.support.rest.validation.openapi.OpenApiValidationMessageParsersConfiguration
