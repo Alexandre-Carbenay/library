@@ -8,14 +8,12 @@ import org.springframework.core.annotation.Order;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 /**
  * An {@link OpenApiValidationMessageParser} implementation that handles missing required parameter, either query
  * parameter or request header.
  */
 @Order(2)
-@SuppressWarnings("preview")
 class RequiredParameterParser implements OpenApiValidationMessageParser {
 
     @Override
@@ -44,7 +42,7 @@ class RequiredParameterParser implements OpenApiValidationMessageParser {
         return Arrays.stream(ParameterType.values())
                 .filter(type -> type.in.equals(parameter.getIn()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException(STR."Cannot handle parameter of type \{parameter.getIn()}"));
+                .orElseThrow(() -> new IllegalStateException("Cannot handle parameter of type " + parameter.getIn()));
     }
 
     enum ParameterType {

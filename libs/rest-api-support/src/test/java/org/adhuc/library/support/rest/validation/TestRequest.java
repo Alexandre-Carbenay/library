@@ -2,9 +2,9 @@ package org.adhuc.library.support.rest.validation;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import net.datafaker.Faker;
+import tools.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
+import tools.jackson.databind.annotation.JsonNaming;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
 
-@SuppressWarnings({"FieldCanBeLocal", "unused", "NotNullFieldNotInitialized"})
+@SuppressWarnings({"FieldCanBeLocal", "unused"})
 @JsonInclude(NON_ABSENT)
 @JsonNaming(SnakeCaseStrategy.class)
 @JsonAutoDetect(fieldVisibility = ANY)

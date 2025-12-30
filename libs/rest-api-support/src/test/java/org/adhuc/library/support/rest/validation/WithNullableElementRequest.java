@@ -1,16 +1,16 @@
 package org.adhuc.library.support.rest.validation;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import net.datafaker.Faker;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
 
 import java.util.function.Supplier;
 
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static org.adhuc.library.support.rest.validation.WithNullableElementRequest.WithNullableChild.nullableChild;
 
-@SuppressWarnings({"FieldCanBeLocal", "unused", "NotNullFieldNotInitialized"})
+@SuppressWarnings("unused")
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonAutoDetect(fieldVisibility = ANY)
 class WithNullableElementRequest {

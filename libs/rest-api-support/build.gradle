@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'org.springframework.boot' version '3.5.7' apply false
+    id 'org.springframework.boot' version '4.0.1' apply false
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -14,7 +14,7 @@ dependencyManagement {
 group = 'org.adhuc.library'
 
 java {
-    sourceCompatibility = '21'
+    sourceCompatibility = '25'
 }
 
 repositories {
@@ -35,6 +35,7 @@ dependencies {
     implementation 'org.apache.tomcat.embed:tomcat-embed-el'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
     testImplementation 'net.datafaker:datafaker:2.5.1'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -44,13 +45,8 @@ tasks.named('compileJava') {
     inputs.files(tasks.named('processResources'))
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs.add('--enable-preview')
-}
-
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
-    jvmArgs += '--enable-preview'
     testLogging {
         events "failed", "skipped", "standardError"
         showExceptions true

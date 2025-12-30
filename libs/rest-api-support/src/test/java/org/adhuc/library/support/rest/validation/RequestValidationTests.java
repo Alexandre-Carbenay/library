@@ -12,14 +12,15 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.web.bind.annotation.*;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -34,7 +35,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SuppressWarnings({"unused", "NotNullFieldNotInitialized", "preview"})
+@SuppressWarnings("unused")
 @Tag("integration")
 @Tag("restApi")
 @SpringBootTest
@@ -50,7 +51,7 @@ class RequestValidationTests {
     @Autowired
     private MockMvc mvc;
     @Autowired
-    private ObjectMapper mapper;
+    private JsonMapper mapper;
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -198,7 +199,6 @@ class RequestValidationTests {
                 .andExpect(jsonPath("errors[0].pointer", equalTo(expectedPointer)));
     }
 
-    @SuppressWarnings("DataFlowIssue")
     static Stream<Arguments> requiredStringValidationErrorProvider() {
         var tooShortRequiredStringRequest = testRequest().tooShortRequiredString();
         var tooShort = tooShortRequiredStringRequest.requiredString();
@@ -213,12 +213,12 @@ class RequestValidationTests {
                 ),
                 Arguments.of("Required string is too short",
                         tooShortRequiredStringRequest,
-                        STR."String \"\{tooShort}\" is too short (length: \{tooShort.length()}, required minimum: 5)",
+                        "String \"" + tooShort + "\" is too short (length: " + tooShort.length() + ", required minimum: 5)",
                         "/required_string"
                 ),
                 Arguments.of("Required string is too long",
                         tooLongRequiredStringRequest,
-                        STR."String \"\{tooLong}\" is too long (length: \{tooLong.length()}, maximum allowed: 100)",
+                        "String \"" + tooLong + "\" is too long (length: " + tooLong.length() + ", maximum allowed: 100)",
                         "/required_string"
                 ),
                 Arguments.of("Required string is not a string",
@@ -229,7 +229,6 @@ class RequestValidationTests {
         );
     }
 
-    @SuppressWarnings("DataFlowIssue")
     static Stream<Arguments> requiredIntValidationErrorProvider() {
         var tooLowRequiredIntRequest = testRequest().tooLowRequiredInt();
         var tooLow = tooLowRequiredIntRequest.requiredInt();
@@ -244,12 +243,12 @@ class RequestValidationTests {
                 ),
                 Arguments.of("Required integer is lower than minimum",
                         tooLowRequiredIntRequest,
-                        STR."Numeric instance is lower than the required minimum (minimum: 10, found: \{tooLow})",
+                        "Numeric instance is lower than the required minimum (minimum: 10, found: " + tooLow + ")",
                         "/required_int"
                 ),
                 Arguments.of("Required integer is higher than minimum",
                         tooHighRequiredIntRequest,
-                        STR."Numeric instance is greater than the required maximum (maximum: 20, found: \{tooHigh})",
+                        "Numeric instance is greater than the required maximum (maximum: 20, found: " + tooHigh + ")",
                         "/required_int"
                 ),
                 Arguments.of("Required integer is not an integer",
@@ -260,7 +259,6 @@ class RequestValidationTests {
         );
     }
 
-    @SuppressWarnings("DataFlowIssue")
     static Stream<Arguments> requiredBooleanValidationErrorProvider() {
         return Stream.of(
                 Arguments.of("Required boolean is not present",
@@ -276,7 +274,6 @@ class RequestValidationTests {
         );
     }
 
-    @SuppressWarnings("DataFlowIssue")
     static Stream<Arguments> requiredDateValidationErrorProvider() {
         var invalidRequiredDateFormatRequest = testRequest().invalidRequiredDateFormat();
         var invalidDate = invalidRequiredDateFormatRequest.requiredDate();
@@ -294,13 +291,12 @@ class RequestValidationTests {
                 ),
                 Arguments.of("Required date has not date format",
                         invalidRequiredDateFormatRequest,
-                        STR."String \"\{invalidDate}\" is invalid against requested date format(s) yyyy-MM-dd",
+                        "String \"" + invalidDate + "\" is invalid against requested date format(s) yyyy-MM-dd",
                         "/required_date"
                 )
         );
     }
 
-    @SuppressWarnings("DataFlowIssue")
     static Stream<Arguments> requiredUuidValidationErrorProvider() {
         var invalidRequiredUuidFormatRequest = testRequest().invalidRequiredUuidFormat();
         var invalidUuid = invalidRequiredUuidFormatRequest.requiredUuid();
@@ -318,13 +314,12 @@ class RequestValidationTests {
                 ),
                 Arguments.of("Required UUID has not UUID format",
                         invalidRequiredUuidFormatRequest,
-                        STR."Input string \"\{invalidUuid}\" is not a valid UUID",
+                        "Input string \"" + invalidUuid + "\" is not a valid UUID",
                         "/required_uuid"
                 )
         );
     }
 
-    @SuppressWarnings("DataFlowIssue")
     static Stream<Arguments> requiredArrayValidationErrorProvider() {
         var tooFewElementsRequiredArrayRequest = testRequest().tooFewRequiredArrayElements();
         var tooFewElements = tooFewElementsRequiredArrayRequest.requiredArray().size();
@@ -339,12 +334,12 @@ class RequestValidationTests {
                 ),
                 Arguments.of("Required array has too few elements",
                         tooFewElementsRequiredArrayRequest,
-                        STR."Array is too short: must have at least 2 elements but instance has \{tooFewElements} elements",
+                        "Array is too short: must have at least 2 elements but instance has " + tooFewElements + " elements",
                         "/required_array"
                 ),
                 Arguments.of("Required array has too many elements",
                         tooManyElementsRequiredArrayRequest,
-                        STR."Array is too long: must have at most 5 elements but instance has \{tooManyElements} elements",
+                        "Array is too long: must have at most 5 elements but instance has " + tooManyElements + " elements",
                         "/required_array"
                 ),
                 Arguments.of("Required array has duplicate elements",
@@ -360,7 +355,6 @@ class RequestValidationTests {
         );
     }
 
-    @SuppressWarnings("DataFlowIssue")
     static Stream<Arguments> requiredChildValidationErrorProvider() {
         var tooShortRequiredChildStringRequest = testRequest().requiredChild(testChild().tooShortRequiredChildString());
         var tooShort = tooShortRequiredChildStringRequest.requiredChild().requiredChildString();
@@ -380,12 +374,12 @@ class RequestValidationTests {
                 ),
                 Arguments.of("Required child's string is too short",
                         tooShortRequiredChildStringRequest,
-                        STR."String \"\{tooShort}\" is too short (length: \{tooShort.length()}, required minimum: 3)",
+                        "String \"" + tooShort + "\" is too short (length: " + tooShort.length() + ", required minimum: 3)",
                         "/required_child/required_child_string"
                 ),
                 Arguments.of("Required child's string is too long",
                         tooLongRequiredChildStringRequest,
-                        STR."String \"\{tooLong}\" is too long (length: \{tooLong.length()}, maximum allowed: 10)",
+                        "String \"" + tooLong + "\" is too long (length: " + tooLong.length() + ", maximum allowed: 10)",
                         "/required_child/required_child_string"
                 ),
                 Arguments.of("Required array is not an array",
@@ -403,7 +397,6 @@ class RequestValidationTests {
 
     @Test
     @DisplayName("respond with error detail on request with multiple validation error")
-    @SuppressWarnings("DataFlowIssue")
     void respond400WithMultipleValidationErrors() throws Exception {
         var request = testRequest()
                 .requiredString(null)
@@ -594,7 +587,7 @@ class RequestValidationTests {
     @SpringBootApplication
     static class RequestValidationTestApplication {
 
-        public static void main(String[] args) {
+        static void main(String[] args) {
             SpringApplication.run(RequestValidationTestApplication.class, args);
         }
 
