@@ -69,7 +69,7 @@ public class EditionsController {
                         .withType(URI.create("/problems/unknown-entity"))
                         .withStatus(NOT_FOUND)
                         .withTitle("Unknown edition")
-                        .withDetail(STR."No edition exists with ISBN '\{isbn}'")
+                        .withDetail("No edition exists with ISBN '" + isbn + "'")
                 );
     }
 

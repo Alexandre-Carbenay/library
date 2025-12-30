@@ -86,7 +86,7 @@ public class AuthorsController {
                         .withType(URI.create("/problems/unknown-entity"))
                         .withStatus(NOT_FOUND)
                         .withTitle("Unknown author")
-                        .withDetail(STR."No author exists with id '\{id}'")
+                        .withDetail("No author exists with id '" + id + "'")
                 );
     }
 

@@ -10,7 +10,7 @@ group = 'org.adhuc.library'
 version = '1'
 
 java {
-	sourceCompatibility = '21'
+	sourceCompatibility = '25'
 }
 
 repositories {
@@ -65,7 +65,7 @@ dependencies {
 	}
 	implementation 'io.micrometer:micrometer-tracing'
 
-	implementation 'org.adhuc.library:rest-api-support:0.2.0'
+	implementation 'org.adhuc.library:rest-api-support:1.0.0'
 
 	runtimeOnly 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.0'
 	runtimeOnly 'io.micrometer:micrometer-tracing-bridge-otel'
@@ -94,7 +94,6 @@ dependencies {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	options.compilerArgs.add('--enable-preview')
 	options.compilerArgs.add('-parameters')
 
 	options.errorprone {
@@ -106,7 +105,6 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.withType(Test).configureEach {
 	useJUnitPlatform()
-	jvmArgs += '--enable-preview'
 	testLogging {
 		events "failed", "skipped", "standardError"
 		showExceptions true

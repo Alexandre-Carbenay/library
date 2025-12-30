@@ -11,7 +11,6 @@ import static io.restassured.RestAssured.*;
 import static org.adhuc.library.catalog.acceptance.assertions.EmbeddedAuthorsAssertions.assertResponseEmbedsAuthors;
 import static org.hamcrest.Matchers.*;
 
-@SuppressWarnings("preview")
 public class CatalogStepDefinitions {
 
     private static final List<String> NAVIGATION_LINKS = List.of("first", "prev", "next", "last");
@@ -39,7 +38,7 @@ public class CatalogStepDefinitions {
 
     @When("he navigates through the catalog with {word} link")
     public void navigatesWithLink(String linkName) {
-        var link = response.extract().jsonPath().getString(STR."_links.\{linkName}.href");
+        var link = response.extract().jsonPath().getString("_links." + linkName + ".href");
         response = given()
                 .header("Accept-Language", language.getLanguage())
                 .when()
@@ -51,28 +50,28 @@ public class CatalogStepDefinitions {
     public void catalogReturnedPage(int page, int pageElements, int pageSize) {
         response.statusCode(206)
                 .contentType("application/json")
-                .body("page.number", describedAs(STR."Page number = \{page}", equalTo(page)))
-                .body("page.size", describedAs(STR."Page size = \{pageSize}", equalTo(pageSize)))
-                .body("_embedded.books", describedAs(STR."Embedded books size = \{pageElements}", hasSize(pageElements)));
+                .body("page.number", describedAs("Page number = " + page, equalTo(page)))
+                .body("page.size", describedAs("Page size = " + pageSize, equalTo(pageSize)))
+                .body("_embedded.books", describedAs("Embedded books size = " + pageElements, hasSize(pageElements)));
     }
 
     @Then("the catalog contains {int} books in a total of {int} pages")
     public void catalogReturnedElements(int totalElements, int totalPages) {
         response.statusCode(206)
                 .contentType("application/json")
-                .body("page.total_elements", describedAs(STR."Total elements = \{totalElements}", equalTo(totalElements)))
-                .body("page.total_pages", describedAs(STR."Total pages = \{totalPages}", equalTo(totalPages)));
+                .body("page.total_elements", describedAs("Total elements = " + totalElements, equalTo(totalElements)))
+                .body("page.total_pages", describedAs("Total pages = " + totalPages, equalTo(totalPages)));
     }
 
     @Then("the catalog returns page {int} with available {navigation} links")
     public void catalogPageWithNavigationLinks(int page, List<String> linkNames) {
         response.statusCode(206)
                 .contentType("application/json")
-                .body("page.number", describedAs(STR."Page number = \{page}", equalTo(page)));
+                .body("page.number", describedAs("Page number = " + page, equalTo(page)));
         NAVIGATION_LINKS.stream()
                 .filter(link -> !linkNames.contains(link))
-                .forEach(link -> response.body("_links", describedAs(STR."Link \{link} must not be present in catalog links", not(hasKey(link)))));
-        linkNames.forEach(link -> response.body("_links", describedAs(STR."Link \{link} must be present in catalog links", hasKey(link))));
+                .forEach(link -> response.body("_links", describedAs("Link " + link + " must not be present in catalog links", not(hasKey(link)))));
+        linkNames.forEach(link -> response.body("_links", describedAs("Link " + link + " must be present in catalog links", hasKey(link))));
     }
 
     @Then("the page {int} contains books corresponding to the expected {ids}")
@@ -80,13 +79,13 @@ public class CatalogStepDefinitions {
         for (int index = 0; index < ids.size(); index++) {
             var id = ids.get(index);
             response.body("_embedded.books[%d].id", withArgs(index),
-                    describedAs(STR."Book with index \{index} within page \{page} must have id starting with \{id}", startsWith(id)));
+                    describedAs("Book with index " + index + " within page " + page + " must have id starting with " + id, startsWith(id)));
         }
     }
 
     @Then("the page {int} contains {authorNames} corresponding to the books")
     public void catalogPageWithAuthors(int page, List<String> authorNames) {
-        assertResponseEmbedsAuthors(response, authorNames, name -> STR."Catalog page \{page} must contain author named \{name}");
+        assertResponseEmbedsAuthors(response, authorNames, name -> "Catalog page " + page + " must contain author named " + name);
     }
 
     @Then("the catalog returns page in {language}")

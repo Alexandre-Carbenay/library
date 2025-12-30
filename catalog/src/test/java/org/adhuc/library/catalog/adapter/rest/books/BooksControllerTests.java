@@ -40,7 +40,6 @@ import static org.springframework.http.HttpHeaders.CONTENT_LANGUAGE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SuppressWarnings({"preview", "NotNullFieldNotInitialized"})
 @Tag("integration")
 @Tag("restApi")
 @WebMvcTest(controllers = {
@@ -120,7 +119,7 @@ class BooksControllerTests {
                 .andExpect(jsonPath("id", equalTo(book.id().toString())))
                 .andExpect(jsonPath("title", equalTo(book.titleIn(book.originalLanguage()))))
                 .andExpect(jsonPath("description", equalTo(book.descriptionIn(book.originalLanguage()))))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/books/\{book.id()}")))
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/books/" + book.id())))
                 .andExpect(jsonPath("_embedded.editions").doesNotExist());
 
         assertResponseContainsAllEmbeddedAuthors(result, book.authors());
@@ -147,7 +146,7 @@ class BooksControllerTests {
                 .andExpect(jsonPath("id", equalTo(book.id().toString())))
                 .andExpect(jsonPath("title", equalTo(book.titleIn(expectedLanguage))))
                 .andExpect(jsonPath("description", equalTo(book.descriptionIn(expectedLanguage))))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/books/\{book.id()}")));
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/books/" + book.id())));
 
         assertResponseContainsAllEmbeddedAuthors(result, book.authors());
         assertResponseContainsAllEmbeddedEditions(result, editions);
@@ -199,7 +198,7 @@ class BooksControllerTests {
                 .andExpect(jsonPath("id", equalTo(book.id().toString())))
                 .andExpect(jsonPath("title", equalTo(book.titleIn(expectedLanguage))))
                 .andExpect(jsonPath("description", equalTo(book.descriptionIn(expectedLanguage))))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/books/\{book.id()}")));
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/books/" + book.id())));
 
         assertResponseContainsAllEmbeddedAuthors(result, book.authors());
         assertResponseContainsAllEmbeddedEditions(result, editions);

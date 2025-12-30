@@ -14,7 +14,6 @@ import static org.adhuc.library.catalog.acceptance.assertions.EmbeddedEditionsAs
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
 
-@SuppressWarnings("preview")
 public class BookDetailStepDefinitions {
 
     private UUID bookId;
@@ -37,7 +36,7 @@ public class BookDetailStepDefinitions {
                 .body("type", equalTo("/problems/unknown-entity"))
                 .body("status", equalTo(404))
                 .body("title", equalTo("Unknown book"))
-                .body("detail", equalTo(STR."No book exists with id '\{bookId}'"));
+                .body("detail", equalTo("No book exists with id '" + bookId + "'"));
     }
 
     @Then("the book details have the expected {string}, {authorNames}, {string}, {isbns} and wikipedia {word} in the requested {language}")
@@ -49,8 +48,8 @@ public class BookDetailStepDefinitions {
                 .body("title", equalTo(title))
                 .body("description", equalTo(description))
                 .body("_links.wikipedia.href", equalTo(wikipediaLink));
-        assertResponseEmbedsAuthors(response, authorNames, name -> STR."Book \{bookId} details must contain author named \{name}");
-        assertResponseEmbedsEditions(response, editionIsbns, isbn -> STR."Book \{bookId} details must contain edition with ISBN \{isbn}");
+        assertResponseEmbedsAuthors(response, authorNames, name -> "Book " + bookId + " details must contain author named " + name);
+        assertResponseEmbedsEditions(response, editionIsbns, isbn -> "Book " + bookId + " details must contain edition with ISBN " + isbn);
     }
 
     @Then("the book details have no wikipedia link")

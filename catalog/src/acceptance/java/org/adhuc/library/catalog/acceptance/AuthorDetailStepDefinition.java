@@ -12,7 +12,6 @@ import java.util.UUID;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 
-@SuppressWarnings("preview")
 public class AuthorDetailStepDefinition {
 
     private UUID authorId;
@@ -48,7 +47,7 @@ public class AuthorDetailStepDefinition {
                 .body("type", equalTo("/problems/unknown-entity"))
                 .body("status", equalTo(404))
                 .body("title", equalTo("Unknown author"))
-                .body("detail", equalTo(STR."No author exists with id '\{authorId}'"));
+                .body("detail", equalTo("No author exists with id '" + authorId + "'"));
     }
 
     @Then("the author details have the expected {string}, {date}, {date} and authored notable {titles}")
@@ -65,7 +64,7 @@ public class AuthorDetailStepDefinition {
         }
         bookTitles.forEach(bookId ->
                 response.body("_embedded.notable_books.find { it.title == \"%s\" }", withArgs(bookId),
-                        describedAs(STR."Author \{authorId} details must contain book with title \{bookId}", notNullValue()))
+                        describedAs("Author " + authorId + " details must contain book with title " + bookId, notNullValue()))
         );
     }
 
