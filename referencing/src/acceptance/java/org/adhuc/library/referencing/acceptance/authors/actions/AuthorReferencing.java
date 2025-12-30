@@ -9,7 +9,6 @@ import java.time.LocalDate;
 import static io.restassured.RestAssured.given;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 
-@SuppressWarnings("preview")
 public class AuthorReferencing {
 
     public static ValidatableResponse referenceAuthor(String name, LocalDate dateOfBirth) {
@@ -35,7 +34,7 @@ public class AuthorReferencing {
     public static ValidatableResponse referenceAuthorWithNameOnly(String name) {
         return given()
                 .contentType(ContentType.JSON)
-                .body(STR."{\"name\": \"\{name}\"}")
+                .body("{\"name\": \"" + name + "\"}")
                 .when()
                 .post("/v1/authors")
                 .then();

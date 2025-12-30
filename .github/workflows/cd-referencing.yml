@@ -26,6 +26,7 @@ jobs:
   pipeline:
     uses: ./.github/workflows/cd-generic.yml
     with:
+      java-version: '25'
       app-name: 'referencing'
       working-directory: './referencing'
       github-package: 'library%2Freferencing'
