@@ -1,0 +1,15 @@
+openapi: 3.0.3
+info:
+  title: Basic test specification
+  version: v1
+paths:
+  /test:
+    get:
+      operationId: test
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string

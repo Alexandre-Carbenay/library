@@ -18,10 +18,10 @@ class CatalogRestClient implements CatalogClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CatalogRestClient.class);
 
-    private final CatalogSpringReactiveClient client;
+    private final CatalogSpringClient client;
     private final CircuitBreaker circuitBreaker;
 
-    CatalogRestClient(CatalogSpringReactiveClient client,
+    CatalogRestClient(CatalogSpringClient client,
                       CircuitBreakerFactory<?, ?> circuitBreakerFactory) {
         this.client = client;
         this.circuitBreaker = circuitBreakerFactory.create("catalog");
@@ -41,7 +41,6 @@ class CatalogRestClient implements CatalogClient {
         LOGGER.info("List books for page {} in accept languages {}", pageable, acceptLanguages);
         return circuitBreaker.run(() -> client.
                 listBooks(acceptLanguages, "/api/v1/catalog?page={page}&size={size}", pageable.getPageNumber(), pageable.getPageSize())
-                .block()
         );
     }
 
@@ -53,20 +52,19 @@ class CatalogRestClient implements CatalogClient {
         LOGGER.info("List books for link {} in accept languages {}", linkName, acceptLanguages);
         return circuitBreaker.run(() -> client.
                 listBooks(acceptLanguages, current.getLink(linkName).orElseThrow())
-                .block()
         );
     }
 
     @Override
     public Book getBook(String id, String acceptLanguages) {
         LOGGER.info("Get book {} in accept languages {}", id, acceptLanguages);
-        return circuitBreaker.run(() -> client.retrieveBookDetails(id, acceptLanguages)
-                .map(book -> {
-                    var editions = client.retrieveBookEditions(book).block().stream()
-                            .map(EditionDetailDto::toEdition)
-                            .toList();
-                    return book.asBook(editions);
-                }).block());
+        return circuitBreaker.run(() -> {
+            var book = client.retrieveBookDetails(id, acceptLanguages);
+            var editions = client.retrieveBookEditions(book).stream()
+                    .map(EditionDetailDto::toEdition)
+                    .toList();
+            return book.asBook(editions);
+        });
     }
 
 }

@@ -1,7 +1,7 @@
 plugins {
 	id 'java'
 	id 'net.ltgt.errorprone' version '4.3.0'
-	id 'org.springframework.boot' version '3.5.7'
+	id 'org.springframework.boot' version '4.0.1'
 	id 'io.spring.dependency-management' version '1.1.7'
 	id 'com.avast.gradle.docker-compose' version '0.17.20'
 }
@@ -14,7 +14,21 @@ java {
 }
 
 repositories {
-	mavenCentral()
+	maven {
+		url = uri("https://maven.pkg.github.com/Alexandre-Carbenay/library")
+		content {
+			includeGroup "org.adhuc.library"
+			credentials {
+				username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+				password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+			}
+		}
+	}
+	mavenCentral {
+		content {
+			excludeGroup "org.adhuc.library"
+		}
+	}
 }
 
 sourceSets {
@@ -32,49 +46,52 @@ configurations {
 
 dependencyManagement {
 	imports {
-		mavenBom 'org.springframework.modulith:spring-modulith-bom:1.4.4'
-		mavenBom 'org.jmolecules:jmolecules-bom:2025.0.0'
+		mavenBom 'org.springframework.modulith:spring-modulith-bom:2.0.0'
+		mavenBom 'org.jmolecules:jmolecules-bom:2025.0.1'
 	}
 }
 
 dependencies {
 	implementation 'org.jspecify:jspecify:1.0.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.data:spring-data-rest-webmvc'
 	implementation 'org.springframework.modulith:spring-modulith-starter-core'
 	implementation 'org.springframework.modulith:spring-modulith-starter-insight'
 	implementation 'org.jmolecules:jmolecules-ddd'
 	implementation 'org.jmolecules:jmolecules-onion-architecture'
-	implementation 'com.atlassian.oai:swagger-request-validator-spring-webmvc:2.46.0'
-	implementation('commons-validator:commons-validator:1.10.0') {
+	implementation('commons-validator:commons-validator:1.10.1') {
 		exclude group: 'commons-collections', module: 'commons-collections'
 	}
 	implementation 'io.micrometer:micrometer-tracing'
 
-	runtimeOnly 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
+	implementation 'org.adhuc.library:rest-api-support:0.2.0'
+
+	runtimeOnly 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.0'
 	runtimeOnly 'io.micrometer:micrometer-tracing-bridge-otel'
 	runtimeOnly 'io.opentelemetry:opentelemetry-exporter-zipkin'
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-hateoas-test'
 	testImplementation 'org.springframework.modulith:spring-modulith-starter-test'
 	testImplementation 'org.jmolecules.integrations:jmolecules-archunit'
 	testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
 	testImplementation 'net.datafaker:datafaker:2.5.3'
-	testImplementation 'au.com.dius.pact.provider:junit5:4.6.18'
+	testImplementation 'au.com.dius.pact.provider:junit5:4.6.19'
+
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	acceptanceImplementation 'org.jspecify:jspecify:1.0.0'
 	acceptanceImplementation platform('io.cucumber:cucumber-bom:7.23.0')
 	acceptanceImplementation 'io.cucumber:cucumber-java'
 	acceptanceImplementation 'io.cucumber:cucumber-junit-platform-engine'
 	acceptanceImplementation 'org.junit.platform:junit-platform-suite'
-	acceptanceImplementation 'io.rest-assured:rest-assured'
+	acceptanceImplementation 'io.rest-assured:rest-assured:6.0.0'
 	acceptanceImplementation 'org.assertj:assertj-core'
-	acceptanceImplementation 'com.fasterxml.jackson.core:jackson-annotations'
 	acceptanceImplementation 'com.fasterxml.jackson.core:jackson-databind'
 
-	errorprone 'com.google.errorprone:error_prone_core:2.44.0'
-	errorprone 'com.uber.nullaway:nullaway:0.12.12'
+	errorprone 'com.google.errorprone:error_prone_core:2.45.0'
+	errorprone 'com.uber.nullaway:nullaway:0.12.14'
 }
 
 tasks.withType(JavaCompile).configureEach {

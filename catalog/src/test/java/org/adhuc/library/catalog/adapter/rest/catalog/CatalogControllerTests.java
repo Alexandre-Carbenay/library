@@ -1,10 +1,9 @@
 package org.adhuc.library.catalog.adapter.rest.catalog;
 
 import net.datafaker.Faker;
-import org.adhuc.library.catalog.adapter.rest.PaginationSerializationConfiguration;
+import org.adhuc.library.catalog.adapter.rest.RestAdapterTestConfiguration;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.books.BookModelAssembler;
-import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.authors.Author;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksMother.Books;
@@ -21,7 +20,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -54,7 +53,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Tag("integration")
 @Tag("restApi")
 @WebMvcTest(controllers = {CatalogController.class, BookModelAssembler.class, AuthorModelAssembler.class})
-@Import({RequestValidationConfiguration.class, PaginationSerializationConfiguration.class})
+@Import(RestAdapterTestConfiguration.class)
 @DisplayName("Catalog controller should")
 class CatalogControllerTests {
 
@@ -253,7 +252,7 @@ class CatalogControllerTests {
 
     @ParameterizedTest
     @CsvSource({"-50,-1", "-2,-50", "-1,0"})
-    @DisplayName("refuse providing a page with a negative page number")
+    @DisplayName("refuse providing a page with invalid page number & page size")
     void getInvalidPageNumberAndSize(String pageNumber, String pageSize) throws Exception {
         mvc.perform(get("/api/v1/catalog").accept("application/hal+json")
                         .queryParam("page", pageNumber)
@@ -368,9 +367,11 @@ class CatalogControllerTests {
 
     static void verifyNavigationLink(ResultActions result, boolean hasLink, String linkName, @Nullable String valueIfExists) throws Exception {
         if (hasLink) {
-            result.andExpect(jsonPath(STR."_links.\{linkName}.href", equalTo(requireNonNull(valueIfExists))));
+            var path = STR."_links.\{linkName}.href";
+            result.andExpect(jsonPath(path, equalTo(requireNonNull(valueIfExists))));
         } else {
-            result.andExpect(jsonPath(STR."_links.\{linkName}").doesNotExist());
+            var path = STR."_links.\{linkName}";
+            result.andExpect(jsonPath(path).doesNotExist());
         }
     }
 

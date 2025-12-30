@@ -93,21 +93,33 @@ jobs:
         working-directory: ${{ inputs.working-directory }}
         run: make build-compile
         timeout-minutes: 1
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "🐘 🧪 Test with Gradle"
         working-directory: ${{ inputs.working-directory }}
         run: make build-test
         timeout-minutes: 2
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "🧪 📒 Publish Tests Report"
         working-directory: ${{ inputs.working-directory }}
         run: make build-test-publish
         timeout-minutes: 1
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "🐘 📦 Build artifact with Gradle"
         working-directory: ${{ inputs.working-directory }}
         run: make build-jar
         timeout-minutes: 1
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "🔗 📂 Check for Pacts changes to commit"
         id: check-pacts

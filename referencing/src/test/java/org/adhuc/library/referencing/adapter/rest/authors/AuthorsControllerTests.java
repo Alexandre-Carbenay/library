@@ -2,12 +2,15 @@ package org.adhuc.library.referencing.adapter.rest.authors;
 
 import net.datafaker.Faker;
 import org.adhuc.library.referencing.adapter.rest.PaginationSerializationConfiguration;
-import org.adhuc.library.referencing.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.referencing.authors.Author;
 import org.adhuc.library.referencing.authors.AuthorsConsultationService;
 import org.adhuc.library.referencing.authors.AuthorsMother.Authors;
 import org.adhuc.library.referencing.authors.AuthorsReferencingService;
 import org.adhuc.library.referencing.authors.ReferenceAuthor;
+import org.adhuc.library.support.rest.validation.RequestValidationAutoConfiguration;
+import org.adhuc.library.support.rest.validation.openapi.OpenApiRequestValidationExceptionHandler;
+import org.adhuc.library.support.rest.validation.openapi.OpenApiValidationConfigurer;
+import org.adhuc.library.support.rest.validation.openapi.OpenApiValidationMessageParsersConfiguration;
 import org.assertj.core.api.SoftAssertions;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +23,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -51,7 +55,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Tag("integration")
 @Tag("restApi")
 @WebMvcTest(controllers = {AuthorsController.class, AuthorModelAssembler.class})
-@Import({RequestValidationConfiguration.class, PaginationSerializationConfiguration.class})
+@ImportAutoConfiguration(RequestValidationAutoConfiguration.class)
+@Import({
+        OpenApiValidationConfigurer.class,
+        OpenApiRequestValidationExceptionHandler.class,
+        OpenApiValidationMessageParsersConfiguration.class,
+        PaginationSerializationConfiguration.class
+})
 @DisplayName("Authors controller should")
 class AuthorsControllerTests {
 
@@ -273,9 +283,11 @@ class AuthorsControllerTests {
 
     static void verifyNavigationLink(ResultActions result, boolean hasLink, String linkName, @Nullable String valueIfExists) throws Exception {
         if (hasLink) {
-            result.andExpect(jsonPath(STR."_links.\{linkName}.href", equalTo(requireNonNull(valueIfExists))));
+            var path = STR."_links.\{linkName}.href";
+            result.andExpect(jsonPath(path, equalTo(requireNonNull(valueIfExists))));
         } else {
-            result.andExpect(jsonPath(STR."_links.\{linkName}").doesNotExist());
+            var path = STR."_links.\{linkName}";
+            result.andExpect(jsonPath(path).doesNotExist());
         }
     }
 
@@ -359,10 +371,10 @@ class AuthorsControllerTests {
     @Test
     @DisplayName("refuse referencing author when name is missing")
     void referenceAuthorMissingName() throws Exception {
-        var dateOfBirth = Authors.dateOfBirth();
+        var requestBody = STR."{\"date_of_birth\":\"\{Authors.dateOfBirth()}\"}";
         mvc.perform(post("/api/v1/authors")
                         .contentType("application/json")
-                        .content(STR."{\"date_of_birth\":\"\{dateOfBirth}\"}")
+                        .content(requestBody)
                 ).andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
@@ -372,16 +384,16 @@ class AuthorsControllerTests {
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
                 .andExpect(jsonPath("errors[0].detail", equalTo("Missing required property")))
-                .andExpect(jsonPath("errors[0].pointer", equalTo("name")));
+                .andExpect(jsonPath("errors[0].pointer", equalTo("/name")));
     }
 
     @Test
     @DisplayName("refuse referencing author when date of birth is missing")
     void referenceAuthorMissingDateOfBirth() throws Exception {
-        var name = Authors.name();
+        var requestBody = STR."{\"name\":\"\{Authors.name()}\"}";
         mvc.perform(post("/api/v1/authors")
                         .contentType("application/json")
-                        .content(STR."{\"name\":\"\{name}\"}")
+                        .content(requestBody)
                 ).andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
@@ -391,7 +403,7 @@ class AuthorsControllerTests {
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
                 .andExpect(jsonPath("errors[0].detail", equalTo("Missing required property")))
-                .andExpect(jsonPath("errors[0].pointer", equalTo("date_of_birth")));
+                .andExpect(jsonPath("errors[0].pointer", equalTo("/date_of_birth")));
     }
 
     @Test
@@ -401,9 +413,10 @@ class AuthorsControllerTests {
 
         when(authorsReferencingService.referenceAuthor(any())).thenReturn(author);
 
+        var requestBody = STR."{\"name\":\"\{author.name()}\", \"date_of_birth\":\"\{author.dateOfBirth()}\"}";
         mvc.perform(post("/api/v1/authors")
                         .contentType("application/json")
-                        .content(STR."{\"name\":\"\{author.name()}\", \"date_of_birth\":\"\{author.dateOfBirth()}\"}")
+                        .content(requestBody)
                 ).andExpect(status().isCreated())
                 .andExpect(header().string("Location", equalTo(STR."http://localhost/api/v1/authors/\{author.id()}")))
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
@@ -428,9 +441,10 @@ class AuthorsControllerTests {
 
         when(authorsReferencingService.referenceAuthor(any())).thenReturn(author);
 
+        var requestBody = STR."{\"name\":\"\{author.name()}\", \"date_of_birth\":\"\{author.dateOfBirth()}\", \"date_of_death\":\"\{author.dateOfDeath().orElseThrow()}\"}";
         mvc.perform(post("/api/v1/authors")
                         .contentType("application/json")
-                        .content(STR."{\"name\":\"\{author.name()}\", \"date_of_birth\":\"\{author.dateOfBirth()}\", \"date_of_death\":\"\{author.dateOfDeath().orElseThrow()}\"}")
+                        .content(requestBody)
                 ).andExpect(status().isCreated())
                 .andExpect(header().string("Location", equalTo(STR."http://localhost/api/v1/authors/\{author.id()}")))
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))

@@ -1,8 +1,8 @@
 package org.adhuc.library.catalog.adapter.rest.books;
 
+import org.adhuc.library.catalog.adapter.rest.RestAdapterTestConfiguration;
 import org.adhuc.library.catalog.adapter.rest.authors.AuthorModelAssembler;
 import org.adhuc.library.catalog.adapter.rest.editions.EditionModelAssembler;
-import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.books.Book;
 import org.adhuc.library.catalog.books.BooksService;
 import org.adhuc.library.catalog.editions.Edition;
@@ -13,9 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -32,8 +31,8 @@ import static org.adhuc.library.catalog.adapter.rest.editions.EditionsAssertions
 import static org.adhuc.library.catalog.books.BooksMother.builder;
 import static org.adhuc.library.catalog.books.BooksMother.detailsBuilder;
 import static org.adhuc.library.catalog.editions.EditionsMother.editionsOf;
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.startsWith;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
@@ -50,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         AuthorModelAssembler.class,
         EditionModelAssembler.class
 })
-@Import(RequestValidationConfiguration.class)
+@Import(RestAdapterTestConfiguration.class)
 @DisplayName("Books controller should")
 class BooksControllerTests {
 
@@ -62,9 +61,9 @@ class BooksControllerTests {
     private EditionsService editionsService;
 
     @ParameterizedTest
-    @ValueSource(strings = {"123", "invalid"})
+    @MethodSource("invalidBookIdProvider")
     @DisplayName("refuse providing a book with invalid ID")
-    void invalidBookId(String invalidId) throws Exception {
+    void invalidBookId(String invalidId, String errorDetail) throws Exception {
         mvc.perform(get("/api/v1/books/{id}", invalidId).accept("application/hal+json"))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
@@ -74,10 +73,16 @@ class BooksControllerTests {
                 .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
-                .andExpect(jsonPath("errors[0].detail",
-                        equalTo(STR."Input string \"\{invalidId}\" is not a valid UUID")))
+                .andExpect(jsonPath("errors[0].detail", equalTo(errorDetail)))
                 .andExpect(jsonPath("errors[0].parameter", equalTo("id")));
         verifyNoInteractions(booksService, editionsService);
+    }
+
+    static Stream<Arguments> invalidBookIdProvider() {
+        return Stream.of(
+                Arguments.of("123", "Input string \"123\" is not a valid UUID"),
+                Arguments.of("invalid", "Input string \"invalid\" is not a valid UUID")
+        );
     }
 
     @Test

@@ -80,7 +80,7 @@ public class AuthorsStepDefinitions {
                 .body("type", equalTo("/problems/invalid-request"))
                 .body("title", equalTo("Request validation error"))
                 .body("errors[0].detail", equalTo("Missing required property"))
-                .body("errors[0].pointer", equalTo("date_of_birth"));
+                .body("errors[0].pointer", equalTo("/date_of_birth"));
     }
 
     @Then("{authorName} is now present in the list of authors")
