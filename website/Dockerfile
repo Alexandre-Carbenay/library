@@ -1,10 +1,10 @@
-FROM eclipse-temurin:21-jre-alpine AS builder
+FROM eclipse-temurin:25-jre-alpine AS builder
 WORKDIR /builder
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=tools -jar application.jar extract --layers --destination extracted
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 ARG CREATED
 ARG VERSION
 ARG REVISION
@@ -32,7 +32,7 @@ LABEL org.opencontainers.image.version="${VERSION}"
 LABEL org.opencontainers.image.revision="${REVISION}"
 LABEL org.opencontainers.image.title="Library - Catalog"
 LABEL org.opencontainers.image.description="Public website for the Library system"
-LABEL org.opencontainers.image.base.name="eclipse-temurin:21-jre-alpine"
+LABEL org.opencontainers.image.base.name="eclipse-temurin:25-jre-alpine"
 EXPOSE 8080/tcp
-RUN java -XX:ArchiveClassesAtExit=application.jsa -Dspring.context.exit=onRefresh --enable-preview -jar application.jar
-ENTRYPOINT ["java", "--enable-preview", "-XX:SharedArchiveFile=application.jsa", "-jar", "application.jar"]
+RUN java -XX:ArchiveClassesAtExit=application.jsa -Dspring.context.exit=onRefresh -jar application.jar
+ENTRYPOINT ["java", "-XX:SharedArchiveFile=application.jsa", "-jar", "application.jar"]
