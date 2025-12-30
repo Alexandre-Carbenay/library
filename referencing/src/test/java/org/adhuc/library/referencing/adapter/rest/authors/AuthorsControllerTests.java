@@ -24,7 +24,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -283,9 +283,11 @@ class AuthorsControllerTests {
 
     static void verifyNavigationLink(ResultActions result, boolean hasLink, String linkName, @Nullable String valueIfExists) throws Exception {
         if (hasLink) {
-            result.andExpect(jsonPath(STR."_links.\{linkName}.href", equalTo(requireNonNull(valueIfExists))));
+            var path = STR."_links.\{linkName}.href";
+            result.andExpect(jsonPath(path, equalTo(requireNonNull(valueIfExists))));
         } else {
-            result.andExpect(jsonPath(STR."_links.\{linkName}").doesNotExist());
+            var path = STR."_links.\{linkName}";
+            result.andExpect(jsonPath(path).doesNotExist());
         }
     }
 
@@ -369,10 +371,10 @@ class AuthorsControllerTests {
     @Test
     @DisplayName("refuse referencing author when name is missing")
     void referenceAuthorMissingName() throws Exception {
-        var dateOfBirth = Authors.dateOfBirth();
+        var requestBody = STR."{\"date_of_birth\":\"\{Authors.dateOfBirth()}\"}";
         mvc.perform(post("/api/v1/authors")
                         .contentType("application/json")
-                        .content(STR."{\"date_of_birth\":\"\{dateOfBirth}\"}")
+                        .content(requestBody)
                 ).andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
@@ -388,10 +390,10 @@ class AuthorsControllerTests {
     @Test
     @DisplayName("refuse referencing author when date of birth is missing")
     void referenceAuthorMissingDateOfBirth() throws Exception {
-        var name = Authors.name();
+        var requestBody = STR."{\"name\":\"\{Authors.name()}\"}";
         mvc.perform(post("/api/v1/authors")
                         .contentType("application/json")
-                        .content(STR."{\"name\":\"\{name}\"}")
+                        .content(requestBody)
                 ).andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
                 .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
@@ -411,9 +413,10 @@ class AuthorsControllerTests {
 
         when(authorsReferencingService.referenceAuthor(any())).thenReturn(author);
 
+        var requestBody = STR."{\"name\":\"\{author.name()}\", \"date_of_birth\":\"\{author.dateOfBirth()}\"}";
         mvc.perform(post("/api/v1/authors")
                         .contentType("application/json")
-                        .content(STR."{\"name\":\"\{author.name()}\", \"date_of_birth\":\"\{author.dateOfBirth()}\"}")
+                        .content(requestBody)
                 ).andExpect(status().isCreated())
                 .andExpect(header().string("Location", equalTo(STR."http://localhost/api/v1/authors/\{author.id()}")))
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
@@ -438,9 +441,10 @@ class AuthorsControllerTests {
 
         when(authorsReferencingService.referenceAuthor(any())).thenReturn(author);
 
+        var requestBody = STR."{\"name\":\"\{author.name()}\", \"date_of_birth\":\"\{author.dateOfBirth()}\", \"date_of_death\":\"\{author.dateOfDeath().orElseThrow()}\"}";
         mvc.perform(post("/api/v1/authors")
                         .contentType("application/json")
-                        .content(STR."{\"name\":\"\{author.name()}\", \"date_of_birth\":\"\{author.dateOfBirth()}\", \"date_of_death\":\"\{author.dateOfDeath().orElseThrow()}\"}")
+                        .content(requestBody)
                 ).andExpect(status().isCreated())
                 .andExpect(header().string("Location", equalTo(STR."http://localhost/api/v1/authors/\{author.id()}")))
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
