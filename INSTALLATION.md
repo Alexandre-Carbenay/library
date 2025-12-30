@@ -7,7 +7,7 @@ This guide will help you install your development environment to start collabora
 ### Tools installation
 
 * [Git](https://github.com/git-guides/install-git)
-* [JDK 21](https://adoptium.net/fr/temurin/releases/)
+* [JDK 25](https://adoptium.net/fr/temurin/releases/)
 * [Docker](https://www.docker.com/) and [docker-compose](https://docs.docker.com/compose/install/)
 * [jq](https://jqlang.org/download/)
 

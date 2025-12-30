@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-@SuppressWarnings("preview")
 public class InMemoryAuthorsLoader {
 
     private final Logger logger = LoggerFactory.getLogger(InMemoryAuthorsLoader.class);
@@ -46,19 +45,19 @@ public class InMemoryAuthorsLoader {
 
     public static class AuthorsAutoLoadException extends RuntimeException {
         AuthorsAutoLoadException(String authorsResourcePath, Throwable cause) {
-            super(STR."Unable to load authors from \{authorsResourcePath}", cause);
+            super("Unable to load authors from " + authorsResourcePath, cause);
         }
     }
 
     private record AuthorDto(UUID id, String name, String dateOfBirth, @Nullable String dateOfDeath) {
         Author convert() {
             Assert.notNull(id, "Author ID cannot be null");
-            Assert.hasText(name, () -> STR."Author \{id} name cannot be null or empty");
-            Assert.notNull(this.dateOfBirth, () -> STR."Author \{id} date of birth cannot be null");
+            Assert.hasText(name, () -> "Author " + id + " name cannot be null or empty");
+            Assert.notNull(this.dateOfBirth, () -> "Author " + id + " date of birth cannot be null");
             var dateOfBirth = LocalDate.parse(this.dateOfBirth);
             var dateOfDeath = this.dateOfDeath != null ? LocalDate.parse(this.dateOfDeath) : null;
             if (dateOfDeath != null && dateOfDeath.isBefore(dateOfBirth)) {
-                throw new IllegalArgumentException(STR."Author \{id} cannot be dead before being born");
+                throw new IllegalArgumentException("Author " + id + " cannot be dead before being born");
             }
             return new Author(id, name, dateOfBirth, dateOfDeath);
         }

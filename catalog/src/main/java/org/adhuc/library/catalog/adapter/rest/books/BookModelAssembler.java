@@ -4,7 +4,6 @@ import org.adhuc.library.catalog.books.Book;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,28 +17,24 @@ public class BookModelAssembler extends RepresentationModelAssemblerSupport<Book
         super(BooksController.class, BookModel.class);
     }
 
-    @NonNull
     @Override
-    public BookModel toModel(@NonNull Book book) {
+    public BookModel toModel(Book book) {
         return toModel(book, book.originalLanguage());
     }
 
-    @NonNull
-    public BookModel toModel(@NonNull Book book, @NonNull String language) {
+    public BookModel toModel(Book book, String language) {
         var model = instantiateModel(book, language);
         model.add(linkTo(methodOn(BooksController.class).getBook(book.id(), null)).withSelfRel());
         book.wikipediaLinkIn(language).ifPresent(link -> model.add(Link.of(link.value()).withRel(link.source())));
         return model;
     }
 
-    @NonNull
     @Override
-    protected BookModel instantiateModel(@NonNull Book book) {
+    protected BookModel instantiateModel(Book book) {
         return new BookModel(book);
     }
 
-    @NonNull
-    protected BookModel instantiateModel(@NonNull Book book, @NonNull String language) {
+    protected BookModel instantiateModel(Book book, String language) {
         return new BookModel(book, language);
     }
 
