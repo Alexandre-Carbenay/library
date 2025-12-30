@@ -73,17 +73,17 @@ public class InMemoryEditionsLoader {
     private record EditionDto(String isbn, String title, String publicationDate, UUID book, UUID publisher,
                               String language, String summary) {
         Edition convert(BooksRepository booksRepository, List<Publisher> publishers) {
-            Assert.notNull(ISBN_VALIDATOR.validateISBN13(isbn), STR."ISBN \{isbn} is not valid");
-            Assert.hasText(title, () -> STR."Edition \{isbn} title must be filled");
-            Assert.notNull(publicationDate, () -> STR."Edition \{isbn} publication date must be filled");
+            Assert.notNull(ISBN_VALIDATOR.validateISBN13(isbn), "ISBN " + isbn + " is not valid");
+            Assert.hasText(title, () -> "Edition " + isbn + " title must be filled");
+            Assert.notNull(publicationDate, () -> "Edition " + isbn + " publication date must be filled");
             var publicationDate = PublicationDate.of(LocalDate.parse(this.publicationDate));
-            Assert.notNull(this.book, () -> STR."Edition \{isbn} book must be filled");
+            Assert.notNull(this.book, () -> "Edition " + isbn + " book must be filled");
             var book = booksRepository.findById(this.book);
-            Assert.isTrue(book.isPresent(), STR."Book \{book} is unknown for edition \{isbn}");
+            Assert.isTrue(book.isPresent(), "Book " + book + " is unknown for edition " + isbn);
             var publisher = publishers.stream().filter(p -> p.id().equals(this.publisher)).findFirst().orElse(null);
-            Assert.notNull(language, () -> STR."Edition \{isbn} language must be filled");
-            Assert.isTrue(LANGUAGES.contains(language), () -> STR."Edition \{isbn} language \{language} does not correspond to known language");
-            Assert.hasText(summary, () -> STR."Edition \{isbn} summary must be filled");
+            Assert.notNull(language, () -> "Edition " + isbn + " language must be filled");
+            Assert.isTrue(LANGUAGES.contains(language), () -> "Edition " + isbn + " language " + language + " does not correspond to known language");
+            Assert.hasText(summary, () -> "Edition " + isbn + " summary must be filled");
             return new Edition(isbn, title, publicationDate, book.get(), publisher, language, summary);
         }
     }

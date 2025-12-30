@@ -65,10 +65,10 @@ public class InMemoryBooksLoader {
                     .map(authorsRepository::findById)
                     .flatMap(Optional::stream)
                     .collect(toSet());
-            Assert.isTrue(this.authors.size() == authors.size(), STR."At least one of the authors in \{this.authors} is unknown for book \{id}");
-            Assert.notNull(originalLanguage, () -> STR."Book \{id} original language must be filled");
-            Assert.isTrue(LANGUAGES.contains(originalLanguage), () -> STR."Book \{id} original language \{originalLanguage} does not correspond to known language");
-            Assert.notEmpty(details, () -> STR."Book \{id} localized details cannot be empty");
+            Assert.isTrue(this.authors.size() == authors.size(), "At least one of the authors in " + this.authors + " is unknown for book " + id);
+            Assert.notNull(originalLanguage, () -> "Book " + id + " original language must be filled");
+            Assert.isTrue(LANGUAGES.contains(originalLanguage), () -> "Book " + id + " original language " + originalLanguage + " does not correspond to known language");
+            Assert.notEmpty(details, () -> "Book " + id + " localized details cannot be empty");
             var localizedDetails = details.stream()
                     .map(dto -> dto.convert(id))
                     .collect(toSet());
@@ -79,10 +79,10 @@ public class InMemoryBooksLoader {
     private record LocalizedDetailsDto(String language, String title, String description,
                                        List<ExternalLinkDto> links) {
         LocalizedDetails convert(UUID id) {
-            Assert.notNull(language, () -> STR."Book \{id} localized details language must be filled");
-            Assert.isTrue(LANGUAGES.contains(language), () -> STR."Book \{id} localized detail language \{language} does not correspond to known language");
-            Assert.hasText(title, () -> STR."Book \{id} title for language \{language} must be filled");
-            Assert.hasText(description, () -> STR."Book \{id} description for language \{language} must be filled");
+            Assert.notNull(language, () -> "Book " + id + " localized details language must be filled");
+            Assert.isTrue(LANGUAGES.contains(language), () -> "Book " + id + " localized detail language " + language + " does not correspond to known language");
+            Assert.hasText(title, () -> "Book " + id + " title for language " + language + " must be filled");
+            Assert.hasText(description, () -> "Book " + id + " description for language " + language + " must be filled");
             var externalLinks = this.links.stream()
                     .map(dto -> dto.convert(id, language))
                     .collect(toSet());
@@ -92,8 +92,8 @@ public class InMemoryBooksLoader {
 
     private record ExternalLinkDto(String source, String value) {
         ExternalLink convert(UUID id, String language) {
-            Assert.hasText(source, () -> STR."Book \{id} external link source for language \{language} must be filled");
-            Assert.hasText(value, () -> STR."Book \{id} external link value for source \{source} for language \{language} must be filled");
+            Assert.hasText(source, () -> "Book " + id + " external link source for language " + language + " must be filled");
+            Assert.hasText(value, () -> "Book " + id + " external link value for source " + source + " for language " + language + " must be filled");
             return new ExternalLink(source, value);
         }
     }
