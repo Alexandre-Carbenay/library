@@ -87,7 +87,7 @@ public class BooksController {
                         .withType(URI.create("/problems/unknown-entity"))
                         .withStatus(NOT_FOUND)
                         .withTitle("Unknown book")
-                        .withDetail(STR."No book exists with id '\{id}'")
+                        .withDetail("No book exists with id '" + id + "'")
                 );
     }
 

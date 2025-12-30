@@ -12,7 +12,7 @@ public record Book(UUID id,
 
     public Book {
         Assert.isTrue(details.stream().anyMatch(detail -> detail.language().equals(originalLanguage)),
-                () -> STR."Book \{id} details must have detail in original language \{originalLanguage}");
+                () -> "Book " + id + " details must have detail in original language " + originalLanguage);
     }
 
     public boolean acceptsLanguage(Locale language) {
@@ -43,7 +43,7 @@ public record Book(UUID id,
         return details.stream()
                 .filter(detail -> detail.language().equals(language))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException(STR."No detail for language \{language} in book \{id}"));
+                .orElseThrow(() -> new IllegalArgumentException("No detail for language " + language + " in book " + id));
     }
 
     @Override

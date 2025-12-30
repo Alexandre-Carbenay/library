@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-@SuppressWarnings("preview")
 public class InMemoryEditionsLoader {
 
     private static final ISBNValidator ISBN_VALIDATOR = new ISBNValidator();
@@ -66,7 +65,7 @@ public class InMemoryEditionsLoader {
 
     public static class EditionsAutoLoadException extends RuntimeException {
         EditionsAutoLoadException(String editionsResourcePath, Throwable cause) {
-            super(STR."Unable to load editions from \{editionsResourcePath}", cause);
+            super("Unable to load editions from " + editionsResourcePath, cause);
         }
     }
 
@@ -91,7 +90,7 @@ public class InMemoryEditionsLoader {
     private record PublisherDto(UUID id, String name) {
         Publisher convert() {
             Assert.notNull(id, "Publisher ID cannot be null");
-            Assert.hasText(name, () -> STR."Publisher \{id} name cannot be null or empty");
+            Assert.hasText(name, () -> "Publisher " + id + " name cannot be null or empty");
             return new Publisher(id, name);
         }
     }

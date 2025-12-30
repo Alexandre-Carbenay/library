@@ -49,7 +49,6 @@ import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SuppressWarnings({"preview", "NotNullFieldNotInitialized"})
 @Tag("integration")
 @Tag("restApi")
 @WebMvcTest(controllers = {CatalogController.class, BookModelAssembler.class, AuthorModelAssembler.class})
@@ -198,7 +197,7 @@ class CatalogControllerTests {
                 .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(books.getTotalElements()).intValue())))
                 .andExpect(jsonPath("page.total_pages", equalTo(books.getTotalPages())))
                 .andExpect(jsonPath("page.number", equalTo(books.getNumber())))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{books.getNumber()}&size=50")))
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/catalog?page=" + books.getNumber() + "&size=50")))
                 .andExpect(jsonPath("_embedded").exists())
                 .andExpect(header().string("Content-Language", originalLanguage));
 
@@ -227,7 +226,7 @@ class CatalogControllerTests {
                 .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
-                .andExpect(jsonPath("errors[0].detail", equalTo(STR."Numeric instance is lower than the required minimum (minimum: 0, found: \{pageNumber})")))
+                .andExpect(jsonPath("errors[0].detail", equalTo("Numeric instance is lower than the required minimum (minimum: 0, found: " + pageNumber + ")")))
                 .andExpect(jsonPath("errors[0].parameter", equalTo("page")));
     }
 
@@ -246,7 +245,7 @@ class CatalogControllerTests {
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
                 .andExpect(jsonPath("errors[0].detail",
-                        equalTo(STR."Numeric instance is lower than the required minimum (minimum: 1, found: \{pageSize})")))
+                        equalTo("Numeric instance is lower than the required minimum (minimum: 1, found: " + pageSize + ")")))
                 .andExpect(jsonPath("errors[0].parameter", equalTo("size")));
     }
 
@@ -266,10 +265,10 @@ class CatalogControllerTests {
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(2)))
                 .andExpect(jsonPath("errors[0].detail",
-                        equalTo(STR."Numeric instance is lower than the required minimum (minimum: 0, found: \{pageNumber})")))
+                        equalTo("Numeric instance is lower than the required minimum (minimum: 0, found: " + pageNumber + ")")))
                 .andExpect(jsonPath("errors[0].parameter", equalTo("page")))
                 .andExpect(jsonPath("errors[1].detail",
-                        equalTo(STR."Numeric instance is lower than the required minimum (minimum: 1, found: \{pageSize})")))
+                        equalTo("Numeric instance is lower than the required minimum (minimum: 1, found: " + pageSize + ")")))
                 .andExpect(jsonPath("errors[1].parameter", equalTo("size")));
     }
 
@@ -294,7 +293,7 @@ class CatalogControllerTests {
                 .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(books.getTotalElements()).intValue())))
                 .andExpect(jsonPath("page.total_pages", equalTo(books.getTotalPages())))
                 .andExpect(jsonPath("page.number", equalTo(pageIndex)))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{pageIndex}&size=\{pageSize}")))
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/catalog?page=" + pageIndex + "&size=" + pageSize)))
                 .andExpect(jsonPath("_embedded").exists())
                 .andExpect(header().string("Content-Language", originalLanguage));
 
@@ -328,7 +327,7 @@ class CatalogControllerTests {
                 .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(books.getTotalElements()).intValue())))
                 .andExpect(jsonPath("page.total_pages", equalTo(books.getTotalPages())))
                 .andExpect(jsonPath("page.number", equalTo(pageIndex)))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{pageIndex}&size=\{pageSize}")))
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/catalog?page=" + pageIndex + "&size=" + pageSize)))
                 .andExpect(jsonPath("_embedded").exists())
                 .andExpect(header().string("Content-Language", "fr"));
 
@@ -357,20 +356,19 @@ class CatalogControllerTests {
                         .queryParam("size", Integer.toString(pageSize))
                 ).andExpect(status().isPartialContent())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/catalog?page=\{pageIndex}&size=\{pageSize}")));
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/catalog?page=" + pageIndex + "&size=" + pageSize)));
 
-        verifyNavigationLink(result, hasFirst, "first", STR."http://localhost/api/v1/catalog?page=0&size=\{pageSize}");
-        verifyNavigationLink(result, hasPrev, "prev", STR."http://localhost/api/v1/catalog?page=\{pageIndex - 1}&size=\{pageSize}");
-        verifyNavigationLink(result, hasNext, "next", STR."http://localhost/api/v1/catalog?page=\{pageIndex + 1}&size=\{pageSize}");
-        verifyNavigationLink(result, hasLast, "last", STR."http://localhost/api/v1/catalog?page=\{books.getTotalPages() - 1}&size=\{pageSize}");
+        verifyNavigationLink(result, hasFirst, "first", "http://localhost/api/v1/catalog?page=0&size=" + pageSize);
+        verifyNavigationLink(result, hasPrev, "prev", "http://localhost/api/v1/catalog?page=" + (pageIndex - 1) + "&size=" + pageSize);
+        verifyNavigationLink(result, hasNext, "next", "http://localhost/api/v1/catalog?page=" + (pageIndex + 1) + "&size=" + pageSize);
+        verifyNavigationLink(result, hasLast, "last", "http://localhost/api/v1/catalog?page=" + (books.getTotalPages() - 1) + "&size=" + pageSize);
     }
 
     static void verifyNavigationLink(ResultActions result, boolean hasLink, String linkName, @Nullable String valueIfExists) throws Exception {
         if (hasLink) {
-            var path = STR."_links.\{linkName}.href";
-            result.andExpect(jsonPath(path, equalTo(requireNonNull(valueIfExists))));
+            result.andExpect(jsonPath("_links." + linkName + ".href", equalTo(requireNonNull(valueIfExists))));
         } else {
-            var path = STR."_links.\{linkName}";
+            var path = "_links." + linkName;
             result.andExpect(jsonPath(path).doesNotExist());
         }
     }

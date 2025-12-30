@@ -11,7 +11,6 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PUBLISH_ENABLED
 @SelectPackages("org.adhuc.library.catalog.acceptance")
 @SelectClasspathResource("features")
 @ConfigurationParameter(key = PLUGIN_PUBLISH_ENABLED_PROPERTY_NAME, value = "true")
-@SuppressWarnings("preview")
 public class AcceptanceTests {
 
     private static final String CATALOG_SERVICE_NAME = "catalog";
@@ -20,7 +19,7 @@ public class AcceptanceTests {
     @Before
     public void configureRestAssured() {
         var baseUrl = new ServiceUrlResolver(CATALOG_SERVICE_NAME, CATALOG_EXPOSED_PORT).serviceUrl();
-        RestAssured.baseURI = STR."\{baseUrl}/api";
+        RestAssured.baseURI = baseUrl + "/api";
         RestAssured.useRelaxedHTTPSValidation();
     }
 
@@ -35,7 +34,7 @@ public class AcceptanceTests {
             if (exposedPort == null) {
                 throw new NullPointerException("exposedPort is marked non-null but is null");
             }
-            var portPropertyName = STR."\{serviceName}.tcp.\{exposedPort}";
+            var portPropertyName = serviceName + ".tcp." + exposedPort;
             this.port = Integer.parseInt(System.getProperty(portPropertyName, exposedPort));
         }
 

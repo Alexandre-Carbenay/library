@@ -23,7 +23,7 @@ import static java.util.stream.Collectors.toSet;
 public class InMemoryBooksLoader {
     private static final List<String> LANGUAGES = List.of(Locale.getISOLanguages());
 
-    private final Logger logger = LoggerFactory.getLogger(InMemoryEditionsLoader.class);
+    private final Logger logger = LoggerFactory.getLogger(InMemoryBooksLoader.class);
     private final InMemoryBooksRepository repository;
     private final AuthorsRepository authorsRepository;
     private final String booksResourcePath;
@@ -53,14 +53,14 @@ public class InMemoryBooksLoader {
 
     public static class BooksAutoLoadException extends RuntimeException {
         BooksAutoLoadException(String booksResourcePath, Throwable cause) {
-            super(STR."Unable to load books from \{booksResourcePath}", cause);
+            super("Unable to load books from " + booksResourcePath, cause);
         }
     }
 
     private record BookDto(UUID id, List<UUID> authors, String originalLanguage, List<LocalizedDetailsDto> details) {
         Book convert(AuthorsRepository authorsRepository) {
-            Assert.notNull(id, () -> STR."Book ID must be filled");
-            Assert.notEmpty(this.authors, () -> STR."Book \{id} authors cannot be empty");
+            Assert.notNull(id, () -> "Book ID must be filled");
+            Assert.notEmpty(this.authors, () -> "Book " + id + " authors cannot be empty");
             var authors = this.authors.stream()
                     .map(authorsRepository::findById)
                     .flatMap(Optional::stream)

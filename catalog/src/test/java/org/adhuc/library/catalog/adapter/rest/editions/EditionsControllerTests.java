@@ -15,7 +15,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,7 +29,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SuppressWarnings({"preview", "NotNullFieldNotInitialized"})
 @Tag("integration")
 @Tag("restApi")
 @WebMvcTest(controllers = {
@@ -61,7 +59,7 @@ class EditionsControllerTests {
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
                 .andExpect(jsonPath("errors[0].detail",
-                        equalTo(STR."Input string '\{invalidIsbn}' is not a valid ISBN")))
+                        equalTo("Input string '" + invalidIsbn + "' is not a valid ISBN")))
                 .andExpect(jsonPath("errors[0].parameter", equalTo("isbn")));
     }
 
@@ -101,8 +99,8 @@ class EditionsControllerTests {
                 .andExpect(jsonPath("publisher", equalTo(edition.publisher().orElseThrow().name())))
                 .andExpect(jsonPath("language", equalTo(edition.language())))
                 .andExpect(jsonPath("summary", equalTo(edition.summary())))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/editions/\{edition.isbn()}")))
-                .andExpect(jsonPath("_links.book.href", equalTo(STR."http://localhost/api/v1/books/\{edition.book().id()}")));
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/editions/" + edition.isbn())))
+                .andExpect(jsonPath("_links.book.href", equalTo("http://localhost/api/v1/books/" + edition.book().id())));
 
         verify(editionsService).getEdition(edition.isbn());
     }
@@ -133,8 +131,8 @@ class EditionsControllerTests {
                 .andExpect(jsonPath("publisher").doesNotExist())
                 .andExpect(jsonPath("language", equalTo(edition.language())))
                 .andExpect(jsonPath("summary", equalTo(edition.summary())))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/editions/\{edition.isbn()}")))
-                .andExpect(jsonPath("_links.book.href", equalTo(STR."http://localhost/api/v1/books/\{edition.book().id()}")));
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/editions/" + edition.isbn())))
+                .andExpect(jsonPath("_links.book.href", equalTo("http://localhost/api/v1/books/" + edition.book().id())));
 
         verify(editionsService).getEdition(edition.isbn());
     }

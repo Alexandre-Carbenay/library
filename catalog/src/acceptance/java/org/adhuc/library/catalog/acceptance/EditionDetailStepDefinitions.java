@@ -11,7 +11,6 @@ import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 
-@SuppressWarnings("preview")
 public class EditionDetailStepDefinitions {
 
     private String isbn;
@@ -31,7 +30,7 @@ public class EditionDetailStepDefinitions {
                 .body("type", equalTo("/problems/unknown-entity"))
                 .body("status", equalTo(404))
                 .body("title", equalTo("Unknown edition"))
-                .body("detail", equalTo(STR."No edition exists with ISBN '\{isbn}'"));
+                .body("detail", equalTo("No edition exists with ISBN '" + isbn + "'"));
     }
 
     @Then("the edition details have the expected {string}, {word}, {language}, {string} and related {uuid}")
