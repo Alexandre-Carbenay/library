@@ -14,7 +14,7 @@ dependencyManagement {
 group = 'org.adhuc.library'
 
 java {
-    sourceCompatibility = '21'
+    sourceCompatibility = '25'
 }
 
 repositories {
@@ -44,13 +44,8 @@ tasks.named('compileJava') {
     inputs.files(tasks.named('processResources'))
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs.add('--enable-preview')
-}
-
 tasks.withType(Test).configureEach {
     useJUnitPlatform()
-    jvmArgs += '--enable-preview'
     testLogging {
         events "failed", "skipped", "standardError"
         showExceptions true
