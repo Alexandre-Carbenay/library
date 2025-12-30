@@ -8,9 +8,6 @@ import org.adhuc.library.referencing.authors.AuthorsMother.Authors;
 import org.adhuc.library.referencing.authors.AuthorsReferencingService;
 import org.adhuc.library.referencing.authors.ReferenceAuthor;
 import org.adhuc.library.support.rest.validation.RequestValidationAutoConfiguration;
-import org.adhuc.library.support.rest.validation.openapi.OpenApiRequestValidationExceptionHandler;
-import org.adhuc.library.support.rest.validation.openapi.OpenApiValidationConfigurer;
-import org.adhuc.library.support.rest.validation.openapi.OpenApiValidationMessageParsersConfiguration;
 import org.assertj.core.api.SoftAssertions;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DisplayName;
@@ -51,17 +48,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SuppressWarnings({"NotNullFieldNotInitialized", "preview", "StringTemplateMigration"})
 @Tag("integration")
 @Tag("restApi")
 @WebMvcTest(controllers = {AuthorsController.class, AuthorModelAssembler.class})
 @ImportAutoConfiguration(RequestValidationAutoConfiguration.class)
-@Import({
-        OpenApiValidationConfigurer.class,
-        OpenApiRequestValidationExceptionHandler.class,
-        OpenApiValidationMessageParsersConfiguration.class,
-        PaginationSerializationConfiguration.class
-})
+@Import(PaginationSerializationConfiguration.class)
 @DisplayName("Authors controller should")
 class AuthorsControllerTests {
 
@@ -155,7 +146,7 @@ class AuthorsControllerTests {
                 .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(authors.getTotalElements()).intValue())))
                 .andExpect(jsonPath("page.total_pages", equalTo(authors.getTotalPages())))
                 .andExpect(jsonPath("page.number", equalTo(authors.getNumber())))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/authors?page=\{authors.getNumber()}&size=50")))
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=" + authors.getNumber() + "&size=50")))
                 .andExpect(jsonPath("_embedded").exists());
 
         assertResponseContainsAllAuthors(result, authors.toList());
@@ -182,7 +173,7 @@ class AuthorsControllerTests {
                 .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
-                .andExpect(jsonPath("errors[0].detail", equalTo(STR."Numeric instance is lower than the required minimum (minimum: 0, found: \{pageNumber})")))
+                .andExpect(jsonPath("errors[0].detail", equalTo("Numeric instance is lower than the required minimum (minimum: 0, found: " + pageNumber + ")")))
                 .andExpect(jsonPath("errors[0].parameter", equalTo("page")));
     }
 
@@ -201,7 +192,7 @@ class AuthorsControllerTests {
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(1)))
                 .andExpect(jsonPath("errors[0].detail",
-                        equalTo(STR."Numeric instance is lower than the required minimum (minimum: 1, found: \{pageSize})")))
+                        equalTo("Numeric instance is lower than the required minimum (minimum: 1, found: " + pageSize + ")")))
                 .andExpect(jsonPath("errors[0].parameter", equalTo("size")));
     }
 
@@ -221,10 +212,10 @@ class AuthorsControllerTests {
                 .andExpect(jsonPath("errors").isArray())
                 .andExpect(jsonPath("errors", hasSize(2)))
                 .andExpect(jsonPath("errors[0].detail",
-                        equalTo(STR."Numeric instance is lower than the required minimum (minimum: 0, found: \{pageNumber})")))
+                        equalTo("Numeric instance is lower than the required minimum (minimum: 0, found: " + pageNumber + ")")))
                 .andExpect(jsonPath("errors[0].parameter", equalTo("page")))
                 .andExpect(jsonPath("errors[1].detail",
-                        equalTo(STR."Numeric instance is lower than the required minimum (minimum: 1, found: \{pageSize})")))
+                        equalTo("Numeric instance is lower than the required minimum (minimum: 1, found: " + pageSize + ")")))
                 .andExpect(jsonPath("errors[1].parameter", equalTo("size")));
     }
 
@@ -247,7 +238,7 @@ class AuthorsControllerTests {
                 .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(authors.getTotalElements()).intValue())))
                 .andExpect(jsonPath("page.total_pages", equalTo(authors.getTotalPages())))
                 .andExpect(jsonPath("page.number", equalTo(pageIndex)))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/authors?page=\{pageIndex}&size=\{pageSize}")))
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=" + pageIndex + "&size=" + pageSize)))
                 .andExpect(jsonPath("_embedded").exists());
 
         assertResponseContainsAllAuthors(result, authors.toList());
@@ -273,21 +264,19 @@ class AuthorsControllerTests {
                         .queryParam("size", Integer.toString(pageSize))
                 ).andExpect(status().isPartialContent())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/authors?page=\{pageIndex}&size=\{pageSize}")));
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=" + pageIndex + "&size=" + pageSize)));
 
-        verifyNavigationLink(result, hasFirst, "first", STR."http://localhost/api/v1/authors?page=0&size=\{pageSize}");
-        verifyNavigationLink(result, hasPrev, "prev", STR."http://localhost/api/v1/authors?page=\{pageIndex - 1}&size=\{pageSize}");
-        verifyNavigationLink(result, hasNext, "next", STR."http://localhost/api/v1/authors?page=\{pageIndex + 1}&size=\{pageSize}");
-        verifyNavigationLink(result, hasLast, "last", STR."http://localhost/api/v1/authors?page=\{authors.getTotalPages() - 1}&size=\{pageSize}");
+        verifyNavigationLink(result, hasFirst, "first", "http://localhost/api/v1/authors?page=0&size=" + pageSize);
+        verifyNavigationLink(result, hasPrev, "prev", "http://localhost/api/v1/authors?page=" + (pageIndex - 1) + "&size=" + pageSize);
+        verifyNavigationLink(result, hasNext, "next", "http://localhost/api/v1/authors?page=" + (pageIndex + 1) + "&size=" + pageSize);
+        verifyNavigationLink(result, hasLast, "last", "http://localhost/api/v1/authors?page=" + (authors.getTotalPages() - 1) + "&size=" + pageSize);
     }
 
     static void verifyNavigationLink(ResultActions result, boolean hasLink, String linkName, @Nullable String valueIfExists) throws Exception {
         if (hasLink) {
-            var path = STR."_links.\{linkName}.href";
-            result.andExpect(jsonPath(path, equalTo(requireNonNull(valueIfExists))));
+            result.andExpect(jsonPath("_links." + linkName + ".href", equalTo(requireNonNull(valueIfExists))));
         } else {
-            var path = STR."_links.\{linkName}";
-            result.andExpect(jsonPath(path).doesNotExist());
+            result.andExpect(jsonPath("_links." + linkName).doesNotExist());
         }
     }
 
@@ -371,7 +360,7 @@ class AuthorsControllerTests {
     @Test
     @DisplayName("refuse referencing author when name is missing")
     void referenceAuthorMissingName() throws Exception {
-        var requestBody = STR."{\"date_of_birth\":\"\{Authors.dateOfBirth()}\"}";
+        var requestBody = "{\"date_of_birth\":\"" + Authors.dateOfBirth() + "\"}";
         mvc.perform(post("/api/v1/authors")
                         .contentType("application/json")
                         .content(requestBody)
@@ -390,7 +379,7 @@ class AuthorsControllerTests {
     @Test
     @DisplayName("refuse referencing author when date of birth is missing")
     void referenceAuthorMissingDateOfBirth() throws Exception {
-        var requestBody = STR."{\"name\":\"\{Authors.name()}\"}";
+        var requestBody = "{\"name\":\"" + Authors.name() + "\"}";
         mvc.perform(post("/api/v1/authors")
                         .contentType("application/json")
                         .content(requestBody)
@@ -413,18 +402,18 @@ class AuthorsControllerTests {
 
         when(authorsReferencingService.referenceAuthor(any())).thenReturn(author);
 
-        var requestBody = STR."{\"name\":\"\{author.name()}\", \"date_of_birth\":\"\{author.dateOfBirth()}\"}";
+        var requestBody = "{\"name\":\"" + author.name() + "\", \"date_of_birth\":\"" + author.dateOfBirth() + "\"}";
         mvc.perform(post("/api/v1/authors")
                         .contentType("application/json")
                         .content(requestBody)
                 ).andExpect(status().isCreated())
-                .andExpect(header().string("Location", equalTo(STR."http://localhost/api/v1/authors/\{author.id()}")))
+                .andExpect(header().string("Location", equalTo("http://localhost/api/v1/authors/" + author.id())))
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("id", equalTo(author.id().toString())))
                 .andExpect(jsonPath("name", equalTo(author.name())))
                 .andExpect(jsonPath("date_of_birth", equalTo(author.dateOfBirth().toString())))
                 .andExpect(jsonPath("date_of_death").doesNotExist())
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/authors/\{author.id()}")));
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors/" + author.id())));
 
         verify(authorsReferencingService).referenceAuthor(referenceCommandCaptor.capture());
         var actual = referenceCommandCaptor.getValue();
@@ -441,18 +430,18 @@ class AuthorsControllerTests {
 
         when(authorsReferencingService.referenceAuthor(any())).thenReturn(author);
 
-        var requestBody = STR."{\"name\":\"\{author.name()}\", \"date_of_birth\":\"\{author.dateOfBirth()}\", \"date_of_death\":\"\{author.dateOfDeath().orElseThrow()}\"}";
+        var requestBody = "{\"name\":\"" + author.name() + "\", \"date_of_birth\":\"" + author.dateOfBirth() + "\", \"date_of_death\":\"" + author.dateOfDeath().orElseThrow() + "\"}";
         mvc.perform(post("/api/v1/authors")
                         .contentType("application/json")
                         .content(requestBody)
                 ).andExpect(status().isCreated())
-                .andExpect(header().string("Location", equalTo(STR."http://localhost/api/v1/authors/\{author.id()}")))
+                .andExpect(header().string("Location", equalTo("http://localhost/api/v1/authors/" + author.id())))
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("id", equalTo(author.id().toString())))
                 .andExpect(jsonPath("name", equalTo(author.name())))
                 .andExpect(jsonPath("date_of_birth", equalTo(author.dateOfBirth().toString())))
                 .andExpect(jsonPath("date_of_death", equalTo(author.dateOfDeath().orElseThrow().toString())))
-                .andExpect(jsonPath("_links.self.href", equalTo(STR."http://localhost/api/v1/authors/\{author.id()}")));
+                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors/" + author.id())));
 
         verify(authorsReferencingService).referenceAuthor(referenceCommandCaptor.capture());
         var actual = referenceCommandCaptor.getValue();
