@@ -3,16 +3,16 @@ buildscript {
 		mavenCentral()
 	}
 	dependencies {
-		classpath 'au.com.dius.pact.provider:gradle:4.6.18'
+		classpath 'au.com.dius.pact.provider:gradle:4.6.19'
 	}
 }
 
 plugins {
 	id 'java'
 	id 'net.ltgt.errorprone' version '4.3.0'
-	id 'org.springframework.boot' version '3.5.7'
+	id 'org.springframework.boot' version '4.0.1'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'au.com.dius.pact' version '4.6.18'
+	id 'au.com.dius.pact' version '4.6.19'
 	id 'io.miret.etienne.sass' version '1.6.0'
 }
 
@@ -32,9 +32,8 @@ configurations {
 }
 
 ext {
-	set('springCloudVersion', "2025.0.0")
+	set('springCloudVersion', '2025.1.0')
 	bootstrapVersion = '5.3.8'
-	okhttp3Version = '5.3.2'
 }
 
 dependencyManagement {
@@ -48,7 +47,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework:spring-webflux'
+	implementation 'org.springframework.boot:spring-boot-starter-restclient'
 	implementation 'org.springframework.data:spring-data-commons'
 	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 	implementation 'io.micrometer:micrometer-tracing'
@@ -60,13 +59,14 @@ dependencies {
 	runtimeOnly 'io.opentelemetry:opentelemetry-exporter-zipkin'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation "com.squareup.okhttp3:okhttp:${okhttp3Version}"
-	testImplementation "com.squareup.okhttp3:mockwebserver3-junit5:${okhttp3Version}"
-	testImplementation 'au.com.dius.pact.consumer:junit5:4.6.18'
-	testImplementation 'org.aspectj:aspectjweaver:1.9.25'
+	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+	testImplementation 'org.springframework.boot:spring-boot-starter-restclient-test'
+	testImplementation 'org.wiremock:wiremock-standalone:3.13.2'
+	testImplementation 'au.com.dius.pact.consumer:junit5:4.6.19'
+	testImplementation 'org.aspectj:aspectjweaver:1.9.25.1'
 
 	errorprone 'com.google.errorprone:error_prone_core:2.45.0'
-	errorprone 'com.uber.nullaway:nullaway:0.12.14'
+	errorprone 'com.uber.nullaway:nullaway:0.12.15'
 
 	scss 'org.webjars.npm:bootstrap:5.3.8'
 }

@@ -1,9 +1,9 @@
 package org.adhuc.library.catalog.adapter.rest.editions;
 
-import org.adhuc.library.catalog.adapter.rest.support.validation.openapi.RequestValidationConfiguration;
 import org.adhuc.library.catalog.editions.EditionsMother.Editions;
 import org.adhuc.library.catalog.editions.EditionsService;
 import org.adhuc.library.catalog.editions.PublicationDate;
+import org.adhuc.library.support.rest.validation.RequestValidationAutoConfiguration;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -37,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         EditionModelAssembler.class,
         EditionDetailsModelAssembler.class
 })
-@Import(RequestValidationConfiguration.class)
+@ImportAutoConfiguration(RequestValidationAutoConfiguration.class)
 @DisplayName("Editions controller should")
 class EditionsControllerTests {
 

@@ -1,7 +1,7 @@
 package org.adhuc.library.website.catalog.internal;
 
-import mockwebserver3.MockResponse;
-import mockwebserver3.MockWebServer;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import org.adhuc.library.website.catalog.Book;
 import org.adhuc.library.website.support.pagination.NavigablePage;
 import org.adhuc.library.website.support.pagination.NavigablePageImpl;
@@ -19,21 +19,21 @@ import org.springframework.cloud.client.circuitbreaker.NoFallbackAvailableExcept
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientResponseException;
 
-import java.nio.charset.Charset;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static java.nio.charset.Charset.defaultCharset;
 import static org.adhuc.library.website.catalog.BooksMother.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Tag("unit")
 @Tag("apiClient")
@@ -42,21 +42,21 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 class CatalogRestClientTests {
 
     private CatalogRestClientProperties properties;
-    private MockWebServer mockServer;
-    private WebClient.Builder webClientBuilder;
+    private WireMockServer mockServer;
+    private RestClient.Builder restClientBuilder;
 
     @BeforeEach
-    void setUp() throws Exception {
-        mockServer = new MockWebServer();
-        mockServer.start(12345);
-        properties = new CatalogRestClientProperties(mockServer.url("/").toString(), false);
+    void setUp() {
+        mockServer = new WireMockServer(12345);
+        mockServer.start();
+        properties = new CatalogRestClientProperties(mockServer.url("/"), false);
 
-        webClientBuilder = WebClient.builder();
+        restClientBuilder = RestClient.builder();
     }
 
     @AfterEach
-    void tearDown() throws Exception {
-        mockServer.close();
+    void tearDown() {
+        mockServer.stop();
     }
 
     @Nested
@@ -74,7 +74,7 @@ class CatalogRestClientTests {
                 }
             });
 
-            var catalogSpringReactiveClient = new CatalogSpringReactiveClient(webClientBuilder, null, properties);
+            var catalogSpringReactiveClient = new CatalogSpringClient(restClientBuilder, null, properties);
             catalogRestClient = new CatalogRestClient(catalogSpringReactiveClient, circuitBreakerFactory);
         }
 
@@ -82,12 +82,13 @@ class CatalogRestClientTests {
         @DisplayName("list books for the default page")
         void getDefaultPage() throws Exception {
             var responseBody = new DefaultResourceLoader().getResource("classpath:client/catalog/page-0-size-10.json");
-            var response = new MockResponse.Builder()
-                    .code(206)
-                    .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                    .body(responseBody.getContentAsString(Charset.defaultCharset()))
-                    .build();
-            mockServer.enqueue(response);
+            mockServer.stubFor(get(urlEqualTo("/api/v1/catalog?page=0&size=10"))
+                    .willReturn(aResponse()
+                            .withStatus(206)
+                            .withHeader("Content-Type", "application/json")
+                            .withBody(responseBody.getContentAsString(defaultCharset()))
+                    )
+            );
 
             var actual = catalogRestClient.listBooks("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3");
             SoftAssertions.assertSoftly(s -> {
@@ -102,24 +103,21 @@ class CatalogRestClientTests {
                 s.assertThat(actual.hasLink("last")).isTrue();
             });
 
-            assertThat(mockServer.getRequestCount()).isEqualTo(1);
-            var request = mockServer.takeRequest();
-            SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getTarget()).isEqualTo("/api/v1/catalog?page=0&size=10");
-                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3");
-            });
+            mockServer.verify(getRequestedFor(urlEqualTo("/api/v1/catalog?page=0&size=10"))
+                    .withHeader("Accept-Language", equalTo("fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3")));
         }
 
         @ParameterizedTest
         @MethodSource("pageNumberProvider")
         @DisplayName("list books for a page with given number")
         void getPageNumber(int page, String acceptLanguages, Resource responseBody, int expectedTotalPages, int expectedSize, boolean hasPrev, boolean hasNext) throws Exception {
-            var response = new MockResponse.Builder()
-                    .code(206)
-                    .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                    .body(responseBody.getContentAsString(Charset.defaultCharset()))
-                    .build();
-            mockServer.enqueue(response);
+            mockServer.stubFor(get(urlEqualTo("/api/v1/catalog?page=" + page + "&size=10"))
+                    .willReturn(aResponse()
+                            .withStatus(206)
+                            .withHeader("Content-Type", "application/json")
+                            .withBody(responseBody.getContentAsString(defaultCharset()))
+                    )
+            );
 
             var actual = catalogRestClient.listBooks(page, acceptLanguages);
             SoftAssertions.assertSoftly(s -> {
@@ -134,12 +132,8 @@ class CatalogRestClientTests {
                 s.assertThat(actual.hasLink("last")).isTrue();
             });
 
-            assertThat(mockServer.getRequestCount()).isEqualTo(1);
-            var request = mockServer.takeRequest();
-            SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getTarget()).isEqualTo("/api/v1/catalog?page=%d&size=%d", page, 10);
-                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo(acceptLanguages);
-            });
+            mockServer.verify(getRequestedFor(urlEqualTo("/api/v1/catalog?page=" + page + "&size=10"))
+                    .withHeader("Accept-Language", equalTo(acceptLanguages)));
         }
 
         static Stream<Arguments> pageNumberProvider() {
@@ -162,12 +156,13 @@ class CatalogRestClientTests {
         @MethodSource("pageProvider")
         @DisplayName("list books for a page")
         void getPage(int page, int size, String acceptLanguages, Resource responseBody, int expectedTotalPages, int expectedSize, boolean hasPrev, boolean hasNext) throws Exception {
-            var response = new MockResponse.Builder()
-                    .code(206)
-                    .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                    .body(responseBody.getContentAsString(Charset.defaultCharset()))
-                    .build();
-            mockServer.enqueue(response);
+            mockServer.stubFor(get(urlEqualTo("/api/v1/catalog?page=" + page + "&size=" + size))
+                    .willReturn(aResponse()
+                            .withStatus(206)
+                            .withHeader("Content-Type", "application/json")
+                            .withBody(responseBody.getContentAsString(defaultCharset()))
+                    )
+            );
 
             var actual = catalogRestClient.listBooks(PageRequest.of(page, size), acceptLanguages);
             SoftAssertions.assertSoftly(s -> {
@@ -182,12 +177,8 @@ class CatalogRestClientTests {
                 s.assertThat(actual.hasLink("last")).isTrue();
             });
 
-            assertThat(mockServer.getRequestCount()).isEqualTo(1);
-            var request = mockServer.takeRequest();
-            SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getTarget()).isEqualTo("/api/v1/catalog?page=%d&size=%d", page, size);
-                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo(acceptLanguages);
-            });
+            mockServer.verify(getRequestedFor(urlEqualTo("/api/v1/catalog?page=" + page + "&size=" + size))
+                    .withHeader("Accept-Language", equalTo(acceptLanguages)));
         }
 
         static Stream<Arguments> pageProvider() {
@@ -214,22 +205,19 @@ class CatalogRestClientTests {
         @MethodSource("pageBooksProvider")
         @DisplayName("list books for a page with expected books contained and non expected books not contained")
         void getPageContainingBooks(int page, int size, String acceptLanguages, Resource responseBody, List<Book> expectedBooks, List<Book> nonExpectedBooks) throws Exception {
-            var response = new MockResponse.Builder()
-                    .code(206)
-                    .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                    .body(responseBody.getContentAsString(Charset.defaultCharset()))
-                    .build();
-            mockServer.enqueue(response);
+            mockServer.stubFor(get(urlEqualTo("/api/v1/catalog?page=" + page + "&size=" + size))
+                    .willReturn(aResponse()
+                            .withStatus(206)
+                            .withHeader("Content-Type", "application/json")
+                            .withBody(responseBody.getContentAsString(defaultCharset()))
+                    )
+            );
 
             var actual = catalogRestClient.listBooks(PageRequest.of(page, size), acceptLanguages);
             assertThat(actual.getContent()).containsAll(expectedBooks).doesNotContainAnyElementsOf(nonExpectedBooks);
 
-            assertThat(mockServer.getRequestCount()).isEqualTo(1);
-            var request = mockServer.takeRequest();
-            SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getTarget()).isEqualTo("/api/v1/catalog?page=%d&size=%d", page, size);
-                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo(acceptLanguages);
-            });
+            mockServer.verify(getRequestedFor(urlEqualTo("/api/v1/catalog?page=" + page + "&size=" + size))
+                    .withHeader("Accept-Language", equalTo(acceptLanguages)));
         }
 
         static Stream<Arguments> pageBooksProvider() {
@@ -258,22 +246,19 @@ class CatalogRestClientTests {
         @DisplayName("list books for a link from the previously browsed page with expected books contained and non expected books not contained")
         void getPageFromLink(NavigablePage<Book> currentPage, String linkName, String acceptLanguages,
                              String url, Resource responseBody, List<Book> expectedBooks, List<Book> nonExpectedBooks) throws Exception {
-            var response = new MockResponse.Builder()
-                    .code(206)
-                    .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                    .body(responseBody.getContentAsString(Charset.defaultCharset()))
-                    .build();
-            mockServer.enqueue(response);
+            mockServer.stubFor(get(urlEqualTo(url))
+                    .willReturn(aResponse()
+                            .withStatus(206)
+                            .withHeader("Content-Type", "application/json")
+                            .withBody(responseBody.getContentAsString(defaultCharset()))
+                    )
+            );
 
             var actual = catalogRestClient.listBooks(currentPage, linkName, acceptLanguages);
             assertThat(actual.getContent()).containsAll(expectedBooks).doesNotContainAnyElementsOf(nonExpectedBooks);
 
-            assertThat(mockServer.getRequestCount()).isEqualTo(1);
-            var request = mockServer.takeRequest();
-            SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getTarget()).isEqualTo(url);
-                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo(acceptLanguages);
-            });
+            mockServer.verify(getRequestedFor(urlEqualTo(url))
+                    .withHeader("Accept-Language", equalTo(acceptLanguages)));
         }
 
         static Stream<Arguments> pageBooksFromLinkProvider() {
@@ -396,47 +381,40 @@ class CatalogRestClientTests {
 
         @Test
         @DisplayName("fail retrieving unknown book")
-        void getUnknownBook() throws Exception {
-            var response = new MockResponse.Builder()
-                    .code(404)
-                    .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                    .body("""
-                            {
-                              "type": "/problems/unknown-entity",
-                              "status": 404,
-                              "title": "Unknown book",
-                              "detail": "No book exists with id 'b94329cb-8767-4438-b802-d85a268fb3e3'"
-                            }
-                            """)
-                    .build();
-            mockServer.enqueue(response);
+        void getUnknownBook() {
+            mockServer.stubFor(get(urlEqualTo("/api/v1/books/b94329cb-8767-4438-b802-d85a268fb3e3"))
+                    .willReturn(aResponse()
+                            .withStatus(404)
+                            .withHeader("Content-Type", "application/problem+json")
+                            .withBody("""
+                                    {
+                                      "type": "/problems/unknown-entity",
+                                      "status": 404,
+                                      "title": "Unknown book",
+                                      "detail": "No book exists with id 'b94329cb-8767-4438-b802-d85a268fb3e3'"
+                                    }
+                                    """)
+                    )
+            );
 
             var id = "b94329cb-8767-4438-b802-d85a268fb3e3";
-            assertThrows(WebClientResponseException.NotFound.class, () -> catalogRestClient.getBook(id, "fr"));
+            assertThrows(RestClientResponseException.class, () -> catalogRestClient.getBook(id, "fr"));
 
-            assertThat(mockServer.getRequestCount()).isEqualTo(1);
-            var request = mockServer.takeRequest();
-            SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getUrl().encodedPath()).isEqualTo("/api/v1/books/%s", id);
-                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo("fr");
-            });
+            mockServer.verify(getRequestedFor(urlEqualTo("/api/v1/books/b94329cb-8767-4438-b802-d85a268fb3e3"))
+                    .withHeader("Accept-Language", equalTo("fr")));
         }
 
         @ParameterizedTest
         @MethodSource("knownBookProvider")
         @DisplayName("get book details for a book ID")
-        void getBook(String id, String acceptLanguages, List<MockResponse> responses, Book expected) throws Exception {
-            responses.forEach(mockServer::enqueue);
+        void getBook(String id, String acceptLanguages, List<MappingBuilder> responses, Book expected) {
+            responses.forEach(mockServer::stubFor);
 
             var actual = catalogRestClient.getBook(id, acceptLanguages);
             assertThat(actual).isEqualTo(expected);
 
-            assertThat(mockServer.getRequestCount()).isEqualTo(3);
-            var request = mockServer.takeRequest();
-            SoftAssertions.assertSoftly(s -> {
-                s.assertThat(request.getUrl().encodedPath()).isEqualTo("/api/v1/books/%s", id);
-                s.assertThat(request.getHeaders().get("Accept-Language")).isEqualTo(acceptLanguages);
-            });
+            mockServer.verify(getRequestedFor(urlEqualTo("/api/v1/books/" + id))
+                    .withHeader("Accept-Language", equalTo(acceptLanguages)));
         }
 
         static Stream<Arguments> knownBookProvider() throws Exception {
@@ -446,24 +424,27 @@ class CatalogRestClientTests {
                             DU_CONTRAT_SOCIAL.id(),
                             "fr",
                             List.of(
-                                    new MockResponse.Builder()
-                                            .code(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .body(resourceLoader.getResource("classpath:client/catalog/book-contrat-social.json")
-                                                    .getContentAsString(Charset.defaultCharset()))
-                                            .build(),
-                                    new MockResponse.Builder()
-                                            .code(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782081275232.json")
-                                                    .getContentAsString(Charset.defaultCharset()))
-                                            .build(),
-                                    new MockResponse.Builder()
-                                            .code(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782290385050.json")
-                                                    .getContentAsString(Charset.defaultCharset()))
-                                            .build()
+                                    get(urlEqualTo("/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4"))
+                                            .willReturn(aResponse()
+                                                    .withStatus(200)
+                                                    .withHeader("Content-Type", "application/json")
+                                                    .withBody(resourceLoader.getResource("classpath:client/catalog/book-contrat-social.json")
+                                                            .getContentAsString(defaultCharset()))
+                                            ),
+                                    get(urlEqualTo("/api/v1/editions/9782081275232"))
+                                            .willReturn(aResponse()
+                                                    .withStatus(200)
+                                                    .withHeader("Content-Type", "application/json")
+                                                    .withBody(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782081275232.json")
+                                                            .getContentAsString(defaultCharset()))
+                                            ),
+                                    get(urlEqualTo("/api/v1/editions/9782290385050"))
+                                            .willReturn(aResponse()
+                                                    .withStatus(200)
+                                                    .withHeader("Content-Type", "application/json")
+                                                    .withBody(resourceLoader.getResource("classpath:client/catalog/edition-contrat-social-9782290385050.json")
+                                                            .getContentAsString(defaultCharset()))
+                                            )
                             ),
                             DU_CONTRAT_SOCIAL_WITH_EDITIONS
                     ),
@@ -471,24 +452,27 @@ class CatalogRestClientTests {
                             A_DANCE_WITH_DRAGONS_FR.id(),
                             "fr",
                             List.of(
-                                    new MockResponse.Builder()
-                                            .code(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .body(resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-fr.json")
-                                                    .getContentAsString(Charset.defaultCharset()))
-                                            .build(),
-                                    new MockResponse.Builder()
-                                            .code(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9780553801477.json")
-                                                    .getContentAsString(Charset.defaultCharset()))
-                                            .build(),
-                                    new MockResponse.Builder()
-                                            .code(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9782290221709.json")
-                                                    .getContentAsString(Charset.defaultCharset()))
-                                            .build()
+                                    get(urlEqualTo("/api/v1/books/2869e847-dcf8-457f-8824-9489da2630ce"))
+                                            .willReturn(aResponse()
+                                                    .withStatus(200)
+                                                    .withHeader("Content-Type", "application/json")
+                                                    .withBody(resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-fr.json")
+                                                            .getContentAsString(defaultCharset()))
+                                            ),
+                                    get(urlEqualTo("/api/v1/editions/9780553801477"))
+                                            .willReturn(aResponse()
+                                                    .withStatus(200)
+                                                    .withHeader("Content-Type", "application/json")
+                                                    .withBody(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9780553801477.json")
+                                                            .getContentAsString(defaultCharset()))
+                                            ),
+                                    get(urlEqualTo("/api/v1/editions/9782290221709"))
+                                            .willReturn(aResponse()
+                                                    .withStatus(200)
+                                                    .withHeader("Content-Type", "application/json")
+                                                    .withBody(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9782290221709.json")
+                                                            .getContentAsString(defaultCharset()))
+                                            )
                             ),
                             A_DANCE_WITH_DRAGONS_FR_WITH_EDITIONS
                     ),
@@ -496,24 +480,27 @@ class CatalogRestClientTests {
                             A_DANCE_WITH_DRAGONS_FR.id(),
                             "fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3",
                             List.of(
-                                    new MockResponse.Builder()
-                                            .code(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .body(resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-fr.json")
-                                                    .getContentAsString(Charset.defaultCharset()))
-                                            .build(),
-                                    new MockResponse.Builder()
-                                            .code(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9780553801477.json")
-                                                    .getContentAsString(Charset.defaultCharset()))
-                                            .build(),
-                                    new MockResponse.Builder()
-                                            .code(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9782290221709.json")
-                                                    .getContentAsString(Charset.defaultCharset()))
-                                            .build()
+                                    get(urlEqualTo("/api/v1/books/2869e847-dcf8-457f-8824-9489da2630ce"))
+                                            .willReturn(aResponse()
+                                                    .withStatus(200)
+                                                    .withHeader("Content-Type", "application/json")
+                                                    .withBody(resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-fr.json")
+                                                            .getContentAsString(defaultCharset()))
+                                            ),
+                                    get(urlEqualTo("/api/v1/editions/9780553801477"))
+                                            .willReturn(aResponse()
+                                                    .withStatus(200)
+                                                    .withHeader("Content-Type", "application/json")
+                                                    .withBody(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9780553801477.json")
+                                                            .getContentAsString(defaultCharset()))
+                                            ),
+                                    get(urlEqualTo("/api/v1/editions/9782290221709"))
+                                            .willReturn(aResponse()
+                                                    .withStatus(200)
+                                                    .withHeader("Content-Type", "application/json")
+                                                    .withBody(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9782290221709.json")
+                                                            .getContentAsString(defaultCharset()))
+                                            )
                             ),
                             A_DANCE_WITH_DRAGONS_FR_WITH_EDITIONS
                     ),
@@ -521,24 +508,27 @@ class CatalogRestClientTests {
                             A_DANCE_WITH_DRAGONS_EN.id(),
                             "en",
                             List.of(
-                                    new MockResponse.Builder()
-                                            .code(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .body(resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-en.json")
-                                                    .getContentAsString(Charset.defaultCharset()))
-                                            .build(),
-                                    new MockResponse.Builder()
-                                            .code(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9780553801477.json")
-                                                    .getContentAsString(Charset.defaultCharset()))
-                                            .build(),
-                                    new MockResponse.Builder()
-                                            .code(200)
-                                            .setHeader("Content-Type", APPLICATION_JSON_VALUE)
-                                            .body(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9782290221709.json")
-                                                    .getContentAsString(Charset.defaultCharset()))
-                                            .build()
+                                    get(urlEqualTo("/api/v1/books/2869e847-dcf8-457f-8824-9489da2630ce"))
+                                            .willReturn(aResponse()
+                                                    .withStatus(200)
+                                                    .withHeader("Content-Type", "application/json")
+                                                    .withBody(resourceLoader.getResource("classpath:client/catalog/book-dance-with-dragons-en.json")
+                                                            .getContentAsString(defaultCharset()))
+                                            ),
+                                    get(urlEqualTo("/api/v1/editions/9780553801477"))
+                                            .willReturn(aResponse()
+                                                    .withStatus(200)
+                                                    .withHeader("Content-Type", "application/json")
+                                                    .withBody(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9780553801477.json")
+                                                            .getContentAsString(defaultCharset()))
+                                            ),
+                                    get(urlEqualTo("/api/v1/editions/9782290221709"))
+                                            .willReturn(aResponse()
+                                                    .withStatus(200)
+                                                    .withHeader("Content-Type", "application/json")
+                                                    .withBody(resourceLoader.getResource("classpath:client/catalog/edition-dance-with-dragons-9782290221709.json")
+                                                            .getContentAsString(defaultCharset()))
+                                            )
                             ),
                             A_DANCE_WITH_DRAGONS_EN_WITH_EDITIONS
                     )
@@ -561,7 +551,7 @@ class CatalogRestClientTests {
                 }
             });
 
-            var catalogSpringReactiveClient = new CatalogSpringReactiveClient(webClientBuilder, null, properties);
+            var catalogSpringReactiveClient = new CatalogSpringClient(restClientBuilder, null, properties);
             catalogRestClient = new CatalogRestClient(catalogSpringReactiveClient, circuitBreakerFactory);
         }
 

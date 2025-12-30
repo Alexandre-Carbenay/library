@@ -1,31 +1,41 @@
 package org.adhuc.library.referencing.adapter.rest;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.hateoas.PagedModel;
-
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.module.SimpleSerializers;
 
 @Configuration
 public class PaginationSerializationConfiguration {
     @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
-        return builder -> builder.serializerByType(PagedModel.PageMetadata.class, new PageMetadataSerializer());
+    public JsonMapperBuilderCustomizer jsonCustomizer() {
+        return builder -> builder.addModule(new PaginationModule());
     }
 
-    private static class PageMetadataSerializer extends JsonSerializer<PagedModel.PageMetadata> {
+    private static class PaginationModule extends SimpleModule {
         @Override
-        public void serialize(PagedModel.PageMetadata value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-            gen.writeFieldName("page");
+        public void setupModule(SetupContext context) {
+            var serializers = new SimpleSerializers();
+            serializers.addSerializer(PagedModel.PageMetadata.class, new PageMetadataSerializer());
+            context.addSerializers(serializers);
+        }
+    }
+
+    private static class PageMetadataSerializer extends ValueSerializer<PagedModel.PageMetadata> {
+        @Override
+        public void serialize(PagedModel.PageMetadata value, JsonGenerator gen, SerializationContext ctxt) throws JacksonException {
+            gen.writeName("page");
             gen.writeStartObject();
-            gen.writeNumberField("size", value.getSize());
-            gen.writeNumberField("total_elements", value.getTotalElements());
-            gen.writeNumberField("total_pages", value.getTotalPages());
-            gen.writeNumberField("number", value.getNumber());
+            gen.writeNumberProperty("size", value.getSize());
+            gen.writeNumberProperty("total_elements", value.getTotalElements());
+            gen.writeNumberProperty("total_pages", value.getTotalPages());
+            gen.writeNumberProperty("number", value.getNumber());
             gen.writeEndObject();
         }
     }

@@ -1,0 +1,279 @@
+openapi: 3.0.3
+info:
+  title: Test specification for request validation
+  version: v1
+paths:
+  /test/request:
+    get:
+      operationId: testRequestGet
+      parameters:
+        - $ref: '#/components/parameters/RequiredParameter'
+        - $ref: '#/components/parameters/OptionalParameter'
+        - $ref: '#/components/parameters/RequiredHeader'
+        - $ref: '#/components/parameters/OptionalHeader'
+      responses:
+        200:
+          $ref: '#/components/responses/TestRequest'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+    post:
+      operationId: testRequestPost
+      requestBody:
+        $ref: '#/components/requestBodies/TestRequest'
+      responses:
+        201:
+          $ref: '#/components/responses/TestRequestCreated'
+        400:
+          $ref: '#/components/responses/BadRequestError'
+  /test/params/{uuid}/{int}:
+    get:
+      operationId: testParamsGet
+      parameters:
+        - $ref: '#/components/parameters/PathUuidParameter'
+        - $ref: '#/components/parameters/PathIntegerParameter'
+        - $ref: '#/components/parameters/OptionalIntegerParameter'
+      responses:
+        204:
+          description: No content
+        400:
+          $ref: '#/components/responses/BadRequestError'
+  /test/nullable:
+    post:
+      operationId: testNullablePost
+      requestBody:
+        $ref: '#/components/requestBodies/NullableRequest'
+      responses:
+        204:
+          description: No content
+        400:
+          $ref: '#/components/responses/BadRequestError'
+components:
+  parameters:
+    RequiredParameter:
+      name: required_parameter
+      in: query
+      required: true
+      schema:
+        type: string
+    OptionalParameter:
+      name: optional_parameter
+      in: query
+      required: false
+      schema:
+        type: string
+    RequiredHeader:
+      name: Required-Header
+      in: header
+      required: true
+      schema:
+        type: string
+    OptionalHeader:
+      name: Optional-Header
+      in: header
+      required: false
+      schema:
+        type: string
+    PathUuidParameter:
+      name: uuid
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    PathIntegerParameter:
+      name: int
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 10
+    OptionalIntegerParameter:
+      name: optional_int
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 2
+        maximum: 5
+  requestBodies:
+    TestRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TestRequest'
+    NullableRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NullableRequest'
+  responses:
+    TestRequest:
+      description: Test request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TestRequest'
+    TestRequestCreated:
+      description: Test request created
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TestRequest'
+    BadRequestError:
+      description: Incoming request is invalid
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    TestRequest:
+      type: object
+      required:
+        - required_string
+        - required_int
+        - required_boolean
+        - required_date
+        - required_uuid
+        - required_array
+        - required_child
+      properties:
+        id:
+          type: string
+          readOnly: true
+        required_string:
+          type: string
+          minLength: 5
+          maxLength: 100
+        optional_string:
+          type: string
+        required_int:
+          type: integer
+          minimum: 10
+          maximum: 20
+        optional_int:
+          type: integer
+        required_boolean:
+          type: boolean
+        optional_boolean:
+          type: boolean
+        required_date:
+          type: string
+          format: date
+        optional_date:
+          type: string
+          format: date
+        required_uuid:
+          type: string
+          format: uuid
+        optional_uuid:
+          type: string
+          format: uuid
+        required_array:
+          type: array
+          items:
+            type: string
+          uniqueItems: true
+          minItems: 2
+          maxItems: 5
+        optional_array:
+          type: array
+          items:
+            type: string
+        required_child:
+          $ref: '#/components/schemas/TestChild'
+        optional_child:
+          $ref: '#/components/schemas/TestChild'
+    TestChild:
+      type: object
+      required:
+        - required_child_string
+      properties:
+        required_child_string:
+          type: string
+          minLength: 3
+          maxLength: 10
+        optional_child_string:
+          type: string
+    NullableRequest:
+      type: object
+      properties:
+        non_nullable_string:
+          type: string
+        nullable_string:
+          type: string
+          nullable: true
+        non_nullable_integer:
+          type: integer
+        nullable_integer:
+          type: integer
+          nullable: true
+        non_nullable_child:
+          type: object
+          properties:
+            non_nullable_string_child:
+              type: string
+            nullable_string_child:
+              type: string
+              nullable: true
+        nullable_child:
+          type: object
+          nullable: true
+          properties:
+            non_nullable_string_child:
+              type: string
+            nullable_string_child:
+              type: string
+              nullable: true
+    Problem:
+      type: object
+      required:
+        - type
+        - status
+        - title
+        - detail
+      properties:
+        type:
+          type: string
+          format: uri-reference
+          description: The problem type.
+        status:
+          type: integer
+          description: The HTTP status of the response.
+        title:
+          type: string
+          description: A human-readable summary of the problem type.
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+        errors:
+          type: array
+          description: An extension to the problem, providing information about each error.
+          items:
+            oneOf:
+              - type: object
+                required:
+                  - detail
+                  - pointer
+                properties:
+                  detail:
+                    type: string
+                    description: The error detail used to determine why the server returned an error.
+                  pointer:
+                    type: string
+                    description: |
+                      A JSON pointer (https://datatracker.ietf.org/doc/html/rfc6901) to the associated entity in the request
+                      document (e.g. "/" for a primary object, "/name" for a specific attribute named "name").
+              - type: object
+                required:
+                  - detail
+                  - parameter
+                properties:
+                  detail:
+                    type: string
+                    description: The error detail used to determine why the server returned an error.
+                  parameter:
+                    type: string
+                    description: A string indicating which URI query parameter caused the error.

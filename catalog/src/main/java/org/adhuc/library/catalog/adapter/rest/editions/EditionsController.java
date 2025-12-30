@@ -1,8 +1,8 @@
 package org.adhuc.library.catalog.adapter.rest.editions;
 
-import org.adhuc.library.catalog.adapter.rest.ProblemError.ParameterError;
 import org.adhuc.library.catalog.editions.Edition;
 import org.adhuc.library.catalog.editions.EditionsService;
+import org.adhuc.library.support.rest.ProblemError.ParameterError;
 import org.apache.commons.validator.routines.ISBNValidator;
 import org.springframework.hateoas.mediatype.problem.Problem;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.util.List;
 
-import static org.adhuc.library.catalog.adapter.rest.support.validation.InvalidRequestBuilder.invalidRequest;
+import static org.adhuc.library.support.rest.validation.InvalidRequestBuilder.invalidRequest;
 import static org.springframework.hateoas.MediaTypes.HAL_JSON_VALUE;
 import static org.springframework.hateoas.mediatype.hal.HalModelBuilder.halModelOf;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
