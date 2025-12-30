@@ -20,7 +20,7 @@ group = 'org.adhuc.library'
 version = '1'
 
 java {
-	sourceCompatibility = '21'
+	sourceCompatibility = '25'
 }
 
 repositories {

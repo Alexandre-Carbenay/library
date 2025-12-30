@@ -26,6 +26,7 @@ jobs:
   pipeline:
     uses: ./.github/workflows/cd-generic.yml
     with:
+      java-version: '25'
       app-name: 'website'
       working-directory: './website'
       github-package: 'library%2Fwebsite'
