@@ -1,15 +1,27 @@
 version: 2
+registries:
+  gradle-github-packages:
+    type: maven-repository
+    url: https://maven.pkg.github.com/Alexandre-Carbenay/library
+    username: octocat
+    password: ${{secrets.GH_PACKAGES}}
 updates:
   - package-ecosystem: gradle
     directory: /catalog
+    registries:
+      - gradle-github-packages
     schedule:
       interval: daily
   - package-ecosystem: gradle
     directory: /referencing
+    registries:
+      - gradle-github-packages
     schedule:
       interval: daily
   - package-ecosystem: gradle
     directory: /website
+    registries:
+      - gradle-github-packages
     schedule:
       interval: daily
   - package-ecosystem: github-actions
