@@ -1,4 +1,9 @@
 version: 2
+registries:
+  gradle-github-packages:
+    type: maven-repository
+    url: https://maven.pkg.github.com/Alexandre-Carbenay/library
+    token: ${{secrets.GH_PACKAGES}}
 updates:
   - package-ecosystem: gradle
     directory: /catalog
