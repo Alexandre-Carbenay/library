@@ -10,6 +10,10 @@ on:
         required: false
         type: string
         default: 'alexandre-carbenay/library'
+      java-version:
+        required: false
+        type: string
+        default: '21'
       app-name:
         required: true
         type: string
@@ -80,10 +84,10 @@ jobs:
               body: output
             })
 
-      - name: "☕ 🛠️ Set up JDK 21"
+      - name: "☕ 🛠️ Set up JDK version"
         uses: actions/setup-java@v5
         with:
-          java-version: '21'
+          java-version: ${{ inputs.java-version }}
           distribution: 'temurin'
 
       - name: "🐘 🛠️ Setup Gradle"
@@ -220,10 +224,10 @@ jobs:
       - name: "📥 Checkout project sources"
         uses: actions/checkout@v6
 
-      - name: "☕ 🛠️ Set up JDK 21"
+      - name: "☕ 🛠️ Set up JDK version"
         uses: actions/setup-java@v5
         with:
-          java-version: '21'
+          java-version: ${{ inputs.java-version }}
           distribution: 'temurin'
 
       - name: "🐘 🛠️ Setup Gradle"
