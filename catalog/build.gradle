@@ -55,7 +55,6 @@ dependencies {
 	implementation 'org.jspecify:jspecify:1.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.modulith:spring-modulith-starter-core'
 	implementation 'org.springframework.modulith:spring-modulith-starter-insight'
 	implementation 'org.jmolecules:jmolecules-ddd'
@@ -68,6 +67,10 @@ dependencies {
 	implementation 'org.adhuc.library:rest-api-support:1.0.0'
 
 	runtimeOnly 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.0'
+	runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
+	runtimeOnly 'org.springframework.boot:spring-boot-micrometer-tracing-opentelemetry'
+	runtimeOnly 'org.springframework.boot:spring-boot-opentelemetry'
+	runtimeOnly 'org.springframework.boot:spring-boot-zipkin'
 	runtimeOnly 'io.micrometer:micrometer-tracing-bridge-otel'
 	runtimeOnly 'io.opentelemetry:opentelemetry-exporter-zipkin'
 
