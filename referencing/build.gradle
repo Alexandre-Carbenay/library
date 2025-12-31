@@ -55,6 +55,7 @@ dependencies {
 	implementation 'org.jspecify:jspecify:1.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+	implementation 'org.springframework.boot:spring-boot-validation'
 	implementation 'org.springframework.modulith:spring-modulith-starter-core'
 	implementation 'org.springframework.modulith:spring-modulith-starter-insight'
 	implementation 'org.jmolecules:jmolecules-ddd'
