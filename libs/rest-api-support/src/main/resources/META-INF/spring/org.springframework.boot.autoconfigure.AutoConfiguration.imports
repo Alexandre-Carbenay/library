@@ -1,1 +1,2 @@
+org.adhuc.library.support.rest.pagination.PaginationAutoConfiguration
 org.adhuc.library.support.rest.validation.RequestValidationAutoConfiguration
