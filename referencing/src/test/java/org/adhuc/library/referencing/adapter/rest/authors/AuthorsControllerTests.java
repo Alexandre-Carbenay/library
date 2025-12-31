@@ -1,12 +1,12 @@
 package org.adhuc.library.referencing.adapter.rest.authors;
 
 import net.datafaker.Faker;
-import org.adhuc.library.referencing.adapter.rest.PaginationSerializationConfiguration;
 import org.adhuc.library.referencing.authors.Author;
 import org.adhuc.library.referencing.authors.AuthorsConsultationService;
 import org.adhuc.library.referencing.authors.AuthorsMother.Authors;
 import org.adhuc.library.referencing.authors.AuthorsReferencingService;
 import org.adhuc.library.referencing.authors.ReferenceAuthor;
+import org.adhuc.library.support.rest.pagination.PaginationAutoConfiguration;
 import org.adhuc.library.support.rest.validation.RequestValidationAutoConfiguration;
 import org.assertj.core.api.SoftAssertions;
 import org.jspecify.annotations.Nullable;
@@ -22,7 +22,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -51,8 +50,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Tag("integration")
 @Tag("restApi")
 @WebMvcTest(controllers = {AuthorsController.class, AuthorModelAssembler.class})
-@ImportAutoConfiguration(RequestValidationAutoConfiguration.class)
-@Import(PaginationSerializationConfiguration.class)
+@ImportAutoConfiguration({RequestValidationAutoConfiguration.class, PaginationAutoConfiguration.class})
 @DisplayName("Authors controller should")
 class AuthorsControllerTests {
 
