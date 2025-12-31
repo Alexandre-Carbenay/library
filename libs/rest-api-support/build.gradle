@@ -26,6 +26,7 @@ dependencies {
 
     api 'org.springframework.hateoas:spring-hateoas'
     api 'org.springframework.data:spring-data-rest-webmvc'
+    api 'org.springframework.boot:spring-boot-jackson'
     api 'org.springframework.boot:spring-boot-autoconfigure'
     api 'com.atlassian.oai:swagger-request-validator-spring-webmvc:2.46.0'
 
@@ -35,6 +36,7 @@ dependencies {
     implementation 'org.apache.tomcat.embed:tomcat-embed-el'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-data-rest'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
     testImplementation 'net.datafaker:datafaker:2.5.1'

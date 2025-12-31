@@ -4,6 +4,7 @@ import org.adhuc.library.support.rest.validation.openapi.OpenApiRequestValidatio
 import org.adhuc.library.support.rest.validation.openapi.OpenApiValidationConfigurer;
 import org.adhuc.library.support.rest.validation.openapi.OpenApiValidationMessageParsersConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBooleanProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -16,6 +17,7 @@ import org.springframework.core.io.ResourceLoader;
         OpenApiValidationMessageParsersConfiguration.class,
         OpenApiRequestValidationExceptionHandler.class
 })
+@ConditionalOnBooleanProperty(name = "enabled", prefix = "org.adhuc.library.support.rest.validation", matchIfMissing = true)
 @EnableConfigurationProperties(RequestValidationProperties.class)
 public class RequestValidationAutoConfiguration {
 
