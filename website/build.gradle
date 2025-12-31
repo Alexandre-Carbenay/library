@@ -45,7 +45,6 @@ dependencyManagement {
 dependencies {
 	implementation 'org.jspecify:jspecify:1.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-restclient'
 	implementation 'org.springframework.data:spring-data-commons'
@@ -55,6 +54,10 @@ dependencies {
 
 	runtimeOnly "org.webjars.npm:bootstrap:${bootstrapVersion}"
 	runtimeOnly 'org.webjars.npm:font-awesome:4.7.0'
+	runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
+	runtimeOnly 'org.springframework.boot:spring-boot-micrometer-tracing-opentelemetry'
+	runtimeOnly 'org.springframework.boot:spring-boot-opentelemetry'
+	runtimeOnly 'org.springframework.boot:spring-boot-zipkin'
 	runtimeOnly 'io.micrometer:micrometer-tracing-bridge-otel'
 	runtimeOnly 'io.opentelemetry:opentelemetry-exporter-zipkin'
 

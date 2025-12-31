@@ -18,6 +18,9 @@ management:
     livenessstate.enabled: true
     readinessstate.enabled: true
     circuitbreakers.enabled: true
+  tracing:
+    export:
+      enabled: false
 
 library.website:
   rest-client:

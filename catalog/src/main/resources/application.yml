@@ -19,6 +19,9 @@ management:
     diskspace.enabled: false
     livenessstate.enabled: true
     readinessstate.enabled: true
+  tracing:
+    export:
+      enabled: false
 
 springdoc:
   api-docs:
