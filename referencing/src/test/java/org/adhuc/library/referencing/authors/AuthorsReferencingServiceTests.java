@@ -6,8 +6,13 @@ import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Authors referencing service should")
 class AuthorsReferencingServiceTests {
@@ -19,6 +24,19 @@ class AuthorsReferencingServiceTests {
     void setUp() {
         authorsRepository = new InMemoryAuthorsRepository();
         service = new AuthorsReferencingService(authorsRepository);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"", "   ", "\t   "})
+    @DisplayName("fail referencing author if its name is empty or blank")
+    void deadBeforeBornAuthor(String name) {
+        assertThrows(IllegalArgumentException.class, () -> new ReferenceAuthor(name, LocalDate.parse("2026-01-01")));
+    }
+
+    @Test
+    @DisplayName("fail referencing author if dead before being born")
+    void deadBeforeBornAuthor() {
+        assertThrows(IllegalArgumentException.class, () -> new ReferenceAuthor("test", LocalDate.parse("2026-01-01"), LocalDate.parse("2025-12-31")));
     }
 
     @Test
@@ -63,6 +81,18 @@ class AuthorsReferencingServiceTests {
         var author = service.referenceAuthor(command);
 
         assertThat(authorsRepository.findById(author.id())).isPresent().contains(author);
+    }
+
+    @Test
+    @DisplayName("save author trimming its name")
+    void referenceAuthorTrimmingName() {
+        var name = Authors.name();
+        var nameWithTrailingSpaces = "  " + name + "\t ";
+        var dateOfBirth = Authors.dateOfBirth();
+        var command = new ReferenceAuthor(nameWithTrailingSpaces, dateOfBirth);
+        var author = service.referenceAuthor(command);
+
+        assertThat(author.name()).isEqualTo(name);
     }
 
 }

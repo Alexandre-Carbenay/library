@@ -83,6 +83,19 @@ public class AuthorsStepDefinitions {
                 .body("errors[0].pointer", equalTo("/date_of_birth"));
     }
 
+    @Then("the referencing fails with invalid date of death {date} being before date of birth {date}")
+    public void assertReferenceFailedInvalidDateOfDeath(LocalDate dateOfDeath, LocalDate dateOfBirth) {
+        Objects.requireNonNull(response, "Response must have been set before assertion")
+                .assertThat()
+                .log().ifStatusCodeMatches(not(equalTo(400)))
+                .statusCode(400)
+                .header("Location", nullValue())
+                .body("type", equalTo("/problems/invalid-request"))
+                .body("title", equalTo("Request validation error"))
+                .body("errors[0].detail", equalTo("Date of death " + dateOfDeath + " must be after date of birth " + dateOfBirth))
+                .body("errors[0].pointer", equalTo("/date_of_death"));
+    }
+
     @Then("{authorName} is now present in the list of authors")
     public void assertAuthorPresentInList(String authorName) {
         var authors = listAuthors();

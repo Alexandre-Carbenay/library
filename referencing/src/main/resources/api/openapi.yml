@@ -353,6 +353,7 @@ components:
           example: 'https://referencing.library.adhuc.org/api/v1/authors/83b5bf5d-b8bc-4ea7-82dd-51d7bd1af725'
     AuthorName:
       type: string
+      minLength: 1
       example: Jean-Jacques Rousseau
     DateOfBirth:
       type: string

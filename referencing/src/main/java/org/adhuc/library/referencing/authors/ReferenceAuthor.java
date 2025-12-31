@@ -5,7 +5,7 @@ import org.jspecify.annotations.Nullable;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public class ReferenceAuthor {
+public class ReferenceAuthor implements AliveOrDead {
 
     private final String name;
     private final LocalDate dateOfBirth;
@@ -17,9 +17,15 @@ public class ReferenceAuthor {
     }
 
     public ReferenceAuthor(String name, LocalDate dateOfBirth, @Nullable LocalDate dateOfDeath) {
-        this.name = name;
+        this.name = name.trim();
         this.dateOfBirth = dateOfBirth;
         this.dateOfDeath = dateOfDeath;
+        if (this.name.isEmpty()) {
+            throw new IllegalArgumentException("An author cannot have empty name");
+        }
+        if (!isBornBeforeDead()) {
+            throw new IllegalArgumentException("An author cannot be dead before being born");
+        }
     }
 
     public String name() {

@@ -1,5 +1,6 @@
 package org.adhuc.library.referencing.adapter.rest.authors;
 
+import jakarta.validation.Valid;
 import org.adhuc.library.referencing.authors.Author;
 import org.adhuc.library.referencing.authors.AuthorsConsultationService;
 import org.adhuc.library.referencing.authors.AuthorsReferencingService;
@@ -62,8 +63,8 @@ class AuthorsController {
     }
 
     @PostMapping
-    ResponseEntity<?> referenceAuthor(@RequestBody AuthorReferencingRequest request) {
-        var command = new ReferenceAuthor(request.name(), request.dateOfBirth(), request.dateOfDeath());
+    ResponseEntity<?> referenceAuthor(@Valid @RequestBody AuthorReferencingRequest request) {
+        var command = new ReferenceAuthor(request.name(), request.dateOfBirth(), request.dateOfDeath().orElse(null));
         var author = Objects.requireNonNull(authorsReferencingService.referenceAuthor(command));
 
         var model = authorModelAssembler.toModel(author);
