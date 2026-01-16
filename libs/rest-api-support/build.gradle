@@ -24,8 +24,8 @@ repositories {
 dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
-    api 'org.springframework.hateoas:spring-hateoas'
     api 'org.springframework.data:spring-data-rest-webmvc'
+    api 'org.springframework.boot:spring-boot-validation'
     api 'org.springframework.boot:spring-boot-jackson'
     api 'org.springframework.boot:spring-boot-autoconfigure'
     api 'com.atlassian.oai:swagger-request-validator-spring-webmvc:2.46.0'
