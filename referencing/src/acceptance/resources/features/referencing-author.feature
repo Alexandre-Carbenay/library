@@ -34,6 +34,15 @@ Feature: Reference a new author
             Then the referencing fails with date of birth required
             And Alexandre Dumas is still not present in the list of authors
 
+    Rule: Author cannot be referenced when its information are invalid
+
+        Scenario: Reference an author dead before being born
+            Given Estelle is a librarian
+            And Alexandre Dumas is not present in the list of authors
+            When she references new author Alexandre Dumas born on 1902-07-24 and dead on 1870-12-05
+            Then the referencing fails with invalid date of death 1870-12-05 being before date of birth 1902-07-24
+            And Alexandre Dumas is still not present in the list of authors
+
     Rule: Different authors can be referenced with same name and date of birth
     To avoid blocking author referencing in case of multiple authors with the same name, we allow author duplication.
     This means that a librarian should be proposed the list of existing authors with the same name so that she can

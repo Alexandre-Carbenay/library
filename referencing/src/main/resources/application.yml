@@ -28,6 +28,11 @@ springdoc:
   swagger-ui:
     url: /openapi.yml
 
+org.adhuc.library:
+  support:
+    rest.validation.jsr303:
+      enabled: true
+
 logging:
   level:
     org.adhuc.library.referencing: INFO

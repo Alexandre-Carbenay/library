@@ -11,6 +11,7 @@ import org.adhuc.library.support.rest.validation.RequestValidationAutoConfigurat
 import org.assertj.core.api.SoftAssertions;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,6 +22,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
+import org.springframework.boot.validation.autoconfigure.ValidationAutoConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -50,7 +52,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Tag("integration")
 @Tag("restApi")
 @WebMvcTest(controllers = {AuthorsController.class, AuthorModelAssembler.class})
-@ImportAutoConfiguration({RequestValidationAutoConfiguration.class, PaginationAutoConfiguration.class})
+@ImportAutoConfiguration({RequestValidationAutoConfiguration.class, PaginationAutoConfiguration.class, ValidationAutoConfiguration.class})
 @DisplayName("Authors controller should")
 class AuthorsControllerTests {
 
@@ -62,392 +64,501 @@ class AuthorsControllerTests {
     private AuthorsConsultationService authorsConsultationService;
     @MockitoBean
     private AuthorsReferencingService authorsReferencingService;
-    private final ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.captor();
-    private final ArgumentCaptor<ReferenceAuthor> referenceCommandCaptor = ArgumentCaptor.captor();
 
-    @Test
-    @DisplayName("provide an empty page when no author has been referenced")
-    void listAuthorsEmptyDefaultPage() throws Exception {
-        var request = PageRequest.of(0, 50);
-        when(authorsConsultationService.getPage(any())).thenReturn(Page.empty(request));
+    @Nested
+    @DisplayName("getting authors page")
+    class AuthorsPage {
 
-        mvc.perform(get("/api/v1/authors").accept("application/hal+json"))
-                .andExpect(status().isPartialContent())
-                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("page.size", equalTo(50)))
-                .andExpect(jsonPath("page.total_elements", equalTo(0)))
-                .andExpect(jsonPath("page.total_pages", equalTo(0)))
-                .andExpect(jsonPath("page.number", equalTo(0)))
-                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=0&size=50")))
-                .andExpect(jsonPath("_links.first").doesNotExist())
-                .andExpect(jsonPath("_links.prev").doesNotExist())
-                .andExpect(jsonPath("_links.next").doesNotExist())
-                .andExpect(jsonPath("_links.last").doesNotExist())
-                .andExpect(jsonPath("_embedded").doesNotExist());
+        private final ArgumentCaptor<Pageable> pageableCaptor = ArgumentCaptor.captor();
 
-        verify(authorsConsultationService).getPage(pageableCaptor.capture());
-        var actual = pageableCaptor.getValue();
-        SoftAssertions.assertSoftly(s -> {
-            s.assertThat(actual.getPageNumber()).isZero();
-            s.assertThat(actual.getPageSize()).isEqualTo(50);
-        });
-    }
+        @Test
+        @DisplayName("provide an empty page when no author has been referenced")
+        void listAuthorsEmptyDefaultPage() throws Exception {
+            var request = PageRequest.of(0, 50);
+            when(authorsConsultationService.getPage(any())).thenReturn(Page.empty(request));
 
-    @Test
-    @DisplayName("provide a unique page when the number of authors is lower than or equal to the requested page size")
-    void uniqueDefaultPage() throws Exception {
-        var numberOfElements = FAKER.random().nextInt(1, 50);
-        var authors = authors(numberOfElements);
+            mvc.perform(get("/api/v1/authors").accept("application/hal+json"))
+                    .andExpect(status().isPartialContent())
+                    .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                    .andExpect(jsonPath("page.size", equalTo(50)))
+                    .andExpect(jsonPath("page.total_elements", equalTo(0)))
+                    .andExpect(jsonPath("page.total_pages", equalTo(0)))
+                    .andExpect(jsonPath("page.number", equalTo(0)))
+                    .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=0&size=50")))
+                    .andExpect(jsonPath("_links.first").doesNotExist())
+                    .andExpect(jsonPath("_links.prev").doesNotExist())
+                    .andExpect(jsonPath("_links.next").doesNotExist())
+                    .andExpect(jsonPath("_links.last").doesNotExist())
+                    .andExpect(jsonPath("_embedded").doesNotExist());
 
-        var request = PageRequest.of(0, 50);
-        when(authorsConsultationService.getPage(any())).thenReturn(new PageImpl<>(authors, request, numberOfElements));
-
-        var result = mvc.perform(get("/api/v1/authors").accept("application/hal+json"))
-                .andDo(print())
-                .andExpect(status().isPartialContent())
-                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("page.size", equalTo(50)))
-                .andExpect(jsonPath("page.total_elements", equalTo(numberOfElements)))
-                .andExpect(jsonPath("page.total_pages", equalTo(1)))
-                .andExpect(jsonPath("page.number", equalTo(0)))
-                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=0&size=50")))
-                .andExpect(jsonPath("_links.first.href").doesNotExist())
-                .andExpect(jsonPath("_links.prev").doesNotExist())
-                .andExpect(jsonPath("_links.next").doesNotExist())
-                .andExpect(jsonPath("_links.last.href").doesNotExist())
-                .andExpect(jsonPath("_embedded").exists());
-
-        assertResponseContainsAllAuthors(result, authors);
-
-        verify(authorsConsultationService).getPage(pageableCaptor.capture());
-        var actual = pageableCaptor.getValue();
-        SoftAssertions.assertSoftly(s -> {
-            s.assertThat(actual.getPageNumber()).isZero();
-            s.assertThat(actual.getPageSize()).isEqualTo(50);
-        });
-    }
-
-    @Test
-    @DisplayName("provide a page with default page size when not specified explicitly")
-    void defaultPageSize() throws Exception {
-        var pageIndex = FAKER.random().nextInt(1, 100);
-        var authors = pageSample(pageIndex, 50);
-
-        when(authorsConsultationService.getPage(any())).thenReturn(authors);
-
-        var result = mvc.perform(get("/api/v1/authors")
-                        .accept("application/hal+json")
-                        .queryParam("page", String.valueOf(authors.getNumber())))
-                .andExpect(status().isPartialContent())
-                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("page.size", equalTo(authors.getSize())))
-                .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(authors.getTotalElements()).intValue())))
-                .andExpect(jsonPath("page.total_pages", equalTo(authors.getTotalPages())))
-                .andExpect(jsonPath("page.number", equalTo(authors.getNumber())))
-                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=" + authors.getNumber() + "&size=50")))
-                .andExpect(jsonPath("_embedded").exists());
-
-        assertResponseContainsAllAuthors(result, authors.toList());
-
-        verify(authorsConsultationService).getPage(pageableCaptor.capture());
-        var actual = pageableCaptor.getValue();
-        SoftAssertions.assertSoftly(s -> {
-            s.assertThat(actual.getPageNumber()).isEqualTo(authors.getNumber());
-            s.assertThat(actual.getPageSize()).isEqualTo(50);
-        });
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"-50", "-2", "-1"})
-    @DisplayName("refuse providing a page with a negative page number")
-    void getInvalidPageNumber(String pageNumber) throws Exception {
-        mvc.perform(get("/api/v1/authors").accept("application/hal+json")
-                        .queryParam("page", pageNumber)
-                ).andExpect(status().isBadRequest())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
-                .andExpect(jsonPath("status", equalTo(400)))
-                .andExpect(jsonPath("title", equalTo("Request validation error")))
-                .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
-                .andExpect(jsonPath("errors").isArray())
-                .andExpect(jsonPath("errors", hasSize(1)))
-                .andExpect(jsonPath("errors[0].detail", equalTo("Numeric instance is lower than the required minimum (minimum: 0, found: " + pageNumber + ")")))
-                .andExpect(jsonPath("errors[0].parameter", equalTo("page")));
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"-50", "-1", "0"})
-    @DisplayName("refuse providing a page with a negative page size")
-    void getInvalidPageSize(String pageSize) throws Exception {
-        mvc.perform(get("/api/v1/authors").accept("application/hal+json")
-                        .queryParam("size", pageSize)
-                ).andExpect(status().isBadRequest())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
-                .andExpect(jsonPath("status", equalTo(400)))
-                .andExpect(jsonPath("title", equalTo("Request validation error")))
-                .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
-                .andExpect(jsonPath("errors").isArray())
-                .andExpect(jsonPath("errors", hasSize(1)))
-                .andExpect(jsonPath("errors[0].detail",
-                        equalTo("Numeric instance is lower than the required minimum (minimum: 1, found: " + pageSize + ")")))
-                .andExpect(jsonPath("errors[0].parameter", equalTo("size")));
-    }
-
-    @ParameterizedTest
-    @CsvSource({"-50,-1", "-2,-50", "-1,0"})
-    @DisplayName("refuse providing a page with a negative page number")
-    void getInvalidPageNumberAndSize(String pageNumber, String pageSize) throws Exception {
-        mvc.perform(get("/api/v1/authors").accept("application/hal+json")
-                        .queryParam("page", pageNumber)
-                        .queryParam("size", pageSize)
-                ).andExpect(status().isBadRequest())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
-                .andExpect(jsonPath("status", equalTo(400)))
-                .andExpect(jsonPath("title", equalTo("Request validation error")))
-                .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
-                .andExpect(jsonPath("errors").isArray())
-                .andExpect(jsonPath("errors", hasSize(2)))
-                .andExpect(jsonPath("errors[0].detail",
-                        equalTo("Numeric instance is lower than the required minimum (minimum: 0, found: " + pageNumber + ")")))
-                .andExpect(jsonPath("errors[0].parameter", equalTo("page")))
-                .andExpect(jsonPath("errors[1].detail",
-                        equalTo("Numeric instance is lower than the required minimum (minimum: 1, found: " + pageSize + ")")))
-                .andExpect(jsonPath("errors[1].parameter", equalTo("size")));
-    }
-
-    @Test
-    @DisplayName("provide a page corresponding to requested page and size")
-    void getPage() throws Exception {
-        var pageIndex = FAKER.random().nextInt(0, 100);
-        var pageSize = FAKER.random().nextInt(2, 100);
-        var authors = pageSample(pageIndex, pageSize);
-
-        when(authorsConsultationService.getPage(any())).thenReturn(authors);
-
-        var result = mvc.perform(get("/api/v1/authors")
-                        .accept("application/hal+json")
-                        .queryParam("page", Integer.toString(pageIndex))
-                        .queryParam("size", Integer.toString(pageSize))
-                ).andExpect(status().isPartialContent())
-                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("page.size", equalTo(authors.getSize())))
-                .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(authors.getTotalElements()).intValue())))
-                .andExpect(jsonPath("page.total_pages", equalTo(authors.getTotalPages())))
-                .andExpect(jsonPath("page.number", equalTo(pageIndex)))
-                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=" + pageIndex + "&size=" + pageSize)))
-                .andExpect(jsonPath("_embedded").exists());
-
-        assertResponseContainsAllAuthors(result, authors.toList());
-
-        verify(authorsConsultationService).getPage(pageableCaptor.capture());
-        var actual = pageableCaptor.getValue();
-        SoftAssertions.assertSoftly(s -> {
-            s.assertThat(actual.getPageNumber()).isEqualTo(authors.getNumber());
-            s.assertThat(actual.getPageSize()).isEqualTo(authors.getSize());
-        });
-    }
-
-    @ParameterizedTest(name = "[{index}] Page = {0}, size = {1}, first = {3}, prev = {4}, next = {5}, last = {6}")
-    @MethodSource({"uniquePagesProvider", "firstPagesProvider", "intermediatePagesProvider", "lastPagesProvider"})
-    @DisplayName("provide a page with navigation links")
-    void getPageWithNavigation(int pageIndex, int pageSize, Page<Author> authors, boolean hasFirst, boolean hasPrev,
-                               boolean hasNext, boolean hasLast) throws Exception {
-        when(authorsConsultationService.getPage(any())).thenReturn(authors);
-
-        var result = mvc.perform(get("/api/v1/authors")
-                        .accept("application/hal+json")
-                        .queryParam("page", Integer.toString(pageIndex))
-                        .queryParam("size", Integer.toString(pageSize))
-                ).andExpect(status().isPartialContent())
-                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=" + pageIndex + "&size=" + pageSize)));
-
-        verifyNavigationLink(result, hasFirst, "first", "http://localhost/api/v1/authors?page=0&size=" + pageSize);
-        verifyNavigationLink(result, hasPrev, "prev", "http://localhost/api/v1/authors?page=" + (pageIndex - 1) + "&size=" + pageSize);
-        verifyNavigationLink(result, hasNext, "next", "http://localhost/api/v1/authors?page=" + (pageIndex + 1) + "&size=" + pageSize);
-        verifyNavigationLink(result, hasLast, "last", "http://localhost/api/v1/authors?page=" + (authors.getTotalPages() - 1) + "&size=" + pageSize);
-    }
-
-    static void verifyNavigationLink(ResultActions result, boolean hasLink, String linkName, @Nullable String valueIfExists) throws Exception {
-        if (hasLink) {
-            result.andExpect(jsonPath("_links." + linkName + ".href", equalTo(requireNonNull(valueIfExists))));
-        } else {
-            result.andExpect(jsonPath("_links." + linkName).doesNotExist());
+            verify(authorsConsultationService).getPage(pageableCaptor.capture());
+            var actual = pageableCaptor.getValue();
+            SoftAssertions.assertSoftly(s -> {
+                s.assertThat(actual.getPageNumber()).isZero();
+                s.assertThat(actual.getPageSize()).isEqualTo(50);
+            });
         }
-    }
 
-    static Stream<Arguments> uniquePagesProvider() {
-        var requestedPageSize = FAKER.random().nextInt(2, 100);
-        var page = lastPage(0, requestedPageSize);
-        return Stream.of(Arguments.of(0, page.getPageable().getPageSize(), page, false, false, false, false));
-    }
+        @Test
+        @DisplayName("provide a unique page when the number of authors is lower than or equal to the requested page size")
+        void uniqueDefaultPage() throws Exception {
+            var numberOfElements = FAKER.random().nextInt(1, 50);
+            var authors = authors(numberOfElements);
 
-    static Stream<Arguments> firstPagesProvider() {
-        var requestedPageSize = FAKER.random().nextInt(2, 100);
-        var page = fullPage(0, requestedPageSize);
-        return Stream.of(Arguments.of(0, page.getPageable().getPageSize(), page, true, false, true, true));
-    }
+            var request = PageRequest.of(0, 50);
+            when(authorsConsultationService.getPage(any())).thenReturn(new PageImpl<>(authors, request, numberOfElements));
 
-    static Stream<Arguments> intermediatePagesProvider() {
-        var pageIndex = FAKER.random().nextInt(1, 100);
-        var requestedPageSize = FAKER.random().nextInt(2, 100);
-        var page = fullPage(pageIndex, requestedPageSize);
-        return Stream.of(Arguments.of(page.getNumber(), page.getPageable().getPageSize(), page, true, true, true, true));
-    }
+            var result = mvc.perform(get("/api/v1/authors").accept("application/hal+json"))
+                    .andDo(print())
+                    .andExpect(status().isPartialContent())
+                    .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                    .andExpect(jsonPath("page.size", equalTo(50)))
+                    .andExpect(jsonPath("page.total_elements", equalTo(numberOfElements)))
+                    .andExpect(jsonPath("page.total_pages", equalTo(1)))
+                    .andExpect(jsonPath("page.number", equalTo(0)))
+                    .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=0&size=50")))
+                    .andExpect(jsonPath("_links.first.href").doesNotExist())
+                    .andExpect(jsonPath("_links.prev").doesNotExist())
+                    .andExpect(jsonPath("_links.next").doesNotExist())
+                    .andExpect(jsonPath("_links.last.href").doesNotExist())
+                    .andExpect(jsonPath("_embedded").exists());
 
-    static Stream<Arguments> lastPagesProvider() {
-        var pageIndex = FAKER.random().nextInt(1, 100);
-        var requestedPageSize = FAKER.random().nextInt(2, 100);
-        var page = lastPage(pageIndex, requestedPageSize);
-        return Stream.of(Arguments.of(page.getNumber(), page.getPageable().getPageSize(), page, true, true, false, true));
-    }
+            assertResponseContainsAllAuthors(result, authors);
 
-    private static Page<Author> pageSample(int pageIndex, int requestedPageSize) {
-        var isLastPage = FAKER.bool().bool();
-        if (isLastPage) {
-            return lastPage(pageIndex, requestedPageSize);
+            verify(authorsConsultationService).getPage(pageableCaptor.capture());
+            var actual = pageableCaptor.getValue();
+            SoftAssertions.assertSoftly(s -> {
+                s.assertThat(actual.getPageNumber()).isZero();
+                s.assertThat(actual.getPageSize()).isEqualTo(50);
+            });
         }
-        return fullPage(pageIndex, requestedPageSize);
-    }
 
-    private static PageImpl<Author> lastPage(int page, int requestedPageSize) {
-        int pageSize = FAKER.random().nextInt(1, requestedPageSize);
-        int totalRows = pageSize;
-        if (page > 0) {
-            totalRows += requestedPageSize * page;
+        @Test
+        @DisplayName("provide a page with default page size when not specified explicitly")
+        void defaultPageSize() throws Exception {
+            var pageIndex = FAKER.random().nextInt(1, 100);
+            var authors = pageSample(pageIndex, 50);
+
+            when(authorsConsultationService.getPage(any())).thenReturn(authors);
+
+            var result = mvc.perform(get("/api/v1/authors")
+                            .accept("application/hal+json")
+                            .queryParam("page", String.valueOf(authors.getNumber())))
+                    .andExpect(status().isPartialContent())
+                    .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                    .andExpect(jsonPath("page.size", equalTo(authors.getSize())))
+                    .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(authors.getTotalElements()).intValue())))
+                    .andExpect(jsonPath("page.total_pages", equalTo(authors.getTotalPages())))
+                    .andExpect(jsonPath("page.number", equalTo(authors.getNumber())))
+                    .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=" + authors.getNumber() + "&size=50")))
+                    .andExpect(jsonPath("_embedded").exists());
+
+            assertResponseContainsAllAuthors(result, authors.toList());
+
+            verify(authorsConsultationService).getPage(pageableCaptor.capture());
+            var actual = pageableCaptor.getValue();
+            SoftAssertions.assertSoftly(s -> {
+                s.assertThat(actual.getPageNumber()).isEqualTo(authors.getNumber());
+                s.assertThat(actual.getPageSize()).isEqualTo(50);
+            });
         }
-        var elements = authors(pageSize);
-        return new PageImpl<>(elements, PageRequest.of(page, requestedPageSize), totalRows);
-    }
 
-    private static PageImpl<Author> fullPage(int page, int requestedPageSize) {
-        var totalPages = FAKER.random().nextInt(page + 1, 150);
-        var lastPageSize = FAKER.random().nextInt(1, requestedPageSize - 1);
-        var totalRows = totalPages * requestedPageSize + lastPageSize;
-        var elements = authors(requestedPageSize);
-        return new PageImpl<>(elements, PageRequest.of(page, requestedPageSize), totalRows);
-    }
+        @ParameterizedTest
+        @ValueSource(strings = {"-50", "-2", "-1"})
+        @DisplayName("refuse providing a page with a negative page number")
+        void getInvalidPageNumber(String pageNumber) throws Exception {
+            mvc.perform(get("/api/v1/authors").accept("application/hal+json")
+                            .queryParam("page", pageNumber)
+                    ).andExpect(status().isBadRequest())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                    .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
+                    .andExpect(jsonPath("status", equalTo(400)))
+                    .andExpect(jsonPath("title", equalTo("Request validation error")))
+                    .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                    .andExpect(jsonPath("errors").isArray())
+                    .andExpect(jsonPath("errors", hasSize(1)))
+                    .andExpect(jsonPath("errors[0].detail", equalTo("Numeric instance is lower than the required minimum (minimum: 0, found: " + pageNumber + ")")))
+                    .andExpect(jsonPath("errors[0].parameter", equalTo("page")));
+        }
 
-    public static void assertResponseContainsAllAuthors(ResultActions result, Collection<Author> expectedAuthors) throws Exception {
-        result.andExpect(jsonPath("_embedded.authors").exists())
-                .andExpect(jsonPath("_embedded.authors").isArray())
-                .andExpect(jsonPath("_embedded.authors", hasSize(expectedAuthors.size())));
-        for (var author : expectedAuthors) {
-            if (author.dateOfDeath().isPresent()) {
-                result.andExpect(jsonPath(
-                        "_embedded.authors.[" +
-                                "?(@.id == \"" + author.id() + "\" " +
-                                "&& @.name == \"" + author.name() + "\" " +
-                                "&& @.date_of_birth == \"" + author.dateOfBirth() + "\" " +
-                                "&& @.date_of_death == \"" + author.dateOfDeath().get() + "\" " +
-                                "&& @._links.self.href == \"http://localhost/api/v1/authors/" + author.id() + "\")]").exists());
+        @ParameterizedTest
+        @ValueSource(strings = {"-50", "-1", "0"})
+        @DisplayName("refuse providing a page with a negative page size")
+        void getInvalidPageSize(String pageSize) throws Exception {
+            mvc.perform(get("/api/v1/authors").accept("application/hal+json")
+                            .queryParam("size", pageSize)
+                    ).andExpect(status().isBadRequest())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                    .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
+                    .andExpect(jsonPath("status", equalTo(400)))
+                    .andExpect(jsonPath("title", equalTo("Request validation error")))
+                    .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                    .andExpect(jsonPath("errors").isArray())
+                    .andExpect(jsonPath("errors", hasSize(1)))
+                    .andExpect(jsonPath("errors[0].detail",
+                            equalTo("Numeric instance is lower than the required minimum (minimum: 1, found: " + pageSize + ")")))
+                    .andExpect(jsonPath("errors[0].parameter", equalTo("size")));
+        }
+
+        @ParameterizedTest
+        @CsvSource({"-50,-1", "-2,-50", "-1,0"})
+        @DisplayName("refuse providing a page with a negative page number")
+        void getInvalidPageNumberAndSize(String pageNumber, String pageSize) throws Exception {
+            mvc.perform(get("/api/v1/authors").accept("application/hal+json")
+                            .queryParam("page", pageNumber)
+                            .queryParam("size", pageSize)
+                    ).andExpect(status().isBadRequest())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                    .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
+                    .andExpect(jsonPath("status", equalTo(400)))
+                    .andExpect(jsonPath("title", equalTo("Request validation error")))
+                    .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                    .andExpect(jsonPath("errors").isArray())
+                    .andExpect(jsonPath("errors", hasSize(2)))
+                    .andExpect(jsonPath("errors[0].detail",
+                            equalTo("Numeric instance is lower than the required minimum (minimum: 0, found: " + pageNumber + ")")))
+                    .andExpect(jsonPath("errors[0].parameter", equalTo("page")))
+                    .andExpect(jsonPath("errors[1].detail",
+                            equalTo("Numeric instance is lower than the required minimum (minimum: 1, found: " + pageSize + ")")))
+                    .andExpect(jsonPath("errors[1].parameter", equalTo("size")));
+        }
+
+        @Test
+        @DisplayName("provide a page corresponding to requested page and size")
+        void getPage() throws Exception {
+            var pageIndex = FAKER.random().nextInt(0, 100);
+            var pageSize = FAKER.random().nextInt(2, 100);
+            var authors = pageSample(pageIndex, pageSize);
+
+            when(authorsConsultationService.getPage(any())).thenReturn(authors);
+
+            var result = mvc.perform(get("/api/v1/authors")
+                            .accept("application/hal+json")
+                            .queryParam("page", Integer.toString(pageIndex))
+                            .queryParam("size", Integer.toString(pageSize))
+                    ).andExpect(status().isPartialContent())
+                    .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                    .andExpect(jsonPath("page.size", equalTo(authors.getSize())))
+                    .andExpect(jsonPath("page.total_elements", equalTo(Long.valueOf(authors.getTotalElements()).intValue())))
+                    .andExpect(jsonPath("page.total_pages", equalTo(authors.getTotalPages())))
+                    .andExpect(jsonPath("page.number", equalTo(pageIndex)))
+                    .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=" + pageIndex + "&size=" + pageSize)))
+                    .andExpect(jsonPath("_embedded").exists());
+
+            assertResponseContainsAllAuthors(result, authors.toList());
+
+            verify(authorsConsultationService).getPage(pageableCaptor.capture());
+            var actual = pageableCaptor.getValue();
+            SoftAssertions.assertSoftly(s -> {
+                s.assertThat(actual.getPageNumber()).isEqualTo(authors.getNumber());
+                s.assertThat(actual.getPageSize()).isEqualTo(authors.getSize());
+            });
+        }
+
+        @ParameterizedTest(name = "[{index}] Page = {0}, size = {1}, first = {3}, prev = {4}, next = {5}, last = {6}")
+        @MethodSource({"uniquePagesProvider", "firstPagesProvider", "intermediatePagesProvider", "lastPagesProvider"})
+        @DisplayName("provide a page with navigation links")
+        void getPageWithNavigation(int pageIndex, int pageSize, Page<Author> authors, boolean hasFirst, boolean hasPrev,
+                                   boolean hasNext, boolean hasLast) throws Exception {
+            when(authorsConsultationService.getPage(any())).thenReturn(authors);
+
+            var result = mvc.perform(get("/api/v1/authors")
+                            .accept("application/hal+json")
+                            .queryParam("page", Integer.toString(pageIndex))
+                            .queryParam("size", Integer.toString(pageSize))
+                    ).andExpect(status().isPartialContent())
+                    .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                    .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors?page=" + pageIndex + "&size=" + pageSize)));
+
+            verifyNavigationLink(result, hasFirst, "first", "http://localhost/api/v1/authors?page=0&size=" + pageSize);
+            verifyNavigationLink(result, hasPrev, "prev", "http://localhost/api/v1/authors?page=" + (pageIndex - 1) + "&size=" + pageSize);
+            verifyNavigationLink(result, hasNext, "next", "http://localhost/api/v1/authors?page=" + (pageIndex + 1) + "&size=" + pageSize);
+            verifyNavigationLink(result, hasLast, "last", "http://localhost/api/v1/authors?page=" + (authors.getTotalPages() - 1) + "&size=" + pageSize);
+        }
+
+        static void verifyNavigationLink(ResultActions result, boolean hasLink, String linkName, @Nullable String valueIfExists) throws Exception {
+            if (hasLink) {
+                result.andExpect(jsonPath("_links." + linkName + ".href", equalTo(requireNonNull(valueIfExists))));
             } else {
-                // TODO ensure date of death is not present
-                result.andExpect(jsonPath(
-                        "_embedded.authors.[" +
-                                "?(@.id == \"" + author.id() + "\" " +
-                                "&& @.name == \"" + author.name() + "\" " +
-                                "&& @.date_of_birth == \"" + author.dateOfBirth() + "\" " +
-                                "&& @._links.self.href == \"http://localhost/api/v1/authors/" + author.id() + "\")]").exists());
+                result.andExpect(jsonPath("_links." + linkName).doesNotExist());
             }
         }
+
+        static Stream<Arguments> uniquePagesProvider() {
+            var requestedPageSize = FAKER.random().nextInt(2, 100);
+            var page = lastPage(0, requestedPageSize);
+            return Stream.of(Arguments.of(0, page.getPageable().getPageSize(), page, false, false, false, false));
+        }
+
+        static Stream<Arguments> firstPagesProvider() {
+            var requestedPageSize = FAKER.random().nextInt(2, 100);
+            var page = fullPage(0, requestedPageSize);
+            return Stream.of(Arguments.of(0, page.getPageable().getPageSize(), page, true, false, true, true));
+        }
+
+        static Stream<Arguments> intermediatePagesProvider() {
+            var pageIndex = FAKER.random().nextInt(1, 100);
+            var requestedPageSize = FAKER.random().nextInt(2, 100);
+            var page = fullPage(pageIndex, requestedPageSize);
+            return Stream.of(Arguments.of(page.getNumber(), page.getPageable().getPageSize(), page, true, true, true, true));
+        }
+
+        static Stream<Arguments> lastPagesProvider() {
+            var pageIndex = FAKER.random().nextInt(1, 100);
+            var requestedPageSize = FAKER.random().nextInt(2, 100);
+            var page = lastPage(pageIndex, requestedPageSize);
+            return Stream.of(Arguments.of(page.getNumber(), page.getPageable().getPageSize(), page, true, true, false, true));
+        }
+
+        private static Page<Author> pageSample(int pageIndex, int requestedPageSize) {
+            var isLastPage = FAKER.bool().bool();
+            if (isLastPage) {
+                return lastPage(pageIndex, requestedPageSize);
+            }
+            return fullPage(pageIndex, requestedPageSize);
+        }
+
+        private static PageImpl<Author> lastPage(int page, int requestedPageSize) {
+            int pageSize = FAKER.random().nextInt(1, requestedPageSize);
+            int totalRows = pageSize;
+            if (page > 0) {
+                totalRows += requestedPageSize * page;
+            }
+            var elements = authors(pageSize);
+            return new PageImpl<>(elements, PageRequest.of(page, requestedPageSize), totalRows);
+        }
+
+        private static PageImpl<Author> fullPage(int page, int requestedPageSize) {
+            var totalPages = FAKER.random().nextInt(page + 1, 150);
+            var lastPageSize = FAKER.random().nextInt(1, requestedPageSize - 1);
+            var totalRows = totalPages * requestedPageSize + lastPageSize;
+            var elements = authors(requestedPageSize);
+            return new PageImpl<>(elements, PageRequest.of(page, requestedPageSize), totalRows);
+        }
+
+        public static void assertResponseContainsAllAuthors(ResultActions result, Collection<Author> expectedAuthors) throws Exception {
+            result.andExpect(jsonPath("_embedded.authors").exists())
+                    .andExpect(jsonPath("_embedded.authors").isArray())
+                    .andExpect(jsonPath("_embedded.authors", hasSize(expectedAuthors.size())));
+            for (var author : expectedAuthors) {
+                if (author.dateOfDeath().isPresent()) {
+                    result.andExpect(jsonPath(
+                            "_embedded.authors.[" +
+                                    "?(@.id == \"" + author.id() + "\" " +
+                                    "&& @.name == \"" + author.name() + "\" " +
+                                    "&& @.date_of_birth == \"" + author.dateOfBirth() + "\" " +
+                                    "&& @.date_of_death == \"" + author.dateOfDeath().get() + "\" " +
+                                    "&& @._links.self.href == \"http://localhost/api/v1/authors/" + author.id() + "\")]").exists());
+                } else {
+                    // TODO ensure date of death is not present
+                    result.andExpect(jsonPath(
+                            "_embedded.authors.[" +
+                                    "?(@.id == \"" + author.id() + "\" " +
+                                    "&& @.name == \"" + author.name() + "\" " +
+                                    "&& @.date_of_birth == \"" + author.dateOfBirth() + "\" " +
+                                    "&& @._links.self.href == \"http://localhost/api/v1/authors/" + author.id() + "\")]").exists());
+                }
+            }
+        }
+
     }
 
-    @Test
-    @DisplayName("refuse referencing author when name is missing")
-    void referenceAuthorMissingName() throws Exception {
-        var requestBody = "{\"date_of_birth\":\"" + Authors.dateOfBirth() + "\"}";
-        mvc.perform(post("/api/v1/authors")
-                        .contentType("application/json")
-                        .content(requestBody)
-                ).andExpect(status().isBadRequest())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
-                .andExpect(jsonPath("status", equalTo(400)))
-                .andExpect(jsonPath("title", equalTo("Request validation error")))
-                .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
-                .andExpect(jsonPath("errors").isArray())
-                .andExpect(jsonPath("errors", hasSize(1)))
-                .andExpect(jsonPath("errors[0].detail", equalTo("Missing required property")))
-                .andExpect(jsonPath("errors[0].pointer", equalTo("/name")));
-    }
+    @Nested
+    @DisplayName("referencing new author")
+    class AuthorReferencing {
 
-    @Test
-    @DisplayName("refuse referencing author when date of birth is missing")
-    void referenceAuthorMissingDateOfBirth() throws Exception {
-        var requestBody = "{\"name\":\"" + Authors.name() + "\"}";
-        mvc.perform(post("/api/v1/authors")
-                        .contentType("application/json")
-                        .content(requestBody)
-                ).andExpect(status().isBadRequest())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
-                .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
-                .andExpect(jsonPath("status", equalTo(400)))
-                .andExpect(jsonPath("title", equalTo("Request validation error")))
-                .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
-                .andExpect(jsonPath("errors").isArray())
-                .andExpect(jsonPath("errors", hasSize(1)))
-                .andExpect(jsonPath("errors[0].detail", equalTo("Missing required property")))
-                .andExpect(jsonPath("errors[0].pointer", equalTo("/date_of_birth")));
-    }
+        private final ArgumentCaptor<ReferenceAuthor> referenceCommandCaptor = ArgumentCaptor.captor();
 
-    @Test
-    @DisplayName("reference alive author successfully when request is valid")
-    void referenceAliveAuthorSuccess() throws Exception {
-        var author = builder().alive().build();
+        @Test
+        @DisplayName("refuse referencing author when name is missing")
+        void referenceAuthorMissingName() throws Exception {
+            var requestBody = "{\"date_of_birth\":\"" + Authors.dateOfBirth() + "\"}";
+            mvc.perform(post("/api/v1/authors")
+                            .contentType("application/json")
+                            .content(requestBody)
+                    ).andExpect(status().isBadRequest())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                    .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
+                    .andExpect(jsonPath("status", equalTo(400)))
+                    .andExpect(jsonPath("title", equalTo("Request validation error")))
+                    .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                    .andExpect(jsonPath("errors").isArray())
+                    .andExpect(jsonPath("errors", hasSize(1)))
+                    .andExpect(jsonPath("errors[0].detail", equalTo("Missing required property")))
+                    .andExpect(jsonPath("errors[0].pointer", equalTo("/name")));
+        }
 
-        when(authorsReferencingService.referenceAuthor(any())).thenReturn(author);
+        @Test
+        @DisplayName("refuse referencing author when name is empty")
+        void referenceAuthorEmptyName() throws Exception {
+            var requestBody = "{\"name\":\"\", \"date_of_birth\":\"" + Authors.dateOfBirth() + "\"}";
+            mvc.perform(post("/api/v1/authors")
+                            .contentType("application/json")
+                            .content(requestBody)
+                    ).andExpect(status().isBadRequest())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                    .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
+                    .andExpect(jsonPath("status", equalTo(400)))
+                    .andExpect(jsonPath("title", equalTo("Request validation error")))
+                    .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                    .andExpect(jsonPath("errors").isArray())
+                    .andExpect(jsonPath("errors", hasSize(1)))
+                    .andExpect(jsonPath("errors[0].detail", equalTo("String \"\" is too short (length: 0, required minimum: 1)")))
+                    .andExpect(jsonPath("errors[0].pointer", equalTo("/name")));
+        }
 
-        var requestBody = "{\"name\":\"" + author.name() + "\", \"date_of_birth\":\"" + author.dateOfBirth() + "\"}";
-        mvc.perform(post("/api/v1/authors")
-                        .contentType("application/json")
-                        .content(requestBody)
-                ).andExpect(status().isCreated())
-                .andExpect(header().string("Location", equalTo("http://localhost/api/v1/authors/" + author.id())))
-                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("id", equalTo(author.id().toString())))
-                .andExpect(jsonPath("name", equalTo(author.name())))
-                .andExpect(jsonPath("date_of_birth", equalTo(author.dateOfBirth().toString())))
-                .andExpect(jsonPath("date_of_death").doesNotExist())
-                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors/" + author.id())));
+        @Test
+        @DisplayName("refuse referencing author when name is composed only of spaces")
+        void referenceAuthorSpacesName() throws Exception {
+            var requestBody = "{\"name\":\"   \", \"date_of_birth\":\"" + Authors.dateOfBirth() + "\"}";
+            mvc.perform(post("/api/v1/authors")
+                            .contentType("application/json")
+                            .content(requestBody)
+                    ).andExpect(status().isBadRequest())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                    .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
+                    .andExpect(jsonPath("status", equalTo(400)))
+                    .andExpect(jsonPath("title", equalTo("Request validation error")))
+                    .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                    .andExpect(jsonPath("errors").isArray())
+                    .andExpect(jsonPath("errors", hasSize(1)))
+                    .andExpect(jsonPath("errors[0].detail", equalTo("String \"   \" must not be blank")))
+                    .andExpect(jsonPath("errors[0].pointer", equalTo("/name")));
+        }
 
-        verify(authorsReferencingService).referenceAuthor(referenceCommandCaptor.capture());
-        var actual = referenceCommandCaptor.getValue();
-        SoftAssertions.assertSoftly(s -> {
-            s.assertThat(actual.name()).isEqualTo(author.name());
-            s.assertThat(actual.dateOfBirth()).isEqualTo(author.dateOfBirth());
-        });
-    }
+        @Test
+        @DisplayName("refuse referencing author when date of birth is missing")
+        void referenceAuthorMissingDateOfBirth() throws Exception {
+            var requestBody = "{\"name\":\"" + Authors.name() + "\"}";
+            mvc.perform(post("/api/v1/authors")
+                            .contentType("application/json")
+                            .content(requestBody)
+                    ).andExpect(status().isBadRequest())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                    .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
+                    .andExpect(jsonPath("status", equalTo(400)))
+                    .andExpect(jsonPath("title", equalTo("Request validation error")))
+                    .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                    .andExpect(jsonPath("errors").isArray())
+                    .andExpect(jsonPath("errors", hasSize(1)))
+                    .andExpect(jsonPath("errors[0].detail", equalTo("Missing required property")))
+                    .andExpect(jsonPath("errors[0].pointer", equalTo("/date_of_birth")));
+        }
 
-    @Test
-    @DisplayName("reference dead author successfully when request is valid")
-    void referenceDeadAuthorSuccess() throws Exception {
-        var author = builder().dead().build();
+        @Test
+        @DisplayName("refuse referencing author when date of birth is invalid")
+        void referenceAuthorInvalidDateOfBirth() throws Exception {
+            var requestBody = "{\"name\":\"" + Authors.name() + "\", \"date_of_birth\":\"01-01-1970\"}";
+            mvc.perform(post("/api/v1/authors")
+                            .contentType("application/json")
+                            .content(requestBody)
+                    ).andExpect(status().isBadRequest())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                    .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
+                    .andExpect(jsonPath("status", equalTo(400)))
+                    .andExpect(jsonPath("title", equalTo("Request validation error")))
+                    .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                    .andExpect(jsonPath("errors").isArray())
+                    .andExpect(jsonPath("errors", hasSize(1)))
+                    .andExpect(jsonPath("errors[0].detail", equalTo("String \"01-01-1970\" is invalid against requested date format(s) yyyy-MM-dd")))
+                    .andExpect(jsonPath("errors[0].pointer", equalTo("/date_of_birth")));
+        }
 
-        when(authorsReferencingService.referenceAuthor(any())).thenReturn(author);
+        @Test
+        @DisplayName("reference alive author successfully when request is valid")
+        void referenceAliveAuthorSuccess() throws Exception {
+            var author = builder().alive().build();
 
-        var requestBody = "{\"name\":\"" + author.name() + "\", \"date_of_birth\":\"" + author.dateOfBirth() + "\", \"date_of_death\":\"" + author.dateOfDeath().orElseThrow() + "\"}";
-        mvc.perform(post("/api/v1/authors")
-                        .contentType("application/json")
-                        .content(requestBody)
-                ).andExpect(status().isCreated())
-                .andExpect(header().string("Location", equalTo("http://localhost/api/v1/authors/" + author.id())))
-                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("id", equalTo(author.id().toString())))
-                .andExpect(jsonPath("name", equalTo(author.name())))
-                .andExpect(jsonPath("date_of_birth", equalTo(author.dateOfBirth().toString())))
-                .andExpect(jsonPath("date_of_death", equalTo(author.dateOfDeath().orElseThrow().toString())))
-                .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors/" + author.id())));
+            when(authorsReferencingService.referenceAuthor(any())).thenReturn(author);
 
-        verify(authorsReferencingService).referenceAuthor(referenceCommandCaptor.capture());
-        var actual = referenceCommandCaptor.getValue();
-        SoftAssertions.assertSoftly(s -> {
-            s.assertThat(actual.name()).isEqualTo(author.name());
-            s.assertThat(actual.dateOfBirth()).isEqualTo(author.dateOfBirth());
-            s.assertThat(actual.dateOfDeath()).isEqualTo(author.dateOfDeath());
-        });
+            var requestBody = "{\"name\":\"" + author.name() + "\", \"date_of_birth\":\"" + author.dateOfBirth() + "\"}";
+            mvc.perform(post("/api/v1/authors")
+                            .contentType("application/json")
+                            .content(requestBody)
+                    ).andExpect(status().isCreated())
+                    .andExpect(header().string("Location", equalTo("http://localhost/api/v1/authors/" + author.id())))
+                    .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                    .andExpect(jsonPath("id", equalTo(author.id().toString())))
+                    .andExpect(jsonPath("name", equalTo(author.name())))
+                    .andExpect(jsonPath("date_of_birth", equalTo(author.dateOfBirth().toString())))
+                    .andExpect(jsonPath("date_of_death").doesNotExist())
+                    .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors/" + author.id())));
+
+            verify(authorsReferencingService).referenceAuthor(referenceCommandCaptor.capture());
+            var actual = referenceCommandCaptor.getValue();
+            SoftAssertions.assertSoftly(s -> {
+                s.assertThat(actual.name()).isEqualTo(author.name());
+                s.assertThat(actual.dateOfBirth()).isEqualTo(author.dateOfBirth());
+            });
+        }
+
+        @Test
+        @DisplayName("refuse referencing author when date of death is invalid")
+        void referenceAuthorInvalidDateOfDeath() throws Exception {
+            var requestBody = "{\"name\":\"" + Authors.name() + "\", \"date_of_birth\":\"1970-01-01\", \"date_of_death\":\"01-01-2000\"}";
+            mvc.perform(post("/api/v1/authors")
+                            .contentType("application/json")
+                            .content(requestBody)
+                    ).andExpect(status().isBadRequest())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                    .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
+                    .andExpect(jsonPath("status", equalTo(400)))
+                    .andExpect(jsonPath("title", equalTo("Request validation error")))
+                    .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                    .andExpect(jsonPath("errors").isArray())
+                    .andExpect(jsonPath("errors", hasSize(1)))
+                    .andExpect(jsonPath("errors[0].detail", equalTo("String \"01-01-2000\" is invalid against requested date format(s) yyyy-MM-dd")))
+                    .andExpect(jsonPath("errors[0].pointer", equalTo("/date_of_death")));
+        }
+
+        @Test
+        @DisplayName("refuse referencing author when date of birth is after date of death")
+        void referenceAuthorDateOfBirthAfterDateOfDeath() throws Exception {
+            var requestBody = "{\"name\":\"" + Authors.name() + "\", \"date_of_birth\":\"1970-01-01\", \"date_of_death\":\"1969-12-31\"}";
+            mvc.perform(post("/api/v1/authors")
+                            .contentType("application/json")
+                            .content(requestBody)
+                    ).andExpect(status().isBadRequest())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                    .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
+                    .andExpect(jsonPath("status", equalTo(400)))
+                    .andExpect(jsonPath("title", equalTo("Request validation error")))
+                    .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                    .andExpect(jsonPath("errors").isArray())
+                    .andExpect(jsonPath("errors", hasSize(1)))
+                    .andExpect(jsonPath("errors[0].detail", equalTo("Date of death 1969-12-31 must be after date of birth 1970-01-01")))
+                    .andExpect(jsonPath("errors[0].pointer", equalTo("/date_of_death")));
+        }
+
+        @Test
+        @DisplayName("reference dead author successfully when request is valid")
+        void referenceDeadAuthorSuccess() throws Exception {
+            var author = builder().dead().build();
+
+            when(authorsReferencingService.referenceAuthor(any())).thenReturn(author);
+
+            var requestBody = "{\"name\":\"" + author.name() + "\", \"date_of_birth\":\"" + author.dateOfBirth() + "\", \"date_of_death\":\"" + author.dateOfDeath().orElseThrow() + "\"}";
+            mvc.perform(post("/api/v1/authors")
+                            .contentType("application/json")
+                            .content(requestBody)
+                    ).andExpect(status().isCreated())
+                    .andExpect(header().string("Location", equalTo("http://localhost/api/v1/authors/" + author.id())))
+                    .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                    .andExpect(jsonPath("id", equalTo(author.id().toString())))
+                    .andExpect(jsonPath("name", equalTo(author.name())))
+                    .andExpect(jsonPath("date_of_birth", equalTo(author.dateOfBirth().toString())))
+                    .andExpect(jsonPath("date_of_death", equalTo(author.dateOfDeath().orElseThrow().toString())))
+                    .andExpect(jsonPath("_links.self.href", equalTo("http://localhost/api/v1/authors/" + author.id())));
+
+            verify(authorsReferencingService).referenceAuthor(referenceCommandCaptor.capture());
+            var actual = referenceCommandCaptor.getValue();
+            SoftAssertions.assertSoftly(s -> {
+                s.assertThat(actual.name()).isEqualTo(author.name());
+                s.assertThat(actual.dateOfBirth()).isEqualTo(author.dateOfBirth());
+                s.assertThat(actual.dateOfDeath()).isEqualTo(author.dateOfDeath());
+            });
+        }
+
     }
 
 }
