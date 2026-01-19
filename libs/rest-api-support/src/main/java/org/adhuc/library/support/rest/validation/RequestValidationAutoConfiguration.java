@@ -1,5 +1,7 @@
 package org.adhuc.library.support.rest.validation;
 
+import org.adhuc.library.support.rest.validation.jsr303.Jsr303ValidationConfiguration;
+import org.adhuc.library.support.rest.validation.jsr303.Jsr303ValidationExceptionHandler;
 import org.adhuc.library.support.rest.validation.openapi.OpenApiRequestValidationExceptionHandler;
 import org.adhuc.library.support.rest.validation.openapi.OpenApiValidationConfigurer;
 import org.adhuc.library.support.rest.validation.openapi.OpenApiValidationMessageParsersConfiguration;
@@ -15,7 +17,9 @@ import org.springframework.core.io.ResourceLoader;
 @Import({
         OpenApiValidationConfigurer.class,
         OpenApiValidationMessageParsersConfiguration.class,
-        OpenApiRequestValidationExceptionHandler.class
+        OpenApiRequestValidationExceptionHandler.class,
+        Jsr303ValidationConfiguration.class,
+        Jsr303ValidationExceptionHandler.class
 })
 @ConditionalOnBooleanProperty(name = "enabled", prefix = "org.adhuc.library.support.rest.validation", matchIfMissing = true)
 @EnableConfigurationProperties(RequestValidationProperties.class)

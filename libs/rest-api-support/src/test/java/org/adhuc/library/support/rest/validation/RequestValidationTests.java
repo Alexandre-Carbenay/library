@@ -1,5 +1,6 @@
 package org.adhuc.library.support.rest.validation;
 
+import jakarta.validation.Valid;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Tag;
@@ -42,7 +43,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(properties = {
         "management.endpoints.web.base-path=/management-custom",
         "management.endpoints.web.exposure.include=health,beans,info",
-        "org.adhuc.library.support.rest.validation.open-api.location=classpath:validation/openapi-test.yml"
+        "org.adhuc.library.support.rest.validation.open-api.location=classpath:validation/openapi-test.yml",
+        "org.adhuc.library.support.rest.validation.jsr303.enabled=true",
+        "org.adhuc.library.support.rest.validation.jsr303.message-basename=classpath:validation/messages-test"
 })
 @DisplayName("Request validation should")
 class RequestValidationTests {
@@ -158,14 +161,25 @@ class RequestValidationTests {
         );
     }
 
-    @Test
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("validRequestProvider")
     @DisplayName("respond successfully when post request is valid")
-    void respond201OnValidPostRequest() throws Exception {
+    void respond201OnValidPostRequest(String name, TestRequest request) throws Exception {
         mvc.perform(
                 post("/test/request")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(testRequest()))
+                        .content(mapper.writeValueAsString(request))
         ).andExpect(status().isCreated());
+    }
+
+    static Stream<Arguments> validRequestProvider() {
+        return Stream.of(
+                Arguments.of("Random valid request", testRequest()),
+                Arguments.of(
+                        "Valid request without conditional value when condition is not met",
+                        testRequest().requiredBoolean(false).requiredIfRequiredBooleanIsTrue(null)
+                )
+        );
     }
 
     @ParameterizedTest(name = "{0}")
@@ -176,7 +190,8 @@ class RequestValidationTests {
             "requiredDateValidationErrorProvider",
             "requiredUuidValidationErrorProvider",
             "requiredArrayValidationErrorProvider",
-            "requiredChildValidationErrorProvider"
+            "requiredChildValidationErrorProvider",
+            "jsr303ValidationErrorProvider"
     })
     @DisplayName("respond with error detail on request body validation error")
     void respond400OnRequestValidationError(String name, TestRequest request, String expectedDetail, String expectedPointer) throws Exception {
@@ -394,6 +409,21 @@ class RequestValidationTests {
         );
     }
 
+    static Stream<Arguments> jsr303ValidationErrorProvider() {
+        return Stream.of(
+                Arguments.of("String is blank",
+                        testRequest().someOtherString("     "),
+                        "String \"     \" must not be blank",
+                        "/some_other_string"
+                ),
+                Arguments.of("Conditionally required field is not present",
+                        testRequest().requiredBoolean(true).requiredIfRequiredBooleanIsTrue(null),
+                        "Field is required if required boolean is true",
+                        "/pointer_name_test"
+                )
+        );
+    }
+
     @Test
     @DisplayName("respond with error detail on request with multiple validation error")
     void respond400WithMultipleValidationErrors() throws Exception {
@@ -602,7 +632,7 @@ class RequestValidationTests {
 
             @PostMapping("/test/request")
             @ResponseStatus(HttpStatus.CREATED)
-            TestRequest testRequestPost(@RequestBody TestRequest testRequest) {
+            TestRequest testRequestPost(@RequestBody @Valid TestRequest testRequest) {
                 return testRequest.id("sampleId");
             }
 
