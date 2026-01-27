@@ -69,7 +69,7 @@ dependencies {
 	testImplementation 'org.aspectj:aspectjweaver:1.9.25.1'
 
 	errorprone 'com.google.errorprone:error_prone_core:2.46.0'
-	errorprone 'com.uber.nullaway:nullaway:0.13.0'
+	errorprone 'com.uber.nullaway:nullaway:0.13.1'
 
 	scss 'org.webjars.npm:bootstrap:5.3.8'
 }
