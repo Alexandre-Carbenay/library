@@ -7,7 +7,7 @@ Feature: Reference a new author
             Given Estelle is a librarian
             And Alain Damasio is not present in the list of authors
             When she references new author Alain Damasio born on 1969-08-01
-            Then Alain Damasio is referenced
+            Then author Alain Damasio is referenced
             And Alain Damasio is now present in the list of authors
 
         @PendingFeature
@@ -15,14 +15,14 @@ Feature: Reference a new author
             Given Estelle is a librarian
             And Molière is not present in the list of authors
             When she references new author Molière born on 1622
-            Then Molière is referenced
+            Then author Molière is referenced
             And Molière is now present in the list of authors
 
         Scenario: Reference a dead author with its date of death
             Given Estelle is a librarian
             And Franz Kafka is not present in the list of authors
             When she references new author Franz Kafka born on 1883-07-03 and dead on 1924-06-03
-            Then Franz Kafka is referenced
+            Then author Franz Kafka is referenced
             And Franz Kafka is now present in the list of authors
 
     Rule: Author cannot be referenced with missing required information
@@ -52,5 +52,5 @@ Feature: Reference a new author
             Given Estelle is a librarian
             And George Orwell born on 1903-06-25 and dead on 1950-01-21 is present in the list of authors
             When she references new author George Orwell born on 1903-06-25 and dead on 1950-01-21
-            Then George Orwell is referenced
+            Then author George Orwell is referenced
             And George Orwell is present twice in the list of authors

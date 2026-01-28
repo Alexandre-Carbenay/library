@@ -46,7 +46,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Tag("integration")
@@ -109,7 +108,6 @@ class AuthorsControllerTests {
             when(authorsConsultationService.getPage(any())).thenReturn(new PageImpl<>(authors, request, numberOfElements));
 
             var result = mvc.perform(get("/api/v1/authors").accept("application/hal+json"))
-                    .andDo(print())
                     .andExpect(status().isPartialContent())
                     .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                     .andExpect(jsonPath("page.size", equalTo(50)))
