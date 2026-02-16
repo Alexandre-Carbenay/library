@@ -13,6 +13,8 @@ servers:
 tags:
   - name: Authors
     description: Manage referencing of authors within the library.
+  - name: Books
+    description: Manage referencing of books within the library.
 paths:
   /v1/authors:
     get:
@@ -29,7 +31,7 @@ paths:
         '206':
           $ref: '#/components/responses/Authors'
         '400':
-          $ref: '#/components/responses/InvalidAuthorsParameters'
+          $ref: '#/components/responses/InvalidPaginationParameters'
         '500':
           $ref: '#/components/responses/GeneralError'
     post:
@@ -69,6 +71,44 @@ paths:
           $ref: '#/components/responses/InvalidAuthorId'
         '404':
           $ref: '#/components/responses/UnknownAuthor'
+        '500':
+          $ref: '#/components/responses/GeneralError'
+  /v1/books:
+    get:
+      tags:
+        - Books
+      summary: Gets a paginated list of books based on filters.
+      description: |
+        The books list can be sorted and filtered in many different ways.
+      operationId: getBooks
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '206':
+          $ref: '#/components/responses/Books'
+        '400':
+          $ref: '#/components/responses/InvalidPaginationParameters'
+        '500':
+          $ref: '#/components/responses/GeneralError'
+    post:
+      tags:
+        - Books
+      summary: References a new book.
+      description: |
+        References a book to be able to reference editions.
+      operationId: referenceBook
+      requestBody:
+        $ref: '#/components/requestBodies/ReferenceBook'
+      responses:
+        '201':
+          $ref: '#/components/responses/ReferencedBook'
+        '400':
+          $ref: '#/components/responses/InvalidBookReferencing'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
         '500':
           $ref: '#/components/responses/GeneralError'
 components:
@@ -118,6 +158,16 @@ components:
         application/hal+json:
           schema:
             $ref: '#/components/schemas/ReferenceAuthor'
+    ReferenceBook:
+      required: true
+      description: A command to reference a book.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReferenceBook'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/ReferenceBook'
   responses:
     Authors:
       description: The referenced authors.
@@ -152,7 +202,40 @@ components:
           examples:
             invalidAuthorReferencing:
               $ref: '#/components/examples/InvalidAuthorReferencing'
-    InvalidAuthorsParameters:
+    Books:
+      description: The referenced books.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Books'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/Books'
+    ReferencedBook:
+      description: The referenced book.
+      headers:
+        Location:
+          description: Link the referenced book.
+          schema:
+            type: string
+            example: 'https://referencing.library.adhuc.org/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Book'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/Book'
+    InvalidBookReferencing:
+      description: Invalid book referencing command.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            invalidBookReferencing:
+              $ref: '#/components/examples/InvalidBookReferencing'
+    InvalidPaginationParameters:
       description: Invalid pagination parameters.
       content:
         application/problem+json:
@@ -375,6 +458,181 @@ components:
           $ref: '#/components/schemas/DateOfBirth'
         date_of_death:
           $ref: '#/components/schemas/DateOfDeath'
+    Books:
+      type: object
+      required:
+        - page
+        - '_links'
+      properties:
+        page:
+          $ref: '#/components/schemas/Page'
+        '_embedded':
+          type: object
+          readOnly: true
+          required:
+            - books
+          properties:
+            books:
+              description: |
+                The books collection, containing basic information for each book.
+              type: array
+              items:
+                $ref: '#/components/schemas/Book'
+        '_links':
+          type: object
+          readOnly: true
+          required:
+            - self
+          properties:
+            self:
+              description: Link to this books page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/books?page=1&size=50'
+            template:
+              description: Link to the template of books page.
+              type: object
+              required:
+                - href
+                - templated
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/books{?page,size}'
+                templated:
+                  type: boolean
+                  enum:
+                    - true
+            prev:
+              description: Link to the previous books page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/books?page=0&size=50'
+            next:
+              description: Link to the next books page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/books?page=3&size=50'
+            first:
+              description: Link to the first books page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/books?page=0&size=50'
+            last:
+              description: Link to the last books page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/books?page=8&size=50'
+    Book:
+      type: object
+      required:
+        - id
+        - authors
+        - original_language
+        - details
+        - '_links'
+      properties:
+        id:
+          $ref: '#/components/schemas/BookId'
+        authors:
+          $ref: '#/components/schemas/BookAuthors'
+        original_language:
+          $ref: '#/components/schemas/Language'
+        details:
+          $ref: '#/components/schemas/BookDetails'
+        '_links':
+          type: object
+          readOnly: true
+          required:
+            - self
+          properties:
+            self:
+              $ref: '#/components/schemas/BookLink'
+    BookId:
+      type: string
+      format: uuid
+      example: b6608a30-1e9b-4ae0-a89d-624c3ca85da4
+    BookLink:
+      type: object
+      description: Link to the book. Can be used to see the detail of the book.
+      required:
+        - href
+      properties:
+        href:
+          type: string
+          example: 'https://referencing.library.adhuc.org/api/v1/books/b6608a30-1e9b-4ae0-a89d-624c3ca85da4'
+    BookAuthors:
+      type: array
+      minItems: 1
+      items:
+        $ref: '#/components/schemas/AuthorId'
+    Language:
+      type: string
+      example: 'fr'
+    BookDetails:
+      type: array
+      description: List of details for the different languages.
+      minItems: 1
+      items:
+        $ref: '#/components/schemas/BookDetail'
+    BookDetail:
+      type: object
+      required:
+        - language
+        - title
+        - description
+      properties:
+        language:
+          $ref: '#/components/schemas/Language'
+        title:
+          type: string
+          example: 'Du contrat social'
+        description:
+          type: string
+          example: >
+            Du contrat social est un traité de philosophie politique présentant comment l’homme, passant de l’état de
+            nature à l’état de société, peut instituer un ordre social au service de l'intérêt commun. Le pacte social
+            que propose Rousseau établit que chacun doit renoncer à tous ses droits particuliers ou du plus fort pour
+            obtenir l'égalité des droits que procure la société. Cette aliénation de chaque sujet de l’État est ce pacte
+            qui offre à chacun l’égalité : « Les clauses [du pacte social] se réduisent toutes à une seule :
+            l’aliénation totale de chaque associé avec tous ses droits à toute la communauté : car premièrement, chacun
+            se donnant tout entier, la condition est égale pour tous ; et la condition étant égale pour tous, nul n’a
+            intérêt de la rendre onéreuse aux autres. » (Livre I, Chapitre 6) La légitimité du pacte social repose sur
+            le fait que l’homme n’aliène pas au sens propre (il ne l'échange pas ni ne le donne) son droit naturel mais
+            il comprend que le pacte social est au contraire la condition de l’existence de ses droits naturels.
+    ReferenceBook:
+      type: object
+      required:
+        - authors
+        - original_language
+        - details
+      properties:
+        authors:
+          $ref: '#/components/schemas/BookAuthors'
+        original_language:
+          $ref: '#/components/schemas/Language'
+        details:
+          $ref: '#/components/schemas/BookDetails'
     Page:
       type: object
       readOnly: true
@@ -483,7 +741,7 @@ components:
         detail: Invalid author referencing command
         errors:
           - detail: 'Empty string'
-            parameter: name
+            pointer: '/name'
     InvalidUUIDId:
       value:
         type: /problems/invalid-request
@@ -501,6 +759,15 @@ components:
         title: Unknown author
         detail: No author exists with id '96c7774f-dd6b-43d4-bd0e-6a7d1aad09a4'
       summary: Error when no author corresponds to the specified identity.
+    InvalidBookReferencing:
+      value:
+        type: /problems/invalid-request
+        status: 400
+        title: Request validation error
+        detail: Invalid book referencing command
+        errors:
+          - detail: 'Empty string'
+            pointer: '/details/0/title'
     UnauthorizedError:
       value:
         type: /problems/unauthorized
