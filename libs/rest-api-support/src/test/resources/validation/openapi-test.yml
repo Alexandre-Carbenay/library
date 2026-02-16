@@ -25,6 +25,16 @@ paths:
           $ref: '#/components/responses/TestRequestCreated'
         400:
           $ref: '#/components/responses/BadRequestError'
+  /test/request/jsr303:
+    post:
+      operationId: jsr303TestRequestGet
+      requestBody:
+        $ref: '#/components/requestBodies/Jsr303TestRequest'
+      responses:
+        204:
+          description: "Success"
+        400:
+          $ref: '#/components/responses/BadRequestError'
   /test/params/{uuid}/{int}:
     get:
       operationId: testParamsGet
@@ -103,6 +113,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/TestRequest'
+    Jsr303TestRequest:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Jsr303TestRequest'
     NullableRequest:
       required: true
       content:
@@ -197,6 +213,34 @@ components:
           maxLength: 10
         optional_child_string:
           type: string
+    Jsr303TestRequest:
+      type: object
+      properties:
+        not_blank_value:
+          type: string
+        positive_value:
+          type: integer
+        negative_or_zero_value:
+          type: integer
+        email_value:
+          type: string
+        past_or_present_value:
+          type: string
+        sized_list_value:
+          type: array
+          items:
+            type: string
+        amount:
+          type: number
+        conditions:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              enabled:
+                type: boolean
     NullableRequest:
       type: object
       properties:

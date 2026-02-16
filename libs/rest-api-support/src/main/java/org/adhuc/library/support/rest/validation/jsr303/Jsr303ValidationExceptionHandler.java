@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,9 +49,27 @@ public class Jsr303ValidationExceptionHandler extends ResponseEntityExceptionHan
     }
 
     private ProblemError extractFieldError(FieldError error) {
-        var detail = String.format("String \"%s\" %s", error.getRejectedValue(), error.getDefaultMessage());
+        var detail = extractFieldErrorDetail(error);
         var pointer = "/" + extractFieldPointer(error);
         return new ProblemError.PointerError(detail, pointer);
+    }
+
+    private String extractFieldErrorDetail(FieldError error) {
+        return switch (error.getRejectedValue()) {
+            case String value -> String.format("\"%s\" %s", value, error.getDefaultMessage());
+            default -> defaultErrorDetail(error);
+        };
+    }
+
+    private String defaultErrorDetail(FieldError error) {
+        if (error.contains(ConstraintViolation.class)) {
+            var violation = error.unwrap(ConstraintViolation.class);
+            var annotationType = violation.getConstraintDescriptor().getAnnotation().annotationType();
+            if (annotationType.getPackageName().equals("jakarta.validation.constraints")) {
+                return "%s %s".formatted(error.getRejectedValue(), error.getDefaultMessage());
+            }
+        }
+        return error.getDefaultMessage();
     }
 
     private ProblemError extractObjectError(ObjectError error) {
@@ -74,6 +93,7 @@ public class Jsr303ValidationExceptionHandler extends ResponseEntityExceptionHan
         var snakeCaseField = error.getField()
                 .replaceAll("([A-Z])(?=[A-Z])", "$1_")
                 .replaceAll("([a-z])([A-Z])", "$1_$2")
+                .replaceAll("\\[(\\d+)\\]\\.", "/$1/")
                 .toLowerCase();
         return snakeCaseField;
     }
