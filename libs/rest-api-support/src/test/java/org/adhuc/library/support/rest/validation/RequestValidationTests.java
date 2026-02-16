@@ -1,6 +1,7 @@
 package org.adhuc.library.support.rest.validation;
 
 import jakarta.validation.Valid;
+import org.adhuc.library.support.rest.validation.Jsr303TestRequest.ChildCondition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Tag;
@@ -22,9 +23,13 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.web.bind.annotation.*;
 import tools.jackson.databind.json.JsonMapper;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
 
+import static org.adhuc.library.support.rest.validation.Jsr303TestRequest.jsr303TestRequest;
 import static org.adhuc.library.support.rest.validation.TestRequest.TestChild.testChild;
 import static org.adhuc.library.support.rest.validation.TestRequest.testRequest;
 import static org.adhuc.library.support.rest.validation.WithNullableElementRequest.WithNullableChild.nullableChild;
@@ -161,25 +166,14 @@ class RequestValidationTests {
         );
     }
 
-    @ParameterizedTest(name = "{0}")
-    @MethodSource("validRequestProvider")
+    @Test
     @DisplayName("respond successfully when post request is valid")
-    void respond201OnValidPostRequest(String name, TestRequest request) throws Exception {
+    void respond201OnValidPostRequest() throws Exception {
         mvc.perform(
                 post("/test/request")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request))
+                        .content(mapper.writeValueAsString(testRequest()))
         ).andExpect(status().isCreated());
-    }
-
-    static Stream<Arguments> validRequestProvider() {
-        return Stream.of(
-                Arguments.of("Random valid request", testRequest()),
-                Arguments.of(
-                        "Valid request without conditional value when condition is not met",
-                        testRequest().requiredBoolean(false).requiredIfRequiredBooleanIsTrue(null)
-                )
-        );
     }
 
     @ParameterizedTest(name = "{0}")
@@ -190,8 +184,7 @@ class RequestValidationTests {
             "requiredDateValidationErrorProvider",
             "requiredUuidValidationErrorProvider",
             "requiredArrayValidationErrorProvider",
-            "requiredChildValidationErrorProvider",
-            "jsr303ValidationErrorProvider"
+            "requiredChildValidationErrorProvider"
     })
     @DisplayName("respond with error detail on request body validation error")
     void respond400OnRequestValidationError(String name, TestRequest request, String expectedDetail, String expectedPointer) throws Exception {
@@ -409,21 +402,6 @@ class RequestValidationTests {
         );
     }
 
-    static Stream<Arguments> jsr303ValidationErrorProvider() {
-        return Stream.of(
-                Arguments.of("String is blank",
-                        testRequest().someOtherString("     "),
-                        "String \"     \" must not be blank",
-                        "/some_other_string"
-                ),
-                Arguments.of("Conditionally required field is not present",
-                        testRequest().requiredBoolean(true).requiredIfRequiredBooleanIsTrue(null),
-                        "Field is required if required boolean is true",
-                        "/pointer_name_test"
-                )
-        );
-    }
-
     @Test
     @DisplayName("respond with error detail on request with multiple validation error")
     void respond400WithMultipleValidationErrors() throws Exception {
@@ -468,6 +446,105 @@ class RequestValidationTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(nullableElementRequest()))
         ).andExpect(status().isNoContent());
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("jsr303RequestValidationErrorProvider")
+    @DisplayName("respond with error detail based on JSR303 annotation")
+    void respond400Jsr303ValidationError(String name, Jsr303TestRequest request, String expectedDetail, String expectedPointer) throws Exception {
+        var result = mvc.perform(
+                        post("/test/request/jsr303")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(request))
+                ).andExpect(status().isBadRequest())
+                .andExpect(content().contentType("application/problem+json"));
+
+        result
+                .andExpect(jsonPath("type", equalTo("/problems/invalid-request")))
+                .andExpect(jsonPath("status", equalTo(400)))
+                .andExpect(jsonPath("title", equalTo("Request validation error")))
+                .andExpect(jsonPath("detail", equalTo("Request parameters or body are invalid compared to the OpenAPI specification. See errors for more information")))
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors[0].detail", equalTo(expectedDetail)))
+                .andExpect(jsonPath("errors[0].parameter").doesNotExist())
+                .andExpect(jsonPath("errors[0].pointer", equalTo(expectedPointer)));
+    }
+
+    static Stream<Arguments> jsr303RequestValidationErrorProvider() {
+        return Stream.of(
+                Arguments.of("String is blank",
+                        jsr303TestRequest().notBlankValue("     "),
+                        "\"     \" must not be blank",
+                        "/not_blank_value"
+                ),
+                Arguments.of("Positive number is negative",
+                        jsr303TestRequest().positiveValue(-1),
+                        "-1 must be greater than 0",
+                        "/positive_value"
+                ),
+                Arguments.of("Positive number is zero",
+                        jsr303TestRequest().positiveValue(0),
+                        "0 must be greater than 0",
+                        "/positive_value"
+                ),
+                Arguments.of("Negative or zero number is positive",
+                        jsr303TestRequest().negativeOrZeroValue(1),
+                        "1 must be less than or equal to 0",
+                        "/negative_or_zero_value"
+                ),
+                Arguments.of("Email is invalid",
+                        jsr303TestRequest().emailValue("invalid-email"),
+                        "\"invalid-email\" must be a well-formed email address",
+                        "/email_value"
+                ),
+                Arguments.of("Past or present date is in the future",
+                        jsr303TestRequest().pastOrPresentValue(LocalDate.now().plusDays(1)),
+                        LocalDate.now().plusDays(1) + " must be a date in the past or in the present",
+                        "/past_or_present_value"
+                ),
+                Arguments.of("Sized list has too few elements",
+                        jsr303TestRequest().sizedListValue(List.of("only one")),
+                        "[only one] size must be between 2 and 5",
+                        "/sized_list_value"
+                ),
+                Arguments.of("Sized list has too many elements",
+                        jsr303TestRequest().sizedListValue(List.of("1", "2", "3", "4", "5", "6")),
+                        "[1, 2, 3, 4, 5, 6] size must be between 2 and 5",
+                        "/sized_list_value"
+                ),
+                Arguments.of("Amount is too high",
+                        jsr303TestRequest().amount(BigDecimal.valueOf(1000.01)),
+                        "1000.01 numeric value out of bounds (<3 digits>.<2 digits> expected)",
+                        "/amount"
+                ),
+                Arguments.of("Amount is too precise",
+                        jsr303TestRequest().amount(BigDecimal.valueOf(100.001)),
+                        "100.001 numeric value out of bounds (<3 digits>.<2 digits> expected)",
+                        "/amount"
+                ),
+                Arguments.of("Conditionally required is not present when required",
+                        jsr303TestRequest().required(true).conditionallyRequired(null),
+                        "Field is required if required boolean is true",
+                        "/pointer_name_test"
+                ),
+                Arguments.of("Child condition not expected",
+                        jsr303TestRequest().conditions(List.of(
+                                new ChildCondition("a", true),
+                                new ChildCondition("d", true),
+                                new ChildCondition("c", true)
+                        )),
+                        "Expected child condition b but was d",
+                        "/conditions/1/name"
+                ),
+                Arguments.of("Missing child condition",
+                        jsr303TestRequest().conditions(List.of(
+                                new ChildCondition("a", true),
+                                new ChildCondition("b", true)
+                        )),
+                        "Missing child condition c",
+                        "/conditions"
+                )
+        );
     }
 
     @ParameterizedTest(name = "{0}")
@@ -634,6 +711,11 @@ class RequestValidationTests {
             @ResponseStatus(HttpStatus.CREATED)
             TestRequest testRequestPost(@RequestBody @Valid TestRequest testRequest) {
                 return testRequest.id("sampleId");
+            }
+
+            @PostMapping("/test/request/jsr303")
+            @ResponseStatus(HttpStatus.NO_CONTENT)
+            void testJsr303RequestPost(@RequestBody @Valid Jsr303TestRequest testRequest) {
             }
 
             @PostMapping("/test/nullable")

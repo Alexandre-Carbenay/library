@@ -2,7 +2,6 @@ package org.adhuc.library.support.rest.validation;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.validation.constraints.NotBlank;
 import net.datafaker.Faker;
 import tools.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import tools.jackson.databind.annotation.JsonNaming;
@@ -21,21 +20,18 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_ABSENT;
 @JsonInclude(NON_ABSENT)
 @JsonNaming(SnakeCaseStrategy.class)
 @JsonAutoDetect(fieldVisibility = ANY)
-@RequiredIfRequiredBooleanIsTrue(pointerName = "/pointer_name_test")
 class TestRequest {
 
     private static final Faker FAKER = new Faker();
 
     private String id;
     private Object requiredString;
-    @NotBlank
     private String someOtherString;
     private Object optionalString;
     private Object requiredInt;
     private Object optionalInt;
     private Object requiredBoolean;
     private Object optionalBoolean;
-    private String requiredIfRequiredBooleanIsTrue;
     private Object requiredDate;
     private Object optionalDate;
     private Object requiredUuid;
@@ -62,7 +58,6 @@ class TestRequest {
         request.optionalArray = array(0, 5, () -> FAKER.text().text());
         request.requiredChild = TestChild.testChild();
         request.optionalChild = optionalValue(TestChild::testChild);
-        request.requiredIfRequiredBooleanIsTrue = FAKER.text().text();
         return request;
     }
 
@@ -131,15 +126,6 @@ class TestRequest {
 
     TestRequest wrongTypeRequiredBoolean() {
         this.requiredBoolean = FAKER.text().text();
-        return this;
-    }
-
-    String requiredIfRequiredBooleanIsTrue() {
-        return requiredIfRequiredBooleanIsTrue;
-    }
-
-    TestRequest requiredIfRequiredBooleanIsTrue(String value) {
-        this.requiredIfRequiredBooleanIsTrue = value;
         return this;
     }
 

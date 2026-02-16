@@ -20,15 +20,15 @@ import static org.springframework.util.StringUtils.hasLength;
     Class<? extends Payload>[] payload() default {};
     String pointerName() default "";
 
-    class RequiredIfRequiredBooleanIsTrueValidator implements ConstraintValidator<RequiredIfRequiredBooleanIsTrue, TestRequest> {
+    class RequiredIfRequiredBooleanIsTrueValidator implements ConstraintValidator<RequiredIfRequiredBooleanIsTrue, Jsr303TestRequest> {
         @Override
         public void initialize(RequiredIfRequiredBooleanIsTrue constraintAnnotation) {
             ConstraintValidator.super.initialize(constraintAnnotation);
         }
 
         @Override
-        public boolean isValid(TestRequest value, ConstraintValidatorContext context) {
-            return !(Boolean) value.requiredBoolean() || hasLength(value.requiredIfRequiredBooleanIsTrue());
+        public boolean isValid(Jsr303TestRequest value, ConstraintValidatorContext context) {
+            return !(Boolean) value.required() || hasLength(value.conditionnallyRequired());
         }
     }
 
