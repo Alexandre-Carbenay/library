@@ -85,7 +85,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	acceptanceImplementation 'org.jspecify:jspecify:1.0.0'
-	acceptanceImplementation platform('io.cucumber:cucumber-bom:7.23.0')
+	acceptanceImplementation platform('io.cucumber:cucumber-bom:7.33.0')
 	acceptanceImplementation 'io.cucumber:cucumber-java'
 	acceptanceImplementation 'io.cucumber:cucumber-junit-platform-engine'
 	acceptanceImplementation 'org.junit.platform:junit-platform-suite'
