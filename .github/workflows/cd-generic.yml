@@ -181,7 +181,7 @@ jobs:
           tag: pr-${{ github.event.pull_request.number }}
 
       - name: "🐳 📦 🚀 Build and publish artifact with Docker (PR)"
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         if: github.ref != 'refs/heads/main' && github.event_name == 'pull_request'
         timeout-minutes: 1
         with:
@@ -197,7 +197,7 @@ jobs:
             ${{ inputs.docker-registry }}/${{ inputs.github-repository }}/${{ inputs.docker-image }}:sha-${{ github.sha }}
 
       - name: "🐳 📦 🚀 Build and publish artifact with Docker (main)"
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         if: github.ref == 'refs/heads/main'
         timeout-minutes: 1
         with:
