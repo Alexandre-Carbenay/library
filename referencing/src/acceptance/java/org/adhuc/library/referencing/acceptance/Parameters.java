@@ -3,11 +3,18 @@ package org.adhuc.library.referencing.acceptance;
 import io.cucumber.java.ParameterType;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 public class Parameters {
 
-    @ParameterType("[A-Za-zÀ-ÿ][A-Za-zÀ-ÿ ]*")
+    @ParameterType("[A-Z][A-Za-zÀ-ÿ ]*")
     public String authorName(String source) {
+        return source;
+    }
+
+    @ParameterType("[0-9A-Za-zÀ-ÿ][0-9A-Za-zÀ-ÿ ,'\\:]*")
+    public String bookTitle(String source) {
         return source;
     }
 
@@ -19,6 +26,33 @@ public class Parameters {
     @ParameterType("\\d{4}")
     public int year(String source) {
         return Integer.parseInt(source);
+    }
+
+    @ParameterType("French|English|German|Swedish")
+    public String language(String source) {
+        return Language.fromName(source).code;
+    }
+
+    private enum Language {
+        FRENCH("French", "fr"),
+        ENGLISH("English", "en"),
+        GERMAN("German", "de"),
+        SWEDISH("Swedish", "sv");
+
+        private final String name;
+        private final String code;
+
+        Language(String name, String code) {
+            this.name = name;
+            this.code = code;
+        }
+
+        static Language fromName(String name) {
+            return Arrays.stream(Language.values())
+                    .filter(language -> language.name.equals(name))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("No language with name " + name));
+        }
     }
 
 }

@@ -29,7 +29,7 @@ class AuthorsReferencingServiceTests {
     @ParameterizedTest
     @ValueSource(strings = {"", "   ", "\t   "})
     @DisplayName("fail referencing author if its name is empty or blank")
-    void deadBeforeBornAuthor(String name) {
+    void blankAuthorName(String name) {
         assertThrows(IllegalArgumentException.class, () -> new ReferenceAuthor(name, LocalDate.parse("2026-01-01")));
     }
 

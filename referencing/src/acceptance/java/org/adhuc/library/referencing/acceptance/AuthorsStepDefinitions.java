@@ -5,12 +5,14 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.restassured.response.ValidatableResponse;
 import org.adhuc.library.referencing.acceptance.authors.Author;
+import org.adhuc.library.referencing.acceptance.authors.AuthorRetriever;
 import org.jspecify.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import static org.adhuc.library.referencing.acceptance.authors.AuthorsMother.dateOfBirth;
 import static org.adhuc.library.referencing.acceptance.authors.actions.AuthorReferencing.referenceAuthor;
 import static org.adhuc.library.referencing.acceptance.authors.actions.AuthorReferencing.referenceAuthorWithNameOnly;
 import static org.adhuc.library.referencing.acceptance.authors.actions.AuthorsListing.listAuthors;
@@ -25,17 +27,24 @@ public class AuthorsStepDefinitions {
 
     @Given("{authorName} is not present in the list of authors")
     public void authorNotPresentInList(String authorName) {
-        var authors = listAuthors();
-        var authorIsPresent = isAuthorPresentInList(authors, authorName);
+        var authorIsPresent = isAuthorPresentInList(authorName);
         assumeThat(authorIsPresent).as("Author should not be present").isFalse();
     }
 
     @Given("{authorName} born on {date} and dead on {date} is present in the list of authors")
     public void authorPresentInList(String authorName, LocalDate dateOfBirth, LocalDate dateOfDeath) {
-        var authors = listAuthors();
-        var authorIsPresent = isAuthorPresentInList(authors, authorName);
+        var authorIsPresent = isAuthorPresentInList(authorName);
         if (!authorIsPresent) {
             response = referenceAuthor(authorName, dateOfBirth, dateOfDeath);
+            response.statusCode(201);
+        }
+    }
+
+    @Given("{authorName} is present in the list of authors")
+    public void authorPresentInList(String authorName) {
+        var authorIsPresent = isAuthorPresentInList(authorName);
+        if (!authorIsPresent) {
+            response = referenceAuthor(authorName, dateOfBirth());
             response.statusCode(201);
         }
     }
@@ -59,7 +68,7 @@ public class AuthorsStepDefinitions {
         response = referenceAuthor(authorName, dateOfBirth, dateOfDeath);
     }
 
-    @Then("{authorName} is referenced")
+    @Then("author {authorName} is referenced")
     public void assertReferencedAuthor(String authorName) {
         var location = Objects.requireNonNull(response, "Response must have been set before assertion")
                 .assertThat()
@@ -98,15 +107,13 @@ public class AuthorsStepDefinitions {
 
     @Then("{authorName} is now present in the list of authors")
     public void assertAuthorPresentInList(String authorName) {
-        var authors = listAuthors();
-        var authorIsPresent = isAuthorPresentInList(authors, authorName);
+        var authorIsPresent = isAuthorPresentInList(authorName);
         assertThat(authorIsPresent).as("Author should be present after referencing").isTrue();
     }
 
     @Then("{authorName} is still not present in the list of authors")
     public void assertAuthorNotPresentInList(String authorName) {
-        var authors = listAuthors();
-        var authorIsPresent = isAuthorPresentInList(authors, authorName);
+        var authorIsPresent = isAuthorPresentInList(authorName);
         assertThat(authorIsPresent).as("Author should not be present after referencing").isFalse();
     }
 
@@ -117,8 +124,8 @@ public class AuthorsStepDefinitions {
         assertThat(numberOfOccurrences).isEqualTo(2L);
     }
 
-    private boolean isAuthorPresentInList(@Nullable List<Author> authors, String authorName) {
-        return authors != null && !authors.isEmpty() && authors.stream().anyMatch(author -> author.hasName(authorName));
+    private boolean isAuthorPresentInList(String authorName) {
+        return AuthorRetriever.findAuthorByName(authorName).isPresent();
     }
 
     private long authorOccurrencesInList(@Nullable List<Author> authors, String authorName) {

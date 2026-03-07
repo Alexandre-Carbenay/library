@@ -35,7 +35,7 @@ public class InMemoryAuthorsRepository implements AuthorsRepository {
     }
 
     public void saveAll(Collection<Author> authors) {
-        authors.forEach(author -> this.authors.put(author.id(), author));
+        authors.forEach(this::save);
     }
 
 }

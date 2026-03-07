@@ -121,4 +121,33 @@ public class AuthorsMother {
         }
     }
 
+    public static final class Real {
+
+        public static final Author ALBERT_CAMUS = new Author(
+                UUID.fromString("f921c511-6341-494a-8152-c92613db248b"),
+                "Albert Camus",
+                LocalDate.parse("1913-11-07"),
+                LocalDate.parse("1960-01-04")
+        );
+        public static final Author RENE_GOSCINNY = new Author(
+                UUID.fromString("91f97618-5534-4b50-a541-bde0bf2667b3"),
+                "René Goscinny",
+                LocalDate.parse("1926-08-14"),
+                LocalDate.parse("1977-11-05")
+        );
+        public static final Author ALBERT_UDERZO = new Author(
+                UUID.fromString("a992aaca-b2d1-41b4-ada3-b45405906a9a"),
+                "Albert Uderzo",
+                LocalDate.parse("1927-04-25"),
+                LocalDate.parse("2020-03-24")
+        );
+        public static final Author JEAN_JACQUES_SEMPE = new Author(
+                UUID.fromString("2e849dbc-a392-4178-bc99-24c859306180"),
+                "Jean-Jacques Sempé",
+                LocalDate.parse("1932-08-17"),
+                LocalDate.parse("2022-08-11")
+        );
+
+    }
+
 }
