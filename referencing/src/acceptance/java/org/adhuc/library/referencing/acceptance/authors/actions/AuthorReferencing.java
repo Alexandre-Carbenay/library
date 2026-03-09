@@ -12,29 +12,25 @@ import static java.time.format.DateTimeFormatter.ISO_DATE;
 public class AuthorReferencing {
 
     public static ValidatableResponse referenceAuthor(String name, LocalDate dateOfBirth) {
-        return given()
-                .contentType(ContentType.JSON)
-                .body(new Author(name, dateOfBirth.format(ISO_DATE)))
-                .log().ifValidationFails()
-                .when()
-                .post("/v1/authors")
-                .then();
+        return referenceAuthor(new Author(name, dateOfBirth.format(ISO_DATE)));
     }
 
     public static ValidatableResponse referenceAuthor(String name, LocalDate dateOfBirth, LocalDate dateOfDeath) {
-        return given()
-                .contentType(ContentType.JSON)
-                .body(new Author(name, dateOfBirth.format(ISO_DATE), dateOfDeath.format(ISO_DATE)))
-                .log().ifValidationFails()
-                .when()
-                .post("/v1/authors")
-                .then();
+        return referenceAuthor(new Author(name, dateOfBirth.format(ISO_DATE), dateOfDeath.format(ISO_DATE)));
     }
 
     public static ValidatableResponse referenceAuthorWithNameOnly(String name) {
+        return referenceAuthor("{\"name\": \"" + name + "\"}");
+    }
+
+    public static ValidatableResponse referenceAuthorWithDateOfBirthOnly(LocalDate dateOfBirth) {
+        return referenceAuthor("{\"date_of_birth\": \"" + dateOfBirth + "\"}");
+    }
+
+    private static ValidatableResponse referenceAuthor(Object body) {
         return given()
                 .contentType(ContentType.JSON)
-                .body("{\"name\": \"" + name + "\"}")
+                .body(body)
                 .when()
                 .post("/v1/authors")
                 .then();

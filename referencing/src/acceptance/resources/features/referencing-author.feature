@@ -34,6 +34,11 @@ Feature: Reference a new author
             Then the referencing fails with date of birth required
             And Alexandre Dumas is still not present in the list of authors
 
+        Scenario: Reference an author with only its date of birth
+            Given Estelle is a librarian
+            When she references new author with only its date of birth
+            Then the referencing fails with name required
+
     Rule: Author cannot be referenced when its information are invalid
 
         Scenario: Reference an author dead before being born

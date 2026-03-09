@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static org.adhuc.library.referencing.acceptance.authors.AuthorsMother.dateOfBirth;
-import static org.adhuc.library.referencing.acceptance.authors.actions.AuthorReferencing.referenceAuthor;
-import static org.adhuc.library.referencing.acceptance.authors.actions.AuthorReferencing.referenceAuthorWithNameOnly;
+import static org.adhuc.library.referencing.acceptance.authors.actions.AuthorReferencing.*;
 import static org.adhuc.library.referencing.acceptance.authors.actions.AuthorsListing.listAuthors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
@@ -54,6 +53,11 @@ public class AuthorsStepDefinitions {
         response = referenceAuthorWithNameOnly(authorName);
     }
 
+    @When("she references new author with only its date of birth")
+    public void referenceNewAuthorOnlyDateOfBirth() {
+        response = referenceAuthorWithDateOfBirthOnly(dateOfBirth());
+    }
+
     @When("she references new author {authorName} born on {date}")
     public void referenceNewAuthorBornExactDate(String authorName, LocalDate dateOfBirth) {
         response = referenceAuthor(authorName, dateOfBirth);
@@ -90,6 +94,19 @@ public class AuthorsStepDefinitions {
                 .body("title", equalTo("Request validation error"))
                 .body("errors[0].detail", equalTo("Missing required property"))
                 .body("errors[0].pointer", equalTo("/date_of_birth"));
+    }
+
+    @Then("the referencing fails with name required")
+    public void assertReferenceFailedMissingName() {
+        Objects.requireNonNull(response, "Response must have been set before assertion")
+                .assertThat()
+                .log().ifStatusCodeMatches(not(equalTo(400)))
+                .statusCode(400)
+                .header("Location", nullValue())
+                .body("type", equalTo("/problems/invalid-request"))
+                .body("title", equalTo("Request validation error"))
+                .body("errors[0].detail", equalTo("Missing required property"))
+                .body("errors[0].pointer", equalTo("/name"));
     }
 
     @Then("the referencing fails with invalid date of death {date} being before date of birth {date}")
