@@ -4,7 +4,7 @@ import org.adhuc.library.catalog.editions.Edition;
 import org.adhuc.library.catalog.editions.EditionsService;
 import org.adhuc.library.support.rest.ProblemError.ParameterError;
 import org.apache.commons.validator.routines.ISBNValidator;
-import org.springframework.hateoas.mediatype.problem.Problem;
+import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,21 +56,19 @@ public class EditionsController {
                 );
     }
 
-    private ResponseEntity<Problem> prepareInvalidIsbnResponse(String isbn) {
+    private ResponseEntity<ProblemDetail> prepareInvalidIsbnResponse(String isbn) {
         var problem = invalidRequest(List.of(
                 new ParameterError("Input string '" + isbn + "' is not a valid ISBN", "isbn")
         ));
         return ResponseEntity.badRequest().contentType(APPLICATION_PROBLEM_JSON).body(problem);
     }
 
-    private ResponseEntity<Problem> prepareNotFoundResponse(String isbn) {
-        return ResponseEntity.status(NOT_FOUND).contentType(APPLICATION_PROBLEM_JSON)
-                .body(Problem.create()
-                        .withType(URI.create("/problems/unknown-entity"))
-                        .withStatus(NOT_FOUND)
-                        .withTitle("Unknown edition")
-                        .withDetail("No edition exists with ISBN '" + isbn + "'")
-                );
+    private ResponseEntity<ProblemDetail> prepareNotFoundResponse(String isbn) {
+        var problem = ProblemDetail.forStatus(NOT_FOUND);
+        problem.setType(URI.create("/problems/unknown-entity"));
+        problem.setTitle("Unknown edition");
+        problem.setDetail("No edition exists with ISBN '" + isbn + "'");
+        return ResponseEntity.status(NOT_FOUND).contentType(APPLICATION_PROBLEM_JSON).body(problem);
     }
 
 }
