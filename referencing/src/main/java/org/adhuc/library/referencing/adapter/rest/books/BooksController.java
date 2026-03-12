@@ -55,8 +55,8 @@ class BooksController {
         var responseBody = HalModelBuilder.halModelOf(requireNonNull(response.getMetadata()))
                 .links(response.getLinks());
         if (!booksPage.isEmpty()) {
-            var authors = bookModelAssembler.toCollectionModel(booksPage).getContent();
-            responseBody = responseBody.embed(authors, LinkRelation.of("books"));
+            var books = bookModelAssembler.toCollectionModel(booksPage).getContent();
+            responseBody = responseBody.embed(books, LinkRelation.of("books"));
         }
 
         return ResponseEntity.status(PARTIAL_CONTENT).body(responseBody.build());

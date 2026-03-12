@@ -18,6 +18,11 @@ public class Parameters {
         return source;
     }
 
+    @ParameterType("[A-Z][A-Za-zÀ-ÿ ]*")
+    public String publisherName(String source) {
+        return source;
+    }
+
     @ParameterType("\\d{4}-\\d{2}-\\d{2}")
     public LocalDate date(String source) {
         return LocalDate.parse(source);

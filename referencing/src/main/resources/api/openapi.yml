@@ -15,6 +15,8 @@ tags:
     description: Manage referencing of authors within the library.
   - name: Books
     description: Manage referencing of books within the library.
+  - name: Publishers
+    description: Manage referencing of publishers within the library.
 paths:
   /v1/authors:
     get:
@@ -132,6 +134,65 @@ paths:
           $ref: '#/components/responses/UnknownBook'
         '500':
           $ref: '#/components/responses/GeneralError'
+  /v1/publishers:
+    get:
+      tags:
+        - Publishers
+      summary: Gets a paginated list of publishers based on filters.
+      description: |
+        The publishers list can be sorted and filtered in many different ways.
+      operationId: getPublishers
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '206':
+          $ref: '#/components/responses/Publishers'
+        '400':
+          $ref: '#/components/responses/InvalidPaginationParameters'
+        '500':
+          $ref: '#/components/responses/GeneralError'
+    post:
+      tags:
+        - Publishers
+      summary: References a new publisher.
+      description: |
+        References a publisher to be able to reference editions.
+      operationId: referencePublisher
+      requestBody:
+        $ref: '#/components/requestBodies/ReferencePublisher'
+      responses:
+        '201':
+          $ref: '#/components/responses/ReferencedPublisher'
+        '400':
+          $ref: '#/components/responses/InvalidPublisherReferencing'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '409':
+          $ref: '#/components/responses/DuplicatePublisher'
+        '500':
+          $ref: '#/components/responses/GeneralError'
+  /v1/publishers/{publisherId}:
+    get:
+      tags:
+        - Publishers
+      summary: Gets the details of a publisher based on its identity.
+      description: |
+        The details of a publisher contain all its information.
+      operationId: getPublisher
+      parameters:
+        - $ref: '#/components/parameters/PublisherId'
+      responses:
+        '200':
+          $ref: '#/components/responses/Publisher'
+        '400':
+          $ref: '#/components/responses/InvalidPublisherId'
+        '404':
+          $ref: '#/components/responses/UnknownPublisher'
+        '500':
+          $ref: '#/components/responses/GeneralError'
 components:
   parameters:
     AuthorId:
@@ -152,6 +213,15 @@ components:
         type: string
         format: uuid
         example: b6608a30-1e9b-4ae0-a89d-624c3ca85da4
+    PublisherId:
+      name: publisherId
+      description: Publisher identity.
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+        example: c0c990bd-c455-40c4-92e7-0b62befb200d
     Page:
       name: page
       description: |
@@ -198,6 +268,16 @@ components:
         application/hal+json:
           schema:
             $ref: '#/components/schemas/ReferenceBook'
+    ReferencePublisher:
+      required: true
+      description: A command to reference a publisher.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReferencePublisher'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/ReferencePublisher'
   responses:
     Authors:
       description: The referenced authors.
@@ -275,6 +355,49 @@ components:
           examples:
             duplicateBook:
               $ref: '#/components/examples/DuplicateBook'
+    Publishers:
+      description: The referenced publishers.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Publishers'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/Publishers'
+    ReferencedPublisher:
+      description: The referenced publisher.
+      headers:
+        Location:
+          description: Link the referenced publisher.
+          schema:
+            type: string
+            example: 'https://referencing.library.adhuc.org/api/v1/publishers/c0c990bd-c455-40c4-92e7-0b62befb200d'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Publisher'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/Publisher'
+    InvalidPublisherReferencing:
+      description: Invalid publisher referencing command.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            invalidPublisherReferencing:
+              $ref: '#/components/examples/InvalidPublisherReferencing'
+    DuplicatePublisher:
+      description: |
+        Duplicated publisher. Happens when the name is similar to another existing publisher.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            duplicatePublisher:
+              $ref: '#/components/examples/DuplicatePublisher'
     InvalidPaginationParameters:
       description: Invalid pagination parameters.
       content:
@@ -340,6 +463,33 @@ components:
           examples:
             unknown:
               $ref: '#/components/examples/UnknownBook'
+    Publisher:
+      description: A referenced publisher.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Publisher'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/Publisher'
+    InvalidPublisherId:
+      description: Invalid publisher ID.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            invalidId:
+              $ref: '#/components/examples/InvalidUUIDId'
+    UnknownPublisher:
+      description: No publisher corresponds to the specified identity.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            unknown:
+              $ref: '#/components/examples/UnknownPublisher'
     UnauthorizedError:
       description: Unauthorized error.
       content:
@@ -700,6 +850,134 @@ components:
           $ref: '#/components/schemas/Language'
         details:
           $ref: '#/components/schemas/BookDetails'
+    Publishers:
+      type: object
+      required:
+        - page
+        - '_links'
+      properties:
+        page:
+          $ref: '#/components/schemas/Page'
+        '_embedded':
+          type: object
+          readOnly: true
+          required:
+            - publishers
+          properties:
+            publishers:
+              description: |
+                The publishers collection, containing basic information for each publisher.
+              type: array
+              items:
+                $ref: '#/components/schemas/Publisher'
+        '_links':
+          type: object
+          readOnly: true
+          required:
+            - self
+          properties:
+            self:
+              description: Link to this publishers page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/publishers?page=1&size=50'
+            template:
+              description: Link to the template of publishers page.
+              type: object
+              required:
+                - href
+                - templated
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/publishers{?page,size}'
+                templated:
+                  type: boolean
+                  enum:
+                    - true
+            prev:
+              description: Link to the previous publishers page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/publishers?page=0&size=50'
+            next:
+              description: Link to the next publishers page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/publishers?page=3&size=50'
+            first:
+              description: Link to the first publishers page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/publishers?page=0&size=50'
+            last:
+              description: Link to the last publishers page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/publishers?page=8&size=50'
+    Publisher:
+      type: object
+      required:
+        - id
+        - name
+        - '_links'
+      properties:
+        id:
+          $ref: '#/components/schemas/PublisherId'
+        name:
+          $ref: '#/components/schemas/PublisherName'
+        '_links':
+          type: object
+          readOnly: true
+          required:
+            - self
+          properties:
+            self:
+              $ref: '#/components/schemas/PublisherLink'
+    PublisherId:
+      type: string
+      format: uuid
+      example: c0c990bd-c455-40c4-92e7-0b62befb200d
+    PublisherLink:
+      type: object
+      description: Link to the publisher. Can be used to see the detail of the publisher.
+      required:
+        - href
+      properties:
+        href:
+          type: string
+          example: 'https://referencing.library.adhuc.org/api/v1/publishers/c0c990bd-c455-40c4-92e7-0b62befb200d'
+    PublisherName:
+      type: string
+      minLength: 1
+      example: Flammarion
+    ReferencePublisher:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          $ref: '#/components/schemas/PublisherName'
     Page:
       type: object
       readOnly: true
@@ -853,6 +1131,34 @@ components:
         title: Unknown book
         detail: No book exists with id '6c8f5aad-c337-43b2-b359-12ba3990ed48'
       summary: Error when no book corresponds to the specified identity.
+    InvalidPublisherReferencing:
+      value:
+        type: /problems/invalid-request
+        status: 400
+        title: Request validation error
+        detail: Invalid publisher referencing command
+        errors:
+          - detail: 'Empty string'
+            pointer: '/name'
+      summary: Invalid referencing request.
+    DuplicatePublisher:
+      value:
+        type: /problems/duplicate-publisher
+        status: 409
+        title: Duplicate publisher
+        detail: Publisher with name already exists
+        errors:
+          - detail: |
+              Publisher 'Flammarion' already exists
+            pointer: '/name'
+      summary: Duplicate Publisher.
+    UnknownPublisher:
+      value:
+        type: /problems/unknown-entity
+        status: 404
+        title: Unknown publisher
+        detail: No publisher exists with id 'da9fb6f6-a3dd-45b6-b1ff-449c08e61d49'
+      summary: Error when no publisher corresponds to the specified identity.
     UnauthorizedError:
       value:
         type: /problems/unauthorized
