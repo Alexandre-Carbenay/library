@@ -14,6 +14,7 @@ import org.adhuc.library.referencing.acceptance.books.actions.ReferenceRequest.R
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 import static org.adhuc.library.referencing.acceptance.books.Book.hasWikipediaLink;
@@ -55,6 +56,22 @@ public class BooksStepDefinitions {
         if (!bookIsPresent) {
             var authors = getAuthors(List.of(authorName1, authorName2));
             response = referenceBook(authors, language, bookTitle, description());
+            response.statusCode(201);
+        }
+    }
+
+    @Given("{bookTitle} written in {language} by {authorName} is present in the list of books, with title {bookTitle} in {language}")
+    public void bookWithMultipleLocalizationsPresentInList(String bookTitle, String originalLanguage, String authorName,
+                                                           String bookTitleOtherLanguage, String otherLanguage) {
+        var bookIsPresent = isBookPresentInList(bookTitle);
+        if (!bookIsPresent) {
+            var author = getAuthor(authorName);
+            var authorId = Optional.ofNullable(author.id()).orElseThrow();
+            var request = new ReferenceRequest(List.of(authorId), originalLanguage, List.of(
+                    new ReferenceDetail(originalLanguage, bookTitle, description()),
+                    new ReferenceDetail(otherLanguage, bookTitleOtherLanguage, description())
+            ));
+            response = referenceBook(request);
             response.statusCode(201);
         }
     }

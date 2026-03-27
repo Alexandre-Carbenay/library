@@ -3,6 +3,8 @@ package org.adhuc.library.referencing.acceptance;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.cucumber.java.Before;
 import io.restassured.RestAssured;
 import io.restassured.config.ObjectMapperConfig;
@@ -32,7 +34,9 @@ public class AcceptanceTests {
                 (type, s) -> {
                     var mapper = new ObjectMapper();
                     mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-                    mapper.setSerializationInclusion(Include.NON_ABSENT);
+                    mapper.setDefaultPropertyInclusion(Include.NON_ABSENT);
+                    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                    mapper.registerModule(new JavaTimeModule());
                     mapper.configure(FAIL_ON_UNKNOWN_PROPERTIES, false);
                     return mapper;
                 }

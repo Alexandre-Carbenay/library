@@ -52,6 +52,14 @@ public class Book {
         return details.stream().map(LocalizedDetail::title).collect(toSet());
     }
 
+    public Optional<String> titleIn(String language) {
+        return detailsIn(language).map(LocalizedDetail::title);
+    }
+
+    public Optional<String> descriptionIn(String language) {
+        return detailsIn(language).map(LocalizedDetail::description);
+    }
+
     public record LocalizedDetail(String language, String title, String description) {
         public LocalizedDetail(String language, String title, String description) {
             this.language = language;
