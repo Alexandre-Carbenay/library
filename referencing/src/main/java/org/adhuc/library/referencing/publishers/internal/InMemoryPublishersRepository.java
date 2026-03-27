@@ -25,6 +25,7 @@ public class InMemoryPublishersRepository implements PublishersRepository {
         return new PageImpl<>(pagePublishers, request, publishers.size());
     }
 
+    @Override
     public Optional<Publisher> findById(UUID id) {
         return Optional.ofNullable(publishers.get(id));
     }

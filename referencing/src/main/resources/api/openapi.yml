@@ -17,6 +17,8 @@ tags:
     description: Manage referencing of books within the library.
   - name: Publishers
     description: Manage referencing of publishers within the library.
+  - name: Editions
+    description: Manage referencing of editions within the library.
 paths:
   /v1/authors:
     get:
@@ -193,6 +195,65 @@ paths:
           $ref: '#/components/responses/UnknownPublisher'
         '500':
           $ref: '#/components/responses/GeneralError'
+  /v1/editions:
+    get:
+      tags:
+        - Editions
+      summary: Gets a paginated list of editions based on filters.
+      description: |
+        The editions list can be sorted and filtered in many different ways.
+      operationId: getEditions
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '206':
+          $ref: '#/components/responses/Editions'
+        '400':
+          $ref: '#/components/responses/InvalidPaginationParameters'
+        '500':
+          $ref: '#/components/responses/GeneralError'
+    post:
+      tags:
+        - Editions
+      summary: References a new edition.
+      description: |
+        References an edition for a book.
+      operationId: referenceEdition
+      requestBody:
+        $ref: '#/components/requestBodies/ReferenceEdition'
+      responses:
+        '201':
+          $ref: '#/components/responses/ReferencedEdition'
+        '400':
+          $ref: '#/components/responses/InvalidEditionReferencing'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+        '409':
+          $ref: '#/components/responses/DuplicateEdition'
+        '500':
+          $ref: '#/components/responses/GeneralError'
+  /v1/editions/{isbn}:
+    get:
+      tags:
+        - Editions
+      summary: Gets the details of an edition based on its ISBN.
+      description: |
+        The details of an edition contain all its information.
+      operationId: getEdition
+      parameters:
+        - $ref: '#/components/parameters/ISBN'
+      responses:
+        '200':
+          $ref: '#/components/responses/Edition'
+        '400':
+          $ref: '#/components/responses/InvalidISBN'
+        '404':
+          $ref: '#/components/responses/UnknownEdition'
+        '500':
+          $ref: '#/components/responses/GeneralError'
 components:
   parameters:
     AuthorId:
@@ -222,6 +283,14 @@ components:
         type: string
         format: uuid
         example: c0c990bd-c455-40c4-92e7-0b62befb200d
+    ISBN:
+      name: isbn
+      description: ISBN of an edition.
+      in: path
+      required: true
+      schema:
+        type: string
+        example: '9782081275232'
     Page:
       name: page
       description: |
@@ -278,6 +347,16 @@ components:
         application/hal+json:
           schema:
             $ref: '#/components/schemas/ReferencePublisher'
+    ReferenceEdition:
+      required: true
+      description: A command to reference an edition. The title and summary can be omitted. Then, the book's title and description in provided language, or by default original language will be used instead.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ReferenceEdition'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/ReferenceEdition'
   responses:
     Authors:
       description: The referenced authors.
@@ -398,6 +477,53 @@ components:
           examples:
             duplicatePublisher:
               $ref: '#/components/examples/DuplicatePublisher'
+    Editions:
+      description: The referenced editions.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Editions'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/Editions'
+    ReferencedEdition:
+      description: The referenced edition.
+      headers:
+        Location:
+          description: Link the referenced edition.
+          schema:
+            type: string
+            example: 'https://referencing.library.adhuc.org/api/v1/editions/9782081275232'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Edition'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/Edition'
+    InvalidEditionReferencing:
+      description: Invalid edition referencing command.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            invalidEditionReferencing:
+              $ref: '#/components/examples/InvalidEditionReferencing'
+            unknownEditionBook:
+              $ref: '#/components/examples/UnknownEditionBook'
+            unknownEditionPublisher:
+              $ref: '#/components/examples/UnknownEditionPublisher'
+    DuplicateEdition:
+      description: |
+        Duplicated edition. Happens when the ISBN is similar to another existing edition.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            duplicateEdition:
+              $ref: '#/components/examples/DuplicateEdition'
     InvalidPaginationParameters:
       description: Invalid pagination parameters.
       content:
@@ -490,6 +616,33 @@ components:
           examples:
             unknown:
               $ref: '#/components/examples/UnknownPublisher'
+    Edition:
+      description: A referenced edition.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Edition'
+        application/hal+json:
+          schema:
+            $ref: '#/components/schemas/Edition'
+    InvalidISBN:
+      description: Invalid ISBN.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            invalidISBN:
+              $ref: '#/components/examples/InvalidISBN'
+    UnknownEdition:
+      description: No edition corresponds to the specified ISBN.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+          examples:
+            unknownEdition:
+              $ref: '#/components/examples/UnknownEdition'
     UnauthorizedError:
       description: Unauthorized error.
       content:
@@ -978,6 +1131,171 @@ components:
       properties:
         name:
           $ref: '#/components/schemas/PublisherName'
+    Editions:
+      type: object
+      required:
+        - page
+        - '_links'
+      properties:
+        page:
+          $ref: '#/components/schemas/Page'
+        '_embedded':
+          type: object
+          readOnly: true
+          required:
+            - editions
+          properties:
+            editions:
+              description: |
+                The editions collection, containing basic information for each edition.
+              type: array
+              items:
+                $ref: '#/components/schemas/Edition'
+        '_links':
+          type: object
+          readOnly: true
+          required:
+            - self
+          properties:
+            self:
+              description: Link to this editions page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/editions?page=1&size=50'
+            template:
+              description: Link to the template of editions page.
+              type: object
+              required:
+                - href
+                - templated
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/editions{?page,size}'
+                templated:
+                  type: boolean
+                  enum:
+                    - true
+            prev:
+              description: Link to the previous editions page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/editions?page=0&size=50'
+            next:
+              description: Link to the next editions page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/editions?page=3&size=50'
+            first:
+              description: Link to the first editions page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/editions?page=0&size=50'
+            last:
+              description: Link to the last editions page.
+              type: object
+              required:
+                - href
+              properties:
+                href:
+                  type: string
+                  example: 'https://referencing.library.adhuc.org/api/v1/editions?page=8&size=50'
+    Edition:
+      type: object
+      required:
+        - isbn
+        - book
+        - publisher
+        - publication_date
+        - language
+        - title
+        - summary
+        - '_links'
+      properties:
+        isbn:
+          $ref: '#/components/schemas/ISBN'
+        book:
+          $ref: '#/components/schemas/BookId'
+        publisher:
+          $ref: '#/components/schemas/PublisherId'
+        publication_date:
+          $ref: '#/components/schemas/PublicationDate'
+        language:
+          $ref: '#/components/schemas/Language'
+        title:
+          $ref: '#/components/schemas/EditionTitle'
+        summary:
+          $ref: '#/components/schemas/EditionSummary'
+        '_links':
+          type: object
+          readOnly: true
+          required:
+            - self
+          properties:
+            self:
+              $ref: '#/components/schemas/EditionLink'
+    ISBN:
+      type: string
+      example: '9782081275232'
+    PublicationDate:
+      type: string
+      format: date
+      example: 2012-01-04
+    EditionTitle:
+      type: string
+      example: Du contrat social
+    EditionSummary:
+      type: string
+      example: >
+        Paru en 1762, le Contrat social, en affirmant le principe de souveraineté du peuple, a constitué un tournant décisif pour la modernité et s'est imposé comme un des textes majeurs de la philosophie politique. Il a aussi acquis le statut de monument, plus célèbre que connu, plus révéré - ou honni - qu'interrogé. Retrouver, dans les formules fameuses et les pages d'anthologie, le mouvement de la réflexion et les questions vives qui nourrissent une œuvre beaucoup plus problématique qu'affirmative, c'est découvrir une pensée qui se tient au plus près des préoccupations d'aujourd'hui : comment intégrer les intérêts de tous dans la détermination de l'intérêt commun ? Comment lutter contre la pente de tout gouvernement à déposséder les citoyens de la souveraineté ? Comment former en chacun ce sentiment d'obligation sans lequel le lien social se défait ?
+    EditionLink:
+      type: object
+      description: Link to the edition. Can be used to see the detail of the edition.
+      required:
+        - href
+      properties:
+        href:
+          type: string
+          example: 'https://referencing.library.adhuc.org/api/v1/editions/9782081275232'
+    ReferenceEdition:
+      type: object
+      required:
+        - isbn
+        - book
+        - publisher
+        - publication_date
+        - language
+      properties:
+        isbn:
+          $ref: '#/components/schemas/ISBN'
+        book:
+          $ref: '#/components/schemas/BookId'
+        publisher:
+          $ref: '#/components/schemas/PublisherId'
+        publication_date:
+          $ref: '#/components/schemas/PublicationDate'
+        language:
+          $ref: '#/components/schemas/Language'
+        title:
+          $ref: '#/components/schemas/EditionTitle'
+        summary:
+          $ref: '#/components/schemas/EditionSummary'
     Page:
       type: object
       readOnly: true
@@ -1113,6 +1431,7 @@ components:
         errors:
           - detail: 'Empty string'
             pointer: '/details/0/title'
+      summary: Invalid referencing request.
     DuplicateBook:
       value:
         type: /problems/duplicate-book
@@ -1159,6 +1478,64 @@ components:
         title: Unknown publisher
         detail: No publisher exists with id 'da9fb6f6-a3dd-45b6-b1ff-449c08e61d49'
       summary: Error when no publisher corresponds to the specified identity.
+    InvalidISBN:
+      value:
+        type: /problems/invalid-request
+        status: 400
+        title: Request validation error
+        detail: Invalid ISBN
+        errors:
+          - detail: 'Input string "1234" is not a valid ISBN'
+            parameter: isbn
+      summary: Invalid ISBN passed as edition ID in the path.
+    InvalidEditionReferencing:
+      value:
+        type: /problems/invalid-request
+        status: 400
+        title: Request validation error
+        detail: Invalid edition referencing command
+        errors:
+          - detail: 'Empty string'
+            pointer: '/title'
+      summary: Invalid referencing request.
+    UnknownEditionBook:
+      value:
+        type: /problems/unknown-edition-book
+        status: 400
+        title: Unknown edition book
+        detail: Referenced edition's book does not exist
+        errors:
+          - detail: "Edition with ISBN '9782081275232' cannot be referenced for unknown book 'b6608a30-1e9b-4ae0-a89d-624c3ca85da4'"
+            pointer: '/book'
+      summary: Unknown edition book.
+    UnknownEditionPublisher:
+      value:
+        type: /problems/unknown-edition-publisher
+        status: 400
+        title: Unknown edition publisher
+        detail: Referenced edition's publisher does not exist
+        errors:
+          - detail: "Edition with ISBN '9782081275232' cannot be referenced for unknown publisher 'c0c990bd-c455-40c4-92e7-0b62befb200d'"
+            pointer: '/publisher'
+      summary: Unknown edition publisher.
+    DuplicateEdition:
+      value:
+        type: /problems/duplicate-edition
+        status: 409
+        title: Duplicate edition
+        detail: Edition with ISBN already exists
+        errors:
+          - detail: |
+              ISBN 9782081275232 already exists
+            pointer: '/isbn'
+      summary: Duplicate Edition.
+    UnknownEdition:
+      value:
+        type: /problems/unknown-entity
+        status: 404
+        title: Unknown edition
+        detail: No edition exists with ISBN 9782081275232
+      summary: Error when no edition corresponds to the specified identity.
     UnauthorizedError:
       value:
         type: /problems/unauthorized

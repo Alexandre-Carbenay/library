@@ -97,6 +97,7 @@ dependencies {
 	acceptanceImplementation 'org.assertj:assertj-core'
 	acceptanceImplementation "net.datafaker:datafaker:${fakerVersion}"
 	acceptanceImplementation 'com.fasterxml.jackson.core:jackson-databind'
+	acceptanceImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
 	errorprone 'com.google.errorprone:error_prone_core:2.45.0'
 	errorprone 'com.uber.nullaway:nullaway:0.12.14'

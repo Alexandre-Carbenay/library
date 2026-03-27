@@ -4,11 +4,10 @@ import io.cucumber.java.ParameterType;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.List;
 
 public class Parameters {
 
-    @ParameterType("[A-Z][A-Za-zÀ-ÿ ]*")
+    @ParameterType("[A-Z][A-Za-zÀ-ÿ- ]*")
     public String authorName(String source) {
         return source;
     }
@@ -18,8 +17,13 @@ public class Parameters {
         return source;
     }
 
-    @ParameterType("[A-Z][A-Za-zÀ-ÿ ]*")
+    @ParameterType("[A-Z][A-Za-zÀ-ÿ'& ]*")
     public String publisherName(String source) {
+        return source;
+    }
+
+    @ParameterType("\\d{13}")
+    public String isbn(String source) {
         return source;
     }
 

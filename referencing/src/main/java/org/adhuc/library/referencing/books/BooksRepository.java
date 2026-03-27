@@ -11,8 +11,9 @@ public interface BooksRepository {
 
     Page<Book> findPage(Pageable request);
 
+    Optional<Book> findById(UUID id);
+
     Optional<Book> findByTitleInAndAuthorsIn(Collection<String> titles, Collection<UUID> authors);
 
     void save(Book book);
-
 }
