@@ -39,7 +39,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-data-rest'
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-actuator'
-    testImplementation 'net.datafaker:datafaker:2.5.1'
+    testImplementation 'net.datafaker:datafaker:2.5.4'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
