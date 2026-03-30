@@ -28,7 +28,7 @@ dependencies {
     api 'org.springframework.boot:spring-boot-validation'
     api 'org.springframework.boot:spring-boot-jackson'
     api 'org.springframework.boot:spring-boot-autoconfigure'
-    api 'com.atlassian.oai:swagger-request-validator-spring-webmvc:2.46.0'
+    api 'com.atlassian.oai:swagger-request-validator-spring-webmvc:2.46.1'
 
     implementation 'org.jspecify:jspecify:1.0.0'
     implementation 'jakarta.servlet:jakarta.servlet-api'
