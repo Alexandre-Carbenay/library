@@ -1,0 +1,8 @@
+{
+  "name": "rest-api-support",
+  "description": "This file will be used only for semantic release extension",
+  "version": "1.0.0",
+  "dependencies": {
+    "semantic-release-monorepo": "8.0.2"
+  }
+}

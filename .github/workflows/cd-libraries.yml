@@ -39,6 +39,11 @@ jobs:
           ref: ${{ github.head_ref }}
           fetch-depth: "0"
 
+      - name: "🌵 Extract branch name"
+        id: extract_branch
+        shell: bash
+        run: echo "branch_name=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
       - name: "🐘 🧪 Gradle Wrapper Validation Action"
         uses: gradle/actions/wrapper-validation@v5
 
@@ -72,24 +77,25 @@ jobs:
         timeout-minutes: 1
 
       - name: "🏷 📦 Define next version based on semantic versioning"
-        id: svu
-        run: |
-          set +e
-          mkdir -p target_dir
-          wget -q https://github.com/caarlos0/svu/releases/download/v3.1.0/svu_3.1.0_linux_amd64.tar.gz -P target_dir
-          cd target_dir || exit
-          tar -xzvf svu_3.1.0_linux_amd64.tar.gz
-          chmod +x svu
-          sudo mv svu /usr/local/bin/
-          cd .. || exit
-          rm -rf target_dir
-
-          next_tag=$(svu next --tag.prefix="rest-api-support-v" --tag.pattern="rest-api-support-v[0-9]*.[0-9]*.[0-9]*" --log.directory="libs/rest-api-support")
-          echo "next_version=${next_tag#"rest-api-support-v"}" >> $GITHUB_OUTPUT
+        id: semantic-release
+        uses: cycjimmy/semantic-release-action@v6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          ci: false
+          dry_run: true
+          unset_gha_env: true
+          extends: |
+            semantic-release-monorepo@8.0.2
+          branches: |
+            [
+              { name: '${{ steps.extract_branch.outputs.branch_name }}' }
+            ]
+          working_directory: ./libs/rest-api-support
 
       - name: "🐘 📦 🚀 Publish artifact with Maven (PR)"
         working-directory: ./libs/rest-api-support
-        run: ./gradlew -Pversion=${{ steps.svu.outputs.next_version }}-SNAPSHOT publish
+        run: ./gradlew -Pversion=${{ steps.semantic-release.outputs.new_release_version }}-SNAPSHOT publish
         if: github.ref != 'refs/heads/main' && github.event_name == 'pull_request'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
