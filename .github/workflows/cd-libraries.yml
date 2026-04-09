@@ -32,6 +32,8 @@ jobs:
     concurrency:
       group: "${{ github.workflow }}-${{ github.ref }}"
       cancel-in-progress: true
+    outputs:
+      next_version: ${{ steps.semver.outputs.next_version }}
     steps:
       - name: "📥 Checkout project sources"
         uses: actions/checkout@v6
@@ -72,31 +74,18 @@ jobs:
         timeout-minutes: 1
 
       - name: "🏷 📦 Define next version based on semantic versioning"
-        id: svu
+        id: semver
+        if: github.ref == 'refs/heads/main'
         run: |
           set +e
-          mkdir -p target_dir
-          wget -q https://github.com/caarlos0/svu/releases/download/v3.1.0/svu_3.1.0_linux_amd64.tar.gz -P target_dir
-          cd target_dir || exit
-          tar -xzvf svu_3.1.0_linux_amd64.tar.gz
-          chmod +x svu
-          sudo mv svu /usr/local/bin/
-          cd .. || exit
-          rm -rf target_dir
+          curl -SL https://github.com/s0ders/go-semver-release/releases/latest/download/go-semver-release-linux-amd64 -o ./go-semver-release
+          chmod +x ./go-semver-release
 
-          next_tag=$(svu next --tag.prefix="rest-api-support-v" --tag.pattern="rest-api-support-v[0-9]*.[0-9]*.[0-9]*" --log.directory="libs/rest-api-support")
-          echo "next_version=${next_tag#"rest-api-support-v"}" >> $GITHUB_OUTPUT
-
-      - name: "🐘 📦 🚀 Publish artifact with Maven (PR)"
-        working-directory: ./libs/rest-api-support
-        run: ./gradlew -Pversion=${{ steps.svu.outputs.next_version }}-SNAPSHOT publish
-        if: github.ref != 'refs/heads/main' && github.event_name == 'pull_request'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "next_version=$(./go-semver-release release . --dry-run | jq -r '.releases.[] | select(.project == "rest-api-support") | .version')" >> $GITHUB_OUTPUT
 
       - name: "🐘 📦 🚀 Publish artifact with Maven (main)"
         working-directory: ./libs/rest-api-support
-        run: ./gradlew -Pversion=${{ steps.svu.outputs.next_version }} publish
+        run: ./gradlew -Pversion=${{ steps.semver.outputs.next_version }} publish
         if: github.ref == 'refs/heads/main'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -116,23 +105,6 @@ jobs:
         with:
           fetch-depth: "0"
 
-      - name: "🏷 📦 Define tags based on semantic versioning"
-        id: svu
-        run: |
-          set +e
-          mkdir -p target_dir
-          wget -q https://github.com/caarlos0/svu/releases/download/v3.1.0/svu_3.1.0_linux_amd64.tar.gz -P target_dir
-          cd target_dir || exit
-          tar -xzvf svu_3.1.0_linux_amd64.tar.gz
-          chmod +x svu
-          sudo mv svu /usr/local/bin/
-          cd .. || exit
-          rm -rf target_dir
-
-          echo "current_tag=$(svu current --tag.prefix="rest-api-support-v" --tag.pattern="rest-api-support-v[0-9]*.[0-9]*.[0-9]*-build-*")" >> $GITHUB_OUTPUT
-          echo "next_tag=$(svu next --tag.prefix="rest-api-support-v" --tag.pattern="rest-api-support-v[0-9]*.[0-9]*.[0-9]*" --log.directory="libs/rest-api-support")" >> $GITHUB_OUTPUT
-          echo "next_build_tag=$(svu next --tag.prefix="rest-api-support-v" --tag.pattern="rest-api-support-v[0-9]*.[0-9]*.[0-9]*" --log.directory="libs/rest-api-support")-build-${{ github.run_number }}" >> $GITHUB_OUTPUT
-
       - name: "🏷 🌵 Tag Git branch"
         run: |
           git config --global --add safe.directory "$(realpath "./libs/rest-api-support")"
@@ -140,20 +112,12 @@ jobs:
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global http.sslVerify true
 
-          git -C ./libs/rest-api-support tag -fa ${{ steps.svu.outputs.next_tag }} ${{ github.sha }} -m "${TAG_MSG}"
-          git -C ./libs/rest-api-support push --force origin ${{ steps.svu.outputs.next_tag }} --push-option "ci.skip"
-
-          git -C ./libs/rest-api-support tag -fa ${{ steps.svu.outputs.next_build_tag }} ${{ github.sha }} -m "${TAG_MSG}"
-          git -C ./libs/rest-api-support push origin ${{ steps.svu.outputs.next_build_tag }} --push-option "ci.skip"
+          git -C ./libs/rest-api-support tag -fa ${{ needs.build.outputs.next_version }} ${{ github.sha }} -m "${TAG_MSG}"
+          git -C ./libs/rest-api-support push --force origin ${{ needs.build.outputs.next_version }} --push-option "ci.skip"
 
       - name: "📦 🚀 Create Github release"
-        run: |
-          gh release create ${{ steps.svu.outputs.next_build_tag }} \
-            --generate-notes \
-            --latest \
-            --verify-tag=true \
-            --target=main \
-            --notes-start-tag=${{ steps.svu.outputs.current_tag }} \
-            --prerelease=false
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.build.outputs.next_version }}
+          name: "Release ${{ needs.build.outputs.next_version }}"
+          generate_release_notes: true

@@ -1,0 +1,13 @@
+branches:
+  - name: main
+rules:
+  minor:
+    - feat
+  patch:
+    - fix
+    - refactor
+    - chore
+    - test
+monorepo:
+  - name: rest-api-support
+    path: ./libs/rest-api-support/
