@@ -9,5 +9,11 @@ rules:
     - chore
     - test
 monorepo:
+  - name: catalog
+    path: ./catalog/
+  - name: referencing
+    path: ./referencing/
+  - name: website
+    path: ./website/
   - name: rest-api-support
     path: ./libs/rest-api-support/

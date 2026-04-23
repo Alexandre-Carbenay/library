@@ -5,8 +5,6 @@ on:
       - 'main'
     paths:
       - 'website/**'
-      - '.github/workflows/cd-website.yml'
-      - '.github/workflows/cd-generic.yml'
       - '!**/README.md'
   pull_request:
     types:
@@ -17,8 +15,6 @@ on:
       - 'main'
     paths:
       - 'website/**'
-      - '.github/workflows/cd-website.yml'
-      - '.github/workflows/cd-generic.yml'
       - '!**/README.md'
   workflow_dispatch:
 

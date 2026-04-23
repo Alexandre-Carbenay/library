@@ -301,21 +301,14 @@ jobs:
           docker pull ${{ inputs.docker-registry }}/${{ inputs.github-repository }}/${{ inputs.docker-image }}:sha-${{ github.sha }}
 
       - name: "🏷 📦 Define tags based on semantic versioning"
-        id: svu
+        id: semver
         run: |
           set +e
-          mkdir -p target_dir
-          wget -q https://github.com/caarlos0/svu/releases/download/v3.1.0/svu_3.1.0_linux_amd64.tar.gz -P target_dir
-          cd target_dir || exit
-          tar -xzvf svu_3.1.0_linux_amd64.tar.gz
-          chmod +x svu
-          sudo mv svu /usr/local/bin/
-          cd .. || exit
-          rm -rf target_dir
+          curl -SL https://github.com/s0ders/go-semver-release/releases/latest/download/go-semver-release-linux-amd64 -o ./go-semver-release
+          chmod +x ./go-semver-release
 
-          echo "current_tag=$(svu current --tag.prefix="${{ inputs.app-name }}-v" --tag.pattern="${{ inputs.app-name }}-v[0-9]*.[0-9]*.[0-9]*-build-*")" >> $GITHUB_OUTPUT
-          echo "next_tag=$(svu next --tag.prefix="${{ inputs.app-name }}-v" --tag.pattern="${{ inputs.app-name }}-v[0-9]*.[0-9]*.[0-9]*" --log.directory="${{ inputs.app-name }}")" >> $GITHUB_OUTPUT
-          echo "next_build_tag=$(svu next --tag.prefix="${{ inputs.app-name }}-v" --tag.pattern="${{ inputs.app-name }}-v[0-9]*.[0-9]*.[0-9]*" --log.directory="${{ inputs.app-name }}")-build-${{ github.run_number }}" >> $GITHUB_OUTPUT
+          echo "next_version=$(./go-semver-release release . --dry-run | jq -r '.releases.[] | select(.project == "${{ inputs.app-name }}") | .version')" >> $GITHUB_OUTPUT
+          echo "next_tag="${{ inputs.app-name }}-v${{ needs.build.outputs.next_version }}"" >> $GITHUB_OUTPUT
 
       - name: "🏷 🌵 Tag Git branch"
         run: |
@@ -324,29 +317,21 @@ jobs:
           git config --global user.name "${GITHUB_ACTOR}"
           git config --global http.sslVerify true
 
-          git -C ${{ inputs.working-directory }} tag -fa ${{ steps.svu.outputs.next_tag }} ${{ github.sha }} -m "${TAG_MSG}"
-          git -C ${{ inputs.working-directory }} push --force origin ${{ steps.svu.outputs.next_tag }} --push-option "ci.skip"
-
-          git -C ${{ inputs.working-directory }} tag -fa ${{ steps.svu.outputs.next_build_tag }} ${{ github.sha }} -m "${TAG_MSG}"
-          git -C ${{ inputs.working-directory }} push origin ${{ steps.svu.outputs.next_build_tag }} --push-option "ci.skip"
+          git -C ${{ inputs.working-directory }} tag -fa ${{ steps.semver.outputs.next_tag }} ${{ github.sha }} -m "${TAG_MSG}"
+          git -C ${{ inputs.working-directory }} push --force origin ${{ steps.semver.outputs.next_tag }} --push-option "ci.skip"
 
       - name: "🏷 🐳 📦 Push Docker image with release tag"
         run: |
           docker tag ${{ env.distant-image }}:sha-${{ github.sha }} ${{ env.distant-image }}:latest
-          docker tag ${{ env.distant-image }}:sha-${{ github.sha }} ${{ env.distant-image }}:${{ steps.svu.outputs.next_build_tag }}
+          docker tag ${{ env.distant-image }}:sha-${{ github.sha }} ${{ env.distant-image }}:${{ steps.semver.outputs.next_tag }}
           docker push ${{ env.distant-image }}:latest
-          docker push ${{ env.distant-image }}:${{ steps.svu.outputs.next_build_tag }}
+          docker push ${{ env.distant-image }}:${{ steps.semver.outputs.next_tag }}
         env:
           distant-image: ${{ inputs.docker-registry }}/${{ inputs.github-repository }}/${{ inputs.docker-image }}
 
       - name: "📦 🚀 Create Github release"
-        run: |
-          gh release create ${{ steps.svu.outputs.next_build_tag }} \
-            --generate-notes \
-            --latest \
-            --verify-tag=true \
-            --target=main \
-            --notes-start-tag=${{ steps.svu.outputs.current_tag }} \
-            --prerelease=false
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.semver.outputs.next_tag }}
+          name: "${{ steps.semver.outputs.next_tag }}"
+          generate_release_notes: true
