@@ -116,7 +116,7 @@ jobs:
           git -C ./libs/rest-api-support push --force origin ${next_tag} --push-option "ci.skip"
 
       - name: "📦 🚀 Create Github release"
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ steps.tag.outputs.next_tag }}
           name: "${{ steps.tag.outputs.next_tag }}"
