@@ -183,7 +183,6 @@ jobs:
       - name: "🐳 📦 🚀 Build and publish artifact with Docker (PR)"
         uses: docker/build-push-action@v7
         if: github.ref != 'refs/heads/main' && github.event_name == 'pull_request'
-        timeout-minutes: 1
         with:
           context: ${{ inputs.working-directory }}
           platforms: linux/amd64
@@ -199,7 +198,6 @@ jobs:
       - name: "🐳 📦 🚀 Build and publish artifact with Docker (main)"
         uses: docker/build-push-action@v7
         if: github.ref == 'refs/heads/main'
-        timeout-minutes: 1
         with:
           context: ${{ inputs.working-directory }}
           platforms: linux/amd64
