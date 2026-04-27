@@ -7,8 +7,6 @@ on:
       - 'main'
     paths:
       - 'referencing/**'
-      - '.github/workflows/cd-referencing.yml'
-      - '.github/workflows/cd-generic.yml'
       - '!**/README.md'
   workflow_dispatch:
 
