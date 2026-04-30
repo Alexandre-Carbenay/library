@@ -10,10 +10,16 @@ rules:
     - test
 monorepo:
   - name: catalog
-    path: ./catalog/
+    paths:
+      - ./catalog/
+      - ./.github/workflows/
   - name: referencing
-    path: ./referencing/
+    paths:
+      - ./referencing/
+      - ./.github/workflows/
   - name: website
-    path: ./website/
+    paths:
+      - ./website/
+      - ./.github/workflows/
   - name: rest-api-support
     path: ./libs/rest-api-support/
