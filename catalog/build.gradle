@@ -90,7 +90,6 @@ dependencies {
 	acceptanceImplementation 'org.junit.platform:junit-platform-suite'
 	acceptanceImplementation 'io.rest-assured:rest-assured:6.0.0'
 	acceptanceImplementation 'org.assertj:assertj-core'
-	acceptanceImplementation 'com.fasterxml.jackson.core:jackson-databind'
 
 	errorprone 'com.google.errorprone:error_prone_core:2.45.0'
 	errorprone 'com.uber.nullaway:nullaway:0.12.14'
