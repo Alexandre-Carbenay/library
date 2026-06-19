@@ -34,7 +34,7 @@ jobs:
       next_version: ${{ steps.semver.outputs.next_version }}
     steps:
       - name: "📥 Checkout project sources"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.head_ref }}
           fetch-depth: "0"
@@ -99,7 +99,7 @@ jobs:
       contents: write
     steps:
       - name: "📥 Checkout project sources"
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: "0"
 
