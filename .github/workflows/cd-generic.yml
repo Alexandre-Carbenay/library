@@ -57,7 +57,7 @@ jobs:
         uses: gradle/actions/wrapper-validation@v6
 
       - name: "🐳 🔍 Hadolint Dockerfile Scan"
-        uses: hadolint/hadolint-action@v3.3.0
+        uses: hadolint/hadolint-action@v3.5.0
         id: hadolint
         continue-on-error: true
         with:
